@@ -89,6 +89,26 @@ const base = '/ThesisArcPro';
   .header__nav { display: none; }
   .header__cta { display: none; }
   .header__burger { display: flex; }
+
+  .header__nav.mobile-open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--navy);
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border);
+    gap: 1.2rem;
+    z-index: 999;
+  }
+
+  .header__nav.mobile-open a {
+    font-size: 1rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border);
+  }
 }
 </style>
 
