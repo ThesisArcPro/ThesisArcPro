@@ -1,0 +1,222 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Order Received" description="Thank you for your order — ThesisArcPro will contact you within 30 minutes.">
+  <Header />
+
+  <main>
+    <section class="thankyou">
+      <div class="container thankyou__inner">
+
+        <div class="thankyou__icon">✓</div>
+        <h1>Order Received!</h1>
+        <p class="thankyou__sub">Thank you for choosing ThesisArcPro. We have received your order and will contact you within <strong>30 minutes</strong> with your confirmation and next steps.</p>
+
+        <div class="thankyou__steps">
+          <div class="thankyou__step">
+            <div class="step__num">01</div>
+            <h3>Order Confirmed</h3>
+            <p>Your order details have been received by our team.</p>
+          </div>
+          <div class="thankyou__step">
+            <div class="step__num">02</div>
+            <h3>Expert Matched</h3>
+            <p>We are matching you with the best expert for your subject.</p>
+          </div>
+          <div class="thankyou__step">
+            <div class="step__num">03</div>
+            <h3>Work Begins</h3>
+            <p>Your expert begins working on your assignment immediately.</p>
+          </div>
+          <div class="thankyou__step">
+            <div class="step__num">04</div>
+            <h3>Delivered On Time</h3>
+            <p>Your completed work is delivered before your deadline.</p>
+          </div>
+        </div>
+
+        <div class="thankyou__contact">
+          <p>Need to reach us urgently?</p>
+          <div class="thankyou__buttons">
+            <a href="https://wa.me/254700000000" target="_blank" class="btn-primary">
+              💬 Chat on WhatsApp
+            </a>
+            <a href="https://mail.google.com/mail/?view=cm&to=support@thesisarcpro.com&su=ThesisArcPro%20Order%20Followup" target="_blank" class="btn-secondary-dark">
+              📧 Send us an Email
+            </a>
+          </div>
+        </div>
+
+        <a href="/" class="thankyou__home">← Back to Homepage</a>
+
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+.thankyou {
+  background-color: var(--navy);
+  min-height: 100vh;
+  padding: 10rem 0 6rem;
+  display: flex;
+  align-items: center;
+}
+
+.thankyou__inner {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.thankyou__icon {
+  width: 80px;
+  height: 80px;
+  background-color: var(--gold);
+  color: var(--navy);
+  font-size: 2.5rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.thankyou h1 {
+  color: var(--white);
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1.5rem;
+}
+
+.thankyou__sub {
+  color: rgba(255,255,255,0.75);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+.thankyou__sub strong {
+  color: var(--gold);
+}
+
+.thankyou__steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.thankyou__step {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.thankyou__step:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+}
+
+.step__num {
+  background-color: var(--gold);
+  color: var(--navy);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.thankyou__step h3 {
+  color: var(--white);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.thankyou__step p {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.thankyou__contact {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.thankyou__contact p {
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+}
+
+.thankyou__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-secondary-dark {
+  display: inline-block;
+  background-color: transparent;
+  color: var(--gold);
+  padding: 0.85rem 2rem;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid var(--gold);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary-dark:hover {
+  background-color: var(--gold);
+  color: var(--navy);
+  transform: translateY(-2px);
+}
+
+.thankyou__home {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+
+.thankyou__home:hover {
+  color: var(--gold);
+}
+
+@media (max-width: 768px) {
+  .thankyou__steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .thankyou__steps {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

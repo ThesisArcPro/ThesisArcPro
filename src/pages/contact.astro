@@ -1,0 +1,684 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Place Order" description="Place your order with ThesisArcPro — get an instant price quote for academic writing support.">
+  <Header />
+
+  <!-- Floating Left: Help / Live Chat (all-in-one) -->
+  <div class="floating-left">
+    <button class="float-btn float-btn--help" id="helpBtn" title="Help & Live Chat">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 1C6.48 1 2 5.48 2 11c0 1.88.52 3.64 1.43 5.14L2 22l5.86-1.43C9.36 21.48 11.12 22 13 22c5.52 0 9-4.48 9-10S17.52 1 12 1zm0 2c3.87 0 7 3.13 7 7s-3.13 7-7 7c-1.55 0-2.98-.5-4.13-1.34L5 17l1.34-1.87C5.5 13.98 5 12.55 5 11c0-3.87 3.13-7 7-7zm-1 3v5h2V6h-2zm0 6v2h2v-2h-2z"/></svg>
+      <span>Help</span>
+    </button>
+  </div>
+
+  <!-- Live Chat Popup -->
+  <div class="chat-popup" id="chatPopup">
+    <div class="chat-popup__header">
+      <div class="chat-popup__avatars">
+        <div class="avatar avatar--1">T</div>
+        <div class="avatar avatar--2">A</div>
+        <div class="avatar avatar--3">P</div>
+      </div>
+      <button class="chat-popup__close" id="chatClose">✕</button>
+      <h2>Hey there! 👋</h2>
+      <p>How can we help?</p>
+      <span class="chat-online">● We're online now</span>
+    </div>
+    <div class="chat-popup__body">
+      <div class="chat-actions">
+        <a href="https://wa.me/254700000000" target="_blank" class="chat-action-btn chat-action-btn--whatsapp">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <div>
+            <span class="chat-action-btn__title">Chat on WhatsApp</span>
+            <span class="chat-action-btn__sub">Instant response</span>
+          </div>
+          <svg class="chat-action-btn__arrow" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a href="https://mail.google.com/mail/?view=cm&to=support@thesisarcpro.com&su=ThesisArcPro%20Enquiry" target="_blank" class="chat-action-btn chat-action-btn--email">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <div>
+            <span class="chat-action-btn__title">Send us an Email</span>
+            <span class="chat-action-btn__sub">support@thesisarcpro.com</span>
+          </div>
+          <svg class="chat-action-btn__arrow" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="chat-popup__footer">
+      <div class="chat-tabs">
+        <button class="chat-tab chat-tab--active">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          Home
+        </button>
+        <button class="chat-tab" id="messagesTab">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          Messages
+        </button>
+        <button class="chat-tab">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+          Help
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="chat-overlay" id="chatOverlay"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-hero__eyebrow">Get Started</p>
+        <h1>Place Your Order</h1>
+        <p class="page-hero__sub">Fill in your details below and get an instant price quote. We will match you with the perfect expert within 30 minutes.</p>
+      </div>
+    </section>
+
+    <section class="order-section">
+      <div class="container order__inner">
+
+        <div class="order__form-wrap">
+          <h2>Order Details</h2>
+          <p>Complete the form below to get your instant quote.</p>
+
+          <form class="order-form" id="orderForm" action="https://formspree.io/f/mbdbeanp" method="POST" data-next="http://localhost:4321/thankyou">
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="topic">Topic / Title *</label>
+              <input type="text" id="topic" name="topic" placeholder="Enter your assignment topic or title" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="type">Assignment Type *</label>
+                <select id="type" name="type" required>
+                  <option value="" disabled selected>Select type</option>
+                  <option>Essay</option>
+                  <option>Research Paper</option>
+                  <option>Discussion Post</option>
+                  <option>Report</option>
+                  <option>Take Home Exam</option>
+                  <option>Dissertation / Thesis</option>
+                  <option>Research Proposal</option>
+                  <option>Literature Review</option>
+                  <option>Case Study</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="subject">Subject *</label>
+                <select id="subject" name="subject" required>
+                  <option value="" disabled selected>Select subject</option>
+                  <option>Nursing & Healthcare</option>
+                  <option>Business Management</option>
+                  <option>English & Literature</option>
+                  <option>Mathematics</option>
+                  <option>Psychology</option>
+                  <option>Law</option>
+                  <option>Education</option>
+                  <option>History</option>
+                  <option>Science</option>
+                  <option>Sociology</option>
+                  <option>IT & Computer Science</option>
+                  <option>Finance & Accounting</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="service">Service *</label>
+                <select id="service" name="service" required>
+                  <option value="" disabled selected>Select service</option>
+                  <option>Writing</option>
+                  <option>Rewriting</option>
+                  <option>Editing & Proofreading</option>
+                  <option>Review My Work</option>
+                  <option>Calculations / Problems</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="language">Language *</label>
+                <select id="language" name="language" required>
+                  <option value="" disabled selected>Select language</option>
+                  <option>English (US)</option>
+                  <option>English (UK)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="level">Education Level *</label>
+                <select id="level" name="level" required>
+                  <option value="" disabled selected>Select level</option>
+                  <option value="12">High School ($12/pg)</option>
+                  <option value="13">College ($13/pg)</option>
+                  <option value="14">Masters ($14/pg)</option>
+                  <option value="15">PhD / Doctorate ($15/pg)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="deadline">Deadline *</label>
+                <input type="datetime-local" id="deadline" name="deadline" />
+              </div>
+            </div>
+
+            <div class="urgency-display" id="urgencyDisplay" style="display:none;">
+              <span class="urgency-badge" id="urgencyBadge"></span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pages">Number of Pages *</label>
+                <div class="pages-input">
+                  <button type="button" id="minusBtn">−</button>
+                  <input type="number" id="pages" name="pages" value="1" min="1" max="500" />
+                  <button type="button" id="plusBtn">+</button>
+                </div>
+                <span class="pages-note">1 page = 275 words</span>
+              </div>
+              <div class="form-group">
+                <label>Word Count</label>
+                <div class="wordcount-display" id="wordCount">275 words</div>
+              </div>
+            </div>
+
+            <div class="addons">
+              <h3>Add-ons</h3>
+              <div class="addons__grid">
+                <div class="addon-item">
+                  <div class="addon-item__info">
+                    <span class="addon-item__name">📊 Graphics & Tables</span>
+                    <span class="addon-item__price">$5 each</span>
+                  </div>
+                  <div class="addon-qty">
+                    <button type="button" onclick="changeAddon('graphics', -1)">−</button>
+                    <span id="graphics-qty">0</span>
+                    <button type="button" onclick="changeAddon('graphics', 1)">+</button>
+                  </div>
+                </div>
+                <div class="addon-item">
+                  <div class="addon-item__info">
+                    <span class="addon-item__name">📚 Printable Sources</span>
+                    <span class="addon-item__price">$4 each</span>
+                  </div>
+                  <div class="addon-qty">
+                    <button type="button" onclick="changeAddon('sources', -1)">−</button>
+                    <span id="sources-qty">0</span>
+                    <button type="button" onclick="changeAddon('sources', 1)">+</button>
+                  </div>
+                </div>
+                <div class="addon-item addon-item--free">
+                  <div class="addon-item__info">
+                    <span class="addon-item__name">🛡️ Plagiarism & AI Report</span>
+                    <span class="addon-item__price free">FREE</span>
+                  </div>
+                  <div class="addon-qty addon-qty--free">
+                    <span>✓ Included</span>
+                  </div>
+                </div>
+                <div class="addon-item">
+                  <div class="addon-item__info">
+                    <span class="addon-item__name">📝 Abstract</span>
+                    <span class="addon-item__price">$6 each</span>
+                  </div>
+                  <div class="addon-qty">
+                    <button type="button" onclick="changeAddon('abstract', -1)">−</button>
+                    <span id="abstract-qty">0</span>
+                    <button type="button" onclick="changeAddon('abstract', 1)">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="instructions">Instructions / Description *</label>
+              <textarea id="instructions" name="instructions" rows="5" placeholder="Describe your assignment in detail — include any specific requirements, rubric, or guidelines..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="files">Attach Files (optional)</label>
+              <div class="file-upload">
+                <input type="file" id="files" name="files" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg" />
+                <p>📎 Drag & drop files here or click to browse</p>
+                <span>Accepted: PDF, DOC, DOCX, TXT, PNG, JPG</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary form-submit">
+              Place Order Now
+            </button>
+
+          </form>
+        </div>
+
+        <!-- Price Calculator -->
+        <div class="order__calculator">
+          <div class="calculator-card">
+            <h3>💰 Your Price</h3>
+            <div class="calc-display">
+              <div class="calc-total" id="calcTotal">$12.00</div>
+              <div class="calc-label">Estimated Total</div>
+            </div>
+            <div class="calc-breakdown">
+              <div class="breakdown-item">
+                <span>Base price</span>
+                <span id="basePriceDisplay">$12.00/pg</span>
+              </div>
+              <div class="breakdown-item">
+                <span>Pages</span>
+                <span id="pagesDisplay">x 1</span>
+              </div>
+              <div class="breakdown-item" id="urgencyRow" style="display:none;">
+                <span id="urgencyLabel">Urgency</span>
+                <span id="urgencyAmount">+$0.00</span>
+              </div>
+              <div class="breakdown-item" id="addonsRow" style="display:none;">
+                <span>Add-ons</span>
+                <span id="addonsAmount">+$0.00</span>
+              </div>
+              <div class="breakdown-divider"></div>
+              <div class="breakdown-item breakdown-item--total">
+                <span>Total</span>
+                <span id="totalDisplay">$12.00</span>
+              </div>
+            </div>
+            <div class="calc-features">
+              <div class="calc-feature">✓ Free plagiarism & AI report</div>
+              <div class="calc-feature">✓ Free unlimited revisions</div>
+              <div class="calc-feature">✓ On time delivery guaranteed</div>
+              <div class="calc-feature">✓ Money back guarantee</div>
+            </div>
+            <div class="calc-note">
+              💬 Need a custom quote? <a href="https://wa.me/254700000000" target="_blank">Chat with us</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+.floating-left {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 9999;
+}
+.float-btn--help {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  padding: 0 1.3rem;
+  height: 48px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+.float-btn--help svg { flex-shrink: 0; }
+.float-btn--help:hover {
+  background-color: var(--gold);
+  color: var(--navy);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+}
+.chat-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 10000;
+}
+.chat-overlay.active { display: block; }
+.chat-popup {
+  position: fixed;
+  bottom: 6rem;
+  left: 2rem;
+  width: 320px;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  z-index: 10001;
+  overflow: hidden;
+  transform: translateY(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+.chat-popup.active {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+.chat-popup__header {
+  background: #1a73e8;
+  padding: 1.5rem 1.5rem 1.3rem;
+  position: relative;
+}
+.chat-popup__avatars { display: flex; margin-bottom: 1rem; }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.82rem; color: white;
+  margin-left: -8px;
+}
+.avatar:first-child { margin-left: 0; }
+.avatar--1 { background: #e74c3c; }
+.avatar--2 { background: #8e44ad; }
+.avatar--3 { background: #f39c12; }
+.chat-popup__close {
+  position: absolute; top: 0.9rem; right: 0.9rem;
+  background: rgba(255,255,255,0.2); border: none; color: white;
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+  font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s ease;
+}
+.chat-popup__close:hover { background: rgba(255,255,255,0.35); }
+.chat-popup__header h2 { color: white; font-size: 1.25rem; margin: 0 0 0.25rem; }
+.chat-popup__header p { color: rgba(255,255,255,0.85); font-size: 0.92rem; margin: 0 0 0.5rem; }
+.chat-online { font-size: 0.76rem; color: #a8f0c6; font-weight: 500; }
+.chat-popup__body { padding: 1.2rem; }
+.chat-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+.chat-action-btn {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.85rem 1rem; border-radius: 10px;
+  text-decoration: none; transition: all 0.2s ease;
+}
+.chat-action-btn > div { flex: 1; }
+.chat-action-btn__title { display: block; font-weight: 700; font-size: 0.88rem; }
+.chat-action-btn__sub { display: block; font-size: 0.76rem; opacity: 0.7; margin-top: 0.1rem; }
+.chat-action-btn__arrow { opacity: 0.4; flex-shrink: 0; }
+.chat-action-btn--whatsapp {
+  background: #e8faf0; color: #1a7a3c;
+  border: 1px solid rgba(37,211,102,0.15);
+}
+.chat-action-btn--whatsapp:hover { background: #25D366; color: white; }
+.chat-action-btn--whatsapp:hover .chat-action-btn__arrow { opacity: 0.7; }
+.chat-action-btn--email {
+  background: rgba(197,160,89,0.08); color: var(--navy);
+  border: 1px solid rgba(197,160,89,0.2);
+}
+.chat-action-btn--email:hover { background: var(--gold); color: var(--navy); }
+.chat-popup__footer { border-top: 1px solid rgba(0,0,0,0.07); padding: 0.4rem 0; }
+.chat-tabs { display: flex; justify-content: space-around; }
+.chat-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+  background: none; border: none; cursor: pointer;
+  padding: 0.5rem 0.8rem; border-radius: 8px;
+  font-size: 0.7rem; color: var(--text-light); transition: color 0.2s ease;
+}
+.chat-tab--active { color: #1a73e8; }
+.chat-tab:hover { color: var(--navy); }
+.page-hero {
+  background-color: var(--navy);
+  padding: 10rem 0 5rem;
+  text-align: center;
+}
+.page-hero__eyebrow {
+  color: var(--gold); font-size: 0.85rem; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem;
+}
+.page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
+.page-hero__sub {
+  color: rgba(255,255,255,0.7); font-size: 1.1rem;
+  max-width: 600px; margin: 0 auto;
+}
+.order-section { padding: var(--section-padding); background-color: var(--off-white); }
+.order__inner { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3rem; align-items: start; }
+.order__form-wrap h2 { color: var(--navy); margin-bottom: 0.5rem; }
+.order__form-wrap > p { color: var(--text-mid); margin-bottom: 2rem; }
+.order-form { display: flex; flex-direction: column; gap: 1.2rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-group label { color: var(--navy); font-size: 0.9rem; font-weight: 600; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.85rem 1rem;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  background-color: var(--white);
+  transition: border-color 0.3s ease;
+  outline: none;
+  width: 100%;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(197,160,89,0.1);
+}
+.form-group textarea { resize: vertical; min-height: 120px; }
+.urgency-display {
+  background: rgba(197,160,89,0.1);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+}
+.urgency-badge { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
+.pages-input {
+  display: flex; align-items: center;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: 6px; overflow: hidden; background: var(--white);
+}
+.pages-input button {
+  background: var(--navy); color: var(--white); border: none;
+  padding: 0.85rem 1.2rem; font-size: 1.2rem; cursor: pointer;
+  transition: background 0.3s ease;
+}
+.pages-input button:hover { background: var(--gold); color: var(--navy); }
+.pages-input input { border: none !important; text-align: center; flex: 1; font-weight: 700; box-shadow: none !important; }
+.pages-note { color: var(--text-light); font-size: 0.8rem; }
+.wordcount-display {
+  padding: 0.85rem 1rem; border: 1.5px solid var(--border);
+  border-radius: 6px; background: var(--white);
+  color: var(--navy); font-weight: 700; display: flex; align-items: center;
+}
+.addons { background: var(--white); border: 1.5px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 1.5rem; }
+.addons h3 { color: var(--navy); font-size: 1rem; margin-bottom: 1rem; }
+.addons__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.addon-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 8px; background: var(--off-white); gap: 0.5rem; }
+.addon-item--free { opacity: 0.85; }
+.addon-item__info { display: flex; flex-direction: column; gap: 0.2rem; }
+.addon-item__name { color: var(--text-dark); font-size: 0.82rem; font-weight: 500; }
+.addon-item__price { color: var(--navy); font-weight: 700; font-size: 0.82rem; }
+.addon-item__price.free { color: #2d6a4f; }
+.addon-qty { display: flex; align-items: center; gap: 0.5rem; background: var(--white); border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; overflow: hidden; flex-shrink: 0; }
+.addon-qty button { background: var(--navy); color: var(--white); border: none; padding: 0.4rem 0.7rem; font-size: 1rem; cursor: pointer; transition: background 0.2s ease; }
+.addon-qty button:hover { background: var(--gold); color: var(--navy); }
+.addon-qty span { min-width: 24px; text-align: center; font-weight: 700; font-size: 0.9rem; color: var(--navy); }
+.addon-qty--free { background: none; border: none; padding: 0 0.5rem; }
+.addon-qty--free span { color: #2d6a4f; font-size: 0.82rem; }
+.file-upload { border: 2px dashed var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; position: relative; background: var(--white); }
+.file-upload:hover { border-color: var(--gold); }
+.file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100% !important; padding: 0 !important; border: none !important; }
+.file-upload p { color: var(--text-mid); font-size: 0.9rem; margin-bottom: 0.3rem; }
+.file-upload span { color: var(--text-light); font-size: 0.8rem; }
+.form-submit { width: 100%; padding: 1.1rem; font-size: 1rem; cursor: pointer; border: none; }
+.order__calculator { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 1.5rem; }
+.calculator-card { background: var(--navy); border-radius: 16px; padding: 2rem; }
+.calculator-card h3 { color: var(--white); font-size: 1.2rem; margin-bottom: 1.5rem; text-align: center; }
+.calc-display { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
+.calc-total { color: var(--gold); font-family: var(--font-heading); font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 0.5rem; }
+.calc-label { color: rgba(255,255,255,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+.calc-breakdown { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.5rem; }
+.breakdown-item { display: flex; justify-content: space-between; font-size: 0.9rem; color: rgba(255,255,255,0.7); }
+.breakdown-item--total { color: var(--white); font-weight: 700; font-size: 1rem; }
+.breakdown-divider { height: 1px; background: var(--border); margin: 0.3rem 0; }
+.calc-features { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+.calc-feature { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
+.calc-note { text-align: center; color: rgba(255,255,255,0.5); font-size: 0.82rem; }
+.calc-note a { color: var(--gold); text-decoration: underline; }
+@media (max-width: 900px) {
+  .order__inner { grid-template-columns: 1fr; }
+  .order__calculator { position: static; }
+  .form-row { grid-template-columns: 1fr; }
+  .addons__grid { grid-template-columns: 1fr; }
+  .chat-popup { width: calc(100vw - 3rem); left: 1.5rem; }
+  .floating-left { bottom: 1rem; left: 1rem; }
+}
+</style>
+
+<script>
+  const addonPrices = { graphics: 5, sources: 4, abstract: 6 };
+  const addonQtys = { graphics: 0, sources: 0, abstract: 0 };
+
+  function changeAddon(name, delta) {
+    addonQtys[name] = Math.max(0, addonQtys[name] + delta);
+    document.getElementById(name + '-qty').textContent = addonQtys[name];
+    calculatePrice();
+  }
+
+  function calculatePrice() {
+    const levelSelect = document.getElementById('level');
+    const pagesInput = document.getElementById('pages');
+    const deadlineInput = document.getElementById('deadline');
+    const baseRate = parseFloat(levelSelect.value) || 12;
+    const pages = parseInt(pagesInput.value) || 1;
+
+    document.getElementById('wordCount').textContent = (pages * 275).toLocaleString() + ' words';
+
+    let urgencyRate = 0;
+    let urgencyLabel = '';
+    if (deadlineInput.value) {
+      const hoursLeft = (new Date(deadlineInput.value) - new Date()) / 3600000;
+      if (hoursLeft <= 3) { urgencyRate = 0.5; urgencyLabel = 'Urgency (3hrs +50%)'; }
+      else if (hoursLeft <= 6) { urgencyRate = 0.4; urgencyLabel = 'Urgency (6hrs +40%)'; }
+      else if (hoursLeft <= 9) { urgencyRate = 0.3; urgencyLabel = 'Urgency (9hrs +30%)'; }
+      else if (hoursLeft <= 12) { urgencyRate = 0.2; urgencyLabel = 'Urgency (12hrs +20%)'; }
+
+      const urgencyDisplay = document.getElementById('urgencyDisplay');
+      if (urgencyRate > 0) {
+        urgencyDisplay.style.display = 'block';
+        document.getElementById('urgencyBadge').textContent = '⚡ ' + urgencyLabel + ' applied';
+      } else {
+        urgencyDisplay.style.display = 'none';
+      }
+    }
+
+    let addonsTotal = 0;
+    for (const [key, qty] of Object.entries(addonQtys)) {
+      addonsTotal += qty * addonPrices[key];
+    }
+
+    const baseTotal = baseRate * pages;
+    const urgencyAmount = baseTotal * urgencyRate;
+    const grandTotal = baseTotal + urgencyAmount + addonsTotal;
+
+    document.getElementById('calcTotal').textContent = '$' + grandTotal.toFixed(2);
+    document.getElementById('totalDisplay').textContent = '$' + grandTotal.toFixed(2);
+    document.getElementById('basePriceDisplay').textContent = '$' + baseRate.toFixed(2) + '/pg';
+    document.getElementById('pagesDisplay').textContent = 'x ' + pages;
+
+    const urgencyRow = document.getElementById('urgencyRow');
+    if (urgencyAmount > 0) {
+      urgencyRow.style.display = 'flex';
+      document.getElementById('urgencyLabel').textContent = urgencyLabel;
+      document.getElementById('urgencyAmount').textContent = '+$' + urgencyAmount.toFixed(2);
+    } else {
+      urgencyRow.style.display = 'none';
+    }
+
+    const addonsRow = document.getElementById('addonsRow');
+    if (addonsTotal > 0) {
+      addonsRow.style.display = 'flex';
+      document.getElementById('addonsAmount').textContent = '+$' + addonsTotal.toFixed(2);
+    } else {
+      addonsRow.style.display = 'none';
+    }
+  }
+
+  document.getElementById('minusBtn')?.addEventListener('click', () => {
+    const input = document.getElementById('pages');
+    input.value = Math.max(1, parseInt(input.value) - 1);
+    calculatePrice();
+  });
+
+  document.getElementById('plusBtn')?.addEventListener('click', () => {
+    const input = document.getElementById('pages');
+    input.value = parseInt(input.value) + 1;
+    calculatePrice();
+  });
+
+  ['level', 'pages', 'deadline'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', calculatePrice);
+    document.getElementById(id)?.addEventListener('input', calculatePrice);
+  });
+
+  document.getElementById('orderForm')?.addEventListener('submit', () => {
+    const btn = document.querySelector('.form-submit');
+    if (btn) {
+      btn.textContent = '⏳ Sending your order...';
+      btn.style.backgroundColor = '#2d6a4f';
+    }
+  });
+
+  // Chat popup
+  const helpBtn = document.getElementById('helpBtn');
+  const chatPopup = document.getElementById('chatPopup');
+  const chatClose = document.getElementById('chatClose');
+  const chatOverlay = document.getElementById('chatOverlay');
+
+  helpBtn?.addEventListener('click', () => {
+    chatPopup.classList.add('active');
+    chatOverlay.classList.add('active');
+  });
+
+  chatClose?.addEventListener('click', () => {
+    chatPopup.classList.remove('active');
+    chatOverlay.classList.remove('active');
+  });
+
+  chatOverlay?.addEventListener('click', () => {
+    chatPopup.classList.remove('active');
+    chatOverlay.classList.remove('active');
+  });
+
+  // ✅ Messages tab → opens Tawk.to live chat
+  const chatTabs = document.querySelectorAll('.chat-tab');
+  chatTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => {
+      chatTabs.forEach(t => t.classList.remove('chat-tab--active'));
+      tab.classList.add('chat-tab--active');
+
+      if (index === 1) {
+        // Close our popup first
+        chatPopup.classList.remove('active');
+        chatOverlay.classList.remove('active');
+        // Then open Tawk.to after short delay
+        setTimeout(() => {
+          if (typeof Tawk_API !== 'undefined') {
+            Tawk_API.maximize();
+          }
+        }, 300);
+      }
+    });
+  });
+
+  calculatePrice();
+  window.changeAddon = changeAddon;
+</script>

@@ -1,0 +1,306 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Academic Integrity" description="ThesisArcPro's commitment to academic integrity, ethical standards, and responsible academic support.">
+  <Header />
+
+  <main>
+    <!-- Page Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-hero__eyebrow">Our Commitment</p>
+        <h1>Academic Integrity Policy</h1>
+        <p class="page-hero__sub">At ThesisArcPro, ethical academic support is not just a policy — it is the foundation of everything we do.</p>
+      </div>
+    </section>
+
+    <!-- Main Policy -->
+    <section class="policy">
+      <div class="container policy__inner">
+
+        <div class="policy__main">
+
+          <div class="policy__block">
+            <h2>Our Ethical Commitment</h2>
+            <p>ThesisArcPro is committed to providing academic support services that empower students to learn, grow, and succeed — while maintaining the highest standards of academic integrity.</p>
+            <p>All services provided by ThesisArcPro are intended to be used as reference materials, model answers, and guided support. We strongly encourage all students to use our work responsibly and in accordance with their institution's academic policies.</p>
+          </div>
+
+          <div class="policy__block">
+            <h2>How Our Services Should Be Used</h2>
+            <p>Our academic support services are designed to:</p>
+            <ul class="policy__list">
+              <li>Serve as model answers and reference materials for learning</li>
+              <li>Provide guided research support and methodology assistance</li>
+              <li>Help students understand complex academic concepts</li>
+              <li>Improve academic writing skills through professional editing</li>
+              <li>Support students in structuring and presenting their ideas</li>
+            </ul>
+          </div>
+
+          <div class="policy__block">
+            <h2>Plagiarism Policy</h2>
+            <p>Every piece of work produced by ThesisArcPro is:</p>
+            <ul class="policy__list">
+              <li>Written completely from scratch by our expert writers</li>
+              <li>Verified using professional plagiarism detection software</li>
+              <li>Accompanied by a free plagiarism report on request</li>
+              <li>Never resold or reused for any other client</li>
+            </ul>
+            <p>We take plagiarism extremely seriously and have a zero tolerance policy for any form of academic dishonesty within our team.</p>
+          </div>
+
+          <div class="policy__block">
+            <h2>Confidentiality Policy</h2>
+            <p>We understand that privacy is paramount to our clients. ThesisArcPro guarantees:</p>
+            <ul class="policy__list">
+              <li>Your personal information is never shared with third parties</li>
+              <li>Your order details are kept completely confidential</li>
+              <li>All communication between you and your expert is private</li>
+              <li>Your data is protected using industry-standard encryption</li>
+              <li>You may request deletion of your data at any time</li>
+            </ul>
+          </div>
+
+          <div class="policy__block">
+            <h2>Student Responsibility</h2>
+            <p>While we are committed to providing the highest quality academic support, students are responsible for:</p>
+            <ul class="policy__list">
+              <li>Using our work in accordance with their institution's policies</li>
+              <li>Understanding the academic integrity requirements of their course</li>
+              <li>Using our materials as learning tools and reference guides</li>
+              <li>Ensuring their final submissions reflect their own understanding</li>
+            </ul>
+          </div>
+
+          <div class="policy__block">
+            <h2>Quality Assurance</h2>
+            <p>Every order goes through our rigorous quality assurance process:</p>
+            <ul class="policy__list">
+              <li>Written by a qualified expert in the relevant field</li>
+              <li>Reviewed by a senior editor for quality and accuracy</li>
+              <li>Checked for plagiarism using professional tools</li>
+              <li>Verified for correct formatting and citation style</li>
+              <li>Delivered with a satisfaction guarantee</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="policy__sidebar">
+          <div class="sidebar__card">
+            <div class="sidebar__icon">🛡️</div>
+            <h3>Our Guarantees</h3>
+            <ul>
+              <li>✓ 100% Original Work</li>
+              <li>✓ Free Plagiarism Report</li>
+              <li>✓ Complete Confidentiality</li>
+              <li>✓ Secure Payments</li>
+              <li>✓ Money Back Guarantee</li>
+              <li>✓ Free Revisions</li>
+              <li>✓ 24/7 Support</li>
+            </ul>
+          </div>
+
+          <div class="sidebar__card sidebar__card--gold">
+            <h3>Have Questions?</h3>
+            <p>Our team is available 24/7 to answer any questions about our academic integrity policy or how our services work.</p>
+            <a href="/contact" class="btn-primary" style="width:100%; text-align:center; margin-top:1rem;">
+              Contact Us
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Commitment Banner -->
+    <section class="commitment">
+      <div class="container commitment__inner">
+        <div class="commitment__icon">✦</div>
+        <h2>Our Promise To Every Student</h2>
+        <p>We are committed to being a trusted, ethical, and professional academic partner. Your success and integrity matter to us as much as they matter to you.</p>
+        <a href="/contact" class="btn-primary">Book a Free Consultation</a>
+      </div>
+    </section>
+
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+.page-hero {
+  background-color: var(--navy);
+  padding: 10rem 0 5rem;
+  text-align: center;
+}
+
+.page-hero__eyebrow {
+  color: var(--gold);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
+
+.page-hero__sub {
+  color: rgba(255,255,255,0.7);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.policy {
+  padding: var(--section-padding);
+  background-color: var(--white);
+}
+
+.policy__inner {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 4rem;
+  align-items: start;
+}
+
+.policy__block {
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.policy__block:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.policy__block h2 {
+  color: var(--navy);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.policy__block p {
+  color: var(--text-mid);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.policy__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+
+.policy__list li {
+  color: var(--text-mid);
+  font-size: 0.95rem;
+  padding-left: 1.5rem;
+  position: relative;
+  line-height: 1.6;
+}
+
+.policy__list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.policy__sidebar {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebar__card {
+  background-color: var(--navy);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.sidebar__card--gold {
+  background-color: var(--off-white);
+  border: 1px solid var(--border);
+}
+
+.sidebar__card--gold h3 {
+  color: var(--navy);
+}
+
+.sidebar__card--gold p {
+  color: var(--text-mid);
+}
+
+.sidebar__icon {
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.sidebar__card h3 {
+  color: var(--white);
+  font-size: 1.1rem;
+  margin-bottom: 1.2rem;
+}
+
+.sidebar__card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.sidebar__card ul li {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9rem;
+}
+
+.commitment {
+  background-color: var(--navy);
+  padding: 5rem 0;
+}
+
+.commitment__inner {
+  text-align: center;
+}
+
+.commitment__icon {
+  color: var(--gold);
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.commitment h2 {
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.commitment p {
+  color: rgba(255,255,255,0.7);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+@media (max-width: 900px) {
+  .policy__inner {
+    grid-template-columns: 1fr;
+  }
+  .policy__sidebar {
+    position: static;
+  }
+}
+</style>

@@ -1,0 +1,113 @@
+---
+---
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="/" class="header__logo">
+      <span class="logo-thesis">Thesis</span><span class="logo-arc">Arc</span><span class="logo-pro">Pro</span>
+    </a>
+
+    <nav class="header__nav">
+      <a href="/services">Services</a>
+      <a href="/how-it-works">How It Works</a>
+      <a href="/about">About</a>
+      <a href="/academic-integrity">Academic Integrity</a>
+      <a href="/contact">Contact</a>
+    </nav>
+
+    <a href="/contact" class="btn-primary header__cta">Get Started</a>
+
+    <button class="header__burger" id="burger" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--navy);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.header__logo {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.logo-thesis { color: var(--white); }
+.logo-arc    { color: var(--gold);  }
+.logo-pro    { color: var(--white); }
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+}
+
+.header__nav a {
+  color: rgba(255,255,255,0.85);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+  transition: color 0.3s ease;
+}
+
+.header__nav a:hover {
+  color: var(--gold);
+}
+
+.header__cta {
+  font-size: 0.85rem;
+  padding: 0.6rem 1.4rem;
+  white-space: nowrap;
+}
+
+.header__burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.header__burger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--white);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .header__nav { display: none; }
+  .header__cta { display: none; }
+  .header__burger { display: flex; }
+}
+</style>
+
+<script>
+const burger = document.getElementById('burger');
+const nav = document.querySelector('.header__nav');
+burger?.addEventListener('click', () => {
+  nav?.classList.toggle('mobile-open');
+});
+</script>
