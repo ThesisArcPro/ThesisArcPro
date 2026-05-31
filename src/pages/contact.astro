@@ -5,7 +5,10 @@ import Footer from '../components/Footer.astro';
 const base = '/ThesisArcPro';
 ---
 
-<BaseLayout title="Place Order" description="Place your order with ThesisArcPro — get an instant price quote for academic writing support.">
+<BaseLayout 
+  title="Place Order" 
+  description="Place your order with ThesisArcPro — get an instant price quote for expert academic writing support. Essays, dissertations, research papers and more."
+  url="https://thesisarcpro.github.io/ThesisArcPro/contact">
   <Header />
 
   <div class="floating-left">
@@ -68,10 +71,21 @@ const base = '/ThesisArcPro';
 
   <main>
     <section class="page-hero">
-      <div class="container">
-        <p class="page-hero__eyebrow">Get Started</p>
-        <h1>Place Your Order</h1>
-        <p class="page-hero__sub">Fill in your details below and get an instant price quote. We will match you with the perfect expert within 30 minutes.</p>
+      <div class="container page-hero__inner">
+        <div class="page-hero__content">
+          <p class="page-hero__eyebrow">Get Started</p>
+          <h1>Place Your Order</h1>
+          <p class="page-hero__sub">Fill in your details below and get an instant price quote. We will match you with the perfect expert within 30 minutes.</p>
+        </div>
+        <div class="page-hero__illustration">
+          <img
+            src="/ThesisArcPro/images/contact.svg"
+            alt="Place your academic writing order and get expert help instantly"
+            width="400"
+            height="300"
+            loading="eager"
+          />
+        </div>
       </div>
     </section>
 
@@ -345,10 +359,13 @@ const base = '/ThesisArcPro';
 .chat-tab { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; background: none; border: none; cursor: pointer; padding: 0.5rem 0.8rem; border-radius: 8px; font-size: 0.7rem; color: var(--text-light); transition: color 0.2s ease; }
 .chat-tab--active { color: #1a73e8; }
 .chat-tab:hover { color: var(--navy); }
-.page-hero { background-color: var(--navy); padding: 10rem 0 5rem; text-align: center; }
+.page-hero { background-color: var(--navy); padding: 10rem 0 5rem; }
+.page-hero__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
 .page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
 .page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
-.page-hero__sub { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+.page-hero__sub { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; }
+.page-hero__illustration { display: flex; justify-content: center; align-items: center; }
+.page-hero__illustration img { width: 100%; max-width: 380px; height: auto; }
 .order-section { padding: var(--section-padding); background-color: var(--off-white); }
 .order__inner { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3rem; align-items: start; }
 .order__form-wrap h2 { color: var(--navy); margin-bottom: 0.5rem; }
@@ -404,6 +421,8 @@ const base = '/ThesisArcPro';
 .calc-note { text-align: center; color: rgba(255,255,255,0.5); font-size: 0.82rem; }
 .calc-note a { color: var(--gold); text-decoration: underline; }
 @media (max-width: 900px) {
+  .page-hero__inner { grid-template-columns: 1fr; }
+  .page-hero__illustration { display: none; }
   .order__inner { grid-template-columns: 1fr; }
   .order__calculator { position: static; }
   .form-row { grid-template-columns: 1fr; }
@@ -442,9 +461,7 @@ const base = '/ThesisArcPro';
       if (urgencyRate > 0) {
         urgencyDisplay.style.display = 'block';
         document.getElementById('urgencyBadge').textContent = '⚡ ' + urgencyLabel + ' applied';
-      } else {
-        urgencyDisplay.style.display = 'none';
-      }
+      } else { urgencyDisplay.style.display = 'none'; }
     }
     let addonsTotal = 0;
     for (const [key, qty] of Object.entries(addonQtys)) { addonsTotal += qty * addonPrices[key]; }
@@ -486,7 +503,6 @@ const base = '/ThesisArcPro';
     const btn = document.querySelector('.form-submit');
     if (btn) { btn.textContent = '⏳ Sending your order...'; btn.style.backgroundColor = '#2d6a4f'; }
   });
-
   const helpBtn = document.getElementById('helpBtn');
   const chatPopup = document.getElementById('chatPopup');
   const chatClose = document.getElementById('chatClose');
@@ -494,7 +510,6 @@ const base = '/ThesisArcPro';
   helpBtn?.addEventListener('click', () => { chatPopup.classList.add('active'); chatOverlay.classList.add('active'); });
   chatClose?.addEventListener('click', () => { chatPopup.classList.remove('active'); chatOverlay.classList.remove('active'); });
   chatOverlay?.addEventListener('click', () => { chatPopup.classList.remove('active'); chatOverlay.classList.remove('active'); });
-
   const chatTabs = document.querySelectorAll('.chat-tab');
   chatTabs.forEach((tab, index) => {
     tab.addEventListener('click', () => {
@@ -507,7 +522,6 @@ const base = '/ThesisArcPro';
       }
     });
   });
-
   calculatePrice();
   window.changeAddon = changeAddon;
 </script>
