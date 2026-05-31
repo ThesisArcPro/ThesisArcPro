@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://ThesisArcPro.github.io',
-  base: '/thesisarcpro',
+  site: 'https://thesisarcpro.github.io',
+  base: '/ThesisArcPro',
 });
