@@ -1,4 +1,5 @@
 ---
+const base = '/ThesisArcPro';
 ---
 
 <section class="services">
@@ -20,7 +21,7 @@
           <li>Any deadline met</li>
           <li>Plagiarism free</li>
         </ul>
-        <a href="/services" class="service-card__link">Learn More →</a>
+        <a href={`${base}/services`} class="service-card__link">Learn More →</a>
       </div>
 
       <div class="service-card">
@@ -32,7 +33,7 @@
           <li>All citation styles</li>
           <li>Primary & secondary research</li>
         </ul>
-        <a href="/services" class="service-card__link">Learn More →</a>
+        <a href={`${base}/services`} class="service-card__link">Learn More →</a>
       </div>
 
       <div class="service-card service-card--featured">
@@ -45,7 +46,7 @@
           <li>Research methodology guidance</li>
           <li>Statistical analysis help</li>
         </ul>
-        <a href="/services" class="service-card__link">Learn More →</a>
+        <a href={`${base}/services`} class="service-card__link">Learn More →</a>
       </div>
 
       <div class="service-card">
@@ -57,7 +58,7 @@
           <li>Structure & flow improvement</li>
           <li>Formatting & referencing</li>
         </ul>
-        <a href="/services" class="service-card__link">Learn More →</a>
+        <a href={`${base}/services`} class="service-card__link">Learn More →</a>
       </div>
 
       <div class="service-card">
@@ -69,7 +70,7 @@
           <li>History & Social Studies</li>
           <li>Fast turnaround</li>
         </ul>
-        <a href="/services" class="service-card__link">Learn More →</a>
+        <a href={`${base}/services`} class="service-card__link">Learn More →</a>
       </div>
 
       <div class="service-card">
@@ -81,14 +82,14 @@
           <li>Research design support</li>
           <li>Data analysis guidance</li>
         </ul>
-        <a href="/services" class="service-card__link">Learn More →</a>
+        <a href={`${base}/services`} class="service-card__link">Learn More →</a>
       </div>
 
     </div>
 
     <div class="services__cta">
-      <a href="/contact" class="btn-primary">Book a Free Consultation</a>
-      <a href="/services" class="btn-outline">View All Services</a>
+      <a href={`${base}/contact`} class="btn-primary">Book a Free Consultation</a>
+      <a href={`${base}/services`} class="btn-outline">View All Services</a>
     </div>
 
   </div>
@@ -99,7 +100,6 @@
   padding: var(--section-padding);
   background-color: var(--off-white);
 }
-
 .services__eyebrow {
   text-align: center;
   color: var(--gold);
@@ -109,14 +109,12 @@
   text-transform: uppercase;
   margin-bottom: 1rem;
 }
-
 .services__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 3rem;
 }
-
 .service-card {
   background-color: var(--white);
   border: 1px solid rgba(0,0,0,0.08);
@@ -128,34 +126,19 @@
   flex-direction: column;
   gap: 1rem;
 }
-
 .service-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(27,42,74,0.12);
   border-color: var(--gold);
 }
-
 .service-card--featured {
   border-color: var(--gold);
   background: linear-gradient(135deg, var(--navy) 0%, #243558 100%);
 }
-
-.service-card--featured h3 {
-  color: var(--white);
-}
-
-.service-card--featured p {
-  color: rgba(255,255,255,0.7);
-}
-
-.service-card--featured ul li {
-  color: rgba(255,255,255,0.8);
-}
-
-.service-card--featured .service-card__link {
-  color: var(--gold);
-}
-
+.service-card--featured h3 { color: var(--white); }
+.service-card--featured p { color: rgba(255,255,255,0.7); }
+.service-card--featured ul li { color: rgba(255,255,255,0.8); }
+.service-card--featured .service-card__link { color: var(--gold); }
 .service-card__badge {
   position: absolute;
   top: -12px;
@@ -171,64 +154,15 @@
   border-radius: 20px;
   white-space: nowrap;
 }
-
-.service-card__icon {
-  font-size: 2rem;
-}
-
-.service-card h3 {
-  font-size: 1.1rem;
-  color: var(--navy);
-}
-
-.service-card p {
-  color: var(--text-mid);
-  font-size: 0.9rem;
-  line-height: 1.7;
-  flex: 1;
-}
-
-.service-card ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.service-card ul li {
-  color: var(--text-mid);
-  font-size: 0.85rem;
-  padding-left: 1rem;
-  position: relative;
-}
-
-.service-card ul li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: var(--gold);
-  font-weight: 700;
-}
-
-.service-card__link {
-  color: var(--navy);
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: color 0.3s ease;
-  margin-top: auto;
-}
-
-.service-card__link:hover {
-  color: var(--gold);
-}
-
-.services__cta {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
+.service-card__icon { font-size: 2rem; }
+.service-card h3 { font-size: 1.1rem; color: var(--navy); }
+.service-card p { color: var(--text-mid); font-size: 0.9rem; line-height: 1.7; flex: 1; }
+.service-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.service-card ul li { color: var(--text-mid); font-size: 0.85rem; padding-left: 1rem; position: relative; }
+.service-card ul li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+.service-card__link { color: var(--navy); font-size: 0.9rem; font-weight: 600; transition: color 0.3s ease; margin-top: auto; }
+.service-card__link:hover { color: var(--gold); }
+.services__cta { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
 .btn-outline {
   display: inline-block;
   background-color: transparent;
@@ -241,22 +175,15 @@
   border: 2px solid var(--navy);
   transition: all 0.3s ease;
 }
-
 .btn-outline:hover {
   background-color: var(--navy);
   color: var(--white);
   transform: translateY(-2px);
 }
-
 @media (max-width: 900px) {
-  .services__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .services__grid { grid-template-columns: repeat(2, 1fr); }
 }
-
 @media (max-width: 580px) {
-  .services__grid {
-    grid-template-columns: 1fr;
-  }
+  .services__grid { grid-template-columns: 1fr; }
 }
 </style>

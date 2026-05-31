@@ -1,4 +1,5 @@
 ---
+const base = '/ThesisArcPro';
 ---
 
 <section class="hero">
@@ -10,8 +11,8 @@
       <p class="hero__sub">From high school essays to PhD dissertations — we provide expert guidance, writing support, and professional editing at every academic level.</p>
 
       <div class="hero__buttons">
-        <a href="/contact" class="btn-primary">Book a Free Consultation</a>
-        <a href="/contact" class="btn-secondary">Get a Free Quote</a>
+        <a href={`${base}/contact`} class="btn-primary">Book a Free Consultation</a>
+        <a href={`${base}/contact`} class="btn-secondary">Get a Free Quote</a>
       </div>
 
       <div class="hero__trust">
@@ -57,7 +58,6 @@
   position: relative;
   overflow: hidden;
 }
-
 .hero::before {
   content: '';
   position: absolute;
@@ -68,80 +68,31 @@
   background: radial-gradient(circle, rgba(197,160,89,0.08) 0%, transparent 70%);
   pointer-events: none;
 }
-
 .hero__inner {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 4rem;
   align-items: center;
 }
-
 .hero__eyebrow {
-  color: var(--gold);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 1.2rem;
+  color: var(--gold); font-size: 0.85rem; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.2rem;
 }
-
-.hero h1 {
-  color: var(--white);
-  margin-bottom: 1.5rem;
-}
-
+.hero h1 { color: var(--white); margin-bottom: 1.5rem; }
 .hero__sub {
-  color: rgba(255,255,255,0.75);
-  font-size: 1.1rem;
-  line-height: 1.8;
-  margin-bottom: 2.5rem;
-  max-width: 520px;
+  color: rgba(255,255,255,0.75); font-size: 1.1rem;
+  line-height: 1.8; margin-bottom: 2.5rem; max-width: 520px;
 }
-
-.hero__buttons {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 3rem;
-}
-
-.hero__trust {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.trust-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
+.hero__buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
+.hero__trust { display: flex; align-items: center; gap: 1.5rem; }
+.trust-item { display: flex; flex-direction: column; gap: 0.2rem; }
 .trust-number {
-  color: var(--gold);
-  font-family: var(--font-heading);
-  font-size: 1.8rem;
-  font-weight: 700;
-  line-height: 1;
+  color: var(--gold); font-family: var(--font-heading);
+  font-size: 1.8rem; font-weight: 700; line-height: 1;
 }
-
-.trust-label {
-  color: rgba(255,255,255,0.55);
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
-}
-
-.trust-divider {
-  width: 1px;
-  height: 40px;
-  background-color: var(--border);
-}
-
-.hero__visual {
-  display: flex;
-  justify-content: center;
-}
-
+.trust-label { color: rgba(255,255,255,0.55); font-size: 0.8rem; letter-spacing: 0.5px; }
+.trust-divider { width: 1px; height: 40px; background-color: var(--border); }
+.hero__visual { display: flex; justify-content: center; }
 .hero__card {
   background: rgba(255,255,255,0.05);
   border: 1px solid var(--border);
@@ -150,53 +101,15 @@
   max-width: 380px;
   width: 100%;
 }
-
-.card__icon {
-  color: var(--gold);
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-}
-
-.hero__card h3 {
-  color: var(--white);
-  font-size: 1.2rem;
-  margin-bottom: 0.8rem;
-}
-
-.hero__card > p {
-  color: rgba(255,255,255,0.6);
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-}
-
-.hero__card ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-}
-
-.hero__card ul li {
-  color: rgba(255,255,255,0.8);
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
+.card__icon { color: var(--gold); font-size: 1.8rem; margin-bottom: 1rem; }
+.hero__card h3 { color: var(--white); font-size: 1.2rem; margin-bottom: 0.8rem; }
+.hero__card > p { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 1.5rem; }
+.hero__card ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.hero__card ul li { color: rgba(255,255,255,0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
 @media (max-width: 768px) {
-  .hero {
-    padding: 8rem 0 4rem;
-  }
-  .hero__inner {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-  .hero__visual {
-    display: none;
-  }
-  .hero__trust {
-    gap: 1rem;
-  }
+  .hero { padding: 8rem 0 4rem; }
+  .hero__inner { grid-template-columns: 1fr; gap: 3rem; }
+  .hero__visual { display: none; }
+  .hero__trust { gap: 1rem; }
 }
 </style>
