@@ -5,7 +5,10 @@ import Footer from '../components/Footer.astro';
 const base = '/ThesisArcPro';
 ---
 
-<BaseLayout title="About Us" description="Learn about ThesisArcPro — our mission, our team, and our commitment to academic excellence.">
+<BaseLayout 
+  title="About Us" 
+  description="Learn about ThesisArcPro — our mission, our team, and our commitment to providing expert academic writing support for students worldwide."
+  url="https://thesisarcpro.github.io/ThesisArcPro/about">
   <Header />
 
   <main>
@@ -26,6 +29,15 @@ const base = '/ThesisArcPro';
           <p>ThesisArcPro was founded with a single mission — to make high quality academic support accessible to every student, regardless of their level or background.</p>
           <p>We believe every student deserves access to expert guidance. Whether you are a high school student struggling with your first essay or a PhD candidate working on your dissertation — we are here to help you succeed.</p>
           <p>Our team of over 50 qualified academic experts brings decades of combined experience across all disciplines and academic levels.</p>
+          <div class="mission__illustration">
+            <img
+              src="/ThesisArcPro/images/about.svg"
+              alt="ThesisArcPro team of academic experts and writers helping students succeed"
+              width="480"
+              height="320"
+              loading="lazy"
+            />
+          </div>
         </div>
         <div class="mission__stats">
           <div class="mission__stat">
@@ -170,6 +182,8 @@ const base = '/ThesisArcPro';
 .mission__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
 .mission__content h2 { color: var(--navy); margin-bottom: 0.5rem; }
 .mission__content p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1rem; }
+.mission__illustration { margin-top: 2rem; }
+.mission__illustration img { width: 100%; height: auto; }
 .mission__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background-color: var(--navy); border-radius: 16px; padding: 2.5rem; }
 .mission__stat { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.3rem; }
 .stat__number { color: var(--gold); font-family: var(--font-heading); font-size: 2rem; font-weight: 700; line-height: 1; }

@@ -34,18 +34,13 @@ const base = '/ThesisArcPro';
     </div>
 
     <div class="hero__visual">
-      <div class="hero__card">
-        <div class="card__icon">✦</div>
-        <h3>Your Academic Journey Starts Here</h3>
-        <p>From first assignment to final defence — we support you every step of the way.</p>
-        <ul>
-          <li>✓ Essays & Assignment Help</li>
-          <li>✓ Research Papers & Reports</li>
-          <li>✓ Dissertation & Thesis Support</li>
-          <li>✓ Editing & Proofreading</li>
-          <li>✓ Academic Integrity Guaranteed</li>
-        </ul>
-      </div>
+      <img
+        src="/ThesisArcPro/images/hero.svg"
+        alt="Students receiving expert academic writing and dissertation support"
+        width="500"
+        height="400"
+        loading="eager"
+      />
     </div>
 
   </div>
@@ -92,20 +87,17 @@ const base = '/ThesisArcPro';
 }
 .trust-label { color: rgba(255,255,255,0.55); font-size: 0.8rem; letter-spacing: 0.5px; }
 .trust-divider { width: 1px; height: 40px; background-color: var(--border); }
-.hero__visual { display: flex; justify-content: center; }
-.hero__card {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 2.5rem;
-  max-width: 380px;
-  width: 100%;
+.hero__visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.card__icon { color: var(--gold); font-size: 1.8rem; margin-bottom: 1rem; }
-.hero__card h3 { color: var(--white); font-size: 1.2rem; margin-bottom: 0.8rem; }
-.hero__card > p { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 1.5rem; }
-.hero__card ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
-.hero__card ul li { color: rgba(255,255,255,0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+.hero__visual img {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+}
 @media (max-width: 768px) {
   .hero { padding: 8rem 0 4rem; }
   .hero__inner { grid-template-columns: 1fr; gap: 3rem; }
