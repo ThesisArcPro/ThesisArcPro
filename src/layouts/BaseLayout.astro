@@ -1,7 +1,14 @@
 ---
 import '../styles/global.css';
 
-const { title = 'ThesisArcPro', description = 'Premium Academic Research & Writing Support for Graduate Students.' } = Astro.props;
+const { 
+  title = 'ThesisArcPro', 
+  description = 'Expert academic writing and research support for high school, college, Masters and PhD students. Essays, dissertations, research papers, editing and more.',
+  image = 'https://thesisarcpro.github.io/ThesisArcPro/og-image.jpg',
+  url = 'https://thesisarcpro.github.io/ThesisArcPro/'
+} = Astro.props;
+
+const fullTitle = `${title} | ThesisArcPro — Expert Academic Writing Support`;
 ---
 
 <!doctype html>
@@ -9,10 +16,67 @@ const { title = 'ThesisArcPro', description = 'Premium Academic Research & Writi
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | ThesisArcPro</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- ✅ Primary SEO -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="academic writing help, essay writing service, dissertation support, research paper writing, homework help, thesis writing, PhD support, assignment help, editing proofreading, academic research" />
+    <meta name="author" content="ThesisArcPro" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={url} />
+
+    <!-- ✅ Open Graph (Facebook, WhatsApp, LinkedIn previews) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="ThesisArcPro" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- ✅ Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    <!-- ✅ Schema Markup (tells Google what your business is) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "ThesisArcPro",
+      "description": "Expert academic writing and research support for students at all levels",
+      "url": "https://thesisarcpro.github.io/ThesisArcPro/",
+      "logo": "https://thesisarcpro.github.io/ThesisArcPro/favicon.svg",
+      "serviceType": [
+        "Essay Writing",
+        "Dissertation Support",
+        "Research Paper Writing",
+        "Editing and Proofreading",
+        "Homework Help",
+        "Research Consulting"
+      ],
+      "areaServed": "Worldwide",
+      "priceRange": "$$",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "email": "support@thesisarcpro.com",
+        "availableLanguage": "English"
+      },
+      "sameAs": []
+    }
+    </script>
+
+    <!-- ✅ Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/ThesisArcPro/favicon.svg" />
+    <link rel="apple-touch-icon" href="/ThesisArcPro/favicon.svg" />
+    <meta name="theme-color" content="#1B2A4A" />
+
   </head>
   <body>
     <slot />
