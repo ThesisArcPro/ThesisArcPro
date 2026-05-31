@@ -2,13 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+const base = '/ThesisArcPro';
 ---
 
 <BaseLayout title="How It Works" description="Learn how ThesisArcPro works — a simple 3 step process to get expert academic writing support.">
   <Header />
 
   <main>
-    <!-- Page Hero -->
     <section class="page-hero">
       <div class="container">
         <p class="page-hero__eyebrow">Simple Process</p>
@@ -17,7 +17,6 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
 
-    <!-- Steps Section -->
     <section class="steps-section">
       <div class="container">
 
@@ -29,22 +28,10 @@ import Footer from '../components/Footer.astro';
             <p>Start by filling out our simple order form. Tell us about your assignment — the subject, academic level, deadline, word count, and any specific instructions or requirements from your institution.</p>
             <p>The more detail you provide, the better we can match you with the right expert and deliver exactly what you need.</p>
             <div class="step-block__list">
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Subject and topic details</span>
-              </div>
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Academic level and word count</span>
-              </div>
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Deadline and citation style</span>
-              </div>
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Any special instructions</span>
-              </div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Subject and topic details</span></div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Academic level and word count</span></div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Deadline and citation style</span></div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Any special instructions</span></div>
             </div>
           </div>
         </div>
@@ -63,22 +50,10 @@ import Footer from '../components/Footer.astro';
             <p>Once we receive your order, our team carefully matches you with the most qualified writer or researcher for your specific needs. All our experts hold advanced degrees in their fields.</p>
             <p>You can communicate directly with your assigned expert, ask questions, and provide additional guidance throughout the process.</p>
             <div class="step-block__list">
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Qualified subject matter experts</span>
-              </div>
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Direct communication channel</span>
-              </div>
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Progress updates throughout</span>
-              </div>
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Matched within 30 minutes</span>
-              </div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Qualified subject matter experts</span></div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Direct communication channel</span></div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Progress updates throughout</span></div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Matched within 30 minutes</span></div>
             </div>
           </div>
         </div>
@@ -97,22 +72,10 @@ import Footer from '../components/Footer.astro';
             <p>Your completed work is delivered before your deadline — plagiarism free, properly formatted, and ready to submit. Every order includes a free plagiarism report.</p>
             <p>Not satisfied? We offer unlimited free revisions until the work meets your expectations. Your satisfaction is our guarantee.</p>
             <div class="step-block__list">
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Delivered before deadline</span>
-              </div>
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Free plagiarism report included</span>
-              </div>
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Unlimited free revisions</span>
-              </div>
-              <div class="step-list__item">
-                <span class="step-list__icon">✓</span>
-                <span>Money back guarantee</span>
-              </div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Delivered before deadline</span></div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Free plagiarism report included</span></div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Unlimited free revisions</span></div>
+              <div class="step-list__item"><span class="step-list__icon">✓</span><span>Money back guarantee</span></div>
             </div>
           </div>
         </div>
@@ -120,7 +83,6 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
 
-    <!-- Guarantees -->
     <section class="guarantees">
       <div class="container">
         <h2 class="section-title">Our Guarantees</h2>
@@ -160,12 +122,11 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
 
-    <!-- CTA -->
     <section class="hiw-cta">
       <div class="container hiw-cta__inner">
         <h2>Ready To Get Started?</h2>
         <p>Join thousands of students who have achieved academic success with ThesisArcPro.</p>
-        <a href="/contact" class="btn-primary">Book a Free Consultation</a>
+        <a href={`${base}/contact`} class="btn-primary">Book a Free Consultation</a>
       </div>
     </section>
 
@@ -175,217 +136,46 @@ import Footer from '../components/Footer.astro';
 </BaseLayout>
 
 <style>
-.page-hero {
-  background-color: var(--navy);
-  padding: 10rem 0 5rem;
-  text-align: center;
-}
-
-.page-hero__eyebrow {
-  color: var(--gold);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
-.page-hero h1 {
-  color: var(--white);
-  margin-bottom: 1.5rem;
-}
-
-.page-hero__sub {
-  color: rgba(255,255,255,0.7);
-  font-size: 1.1rem;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.steps-section {
-  padding: var(--section-padding);
-  background-color: var(--white);
-}
-
-.step-block {
-  display: grid;
-  grid-template-columns: auto auto 1fr;
-  gap: 2.5rem;
-  align-items: start;
-  padding: 3rem 0;
-}
-
-.step-block--reverse {
-  grid-template-columns: 1fr auto auto;
-}
-
+.page-hero { background-color: var(--navy); padding: 10rem 0 5rem; text-align: center; }
+.page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+.page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
+.page-hero__sub { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+.steps-section { padding: var(--section-padding); background-color: var(--white); }
+.step-block { display: grid; grid-template-columns: auto auto 1fr; gap: 2.5rem; align-items: start; padding: 3rem 0; }
+.step-block--reverse { grid-template-columns: 1fr auto auto; }
 .step-block--reverse .step-block__number { order: 3; }
 .step-block--reverse .step-block__icon   { order: 2; }
 .step-block--reverse .step-block__content { order: 1; }
-
-.step-block__number {
-  background-color: var(--navy);
-  color: var(--gold);
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  padding: 0.5rem 1.2rem;
-  border-radius: 20px;
-  height: fit-content;
-  white-space: nowrap;
-}
-
-.step-block__icon {
-  font-size: 3.5rem;
-  width: 90px;
-  height: 90px;
-  background-color: var(--off-white);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.step-block__content h2 {
-  color: var(--navy);
-  margin-bottom: 1rem;
-}
-
-.step-block__content p {
-  color: var(--text-mid);
-  line-height: 1.8;
-  margin-bottom: 1rem;
-  max-width: 600px;
-}
-
-.step-block__list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
-  margin-top: 1.5rem;
-}
-
-.step-list__item {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: var(--text-mid);
-  font-size: 0.9rem;
-}
-
-.step-list__icon {
-  color: var(--gold);
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.step-connector {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
-}
-
-.connector__line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
-}
-
-.connector__label {
-  color: var(--gold);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.guarantees {
-  padding: var(--section-padding);
-  background-color: var(--off-white);
-}
-
-.guarantees__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-
-.guarantee-card {
-  background-color: var(--white);
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 12px;
-  padding: 2rem;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.guarantee-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(27,42,74,0.1);
-  border-color: var(--gold);
-}
-
-.guarantee-card__icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.guarantee-card h3 {
-  color: var(--navy);
-  font-size: 1.1rem;
-  margin-bottom: 0.8rem;
-}
-
-.guarantee-card p {
-  color: var(--text-mid);
-  font-size: 0.9rem;
-  line-height: 1.7;
-}
-
-.hiw-cta {
-  background-color: var(--navy);
-  padding: 5rem 0;
-}
-
-.hiw-cta__inner {
-  text-align: center;
-}
-
-.hiw-cta h2 {
-  color: var(--white);
-  margin-bottom: 1rem;
-}
-
-.hiw-cta p {
-  color: rgba(255,255,255,0.7);
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
-}
-
+.step-block__number { background-color: var(--navy); color: var(--gold); font-family: var(--font-heading); font-size: 1rem; font-weight: 700; letter-spacing: 1px; padding: 0.5rem 1.2rem; border-radius: 20px; height: fit-content; white-space: nowrap; }
+.step-block__icon { font-size: 3.5rem; width: 90px; height: 90px; background-color: var(--off-white); border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-block__content h2 { color: var(--navy); margin-bottom: 1rem; }
+.step-block__content p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1rem; max-width: 600px; }
+.step-block__list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1.5rem; }
+.step-list__item { display: flex; align-items: center; gap: 0.6rem; color: var(--text-mid); font-size: 0.9rem; }
+.step-list__icon { color: var(--gold); font-weight: 700; flex-shrink: 0; }
+.step-connector { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; }
+.connector__line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+.connector__label { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+.guarantees { padding: var(--section-padding); background-color: var(--off-white); }
+.guarantees__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.guarantee-card { background-color: var(--white); border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; padding: 2rem; text-align: center; transition: all 0.3s ease; }
+.guarantee-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(27,42,74,0.1); border-color: var(--gold); }
+.guarantee-card__icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.guarantee-card h3 { color: var(--navy); font-size: 1.1rem; margin-bottom: 0.8rem; }
+.guarantee-card p { color: var(--text-mid); font-size: 0.9rem; line-height: 1.7; }
+.hiw-cta { background-color: var(--navy); padding: 5rem 0; }
+.hiw-cta__inner { text-align: center; }
+.hiw-cta h2 { color: var(--white); margin-bottom: 1rem; }
+.hiw-cta p { color: rgba(255,255,255,0.7); margin-bottom: 2rem; font-size: 1.1rem; }
 @media (max-width: 768px) {
-  .step-block {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
+  .step-block { grid-template-columns: 1fr; gap: 1.5rem; }
   .step-block--reverse .step-block__number { order: 0; }
   .step-block--reverse .step-block__icon   { order: 0; }
   .step-block--reverse .step-block__content { order: 0; }
-  .step-block__list {
-    grid-template-columns: 1fr;
-  }
-  .guarantees__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .step-block__list { grid-template-columns: 1fr; }
+  .guarantees__grid { grid-template-columns: repeat(2, 1fr); }
 }
-
 @media (max-width: 480px) {
-  .guarantees__grid {
-    grid-template-columns: 1fr;
-  }
+  .guarantees__grid { grid-template-columns: 1fr; }
 }
 </style>

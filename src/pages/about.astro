@@ -2,13 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+const base = '/ThesisArcPro';
 ---
 
 <BaseLayout title="About Us" description="Learn about ThesisArcPro — our mission, our team, and our commitment to academic excellence.">
   <Header />
 
   <main>
-    <!-- Page Hero -->
     <section class="page-hero">
       <div class="container">
         <p class="page-hero__eyebrow">Our Story</p>
@@ -17,7 +17,6 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
 
-    <!-- Mission Section -->
     <section class="mission">
       <div class="container mission__inner">
         <div class="mission__content">
@@ -49,7 +48,6 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
 
-    <!-- Values Section -->
     <section class="values">
       <div class="container">
         <p class="values__eyebrow">What We Stand For</p>
@@ -90,7 +88,6 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
 
-    <!-- Why Choose Us -->
     <section class="why-us">
       <div class="container why-us__inner">
         <div class="why-us__content">
@@ -147,10 +144,10 @@ import Footer from '../components/Footer.astro';
             <div class="card__icon">✦</div>
             <h3>Start Your Journey Today</h3>
             <p>Join over 2,000 students who have achieved academic success with ThesisArcPro.</p>
-            <a href="/contact" class="btn-primary" style="width:100%; text-align:center; margin-top:1rem;">
+            <a href={`${base}/contact`} class="btn-primary" style="width:100%; text-align:center; margin-top:1rem;">
               Book Free Consultation
             </a>
-            <a href="/services" class="btn-outline-gold" style="width:100%; text-align:center; margin-top:0.8rem;">
+            <a href={`${base}/services`} class="btn-outline-gold" style="width:100%; text-align:center; margin-top:0.8rem;">
               View Our Services
             </a>
           </div>
@@ -164,235 +161,47 @@ import Footer from '../components/Footer.astro';
 </BaseLayout>
 
 <style>
-.page-hero {
-  background-color: var(--navy);
-  padding: 10rem 0 5rem;
-  text-align: center;
-}
-
-.page-hero__eyebrow {
-  color: var(--gold);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
+.page-hero { background-color: var(--navy); padding: 10rem 0 5rem; text-align: center; }
+.page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
 .page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
-
-.page-hero__sub {
-  color: rgba(255,255,255,0.7);
-  font-size: 1.1rem;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.mission {
-  padding: var(--section-padding);
-  background-color: var(--white);
-}
-
-.mission__inner {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 5rem;
-  align-items: center;
-}
-
-.mission__eyebrow {
-  color: var(--gold);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
+.page-hero__sub { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+.mission { padding: var(--section-padding); background-color: var(--white); }
+.mission__inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: center; }
+.mission__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
 .mission__content h2 { color: var(--navy); margin-bottom: 0.5rem; }
-
-.mission__content p {
-  color: var(--text-mid);
-  line-height: 1.8;
-  margin-bottom: 1rem;
-}
-
-.mission__stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  background-color: var(--navy);
-  border-radius: 16px;
-  padding: 2.5rem;
-}
-
-.mission__stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0.3rem;
-}
-
-.stat__number {
-  color: var(--gold);
-  font-family: var(--font-heading);
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.stat__label {
-  color: rgba(255,255,255,0.6);
-  font-size: 0.85rem;
-}
-
-.values {
-  padding: var(--section-padding);
-  background-color: var(--off-white);
-}
-
-.values__eyebrow {
-  text-align: center;
-  color: var(--gold);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
-.values__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-
-.value-card {
-  background-color: var(--white);
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 12px;
-  padding: 2rem;
-  transition: all 0.3s ease;
-}
-
-.value-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(27,42,74,0.1);
-  border-color: var(--gold);
-}
-
+.mission__content p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1rem; }
+.mission__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background-color: var(--navy); border-radius: 16px; padding: 2.5rem; }
+.mission__stat { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.3rem; }
+.stat__number { color: var(--gold); font-family: var(--font-heading); font-size: 2rem; font-weight: 700; line-height: 1; }
+.stat__label { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+.values { padding: var(--section-padding); background-color: var(--off-white); }
+.values__eyebrow { text-align: center; color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+.values__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.value-card { background-color: var(--white); border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; padding: 2rem; transition: all 0.3s ease; }
+.value-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(27,42,74,0.1); border-color: var(--gold); }
 .value-card__icon { font-size: 2rem; margin-bottom: 1rem; }
 .value-card h3 { color: var(--navy); font-size: 1.1rem; margin-bottom: 0.8rem; }
 .value-card p { color: var(--text-mid); font-size: 0.9rem; line-height: 1.7; }
-
-.why-us {
-  padding: var(--section-padding);
-  background-color: var(--navy);
-}
-
-.why-us__inner {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 5rem;
-  align-items: center;
-}
-
-.why-us__eyebrow {
-  color: var(--gold);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
+.why-us { padding: var(--section-padding); background-color: var(--navy); }
+.why-us__inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: center; }
+.why-us__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
 .why-us__content h2 { color: var(--white); margin-bottom: 0.5rem; }
-
-.why-us__points {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-.why-point {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
-.why-point__icon {
-  color: var(--gold);
-  font-weight: 700;
-  font-size: 1.1rem;
-  flex-shrink: 0;
-  margin-top: 0.2rem;
-}
-
-.why-point h4 {
-  color: var(--white);
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-}
-
-.why-point p {
-  color: rgba(255,255,255,0.6);
-  font-size: 0.85rem;
-  line-height: 1.6;
-}
-
-.why-us__card {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 2.5rem;
-}
-
-.why-us__card .card__icon {
-  color: var(--gold);
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
+.why-us__points { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem; }
+.why-point { display: flex; gap: 1rem; align-items: flex-start; }
+.why-point__icon { color: var(--gold); font-weight: 700; font-size: 1.1rem; flex-shrink: 0; margin-top: 0.2rem; }
+.why-point h4 { color: var(--white); font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+.why-point p { color: rgba(255,255,255,0.6); font-size: 0.85rem; line-height: 1.6; }
+.why-us__card { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; }
+.why-us__card .card__icon { color: var(--gold); font-size: 2rem; margin-bottom: 1rem; }
 .why-us__card h3 { color: var(--white); font-size: 1.3rem; margin-bottom: 1rem; }
 .why-us__card p { color: rgba(255,255,255,0.65); font-size: 0.95rem; line-height: 1.7; }
-
-.btn-outline-gold {
-  display: inline-block;
-  background-color: transparent;
-  color: var(--gold);
-  padding: 0.85rem 2rem;
-  border-radius: 4px;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.95rem;
-  border: 2px solid var(--gold);
-  transition: all 0.3s ease;
-}
-
-.btn-outline-gold:hover {
-  background-color: var(--gold);
-  color: var(--navy);
-  transform: translateY(-2px);
-}
-
+.btn-outline-gold { display: inline-block; background-color: transparent; color: var(--gold); padding: 0.85rem 2rem; border-radius: 4px; font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; border: 2px solid var(--gold); transition: all 0.3s ease; }
+.btn-outline-gold:hover { background-color: var(--gold); color: var(--navy); transform: translateY(-2px); }
 @media (max-width: 768px) {
-  .mission__inner,
-  .why-us__inner {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-  .values__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .mission__inner, .why-us__inner { grid-template-columns: 1fr; gap: 3rem; }
+  .values__grid { grid-template-columns: repeat(2, 1fr); }
 }
-
 @media (max-width: 480px) {
-  .values__grid {
-    grid-template-columns: 1fr;
-  }
+  .values__grid { grid-template-columns: 1fr; }
 }
 </style>

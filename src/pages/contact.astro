@@ -2,12 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+const base = '/ThesisArcPro';
 ---
 
 <BaseLayout title="Place Order" description="Place your order with ThesisArcPro — get an instant price quote for academic writing support.">
   <Header />
 
-  <!-- Floating Left: Help / Live Chat (all-in-one) -->
   <div class="floating-left">
     <button class="float-btn float-btn--help" id="helpBtn" title="Help & Live Chat">
       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 1C6.48 1 2 5.48 2 11c0 1.88.52 3.64 1.43 5.14L2 22l5.86-1.43C9.36 21.48 11.12 22 13 22c5.52 0 9-4.48 9-10S17.52 1 12 1zm0 2c3.87 0 7 3.13 7 7s-3.13 7-7 7c-1.55 0-2.98-.5-4.13-1.34L5 17l1.34-1.87C5.5 13.98 5 12.55 5 11c0-3.87 3.13-7 7-7zm-1 3v5h2V6h-2zm0 6v2h2v-2h-2z"/></svg>
@@ -15,7 +15,6 @@ import Footer from '../components/Footer.astro';
     </button>
   </div>
 
-  <!-- Live Chat Popup -->
   <div class="chat-popup" id="chatPopup">
     <div class="chat-popup__header">
       <div class="chat-popup__avatars">
@@ -83,7 +82,7 @@ import Footer from '../components/Footer.astro';
           <h2>Order Details</h2>
           <p>Complete the form below to get your instant quote.</p>
 
-          <form class="order-form" id="orderForm" action="https://formspree.io/f/mbdbeanp" method="POST" data-next="http://localhost:4321/thankyou">
+          <form class="order-form" id="orderForm" action="https://formspree.io/f/mbdbeanp" method="POST" data-next={`https://thesisarcpro.github.io${base}/thankyou`}>
 
             <div class="form-group">
               <label for="email">Email Address *</label>
@@ -255,14 +254,11 @@ import Footer from '../components/Footer.astro';
               </div>
             </div>
 
-            <button type="submit" class="btn-primary form-submit">
-              Place Order Now
-            </button>
+            <button type="submit" class="btn-primary form-submit">Place Order Now</button>
 
           </form>
         </div>
 
-        <!-- Price Calculator -->
         <div class="order__calculator">
           <div class="calculator-card">
             <h3>💰 Your Price</h3>
@@ -313,137 +309,46 @@ import Footer from '../components/Footer.astro';
 </BaseLayout>
 
 <style>
-.floating-left {
-  position: fixed;
-  bottom: 2rem;
-  left: 2rem;
-  z-index: 9999;
-}
-.float-btn--help {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--navy);
-  color: var(--white);
-  border: none;
-  border-radius: 50px;
-  padding: 0 1.3rem;
-  height: 48px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
+.floating-left { position: fixed; bottom: 2rem; left: 2rem; z-index: 9999; }
+.float-btn--help { display: flex; align-items: center; gap: 0.5rem; background-color: var(--navy); color: var(--white); border: none; border-radius: 50px; padding: 0 1.3rem; height: 48px; font-weight: 700; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: all 0.3s ease; }
 .float-btn--help svg { flex-shrink: 0; }
-.float-btn--help:hover {
-  background-color: var(--gold);
-  color: var(--navy);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
-}
-.chat-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.25);
-  z-index: 10000;
-}
+.float-btn--help:hover { background-color: var(--gold); color: var(--navy); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.25); }
+.chat-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 10000; }
 .chat-overlay.active { display: block; }
-.chat-popup {
-  position: fixed;
-  bottom: 6rem;
-  left: 2rem;
-  width: 320px;
-  background: var(--white);
-  border-radius: 16px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
-  z-index: 10001;
-  overflow: hidden;
-  transform: translateY(16px);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.25s ease;
-}
-.chat-popup.active {
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: all;
-}
-.chat-popup__header {
-  background: #1a73e8;
-  padding: 1.5rem 1.5rem 1.3rem;
-  position: relative;
-}
+.chat-popup { position: fixed; bottom: 6rem; left: 2rem; width: 320px; background: var(--white); border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.18); z-index: 10001; overflow: hidden; transform: translateY(16px); opacity: 0; pointer-events: none; transition: all 0.25s ease; }
+.chat-popup.active { transform: translateY(0); opacity: 1; pointer-events: all; }
+.chat-popup__header { background: #1a73e8; padding: 1.5rem 1.5rem 1.3rem; position: relative; }
 .chat-popup__avatars { display: flex; margin-bottom: 1rem; }
-.avatar {
-  width: 36px; height: 36px; border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.8);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 0.82rem; color: white;
-  margin-left: -8px;
-}
+.avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; color: white; margin-left: -8px; }
 .avatar:first-child { margin-left: 0; }
 .avatar--1 { background: #e74c3c; }
 .avatar--2 { background: #8e44ad; }
 .avatar--3 { background: #f39c12; }
-.chat-popup__close {
-  position: absolute; top: 0.9rem; right: 0.9rem;
-  background: rgba(255,255,255,0.2); border: none; color: white;
-  width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
-  font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
-  transition: background 0.2s ease;
-}
+.chat-popup__close { position: absolute; top: 0.9rem; right: 0.9rem; background: rgba(255,255,255,0.2); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; }
 .chat-popup__close:hover { background: rgba(255,255,255,0.35); }
 .chat-popup__header h2 { color: white; font-size: 1.25rem; margin: 0 0 0.25rem; }
 .chat-popup__header p { color: rgba(255,255,255,0.85); font-size: 0.92rem; margin: 0 0 0.5rem; }
 .chat-online { font-size: 0.76rem; color: #a8f0c6; font-weight: 500; }
 .chat-popup__body { padding: 1.2rem; }
 .chat-actions { display: flex; flex-direction: column; gap: 0.6rem; }
-.chat-action-btn {
-  display: flex; align-items: center; gap: 0.8rem;
-  padding: 0.85rem 1rem; border-radius: 10px;
-  text-decoration: none; transition: all 0.2s ease;
-}
+.chat-action-btn { display: flex; align-items: center; gap: 0.8rem; padding: 0.85rem 1rem; border-radius: 10px; text-decoration: none; transition: all 0.2s ease; }
 .chat-action-btn > div { flex: 1; }
 .chat-action-btn__title { display: block; font-weight: 700; font-size: 0.88rem; }
 .chat-action-btn__sub { display: block; font-size: 0.76rem; opacity: 0.7; margin-top: 0.1rem; }
 .chat-action-btn__arrow { opacity: 0.4; flex-shrink: 0; }
-.chat-action-btn--whatsapp {
-  background: #e8faf0; color: #1a7a3c;
-  border: 1px solid rgba(37,211,102,0.15);
-}
+.chat-action-btn--whatsapp { background: #e8faf0; color: #1a7a3c; border: 1px solid rgba(37,211,102,0.15); }
 .chat-action-btn--whatsapp:hover { background: #25D366; color: white; }
-.chat-action-btn--whatsapp:hover .chat-action-btn__arrow { opacity: 0.7; }
-.chat-action-btn--email {
-  background: rgba(197,160,89,0.08); color: var(--navy);
-  border: 1px solid rgba(197,160,89,0.2);
-}
+.chat-action-btn--email { background: rgba(197,160,89,0.08); color: var(--navy); border: 1px solid rgba(197,160,89,0.2); }
 .chat-action-btn--email:hover { background: var(--gold); color: var(--navy); }
 .chat-popup__footer { border-top: 1px solid rgba(0,0,0,0.07); padding: 0.4rem 0; }
 .chat-tabs { display: flex; justify-content: space-around; }
-.chat-tab {
-  display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
-  background: none; border: none; cursor: pointer;
-  padding: 0.5rem 0.8rem; border-radius: 8px;
-  font-size: 0.7rem; color: var(--text-light); transition: color 0.2s ease;
-}
+.chat-tab { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; background: none; border: none; cursor: pointer; padding: 0.5rem 0.8rem; border-radius: 8px; font-size: 0.7rem; color: var(--text-light); transition: color 0.2s ease; }
 .chat-tab--active { color: #1a73e8; }
 .chat-tab:hover { color: var(--navy); }
-.page-hero {
-  background-color: var(--navy);
-  padding: 10rem 0 5rem;
-  text-align: center;
-}
-.page-hero__eyebrow {
-  color: var(--gold); font-size: 0.85rem; font-weight: 600;
-  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem;
-}
+.page-hero { background-color: var(--navy); padding: 10rem 0 5rem; text-align: center; }
+.page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
 .page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
-.page-hero__sub {
-  color: rgba(255,255,255,0.7); font-size: 1.1rem;
-  max-width: 600px; margin: 0 auto;
-}
+.page-hero__sub { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
 .order-section { padding: var(--section-padding); background-color: var(--off-white); }
 .order__inner { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3rem; align-items: start; }
 .order__form-wrap h2 { color: var(--navy); margin-bottom: 0.5rem; }
@@ -452,52 +357,17 @@ import Footer from '../components/Footer.astro';
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
 .form-group label { color: var(--navy); font-size: 0.9rem; font-weight: 600; }
-.form-group input,
-.form-group select,
-.form-group textarea {
-  padding: 0.85rem 1rem;
-  border: 1.5px solid rgba(0,0,0,0.12);
-  border-radius: 6px;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: var(--text-dark);
-  background-color: var(--white);
-  transition: border-color 0.3s ease;
-  outline: none;
-  width: 100%;
-}
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(197,160,89,0.1);
-}
+.form-group input, .form-group select, .form-group textarea { padding: 0.85rem 1rem; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; font-family: var(--font-body); font-size: 0.95rem; color: var(--text-dark); background-color: var(--white); transition: border-color 0.3s ease; outline: none; width: 100%; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(197,160,89,0.1); }
 .form-group textarea { resize: vertical; min-height: 120px; }
-.urgency-display {
-  background: rgba(197,160,89,0.1);
-  border: 1px solid var(--gold);
-  border-radius: 8px;
-  padding: 0.8rem 1rem;
-}
+.urgency-display { background: rgba(197,160,89,0.1); border: 1px solid var(--gold); border-radius: 8px; padding: 0.8rem 1rem; }
 .urgency-badge { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
-.pages-input {
-  display: flex; align-items: center;
-  border: 1.5px solid rgba(0,0,0,0.12);
-  border-radius: 6px; overflow: hidden; background: var(--white);
-}
-.pages-input button {
-  background: var(--navy); color: var(--white); border: none;
-  padding: 0.85rem 1.2rem; font-size: 1.2rem; cursor: pointer;
-  transition: background 0.3s ease;
-}
+.pages-input { display: flex; align-items: center; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; overflow: hidden; background: var(--white); }
+.pages-input button { background: var(--navy); color: var(--white); border: none; padding: 0.85rem 1.2rem; font-size: 1.2rem; cursor: pointer; transition: background 0.3s ease; }
 .pages-input button:hover { background: var(--gold); color: var(--navy); }
 .pages-input input { border: none !important; text-align: center; flex: 1; font-weight: 700; box-shadow: none !important; }
 .pages-note { color: var(--text-light); font-size: 0.8rem; }
-.wordcount-display {
-  padding: 0.85rem 1rem; border: 1.5px solid var(--border);
-  border-radius: 6px; background: var(--white);
-  color: var(--navy); font-weight: 700; display: flex; align-items: center;
-}
+.wordcount-display { padding: 0.85rem 1rem; border: 1.5px solid var(--border); border-radius: 6px; background: var(--white); color: var(--navy); font-weight: 700; display: flex; align-items: center; }
 .addons { background: var(--white); border: 1.5px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 1.5rem; }
 .addons h3 { color: var(--navy); font-size: 1rem; margin-bottom: 1rem; }
 .addons__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
@@ -559,9 +429,7 @@ import Footer from '../components/Footer.astro';
     const deadlineInput = document.getElementById('deadline');
     const baseRate = parseFloat(levelSelect.value) || 12;
     const pages = parseInt(pagesInput.value) || 1;
-
     document.getElementById('wordCount').textContent = (pages * 275).toLocaleString() + ' words';
-
     let urgencyRate = 0;
     let urgencyLabel = '';
     if (deadlineInput.value) {
@@ -570,7 +438,6 @@ import Footer from '../components/Footer.astro';
       else if (hoursLeft <= 6) { urgencyRate = 0.4; urgencyLabel = 'Urgency (6hrs +40%)'; }
       else if (hoursLeft <= 9) { urgencyRate = 0.3; urgencyLabel = 'Urgency (9hrs +30%)'; }
       else if (hoursLeft <= 12) { urgencyRate = 0.2; urgencyLabel = 'Urgency (12hrs +20%)'; }
-
       const urgencyDisplay = document.getElementById('urgencyDisplay');
       if (urgencyRate > 0) {
         urgencyDisplay.style.display = 'block';
@@ -579,37 +446,26 @@ import Footer from '../components/Footer.astro';
         urgencyDisplay.style.display = 'none';
       }
     }
-
     let addonsTotal = 0;
-    for (const [key, qty] of Object.entries(addonQtys)) {
-      addonsTotal += qty * addonPrices[key];
-    }
-
+    for (const [key, qty] of Object.entries(addonQtys)) { addonsTotal += qty * addonPrices[key]; }
     const baseTotal = baseRate * pages;
     const urgencyAmount = baseTotal * urgencyRate;
     const grandTotal = baseTotal + urgencyAmount + addonsTotal;
-
     document.getElementById('calcTotal').textContent = '$' + grandTotal.toFixed(2);
     document.getElementById('totalDisplay').textContent = '$' + grandTotal.toFixed(2);
     document.getElementById('basePriceDisplay').textContent = '$' + baseRate.toFixed(2) + '/pg';
     document.getElementById('pagesDisplay').textContent = 'x ' + pages;
-
     const urgencyRow = document.getElementById('urgencyRow');
     if (urgencyAmount > 0) {
       urgencyRow.style.display = 'flex';
       document.getElementById('urgencyLabel').textContent = urgencyLabel;
       document.getElementById('urgencyAmount').textContent = '+$' + urgencyAmount.toFixed(2);
-    } else {
-      urgencyRow.style.display = 'none';
-    }
-
+    } else { urgencyRow.style.display = 'none'; }
     const addonsRow = document.getElementById('addonsRow');
     if (addonsTotal > 0) {
       addonsRow.style.display = 'flex';
       document.getElementById('addonsAmount').textContent = '+$' + addonsTotal.toFixed(2);
-    } else {
-      addonsRow.style.display = 'none';
-    }
+    } else { addonsRow.style.display = 'none'; }
   }
 
   document.getElementById('minusBtn')?.addEventListener('click', () => {
@@ -617,64 +473,37 @@ import Footer from '../components/Footer.astro';
     input.value = Math.max(1, parseInt(input.value) - 1);
     calculatePrice();
   });
-
   document.getElementById('plusBtn')?.addEventListener('click', () => {
     const input = document.getElementById('pages');
     input.value = parseInt(input.value) + 1;
     calculatePrice();
   });
-
   ['level', 'pages', 'deadline'].forEach(id => {
     document.getElementById(id)?.addEventListener('change', calculatePrice);
     document.getElementById(id)?.addEventListener('input', calculatePrice);
   });
-
   document.getElementById('orderForm')?.addEventListener('submit', () => {
     const btn = document.querySelector('.form-submit');
-    if (btn) {
-      btn.textContent = '⏳ Sending your order...';
-      btn.style.backgroundColor = '#2d6a4f';
-    }
+    if (btn) { btn.textContent = '⏳ Sending your order...'; btn.style.backgroundColor = '#2d6a4f'; }
   });
 
-  // Chat popup
   const helpBtn = document.getElementById('helpBtn');
   const chatPopup = document.getElementById('chatPopup');
   const chatClose = document.getElementById('chatClose');
   const chatOverlay = document.getElementById('chatOverlay');
+  helpBtn?.addEventListener('click', () => { chatPopup.classList.add('active'); chatOverlay.classList.add('active'); });
+  chatClose?.addEventListener('click', () => { chatPopup.classList.remove('active'); chatOverlay.classList.remove('active'); });
+  chatOverlay?.addEventListener('click', () => { chatPopup.classList.remove('active'); chatOverlay.classList.remove('active'); });
 
-  helpBtn?.addEventListener('click', () => {
-    chatPopup.classList.add('active');
-    chatOverlay.classList.add('active');
-  });
-
-  chatClose?.addEventListener('click', () => {
-    chatPopup.classList.remove('active');
-    chatOverlay.classList.remove('active');
-  });
-
-  chatOverlay?.addEventListener('click', () => {
-    chatPopup.classList.remove('active');
-    chatOverlay.classList.remove('active');
-  });
-
-  // ✅ Messages tab → opens Tawk.to live chat
   const chatTabs = document.querySelectorAll('.chat-tab');
   chatTabs.forEach((tab, index) => {
     tab.addEventListener('click', () => {
       chatTabs.forEach(t => t.classList.remove('chat-tab--active'));
       tab.classList.add('chat-tab--active');
-
       if (index === 1) {
-        // Close our popup first
         chatPopup.classList.remove('active');
         chatOverlay.classList.remove('active');
-        // Then open Tawk.to after short delay
-        setTimeout(() => {
-          if (typeof Tawk_API !== 'undefined') {
-            Tawk_API.maximize();
-          }
-        }, 300);
+        setTimeout(() => { if (typeof Tawk_API !== 'undefined') { Tawk_API.maximize(); } }, 300);
       }
     });
   });
