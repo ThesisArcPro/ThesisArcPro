@@ -174,7 +174,7 @@ const base = '/ThesisArcPro';
                 <label for="level">Education Level *</label>
                 <select id="level" name="level" required>
                   <option value="" disabled selected>Select level</option>
-                  <<option value="High School - $12/pg" data-rate="12">High School ($12/pg)</option>
+                  <option value="High School - $12/pg" data-rate="12">High School ($12/pg)</option>
                   <option value="College - $13/pg" data-rate="13">College ($13/pg)</option>
                   <option value="Masters - $14/pg" data-rate="14">Masters ($14/pg)</option>
                   <option value="PhD / Doctorate - $15/pg" data-rate="15">PhD / Doctorate ($15/pg)</option>
@@ -518,7 +518,9 @@ const base = '/ThesisArcPro';
       if (index === 1) {
         chatPopup.classList.remove('active');
         chatOverlay.classList.remove('active');
-        setTimeout(() => { if (typeof Tawk_API !== 'undefined') { Tawk_API.maximize(); } }, 300);
+        setTimeout(() => {
+          if (typeof tidioChatApi !== 'undefined') { tidioChatApi.open(); }
+        }, 300);
       }
     });
   });
