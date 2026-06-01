@@ -174,10 +174,10 @@ const base = '/ThesisArcPro';
                 <label for="level">Education Level *</label>
                 <select id="level" name="level" required>
                   <option value="" disabled selected>Select level</option>
-                  <option value="High School - $12/pg" data-rate="12">High School ($12/pg)</option>
-                  <option value="College - $13/pg" data-rate="13">College ($13/pg)</option>
-                  <option value="Masters - $14/pg" data-rate="14">Masters ($14/pg)</option>
-                  <option value="PhD / Doctorate - $15/pg" data-rate="15">PhD / Doctorate ($15/pg)</option>
+                  <option value="HighSchool" data-rate="12">High School ($12/pg)</option>
+                  <option value="College" data-rate="13">College ($13/pg)</option>
+                  <option value="Masters" data-rate="14">Masters ($14/pg)</option>
+                  <option value="PhD" data-rate="15">PhD / Doctorate ($15/pg)</option>
                 </select>
               </div>
               <div class="form-group">
@@ -268,7 +268,13 @@ const base = '/ThesisArcPro';
               </div>
             </div>
 
-            <button type="submit" class="btn-primary form-submit">Place Order Now</button>
+            <!-- PayPal Payment Section -->
+            <div class="paypal-wrap">
+              <p class="paypal-label">💳 Pay Securely — Enter your total from the calculator on the right</p>
+              <div id="paypal-container-FPAJ6WCR6V47N"></div>
+            </div>
+
+            <button type="submit" class="btn-primary form-submit">Submit Order Details</button>
 
           </form>
         </div>
@@ -405,6 +411,8 @@ const base = '/ThesisArcPro';
 .file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100% !important; padding: 0 !important; border: none !important; }
 .file-upload p { color: var(--text-mid); font-size: 0.9rem; margin-bottom: 0.3rem; }
 .file-upload span { color: var(--text-light); font-size: 0.8rem; }
+.paypal-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+.paypal-label { color: var(--navy); font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
 .form-submit { width: 100%; padding: 1.1rem; font-size: 1rem; cursor: pointer; border: none; }
 .order__calculator { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 1.5rem; }
 .calculator-card { background: var(--navy); border-radius: 16px; padding: 2rem; }
@@ -524,6 +532,16 @@ const base = '/ThesisArcPro';
       }
     });
   });
+
+  // PayPal Button
+  window.addEventListener('load', () => {
+    if (typeof paypal !== 'undefined') {
+      paypal.HostedButtons({
+        hostedButtonId: "FPAJ6WCR6V47N",
+      }).render("#paypal-container-FPAJ6WCR6V47N");
+    }
+  });
+
   calculatePrice();
   window.changeAddon = changeAddon;
 </script>

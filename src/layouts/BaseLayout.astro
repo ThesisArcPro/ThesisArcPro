@@ -1,23 +1,19 @@
 ---
 import '../styles/global.css';
-
 const { 
   title = 'ThesisArcPro', 
   description = 'Expert academic writing and research support for high school, college, Masters and PhD students. Essays, dissertations, research papers, editing and more.',
   image = 'https://thesisarcpro.github.io/ThesisArcPro/og-image.jpg',
   url = 'https://thesisarcpro.github.io/ThesisArcPro/'
 } = Astro.props;
-
-const fullTitle = `${title} | ThesisArcPro — Expert Academic Writing Support`;
+const fullTitle = `${title} | ThesisArcPro – Expert Academic Writing Support`;
 ---
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
-
     <!-- ✅ Primary SEO -->
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
@@ -25,10 +21,8 @@ const fullTitle = `${title} | ThesisArcPro — Expert Academic Writing Support`;
     <meta name="author" content="ThesisArcPro" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={url} />
-
     <!-- ✅ Google Search Console Verification -->
     <meta name="google-site-verification" content="IJfGWYI6-9uB6Qk8JYUVYFJBTPkv3mbLwxRHC8qFhcI" />
-
     <!-- ✅ Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
@@ -39,13 +33,11 @@ const fullTitle = `${title} | ThesisArcPro — Expert Academic Writing Support`;
     <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="ThesisArcPro" />
     <meta property="og:locale" content="en_US" />
-
     <!-- ✅ Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
-
     <!-- ✅ Schema Markup -->
     <script type="application/ld+json">
     {
@@ -74,19 +66,17 @@ const fullTitle = `${title} | ThesisArcPro — Expert Academic Writing Support`;
       "sameAs": []
     }
     </script>
-
     <!-- ✅ Favicon -->
     <link rel="icon" type="image/svg+xml" href="/ThesisArcPro/favicon.svg" />
     <link rel="apple-touch-icon" href="/ThesisArcPro/favicon.svg" />
     <meta name="theme-color" content="#1B2A4A" />
-
+    <!-- ✅ PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAnL4DaxIYai7QRMop6X9SZM-9g_j_kQanBXreqM2ztZZ83Yn3lYKrOj7ljdkUE4apQzMX8mFpyOISwBg&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
   </head>
   <body>
     <slot />
-
     <!-- Start of Tidio Chat -->
     <script src="//code.tidio.co/ohb8zh8jkjjbz5mlsc2xx61lxgmdmjiz.js" async></script>
     <!-- End of Tidio Chat -->
-
   </body>
 </html>
