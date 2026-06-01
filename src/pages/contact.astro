@@ -174,10 +174,10 @@ const base = '/ThesisArcPro';
                 <label for="level">Education Level *</label>
                 <select id="level" name="level" required>
                   <option value="" disabled selected>Select level</option>
-                  <option value="12">High School ($12/pg)</option>
-                  <option value="13">College ($13/pg)</option>
-                  <option value="14">Masters ($14/pg)</option>
-                  <option value="15">PhD / Doctorate ($15/pg)</option>
+                  <<option value="High School - $12/pg" data-rate="12">High School ($12/pg)</option>
+                  <option value="College - $13/pg" data-rate="13">College ($13/pg)</option>
+                  <option value="Masters - $14/pg" data-rate="14">Masters ($14/pg)</option>
+                  <option value="PhD / Doctorate - $15/pg" data-rate="15">PhD / Doctorate ($15/pg)</option>
                 </select>
               </div>
               <div class="form-group">
@@ -446,7 +446,7 @@ const base = '/ThesisArcPro';
     const levelSelect = document.getElementById('level');
     const pagesInput = document.getElementById('pages');
     const deadlineInput = document.getElementById('deadline');
-    const baseRate = parseFloat(levelSelect.value) || 12;
+    const baseRate = parseFloat(levelSelect.selectedOptions[0]?.dataset.rate) || 12;
     const pages = parseInt(pagesInput.value) || 1;
     document.getElementById('wordCount').textContent = (pages * 275).toLocaleString() + ' words';
     let urgencyRate = 0;
