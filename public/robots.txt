@@ -1,0 +1,4 @@
+ User-agent: *
+Allow: /
+
+Sitemap: https://thesisarcpro.github.io/ThesisArcPro/sitemap-index.xml
