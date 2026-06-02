@@ -126,7 +126,7 @@ const base = '/ThesisArcPro';
       <div class="container hiw-cta__inner">
         <h2>Ready To Get Started?</h2>
         <p>Join thousands of students who have achieved academic success with ThesisArcPro.</p>
-        <a href={`${base}/contact`} class="btn-primary">Book a Free Consultation</a>
+        <a href="#" class="btn-primary auth-gate-page">Book a Free Consultation</a>
       </div>
     </section>
 
@@ -179,3 +179,14 @@ const base = '/ThesisArcPro';
   .guarantees__grid { grid-template-columns: 1fr; }
 }
 </style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+  const base = '/ThesisArcPro';
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  const btns = document.querySelectorAll('.auth-gate-page');
+  btns.forEach(btn => {
+    btn.setAttribute('href', session ? `${base}/contact/` : `${base}/login/`);
+  });
+</script>
