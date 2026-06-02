@@ -510,8 +510,27 @@ const base = '/ThesisArcPro';
   import { supabase } from '../lib/supabase.js';
   const base = '/ThesisArcPro';
 
-  // Check auth via Supabase
-  const { data: { session } } = await supabase.auth.getSession();
+  async function init() {
+    // Check auth via Supabase
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      window.location.href = `${base}/login/`;
+      return;
+    }
+
+    // Auto-fill email
+    const emailInput = document.getElementById('email') as HTMLInputElement;
+    if (emailInput) emailInput.value = session.user.email;
+
+    // Show greeting
+    const greeting = document.getElementById('userGreeting');
+    const greetingText = document.getElementById('greetingText');
+    if (greeting) greeting.style.display = 'flex';
+    if (greetingText) greetingText.textContent = `👋 Welcome, ${session.user.user_metadata?.full_name || session.user.email}`;
+  }
+
+  init();
 
   if (!session) {
     // Not logged in — redirect to login
