@@ -96,7 +96,7 @@ const base = '/ThesisArcPro';
           <h2>Order Details</h2>
           <p>Complete the form below to get your instant quote.</p>
 
-          <form class="order-form" id="orderForm" action="https://formspree.io/f/xlgvywvb" method="POST" data-next={`https://thesisarcpro.github.io${base}/thankyou`}>
+          <form class="order-form" id="orderForm" action="https://formspree.io/f/xlgvywvb" method="POST">
 
             <div class="form-group">
               <label for="email">Email Address *</label>
@@ -268,7 +268,6 @@ const base = '/ThesisArcPro';
               </div>
             </div>
 
-            <!-- ✅ PayPal Payment Section -->
             <div class="paypal-wrap">
               <p class="paypal-label">💳 Step 2 — Pay Securely via PayPal</p>
               <p class="paypal-sub">Check your total from the calculator on the right, then click the button below to pay.</p>
@@ -447,31 +446,40 @@ const base = '/ThesisArcPro';
 </style>
 
 <script>
+  import { supabase } from '../lib/supabase.js';
+  const base = '/ThesisArcPro';
+
+  async function checkAuth() {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        window.location.replace(`${base}/login/`);
+        return;
+      }
+
+      const emailInput = document.getElementById('email') as HTMLInputElement;
+      if (emailInput) emailInput.value = session.user.email;
+
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      window.location.replace(`${base}/login/`);
+    }
+  }
+
+  checkAuth();
+
   const levelSelect = document.getElementById('level') as HTMLSelectElement;
   const pagesInput = document.getElementById('pages') as HTMLInputElement;
   const deadlineInput = document.getElementById('deadline') as HTMLInputElement;
-  const wordCountEl = document.getElementById('wordCount');
-  const calcTotalEl = document.getElementById('calcTotal');
-  const totalDisplayEl = document.getElementById('totalDisplay');
-  const basePriceDisplayEl = document.getElementById('basePriceDisplay');
-  const pagesDisplayEl = document.getElementById('pagesDisplay');
-  const urgencyRowEl = document.getElementById('urgencyRow');
-  const urgencyLabelEl = document.getElementById('urgencyLabel');
-  const urgencyAmountEl = document.getElementById('urgencyAmount');
-  const addonsRowEl = document.getElementById('addonsRow');
-  const addonsAmountEl = document.getElementById('addonsAmount');
-  const urgencyDisplayEl = document.getElementById('urgencyDisplay');
-  const urgencyBadgeEl = document.getElementById('urgencyBadge');
-  const minusBtn = document.getElementById('minusBtn');
-  const plusBtn = document.getElementById('plusBtn');
 
-  let addons = { graphics: 0, sources: 0, abstract: 0 };
-  const addonPrices = { graphics: 5, sources: 4, abstract: 7 };
+  const addons: Record<string, number> = { graphics: 0, sources: 0, abstract: 0 };
+  const addonPrices: Record<string, number> = { graphics: 5, sources: 4, abstract: 7 };
 
   function changeAddon(type: string, delta: number) {
     addons[type] = Math.max(0, (addons[type] || 0) + delta);
     const el = document.getElementById(`${type}-qty`);
-    if (el) el.textContent = addons[type];
+    if (el) el.textContent = String(addons[type]);
     calculatePrice();
   }
 
@@ -480,32 +488,51 @@ const base = '/ThesisArcPro';
     const rate = parseFloat(selectedOption?.getAttribute('data-rate') || '12');
     const pages = parseInt(pagesInput?.value || '1');
     const words = pages * 275;
+
+    const wordCountEl = document.getElementById('wordCount');
+    const pagesDisplayEl = document.getElementById('pagesDisplay');
+    const basePriceDisplayEl = document.getElementById('basePriceDisplay');
+    
     if (wordCountEl) wordCountEl.textContent = `${words.toLocaleString()} words`;
     if (pagesDisplayEl) pagesDisplayEl.textContent = `x ${pages}`;
     if (basePriceDisplayEl) basePriceDisplayEl.textContent = `$${rate.toFixed(2)}/pg`;
 
     let urgencySurcharge = 0;
     let urgencyText = '';
+    
     if (deadlineInput?.value) {
       const now = new Date();
       const deadline = new Date(deadlineInput.value);
       const hoursLeft = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
+      
       if (hoursLeft < 6) { urgencySurcharge = rate * 0.5; urgencyText = '🔴 RUSH (under 6h): +50%'; }
       else if (hoursLeft < 12) { urgencySurcharge = rate * 0.3; urgencyText = '🟠 Urgent (6-12h): +30%'; }
       else if (hoursLeft < 24) { urgencySurcharge = rate * 0.2; urgencyText = '🟡 Same day (12-24h): +20%'; }
       else if (hoursLeft < 48) { urgencySurcharge = rate * 0.1; urgencyText = '🟢 Standard (1-2 days): +10%'; }
     }
 
+    const urgencyBadgeEl = document.getElementById('urgencyBadge');
+    const urgencyDisplayEl = document.getElementById('urgencyDisplay');
     if (urgencyBadgeEl) urgencyBadgeEl.textContent = urgencyText;
     if (urgencyDisplayEl) urgencyDisplayEl.style.display = urgencyText ? 'block' : 'none';
 
     const baseTotal = rate * pages;
     const urgencyTotal = urgencySurcharge * pages;
     let addonsTotal = 0;
+    
     for (const [key, qty] of Object.entries(addons)) {
       addonsTotal += (addonPrices[key] || 0) * qty;
     }
+    
     const total = baseTotal + urgencyTotal + addonsTotal;
+
+    const urgencyRowEl = document.getElementById('urgencyRow');
+    const urgencyLabelEl = document.getElementById('urgencyLabel');
+    const urgencyAmountEl = document.getElementById('urgencyAmount');
+    const addonsRowEl = document.getElementById('addonsRow');
+    const addonsAmountEl = document.getElementById('addonsAmount');
+    const calcTotalEl = document.getElementById('calcTotal');
+    const totalDisplayEl = document.getElementById('totalDisplay');
 
     if (urgencyRowEl) urgencyRowEl.style.display = urgencyTotal > 0 ? 'flex' : 'none';
     if (urgencyLabelEl) urgencyLabelEl.textContent = urgencyText.split(':')[0] || 'Urgency';
@@ -519,46 +546,30 @@ const base = '/ThesisArcPro';
   levelSelect?.addEventListener('change', calculatePrice);
   pagesInput?.addEventListener('input', calculatePrice);
   deadlineInput?.addEventListener('change', calculatePrice);
-  minusBtn?.addEventListener('click', () => {
+
+  document.getElementById('minusBtn')?.addEventListener('click', () => {
     const val = parseInt(pagesInput.value);
     if (val > 1) { pagesInput.value = String(val - 1); calculatePrice(); }
   });
-  plusBtn?.addEventListener('click', () => {
+  
+  document.getElementById('plusBtn')?.addEventListener('click', () => {
     const val = parseInt(pagesInput.value);
     if (val < 500) { pagesInput.value = String(val + 1); calculatePrice(); }
   });
 
   const orderForm = document.getElementById('orderForm') as HTMLFormElement;
-  orderForm?.addEventListener('submit', async (e) => {
+  orderForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     const btn = orderForm.querySelector('.form-submit') as HTMLButtonElement;
-    const originalText = btn.textContent;
-    btn.textContent = 'Sending your order...';
-    btn.style.backgroundColor = '#c5a059';
-    const formData = new FormData(orderForm);
-    try {
-      const response = await fetch(orderForm.action, {
-        method: 'POST',
-        body: formData,
-        headers: { 'Accept': 'application/json' }
-      });
-      if (response.ok) {
-        const nextUrl = orderForm.getAttribute('data-next');
-        if (nextUrl) window.location.href = nextUrl;
-      } else {
-        btn.textContent = 'Error — try again';
-        btn.style.backgroundColor = '#e74c3c';
-      }
-    } catch {
-      btn.textContent = originalText || 'Submit Order Details';
-      btn.style.backgroundColor = '#2d6a4f';
-    }
+    if (btn) btn.textContent = 'Sending...';
+    orderForm.submit();
   });
 
   const helpBtn = document.getElementById('helpBtn');
   const chatPopup = document.getElementById('chatPopup');
   const chatClose = document.getElementById('chatClose');
   const chatOverlay = document.getElementById('chatOverlay');
+  
   helpBtn?.addEventListener('click', () => { chatPopup?.classList.add('active'); chatOverlay?.classList.add('active'); });
   chatClose?.addEventListener('click', () => { chatPopup?.classList.remove('active'); chatOverlay?.classList.remove('active'); });
   chatOverlay?.addEventListener('click', () => { chatPopup?.classList.remove('active'); chatOverlay?.classList.remove('active'); });
@@ -568,13 +579,6 @@ const base = '/ThesisArcPro';
     tab.addEventListener('click', () => {
       chatTabs.forEach(t => t.classList.remove('chat-tab--active'));
       tab.classList.add('chat-tab--active');
-      if (index === 1) {
-        chatPopup?.classList.remove('active');
-        chatOverlay?.classList.remove('active');
-        setTimeout(() => {
-          if (typeof (window as any).tidioChatApi !== 'undefined') { (window as any).tidioChatApi.open(); }
-        }, 300);
-      }
     });
   });
 
