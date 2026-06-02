@@ -7,7 +7,7 @@ const base = '/ThesisArcPro';
 
 <BaseLayout 
   title="Place Order" 
-  description="Place your order with ThesisArcPro — get an instant price quote for expert academic writing support. Essays, dissertations, research papers and more."
+  description="Place your order with ThesisArcPro — get an instant price quote for expert academic writing support."
   url="https://thesisarcpro.github.io/ThesisArcPro/contact">
   <Header />
 
@@ -69,6 +69,41 @@ const base = '/ThesisArcPro';
   </div>
   <div class="chat-overlay" id="chatOverlay"></div>
 
+  <!-- Login Required Modal -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-icon">🔐</div>
+      <h2>Login Required</h2>
+      <p>You need to log in or create an account before placing your order.</p>
+      <div class="modal-buttons">
+        <a href={`${base}/login`} class="btn-primary">Log In</a>
+        <a href={`${base}/signup`} class="btn-outline-gold">Create Account</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal-card">
+      <button class="modal-close" id="paymentModalClose">✕</button>
+      <div class="modal-icon">💰</div>
+      <h2>Complete Payment</h2>
+      <div id="paymentDetails" class="payment-details"></div>
+      <div class="payment-policy">
+        <p id="policyText"></p>
+      </div>
+      <a href="https://www.paypal.com/ncp/payment/X4GBU659AGXGQ" target="_blank" class="paypal-link-btn" id="paypalBtn">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19c-.988 0-1.829.722-1.974 1.699l-1.12 7.106-.313 1.983h3.293l.742-4.713.048-.306c.145-.977.986-1.699 1.974-1.699h1.245c3.863 0 6.637-1.57 7.49-6.114.333-1.726.163-3.168-.734-4.312z"/></svg>
+        Pay with PayPal or Card
+      </a>
+      <p class="paypal-note">🔒 Secured by PayPal — Accepts Visa, Mastercard & PayPal</p>
+      <button class="btn-primary" id="confirmPaymentBtn" style="display:none; width:100%; margin-top:1rem;">
+        ✅ I Have Paid — Submit My Order
+      </button>
+    </div>
+  </div>
+
   <main>
     <section class="page-hero">
       <div class="container page-hero__inner">
@@ -93,14 +128,19 @@ const base = '/ThesisArcPro';
       <div class="container order__inner">
 
         <div class="order__form-wrap">
+          <div class="user-greeting" id="userGreeting" style="display:none;">
+            <span id="greetingText"></span>
+            <button id="logoutBtn" class="logout-btn">Log Out</button>
+          </div>
+
           <h2>Order Details</h2>
           <p>Complete the form below to get your instant quote.</p>
 
-          <form class="order-form" id="orderForm" action="https://formspree.io/f/xlgvywvb" method="POST" data-next={`https://thesisarcpro.github.io${base}/thankyou`}>
+          <form class="order-form" id="orderForm" action="https://formspree.io/f/xlgvywvb" method="POST">
 
             <div class="form-group">
               <label for="email">Email Address *</label>
-              <input type="email" id="email" name="email" placeholder="your@email.com" required />
+              <input type="email" id="email" name="email" placeholder="your@email.com" required readonly />
             </div>
 
             <div class="form-group">
@@ -268,18 +308,15 @@ const base = '/ThesisArcPro';
               </div>
             </div>
 
-            <!-- ✅ PayPal Payment Section -->
-            <div class="paypal-wrap">
-              <p class="paypal-label">💳 Step 2 — Pay Securely via PayPal</p>
-              <p class="paypal-sub">Check your total from the calculator on the right, then click the button below to pay.</p>
-              <a href="https://www.paypal.com/ncp/payment/X4GBU659AGXGQ" target="_blank" class="paypal-link-btn">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19c-.988 0-1.829.722-1.974 1.699l-1.12 7.106-.313 1.983h3.293l.742-4.713.048-.306c.145-.977.986-1.699 1.974-1.699h1.245c3.863 0 6.637-1.57 7.49-6.114.333-1.726.163-3.168-.734-4.312z"/></svg>
-                Pay with PayPal or Card
-              </a>
-              <p class="paypal-note">🔒 Secured by PayPal — Accepts Visa, Mastercard & PayPal</p>
-            </div>
+            <!-- Create Order Button -->
+            <button type="button" class="btn-primary form-submit" id="createOrderBtn">
+              🛒 Create Order
+            </button>
 
-            <button type="submit" class="btn-primary form-submit">Submit Order Details</button>
+            <!-- Submit Order Button — hidden until payment confirmed -->
+            <button type="submit" class="btn-submit-order" id="submitOrderBtn" style="display:none;">
+              ✅ Submit Order
+            </button>
 
           </form>
         </div>
@@ -337,7 +374,7 @@ const base = '/ThesisArcPro';
 .floating-left { position: fixed; bottom: 2rem; left: 2rem; z-index: 9999; }
 .float-btn--help { display: flex; align-items: center; gap: 0.5rem; background-color: var(--navy); color: var(--white); border: none; border-radius: 50px; padding: 0 1.3rem; height: 48px; font-weight: 700; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: all 0.3s ease; }
 .float-btn--help svg { flex-shrink: 0; }
-.float-btn--help:hover { background-color: var(--gold); color: var(--navy); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.25); }
+.float-btn--help:hover { background-color: var(--gold); color: var(--navy); transform: translateY(-2px); }
 .chat-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 10000; }
 .chat-overlay.active { display: block; }
 .chat-popup { position: fixed; bottom: 6rem; left: 2rem; width: 320px; background: var(--white); border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.18); z-index: 10001; overflow: hidden; transform: translateY(16px); opacity: 0; pointer-events: none; transition: all 0.25s ease; }
@@ -349,8 +386,7 @@ const base = '/ThesisArcPro';
 .avatar--1 { background: #e74c3c; }
 .avatar--2 { background: #8e44ad; }
 .avatar--3 { background: #f39c12; }
-.chat-popup__close { position: absolute; top: 0.9rem; right: 0.9rem; background: rgba(255,255,255,0.2); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; }
-.chat-popup__close:hover { background: rgba(255,255,255,0.35); }
+.chat-popup__close { position: absolute; top: 0.9rem; right: 0.9rem; background: rgba(255,255,255,0.2); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
 .chat-popup__header h2 { color: white; font-size: 1.25rem; margin: 0 0 0.25rem; }
 .chat-popup__header p { color: rgba(255,255,255,0.85); font-size: 0.92rem; margin: 0 0 0.5rem; }
 .chat-online { font-size: 0.76rem; color: #a8f0c6; font-weight: 500; }
@@ -370,6 +406,33 @@ const base = '/ThesisArcPro';
 .chat-tab { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; background: none; border: none; cursor: pointer; padding: 0.5rem 0.8rem; border-radius: 8px; font-size: 0.7rem; color: var(--text-light); transition: color 0.2s ease; }
 .chat-tab--active { color: #1a73e8; }
 .chat-tab:hover { color: var(--navy); }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 20000; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal-card { background: var(--white); border-radius: 16px; padding: 2.5rem; max-width: 440px; width: 90%; position: relative; text-align: center; }
+.modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-mid); }
+.modal-icon { font-size: 3rem; margin-bottom: 1rem; }
+.modal-card h2 { color: var(--navy); margin-bottom: 0.8rem; font-size: 1.4rem; }
+.modal-card p { color: var(--text-mid); margin-bottom: 1.5rem; }
+.modal-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn-outline-gold { display: inline-block; background: transparent; color: var(--gold); padding: 0.85rem 2rem; border-radius: 4px; font-weight: 600; font-size: 0.95rem; border: 2px solid var(--gold); transition: all 0.3s ease; text-decoration: none; }
+.btn-outline-gold:hover { background: var(--gold); color: var(--navy); }
+
+/* Payment Modal */
+.payment-details { background: var(--off-white); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+.payment-policy { margin-bottom: 1.5rem; }
+.payment-policy p { color: var(--navy); font-weight: 600; font-size: 1rem; }
+.paypal-link-btn { display: flex; align-items: center; justify-content: center; gap: 0.7rem; background: #FFC439; color: #003087; font-weight: 700; font-size: 1.05rem; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; transition: all 0.2s ease; }
+.paypal-link-btn:hover { background: #f0b429; }
+.paypal-note { color: var(--text-light); font-size: 0.78rem; margin-top: 0.8rem; }
+
+/* User greeting */
+.user-greeting { display: flex; align-items: center; justify-content: space-between; background: rgba(197,160,89,0.1); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 1.5rem; }
+.user-greeting span { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
+.logout-btn { background: none; border: 1px solid var(--navy); color: var(--navy); padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; }
+.logout-btn:hover { background: var(--navy); color: var(--white); }
+
 .page-hero { background-color: var(--navy); padding: 10rem 0 5rem; }
 .page-hero__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
 .page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
@@ -387,6 +450,7 @@ const base = '/ThesisArcPro';
 .form-group label { color: var(--navy); font-size: 0.9rem; font-weight: 600; }
 .form-group input, .form-group select, .form-group textarea { padding: 0.85rem 1rem; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; font-family: var(--font-body); font-size: 0.95rem; color: var(--text-dark); background-color: var(--white); transition: border-color 0.3s ease; outline: none; width: 100%; }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(197,160,89,0.1); }
+.form-group input[readonly] { background-color: var(--off-white); cursor: not-allowed; }
 .form-group textarea { resize: vertical; min-height: 120px; }
 .urgency-display { background: rgba(197,160,89,0.1); border: 1px solid var(--gold); border-radius: 8px; padding: 0.8rem 1rem; }
 .urgency-badge { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
@@ -415,13 +479,9 @@ const base = '/ThesisArcPro';
 .file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
 .file-upload p { color: var(--navy); font-weight: 600; margin-bottom: 0.3rem; }
 .file-upload span { color: var(--text-light); font-size: 0.82rem; }
-.paypal-wrap { background: var(--white); border: 1.5px solid rgba(197,160,89,0.3); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
-.paypal-label { color: var(--navy); font-weight: 700; font-size: 1rem; margin: 0; }
-.paypal-sub { color: var(--text-mid); font-size: 0.88rem; margin: 0; }
-.paypal-link-btn { display: flex; align-items: center; justify-content: center; gap: 0.7rem; background: #FFC439; color: #003087; font-weight: 700; font-size: 1.05rem; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
-.paypal-link-btn:hover { background: #f0b429; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
-.paypal-note { color: var(--text-light); font-size: 0.78rem; text-align: center; margin: 0; }
 .form-submit { width: 100%; padding: 1.1rem; font-size: 1.1rem; border: none; cursor: pointer; border-radius: 8px; font-weight: 700; }
+.btn-submit-order { width: 100%; padding: 1.1rem; font-size: 1.1rem; border: none; cursor: pointer; border-radius: 8px; font-weight: 700; background-color: #2d6a4f; color: white; transition: background 0.3s ease; }
+.btn-submit-order:hover { background-color: #1e4d38; }
 .calculator-card { background: var(--navy); border-radius: 16px; padding: 2rem; position: sticky; top: 6rem; color: var(--white); }
 .calculator-card h3 { color: var(--gold); font-size: 1.1rem; margin-bottom: 1.5rem; }
 .calc-display { text-align: center; margin-bottom: 1.5rem; }
@@ -435,7 +495,6 @@ const base = '/ThesisArcPro';
 .calc-feature { color: rgba(255,255,255,0.75); font-size: 0.83rem; }
 .calc-note { color: rgba(255,255,255,0.6); font-size: 0.82rem; text-align: center; }
 .calc-note a { color: var(--gold); text-decoration: none; }
-.calc-note a:hover { text-decoration: underline; }
 @media (max-width: 768px) {
   .order__inner { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
@@ -447,26 +506,40 @@ const base = '/ThesisArcPro';
 </style>
 
 <script>
+  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+  const base = '/ThesisArcPro';
+
+  // Check auth
+  const sessionStr = localStorage.getItem('tap_session');
+  const session = sessionStr ? JSON.parse(sessionStr) : null;
+
+  if (session?.user) {
+    // Auto-fill email
+    const emailInput = document.getElementById('email') as HTMLInputElement;
+    if (emailInput) emailInput.value = session.user.email;
+
+    // Show greeting
+    const greeting = document.getElementById('userGreeting');
+    const greetingText = document.getElementById('greetingText');
+    if (greeting) greeting.style.display = 'flex';
+    if (greetingText) greetingText.textContent = `👋 Welcome, ${session.user.full_name || session.user.email}`;
+  }
+
+  // Logout
+  document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    localStorage.removeItem('tap_session');
+    window.location.reload();
+  });
+
+  // Price calculator
   const levelSelect = document.getElementById('level') as HTMLSelectElement;
   const pagesInput = document.getElementById('pages') as HTMLInputElement;
   const deadlineInput = document.getElementById('deadline') as HTMLInputElement;
-  const wordCountEl = document.getElementById('wordCount');
-  const calcTotalEl = document.getElementById('calcTotal');
-  const totalDisplayEl = document.getElementById('totalDisplay');
-  const basePriceDisplayEl = document.getElementById('basePriceDisplay');
-  const pagesDisplayEl = document.getElementById('pagesDisplay');
-  const urgencyRowEl = document.getElementById('urgencyRow');
-  const urgencyLabelEl = document.getElementById('urgencyLabel');
-  const urgencyAmountEl = document.getElementById('urgencyAmount');
-  const addonsRowEl = document.getElementById('addonsRow');
-  const addonsAmountEl = document.getElementById('addonsAmount');
-  const urgencyDisplayEl = document.getElementById('urgencyDisplay');
-  const urgencyBadgeEl = document.getElementById('urgencyBadge');
-  const minusBtn = document.getElementById('minusBtn');
-  const plusBtn = document.getElementById('plusBtn');
 
   let addons = { graphics: 0, sources: 0, abstract: 0 };
   const addonPrices = { graphics: 5, sources: 4, abstract: 7 };
+  let currentTotal = 12;
 
   function changeAddon(type: string, delta: number) {
     addons[type] = Math.max(0, (addons[type] || 0) + delta);
@@ -480,6 +553,10 @@ const base = '/ThesisArcPro';
     const rate = parseFloat(selectedOption?.getAttribute('data-rate') || '12');
     const pages = parseInt(pagesInput?.value || '1');
     const words = pages * 275;
+
+    const wordCountEl = document.getElementById('wordCount');
+    const pagesDisplayEl = document.getElementById('pagesDisplay');
+    const basePriceDisplayEl = document.getElementById('basePriceDisplay');
     if (wordCountEl) wordCountEl.textContent = `${words.toLocaleString()} words`;
     if (pagesDisplayEl) pagesDisplayEl.textContent = `x ${pages}`;
     if (basePriceDisplayEl) basePriceDisplayEl.textContent = `$${rate.toFixed(2)}/pg`;
@@ -487,15 +564,15 @@ const base = '/ThesisArcPro';
     let urgencySurcharge = 0;
     let urgencyText = '';
     if (deadlineInput?.value) {
-      const now = new Date();
-      const deadline = new Date(deadlineInput.value);
-      const hoursLeft = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
+      const hoursLeft = (new Date(deadlineInput.value).getTime() - new Date().getTime()) / 3600000;
       if (hoursLeft < 6) { urgencySurcharge = rate * 0.5; urgencyText = '🔴 RUSH (under 6h): +50%'; }
       else if (hoursLeft < 12) { urgencySurcharge = rate * 0.3; urgencyText = '🟠 Urgent (6-12h): +30%'; }
       else if (hoursLeft < 24) { urgencySurcharge = rate * 0.2; urgencyText = '🟡 Same day (12-24h): +20%'; }
       else if (hoursLeft < 48) { urgencySurcharge = rate * 0.1; urgencyText = '🟢 Standard (1-2 days): +10%'; }
     }
 
+    const urgencyBadgeEl = document.getElementById('urgencyBadge');
+    const urgencyDisplayEl = document.getElementById('urgencyDisplay');
     if (urgencyBadgeEl) urgencyBadgeEl.textContent = urgencyText;
     if (urgencyDisplayEl) urgencyDisplayEl.style.display = urgencyText ? 'block' : 'none';
 
@@ -506,6 +583,15 @@ const base = '/ThesisArcPro';
       addonsTotal += (addonPrices[key] || 0) * qty;
     }
     const total = baseTotal + urgencyTotal + addonsTotal;
+    currentTotal = total;
+
+    const urgencyRowEl = document.getElementById('urgencyRow');
+    const urgencyLabelEl = document.getElementById('urgencyLabel');
+    const urgencyAmountEl = document.getElementById('urgencyAmount');
+    const addonsRowEl = document.getElementById('addonsRow');
+    const addonsAmountEl = document.getElementById('addonsAmount');
+    const calcTotalEl = document.getElementById('calcTotal');
+    const totalDisplayEl = document.getElementById('totalDisplay');
 
     if (urgencyRowEl) urgencyRowEl.style.display = urgencyTotal > 0 ? 'flex' : 'none';
     if (urgencyLabelEl) urgencyLabelEl.textContent = urgencyText.split(':')[0] || 'Urgency';
@@ -519,22 +605,88 @@ const base = '/ThesisArcPro';
   levelSelect?.addEventListener('change', calculatePrice);
   pagesInput?.addEventListener('input', calculatePrice);
   deadlineInput?.addEventListener('change', calculatePrice);
-  minusBtn?.addEventListener('click', () => {
+
+  document.getElementById('minusBtn')?.addEventListener('click', () => {
     const val = parseInt(pagesInput.value);
     if (val > 1) { pagesInput.value = String(val - 1); calculatePrice(); }
   });
-  plusBtn?.addEventListener('click', () => {
+  document.getElementById('plusBtn')?.addEventListener('click', () => {
     const val = parseInt(pagesInput.value);
     if (val < 500) { pagesInput.value = String(val + 1); calculatePrice(); }
   });
 
+  // Create Order button
+  document.getElementById('createOrderBtn')?.addEventListener('click', () => {
+    // Check if logged in
+    const s = localStorage.getItem('tap_session');
+    if (!s) {
+      document.getElementById('loginModal')?.classList.add('active');
+      return;
+    }
+
+    // Show payment modal
+    const total = currentTotal;
+    const amountToPay = total < 30 ? total : total * 0.5;
+    const isDeposit = total >= 30;
+
+    const paymentDetails = document.getElementById('paymentDetails');
+    const policyText = document.getElementById('policyText');
+
+    if (paymentDetails) {
+      paymentDetails.innerHTML = `
+        <p style="font-size:1.1rem; color:var(--navy); margin:0;">
+          Order Total: <strong>$${total.toFixed(2)}</strong>
+        </p>
+        <p style="font-size:1.3rem; color:var(--gold); font-weight:800; margin:0.5rem 0 0;">
+          Pay Now: <strong>$${amountToPay.toFixed(2)}</strong>
+        </p>
+      `;
+    }
+
+    if (policyText) {
+      policyText.textContent = isDeposit
+        ? `50% deposit required now. Remaining $${(total * 0.5).toFixed(2)} due on delivery.`
+        : `Full payment required for orders under $30.`;
+    }
+
+    document.getElementById('paymentModal')?.classList.add('active');
+    document.getElementById('confirmPaymentBtn')!.style.display = 'block';
+  });
+
+  // Close modals
+  document.getElementById('modalClose')?.addEventListener('click', () => {
+    document.getElementById('loginModal')?.classList.remove('active');
+  });
+
+  document.getElementById('paymentModalClose')?.addEventListener('click', () => {
+    document.getElementById('paymentModal')?.classList.remove('active');
+  });
+
+  // Confirm payment — show Submit Order button
+  document.getElementById('confirmPaymentBtn')?.addEventListener('click', () => {
+    document.getElementById('paymentModal')?.classList.remove('active');
+    document.getElementById('createOrderBtn')!.style.display = 'none';
+    document.getElementById('submitOrderBtn')!.style.display = 'block';
+  });
+
+  // Submit Order
   const orderForm = document.getElementById('orderForm') as HTMLFormElement;
   orderForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = orderForm.querySelector('.form-submit') as HTMLButtonElement;
-    const originalText = btn.textContent;
-    btn.textContent = 'Sending your order...';
-    btn.style.backgroundColor = '#c5a059';
+    const btn = document.getElementById('submitOrderBtn') as HTMLButtonElement;
+    btn.textContent = '⏳ Submitting your order...';
+    btn.disabled = true;
+
+    // Generate order number
+    const orderNumber = 'T-' + (1000 + Math.floor(Math.random() * 9000));
+
+    // Add hidden order number field
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'order_number';
+    hiddenField.value = orderNumber;
+    orderForm.appendChild(hiddenField);
+
     const formData = new FormData(orderForm);
     try {
       const response = await fetch(orderForm.action, {
@@ -543,18 +695,18 @@ const base = '/ThesisArcPro';
         headers: { 'Accept': 'application/json' }
       });
       if (response.ok) {
-        const nextUrl = orderForm.getAttribute('data-next');
-        if (nextUrl) window.location.href = nextUrl;
+        window.location.href = `${base}/thankyou/`;
       } else {
-        btn.textContent = 'Error — try again';
-        btn.style.backgroundColor = '#e74c3c';
+        btn.textContent = '❌ Error — please try again';
+        btn.disabled = false;
       }
     } catch {
-      btn.textContent = originalText || 'Submit Order Details';
-      btn.style.backgroundColor = '#2d6a4f';
+      btn.textContent = '❌ Error — please try again';
+      btn.disabled = false;
     }
   });
 
+  // Chat popup
   const helpBtn = document.getElementById('helpBtn');
   const chatPopup = document.getElementById('chatPopup');
   const chatClose = document.getElementById('chatClose');

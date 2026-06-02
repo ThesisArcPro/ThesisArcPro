@@ -1,0 +1,291 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+const base = '/ThesisArcPro';
+---
+
+<BaseLayout 
+  title="Sign Up" 
+  description="Create your ThesisArcPro account to place orders and track your academic writing assignments.">
+  <Header />
+
+  <main>
+    <section class="auth-section">
+      <div class="container auth__inner">
+
+        <div class="auth__card">
+          <div class="auth__logo">
+            <a href={`${base}/`}>
+              <span class="logo-thesis">Thesis</span><span class="logo-arc">Arc</span><span class="logo-pro">Pro</span>
+            </a>
+          </div>
+
+          <h1>Create Your Account</h1>
+          <p class="auth__sub">Sign up to place orders and track your assignments.</p>
+
+          <div id="auth__message" class="auth__message" style="display:none;"></div>
+
+          <form class="auth__form" id="signupForm">
+
+            <div class="form-group">
+              <label for="fullName">Full Name *</label>
+              <input type="text" id="fullName" placeholder="Your full name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" placeholder="your@email.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password *</label>
+              <input type="password" id="password" placeholder="At least 6 characters" required />
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password *</label>
+              <input type="password" id="confirmPassword" placeholder="Repeat your password" required />
+            </div>
+
+            <button type="submit" class="btn-primary auth__btn" id="signupBtn">
+              Create Account
+            </button>
+
+          </form>
+
+          <p class="auth__switch">
+            Already have an account? 
+            <a href={`${base}/login`}>Log In</a>
+          </p>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+.auth-section {
+  background-color: var(--navy);
+  min-height: 100vh;
+  padding: 8rem 0 4rem;
+  display: flex;
+  align-items: center;
+}
+
+.auth__inner {
+  display: flex;
+  justify-content: center;
+}
+
+.auth__card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 3rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.auth__logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth__logo a {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.logo-thesis { color: var(--navy); }
+.logo-arc { color: var(--gold); }
+.logo-pro { color: var(--navy); }
+
+.auth__card h1 {
+  color: var(--navy);
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.auth__sub {
+  color: var(--text-mid);
+  text-align: center;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.auth__message {
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.auth__message.success {
+  background: #d8f3dc;
+  color: #2d6a4f;
+  border: 1px solid #95d5b2;
+}
+
+.auth__message.error {
+  background: #ffe5e5;
+  color: #c0392b;
+  border: 1px solid #fab0b0;
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  color: var(--navy);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.form-group input {
+  padding: 0.85rem 1rem;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(197,160,89,0.1);
+}
+
+.auth__btn {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.auth__switch {
+  text-align: center;
+  color: var(--text-mid);
+  font-size: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.auth__switch a {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.auth__switch a:hover {
+  color: var(--navy);
+}
+</style>
+
+<script>
+  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+
+  function showMessage(msg, type) {
+    const el = document.getElementById('auth__message');
+    el.textContent = msg;
+    el.className = 'auth__message ' + type;
+    el.style.display = 'block';
+  }
+
+  document.getElementById('signupForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const btn = document.getElementById('signupBtn');
+
+    if (password !== confirmPassword) {
+      showMessage('Passwords do not match!', 'error');
+      return;
+    }
+
+    if (password.length < 6) {
+      showMessage('Password must be at least 6 characters!', 'error');
+      return;
+    }
+
+    btn.textContent = 'Creating account...';
+    btn.disabled = true;
+
+    try {
+      // Sign up with Supabase
+      const response = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        showMessage(data.error.message || 'Signup failed. Please try again.', 'error');
+        btn.textContent = 'Create Account';
+        btn.disabled = false;
+        return;
+      }
+
+      // Save profile
+      if (data.user) {
+        await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${data.access_token}`
+          },
+          body: JSON.stringify({
+            id: data.user.id,
+            email: email,
+            full_name: fullName
+          })
+        });
+
+        // Save session
+        localStorage.setItem('tap_session', JSON.stringify({
+          access_token: data.access_token,
+          user: { id: data.user.id, email, full_name: fullName }
+        }));
+
+        showMessage('Account created! Redirecting...', 'success');
+        setTimeout(() => {
+          window.location.href = '/ThesisArcPro/contact/';
+        }, 1500);
+      }
+
+    } catch (err) {
+      showMessage('Something went wrong. Please try again.', 'error');
+      btn.textContent = 'Create Account';
+      btn.disabled = false;
+    }
+  });
+</script>
