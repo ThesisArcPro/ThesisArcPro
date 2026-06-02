@@ -1,7 +1,6 @@
 ---
 const base = '/ThesisArcPro';
 ---
-
 <header class="header">
   <div class="container header__inner">
     <a href={`${base}/`} class="header__logo">
@@ -14,7 +13,11 @@ const base = '/ThesisArcPro';
       <a href={`${base}/academic-integrity`}>Academic Integrity</a>
       <a href={`${base}/contact`}>Contact</a>
     </nav>
-    <a href={`${base}/contact`} class="btn-primary header__cta">Get Started</a>
+    <div class="header__actions">
+      <a href={`${base}/login`} class="btn-secondary header__login" id="loginBtn">Login</a>
+      <a href={`${base}/contact`} class="btn-primary header__cta" id="getStartedBtn">Get Started</a>
+      <button class="header__logout" id="logoutBtn" style="display:none;">Logout</button>
+    </div>
     <button class="header__burger" id="burger" aria-label="Open menu">
       <span></span>
       <span></span>
@@ -24,98 +27,64 @@ const base = '/ThesisArcPro';
 </header>
 
 <style>
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background-color: var(--navy);
-  border-bottom: 1px solid var(--border);
-  padding: 1rem 0;
-}
-.header__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-}
-.header__logo {
-  font-family: var(--font-heading);
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: var(--navy); border-bottom: 1px solid var(--border); padding: 1rem 0; }
+.header__inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.header__logo { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; }
 .logo-thesis { color: var(--white); }
-.logo-arc    { color: var(--gold);  }
-.logo-pro    { color: var(--white); }
-.header__nav {
-  display: flex;
-  align-items: center;
-  gap: 1.8rem;
-}
-.header__nav a {
-  color: rgba(255,255,255,0.85);
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  letter-spacing: 0.3px;
-  transition: color 0.3s ease;
-}
-.header__nav a:hover {
-  color: var(--gold);
-}
-.header__cta {
-  font-size: 0.85rem;
-  padding: 0.6rem 1.4rem;
-  white-space: nowrap;
-}
-.header__burger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-}
-.header__burger span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background-color: var(--white);
-  transition: all 0.3s ease;
-}
+.logo-arc { color: var(--gold); }
+.logo-pro { color: var(--white); }
+.header__nav { display: flex; align-items: center; gap: 1.8rem; }
+.header__nav a { color: rgba(255,255,255,0.85); font-family: var(--font-body); font-size: 0.9rem; letter-spacing: 0.3px; transition: color 0.3s ease; }
+.header__nav a:hover { color: var(--gold); }
+.header__actions { display: flex; align-items: center; gap: 0.8rem; }
+.header__cta { font-size: 0.85rem; padding: 0.6rem 1.4rem; white-space: nowrap; }
+.header__login { font-size: 0.85rem; padding: 0.6rem 1.4rem; white-space: nowrap; background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: white; border-radius: 6px; text-decoration: none; transition: all 0.3s ease; }
+.header__login:hover { border-color: var(--gold); color: var(--gold); }
+.header__logout { font-size: 0.85rem; padding: 0.6rem 1.4rem; white-space: nowrap; background: transparent; border: 1.5px solid rgba(255,0,0,0.4); color: rgba(255,100,100,0.9); border-radius: 6px; cursor: pointer; transition: all 0.3s ease; }
+.header__logout:hover { background: rgba(255,0,0,0.1); }
+.header__burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.header__burger span { display: block; width: 24px; height: 2px; background-color: var(--white); transition: all 0.3s ease; }
 @media (max-width: 768px) {
   .header__nav { display: none; }
-  .header__cta { display: none; }
+  .header__actions { display: none; }
   .header__burger { display: flex; }
-
-  .header__nav.mobile-open {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: var(--navy);
-    padding: 1.5rem 2rem;
-    border-top: 1px solid var(--border);
-    gap: 1.2rem;
-    z-index: 999;
-  }
-
-  .header__nav.mobile-open a {
-    font-size: 1rem;
-    padding: 0.3rem 0;
-    border-bottom: 1px solid var(--border);
-  }
+  .header__nav.mobile-open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background-color: var(--navy); padding: 1.5rem 2rem; border-top: 1px solid var(--border); gap: 1.2rem; z-index: 999; }
+  .header__nav.mobile-open a { font-size: 1rem; padding: 0.3rem 0; border-bottom: 1px solid var(--border); }
 }
 </style>
 
 <script>
-const burger = document.getElementById('burger');
-const nav = document.querySelector('.header__nav');
-burger?.addEventListener('click', () => {
-  nav?.classList.toggle('mobile-open');
-});
+  import { supabase } from '../lib/supabase.js';
+
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const getStartedBtn = document.getElementById('getStartedBtn');
+  const burger = document.getElementById('burger');
+  const nav = document.querySelector('.header__nav');
+
+  // Check if user is logged in
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (session) {
+    // User is logged in
+    loginBtn!.style.display = 'none';
+    logoutBtn!.style.display = 'block';
+    getStartedBtn!.setAttribute('href', '/ThesisArcPro/contact/');
+  } else {
+    // User is not logged in
+    loginBtn!.style.display = 'block';
+    logoutBtn!.style.display = 'none';
+    getStartedBtn!.setAttribute('href', '/ThesisArcPro/login/');
+  }
+
+  // Logout
+  logoutBtn?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/ThesisArcPro/login/';
+  });
+
+  // Mobile menu
+  burger?.addEventListener('click', () => {
+    nav?.classList.toggle('mobile-open');
+  });
 </script>
