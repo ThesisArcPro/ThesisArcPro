@@ -270,8 +270,13 @@ const base = '/ThesisArcPro';
 
             <!-- ✅ PayPal Payment Section -->
             <div class="paypal-wrap">
-              <p class="paypal-label">💳 Pay Securely — Enter your total from the calculator on the right</p>
-              <div id="paypal-container-FPAJ6WCR6V47N"></div>
+              <p class="paypal-label">💳 Step 2 — Pay Securely via PayPal</p>
+              <p class="paypal-sub">Check your total from the calculator on the right, then click the button below to pay.</p>
+              <a href="https://www.paypal.com/ncp/payment/X4GBU659AGXGQ" target="_blank" class="paypal-link-btn">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19c-.988 0-1.829.722-1.974 1.699l-1.12 7.106-.313 1.983h3.293l.742-4.713.048-.306c.145-.977.986-1.699 1.974-1.699h1.245c3.863 0 6.637-1.57 7.49-6.114.333-1.726.163-3.168-.734-4.312z"/></svg>
+                Pay with PayPal or Card
+              </a>
+              <p class="paypal-note">🔒 Secured by PayPal — Accepts Visa, Mastercard & PayPal</p>
             </div>
 
             <button type="submit" class="btn-primary form-submit">Submit Order Details</button>
@@ -410,8 +415,12 @@ const base = '/ThesisArcPro';
 .file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
 .file-upload p { color: var(--navy); font-weight: 600; margin-bottom: 0.3rem; }
 .file-upload span { color: var(--text-light); font-size: 0.82rem; }
-.paypal-wrap { background: var(--white); border: 1.5px solid rgba(197,160,89,0.3); border-radius: 12px; padding: 1.5rem; }
-.paypal-label { color: var(--navy); font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
+.paypal-wrap { background: var(--white); border: 1.5px solid rgba(197,160,89,0.3); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.paypal-label { color: var(--navy); font-weight: 700; font-size: 1rem; margin: 0; }
+.paypal-sub { color: var(--text-mid); font-size: 0.88rem; margin: 0; }
+.paypal-link-btn { display: flex; align-items: center; justify-content: center; gap: 0.7rem; background: #FFC439; color: #003087; font-weight: 700; font-size: 1.05rem; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+.paypal-link-btn:hover { background: #f0b429; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+.paypal-note { color: var(--text-light); font-size: 0.78rem; text-align: center; margin: 0; }
 .form-submit { width: 100%; padding: 1.1rem; font-size: 1.1rem; border: none; cursor: pointer; border-radius: 8px; font-weight: 700; }
 .calculator-card { background: var(--navy); border-radius: 16px; padding: 2rem; position: sticky; top: 6rem; color: var(--white); }
 .calculator-card h3 { color: var(--gold); font-size: 1.1rem; margin-bottom: 1.5rem; }
@@ -567,15 +576,6 @@ const base = '/ThesisArcPro';
         }, 300);
       }
     });
-  });
-
-  // ✅ PayPal Button
-  window.addEventListener('load', () => {
-    if (typeof (window as any).paypal !== 'undefined') {
-      (window as any).paypal.HostedButtons({
-        hostedButtonId: "FPAJ6WCR6V47N",
-      }).render("#paypal-container-FPAJ6WCR6V47N");
-    }
   });
 
   calculatePrice();
