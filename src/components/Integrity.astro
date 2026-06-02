@@ -58,7 +58,7 @@ const base = '/ThesisArcPro';
           <li><span class="check">✓</span><span>24/7 customer support</span></li>
           <li><span class="check">✓</span><span>Money back guarantee</span></li>
         </ul>
-        <a href={`${base}/contact`} class="btn-primary" style="width:100%; text-align:center; margin-top:1rem;">
+        <a href="#" class="btn-primary auth-gate-integrity" style="width:100%; text-align:center; margin-top:1rem;">
           Get Started Today
         </a>
       </div>
@@ -129,3 +129,12 @@ const base = '/ThesisArcPro';
   .integrity__points { grid-template-columns: 1fr; }
 }
 </style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+  const { data: { session } } = await supabase.auth.getSession();
+  const btns = document.querySelectorAll('.auth-gate-integrity');
+  btns.forEach(btn => {
+    btn.setAttribute('href', session ? '/ThesisArcPro/contact/' : '/ThesisArcPro/login/');
+  });
+</script>
