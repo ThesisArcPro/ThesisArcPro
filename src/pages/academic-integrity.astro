@@ -107,7 +107,7 @@ const base = '/ThesisArcPro';
           <div class="sidebar__card sidebar__card--gold">
             <h3>Have Questions?</h3>
             <p>Our team is available 24/7 to answer any questions about our academic integrity policy or how our services work.</p>
-            <a href={`${base}/contact`} class="btn-primary" style="width:100%; text-align:center; margin-top:1rem;">
+            <a href="#" class="btn-primary auth-gate-integrity" style="width:100%; text-align:center; margin-top:1rem;">
               Contact Us
             </a>
           </div>
@@ -121,7 +121,7 @@ const base = '/ThesisArcPro';
         <div class="commitment__icon">✦</div>
         <h2>Our Promise To Every Student</h2>
         <p>We are committed to being a trusted, ethical, and professional academic partner. Your success and integrity matter to us as much as they matter to you.</p>
-        <a href={`${base}/contact`} class="btn-primary">Book a Free Consultation</a>
+        <a href="#" class="btn-primary auth-gate-integrity">Book a Free Consultation</a>
       </div>
     </section>
 
@@ -163,3 +163,12 @@ const base = '/ThesisArcPro';
   .policy__sidebar { position: static; }
 }
 </style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+  const { data: { session } } = await supabase.auth.getSession();
+  const btns = document.querySelectorAll('.auth-gate-integrity');
+  btns.forEach(btn => {
+    btn.setAttribute('href', session ? '/ThesisArcPro/contact/' : '/ThesisArcPro/login/');
+  });
+</script>
