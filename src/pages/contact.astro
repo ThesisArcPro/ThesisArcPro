@@ -237,13 +237,13 @@ const base = '/ThesisArcPro';
                     <span class="addon-item__price free">FREE</span>
                   </div>
                   <div class="addon-qty addon-qty--free">
-                    <span>✓ Included</span>
+                    <span>✔ Included</span>
                   </div>
                 </div>
                 <div class="addon-item">
                   <div class="addon-item__info">
-                    <span class="addon-item__name">📝 Abstract</span>
-                    <span class="addon-item__price">$6 each</span>
+                    <span class="addon-item__name">📝 Abstract Page</span>
+                    <span class="addon-item__price">$7 each</span>
                   </div>
                   <div class="addon-qty">
                     <button type="button" onclick="changeAddon('abstract', -1)">−</button>
@@ -268,7 +268,7 @@ const base = '/ThesisArcPro';
               </div>
             </div>
 
-            <!-- PayPal Payment Section -->
+            <!-- ✅ PayPal Payment Section -->
             <div class="paypal-wrap">
               <p class="paypal-label">💳 Pay Securely — Enter your total from the calculator on the right</p>
               <div id="paypal-container-FPAJ6WCR6V47N"></div>
@@ -310,10 +310,10 @@ const base = '/ThesisArcPro';
               </div>
             </div>
             <div class="calc-features">
-              <div class="calc-feature">✓ Free plagiarism & AI report</div>
-              <div class="calc-feature">✓ Free unlimited revisions</div>
-              <div class="calc-feature">✓ On time delivery guaranteed</div>
-              <div class="calc-feature">✓ Money back guarantee</div>
+              <div class="calc-feature">✔ Free plagiarism & AI report</div>
+              <div class="calc-feature">✔ Free unlimited revisions</div>
+              <div class="calc-feature">✔ On time delivery guaranteed</div>
+              <div class="calc-feature">✔ Money back guarantee</div>
             </div>
             <div class="calc-note">
               💬 Need a custom quote? <a href="https://wa.me/16624002088" target="_blank">Chat with us</a>
@@ -398,150 +398,186 @@ const base = '/ThesisArcPro';
 .addon-item--free { opacity: 0.85; }
 .addon-item__info { display: flex; flex-direction: column; gap: 0.2rem; }
 .addon-item__name { color: var(--text-dark); font-size: 0.82rem; font-weight: 500; }
-.addon-item__price { color: var(--navy); font-weight: 700; font-size: 0.82rem; }
+.addon-item__price { color: var(--gold); font-size: 0.78rem; font-weight: 700; }
 .addon-item__price.free { color: #2d6a4f; }
-.addon-qty { display: flex; align-items: center; gap: 0.5rem; background: var(--white); border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; overflow: hidden; flex-shrink: 0; }
-.addon-qty button { background: var(--navy); color: var(--white); border: none; padding: 0.4rem 0.7rem; font-size: 1rem; cursor: pointer; transition: background 0.2s ease; }
+.addon-qty { display: flex; align-items: center; gap: 0.5rem; }
+.addon-qty button { background: var(--navy); color: white; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; }
 .addon-qty button:hover { background: var(--gold); color: var(--navy); }
-.addon-qty span { min-width: 24px; text-align: center; font-weight: 700; font-size: 0.9rem; color: var(--navy); }
-.addon-qty--free { background: none; border: none; padding: 0 0.5rem; }
-.addon-qty--free span { color: #2d6a4f; font-size: 0.82rem; }
-.file-upload { border: 2px dashed var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; position: relative; background: var(--white); }
-.file-upload:hover { border-color: var(--gold); }
-.file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100% !important; padding: 0 !important; border: none !important; }
-.file-upload p { color: var(--text-mid); font-size: 0.9rem; margin-bottom: 0.3rem; }
-.file-upload span { color: var(--text-light); font-size: 0.8rem; }
-.paypal-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-.paypal-label { color: var(--navy); font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
-.form-submit { width: 100%; padding: 1.1rem; font-size: 1rem; cursor: pointer; border: none; }
-.order__calculator { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 1.5rem; }
-.calculator-card { background: var(--navy); border-radius: 16px; padding: 2rem; }
-.calculator-card h3 { color: var(--white); font-size: 1.2rem; margin-bottom: 1.5rem; text-align: center; }
-.calc-display { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
-.calc-total { color: var(--gold); font-family: var(--font-heading); font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 0.5rem; }
-.calc-label { color: rgba(255,255,255,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-.calc-breakdown { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.5rem; }
-.breakdown-item { display: flex; justify-content: space-between; font-size: 0.9rem; color: rgba(255,255,255,0.7); }
+.addon-qty span { font-weight: 700; color: var(--navy); min-width: 16px; text-align: center; }
+.addon-qty--free span { color: #2d6a4f; font-weight: 600; font-size: 0.85rem; }
+.file-upload { border: 2px dashed var(--gold); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; position: relative; transition: background 0.2s ease; }
+.file-upload:hover { background: rgba(197,160,89,0.05); }
+.file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.file-upload p { color: var(--navy); font-weight: 600; margin-bottom: 0.3rem; }
+.file-upload span { color: var(--text-light); font-size: 0.82rem; }
+.paypal-wrap { background: var(--white); border: 1.5px solid rgba(197,160,89,0.3); border-radius: 12px; padding: 1.5rem; }
+.paypal-label { color: var(--navy); font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
+.form-submit { width: 100%; padding: 1.1rem; font-size: 1.1rem; border: none; cursor: pointer; border-radius: 8px; font-weight: 700; }
+.calculator-card { background: var(--navy); border-radius: 16px; padding: 2rem; position: sticky; top: 6rem; color: var(--white); }
+.calculator-card h3 { color: var(--gold); font-size: 1.1rem; margin-bottom: 1.5rem; }
+.calc-display { text-align: center; margin-bottom: 1.5rem; }
+.calc-total { font-size: 3rem; font-weight: 800; color: var(--gold); line-height: 1; }
+.calc-label { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.3rem; }
+.calc-breakdown { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem; }
+.breakdown-item { display: flex; justify-content: space-between; color: rgba(255,255,255,0.8); font-size: 0.88rem; }
 .breakdown-item--total { color: var(--white); font-weight: 700; font-size: 1rem; }
-.breakdown-divider { height: 1px; background: var(--border); margin: 0.3rem 0; }
+.breakdown-divider { height: 1px; background: rgba(255,255,255,0.15); margin: 0.3rem 0; }
 .calc-features { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
-.calc-feature { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
-.calc-note { text-align: center; color: rgba(255,255,255,0.5); font-size: 0.82rem; }
-.calc-note a { color: var(--gold); text-decoration: underline; }
-@media (max-width: 900px) {
-  .page-hero__inner { grid-template-columns: 1fr; }
-  .page-hero__illustration { display: none; }
+.calc-feature { color: rgba(255,255,255,0.75); font-size: 0.83rem; }
+.calc-note { color: rgba(255,255,255,0.6); font-size: 0.82rem; text-align: center; }
+.calc-note a { color: var(--gold); text-decoration: none; }
+.calc-note a:hover { text-decoration: underline; }
+@media (max-width: 768px) {
   .order__inner { grid-template-columns: 1fr; }
-  .order__calculator { position: static; }
   .form-row { grid-template-columns: 1fr; }
   .addons__grid { grid-template-columns: 1fr; }
-  .chat-popup { width: calc(100vw - 3rem); left: 1.5rem; }
-  .floating-left { bottom: 1rem; left: 1rem; }
+  .page-hero__inner { grid-template-columns: 1fr; }
+  .page-hero__illustration { display: none; }
+  .calculator-card { position: static; }
 }
 </style>
 
 <script>
-  const addonPrices = { graphics: 5, sources: 4, abstract: 6 };
-  const addonQtys = { graphics: 0, sources: 0, abstract: 0 };
+  const levelSelect = document.getElementById('level') as HTMLSelectElement;
+  const pagesInput = document.getElementById('pages') as HTMLInputElement;
+  const deadlineInput = document.getElementById('deadline') as HTMLInputElement;
+  const wordCountEl = document.getElementById('wordCount');
+  const calcTotalEl = document.getElementById('calcTotal');
+  const totalDisplayEl = document.getElementById('totalDisplay');
+  const basePriceDisplayEl = document.getElementById('basePriceDisplay');
+  const pagesDisplayEl = document.getElementById('pagesDisplay');
+  const urgencyRowEl = document.getElementById('urgencyRow');
+  const urgencyLabelEl = document.getElementById('urgencyLabel');
+  const urgencyAmountEl = document.getElementById('urgencyAmount');
+  const addonsRowEl = document.getElementById('addonsRow');
+  const addonsAmountEl = document.getElementById('addonsAmount');
+  const urgencyDisplayEl = document.getElementById('urgencyDisplay');
+  const urgencyBadgeEl = document.getElementById('urgencyBadge');
+  const minusBtn = document.getElementById('minusBtn');
+  const plusBtn = document.getElementById('plusBtn');
 
-  function changeAddon(name, delta) {
-    addonQtys[name] = Math.max(0, addonQtys[name] + delta);
-    document.getElementById(name + '-qty').textContent = addonQtys[name];
+  let addons = { graphics: 0, sources: 0, abstract: 0 };
+  const addonPrices = { graphics: 5, sources: 4, abstract: 7 };
+
+  function changeAddon(type: string, delta: number) {
+    addons[type] = Math.max(0, (addons[type] || 0) + delta);
+    const el = document.getElementById(`${type}-qty`);
+    if (el) el.textContent = addons[type];
     calculatePrice();
   }
 
   function calculatePrice() {
-    const levelSelect = document.getElementById('level');
-    const pagesInput = document.getElementById('pages');
-    const deadlineInput = document.getElementById('deadline');
-    const baseRate = parseFloat(levelSelect.selectedOptions[0]?.dataset.rate) || 12;
-    const pages = parseInt(pagesInput.value) || 1;
-    document.getElementById('wordCount').textContent = (pages * 275).toLocaleString() + ' words';
-    let urgencyRate = 0;
-    let urgencyLabel = '';
-    if (deadlineInput.value) {
-      const hoursLeft = (new Date(deadlineInput.value) - new Date()) / 3600000;
-      if (hoursLeft <= 3) { urgencyRate = 0.5; urgencyLabel = 'Urgency (3hrs +50%)'; }
-      else if (hoursLeft <= 6) { urgencyRate = 0.4; urgencyLabel = 'Urgency (6hrs +40%)'; }
-      else if (hoursLeft <= 9) { urgencyRate = 0.3; urgencyLabel = 'Urgency (9hrs +30%)'; }
-      else if (hoursLeft <= 12) { urgencyRate = 0.2; urgencyLabel = 'Urgency (12hrs +20%)'; }
-      const urgencyDisplay = document.getElementById('urgencyDisplay');
-      if (urgencyRate > 0) {
-        urgencyDisplay.style.display = 'block';
-        document.getElementById('urgencyBadge').textContent = '⚡ ' + urgencyLabel + ' applied';
-      } else { urgencyDisplay.style.display = 'none'; }
+    const selectedOption = levelSelect?.options[levelSelect.selectedIndex];
+    const rate = parseFloat(selectedOption?.getAttribute('data-rate') || '12');
+    const pages = parseInt(pagesInput?.value || '1');
+    const words = pages * 275;
+    if (wordCountEl) wordCountEl.textContent = `${words.toLocaleString()} words`;
+    if (pagesDisplayEl) pagesDisplayEl.textContent = `x ${pages}`;
+    if (basePriceDisplayEl) basePriceDisplayEl.textContent = `$${rate.toFixed(2)}/pg`;
+
+    let urgencySurcharge = 0;
+    let urgencyText = '';
+    if (deadlineInput?.value) {
+      const now = new Date();
+      const deadline = new Date(deadlineInput.value);
+      const hoursLeft = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
+      if (hoursLeft < 6) { urgencySurcharge = rate * 0.5; urgencyText = '🔴 RUSH (under 6h): +50%'; }
+      else if (hoursLeft < 12) { urgencySurcharge = rate * 0.3; urgencyText = '🟠 Urgent (6-12h): +30%'; }
+      else if (hoursLeft < 24) { urgencySurcharge = rate * 0.2; urgencyText = '🟡 Same day (12-24h): +20%'; }
+      else if (hoursLeft < 48) { urgencySurcharge = rate * 0.1; urgencyText = '🟢 Standard (1-2 days): +10%'; }
     }
+
+    if (urgencyBadgeEl) urgencyBadgeEl.textContent = urgencyText;
+    if (urgencyDisplayEl) urgencyDisplayEl.style.display = urgencyText ? 'block' : 'none';
+
+    const baseTotal = rate * pages;
+    const urgencyTotal = urgencySurcharge * pages;
     let addonsTotal = 0;
-    for (const [key, qty] of Object.entries(addonQtys)) { addonsTotal += qty * addonPrices[key]; }
-    const baseTotal = baseRate * pages;
-    const urgencyAmount = baseTotal * urgencyRate;
-    const grandTotal = baseTotal + urgencyAmount + addonsTotal;
-    document.getElementById('calcTotal').textContent = '$' + grandTotal.toFixed(2);
-    document.getElementById('totalDisplay').textContent = '$' + grandTotal.toFixed(2);
-    document.getElementById('basePriceDisplay').textContent = '$' + baseRate.toFixed(2) + '/pg';
-    document.getElementById('pagesDisplay').textContent = 'x ' + pages;
-    const urgencyRow = document.getElementById('urgencyRow');
-    if (urgencyAmount > 0) {
-      urgencyRow.style.display = 'flex';
-      document.getElementById('urgencyLabel').textContent = urgencyLabel;
-      document.getElementById('urgencyAmount').textContent = '+$' + urgencyAmount.toFixed(2);
-    } else { urgencyRow.style.display = 'none'; }
-    const addonsRow = document.getElementById('addonsRow');
-    if (addonsTotal > 0) {
-      addonsRow.style.display = 'flex';
-      document.getElementById('addonsAmount').textContent = '+$' + addonsTotal.toFixed(2);
-    } else { addonsRow.style.display = 'none'; }
+    for (const [key, qty] of Object.entries(addons)) {
+      addonsTotal += (addonPrices[key] || 0) * qty;
+    }
+    const total = baseTotal + urgencyTotal + addonsTotal;
+
+    if (urgencyRowEl) urgencyRowEl.style.display = urgencyTotal > 0 ? 'flex' : 'none';
+    if (urgencyLabelEl) urgencyLabelEl.textContent = urgencyText.split(':')[0] || 'Urgency';
+    if (urgencyAmountEl) urgencyAmountEl.textContent = `+$${urgencyTotal.toFixed(2)}`;
+    if (addonsRowEl) addonsRowEl.style.display = addonsTotal > 0 ? 'flex' : 'none';
+    if (addonsAmountEl) addonsAmountEl.textContent = `+$${addonsTotal.toFixed(2)}`;
+    if (calcTotalEl) calcTotalEl.textContent = `$${total.toFixed(2)}`;
+    if (totalDisplayEl) totalDisplayEl.textContent = `$${total.toFixed(2)}`;
   }
 
-  document.getElementById('minusBtn')?.addEventListener('click', () => {
-    const input = document.getElementById('pages');
-    input.value = Math.max(1, parseInt(input.value) - 1);
-    calculatePrice();
+  levelSelect?.addEventListener('change', calculatePrice);
+  pagesInput?.addEventListener('input', calculatePrice);
+  deadlineInput?.addEventListener('change', calculatePrice);
+  minusBtn?.addEventListener('click', () => {
+    const val = parseInt(pagesInput.value);
+    if (val > 1) { pagesInput.value = String(val - 1); calculatePrice(); }
   });
-  document.getElementById('plusBtn')?.addEventListener('click', () => {
-    const input = document.getElementById('pages');
-    input.value = parseInt(input.value) + 1;
-    calculatePrice();
+  plusBtn?.addEventListener('click', () => {
+    const val = parseInt(pagesInput.value);
+    if (val < 500) { pagesInput.value = String(val + 1); calculatePrice(); }
   });
-  ['level', 'pages', 'deadline'].forEach(id => {
-    document.getElementById(id)?.addEventListener('change', calculatePrice);
-    document.getElementById(id)?.addEventListener('input', calculatePrice);
+
+  const orderForm = document.getElementById('orderForm') as HTMLFormElement;
+  orderForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = orderForm.querySelector('.form-submit') as HTMLButtonElement;
+    const originalText = btn.textContent;
+    btn.textContent = 'Sending your order...';
+    btn.style.backgroundColor = '#c5a059';
+    const formData = new FormData(orderForm);
+    try {
+      const response = await fetch(orderForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        const nextUrl = orderForm.getAttribute('data-next');
+        if (nextUrl) window.location.href = nextUrl;
+      } else {
+        btn.textContent = 'Error — try again';
+        btn.style.backgroundColor = '#e74c3c';
+      }
+    } catch {
+      btn.textContent = originalText || 'Submit Order Details';
+      btn.style.backgroundColor = '#2d6a4f';
+    }
   });
-  document.getElementById('orderForm')?.addEventListener('submit', () => {
-    const btn = document.querySelector('.form-submit');
-    if (btn) { btn.textContent = '⏳ Sending your order...'; btn.style.backgroundColor = '#2d6a4f'; }
-  });
+
   const helpBtn = document.getElementById('helpBtn');
   const chatPopup = document.getElementById('chatPopup');
   const chatClose = document.getElementById('chatClose');
   const chatOverlay = document.getElementById('chatOverlay');
-  helpBtn?.addEventListener('click', () => { chatPopup.classList.add('active'); chatOverlay.classList.add('active'); });
-  chatClose?.addEventListener('click', () => { chatPopup.classList.remove('active'); chatOverlay.classList.remove('active'); });
-  chatOverlay?.addEventListener('click', () => { chatPopup.classList.remove('active'); chatOverlay.classList.remove('active'); });
+  helpBtn?.addEventListener('click', () => { chatPopup?.classList.add('active'); chatOverlay?.classList.add('active'); });
+  chatClose?.addEventListener('click', () => { chatPopup?.classList.remove('active'); chatOverlay?.classList.remove('active'); });
+  chatOverlay?.addEventListener('click', () => { chatPopup?.classList.remove('active'); chatOverlay?.classList.remove('active'); });
+
   const chatTabs = document.querySelectorAll('.chat-tab');
   chatTabs.forEach((tab, index) => {
     tab.addEventListener('click', () => {
       chatTabs.forEach(t => t.classList.remove('chat-tab--active'));
       tab.classList.add('chat-tab--active');
       if (index === 1) {
-        chatPopup.classList.remove('active');
-        chatOverlay.classList.remove('active');
+        chatPopup?.classList.remove('active');
+        chatOverlay?.classList.remove('active');
         setTimeout(() => {
-          if (typeof tidioChatApi !== 'undefined') { tidioChatApi.open(); }
+          if (typeof (window as any).tidioChatApi !== 'undefined') { (window as any).tidioChatApi.open(); }
         }, 300);
       }
     });
   });
 
-  // PayPal Button
+  // ✅ PayPal Button
   window.addEventListener('load', () => {
-    if (typeof paypal !== 'undefined') {
-      paypal.HostedButtons({
+    if (typeof (window as any).paypal !== 'undefined') {
+      (window as any).paypal.HostedButtons({
         hostedButtonId: "FPAJ6WCR6V47N",
       }).render("#paypal-container-FPAJ6WCR6V47N");
     }
   });
 
   calculatePrice();
-  window.changeAddon = changeAddon;
+  (window as any).changeAddon = changeAddon;
 </script>
