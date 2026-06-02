@@ -506,7 +506,223 @@ const base = '/ThesisArcPro';
 </style>
 
 <script>
-  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  <script>
+  import { supabase } from '../lib/supabase.js';
+  const base = '/ThesisArcPro';
+
+  // Check auth via Supabase
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    // Not logged in — redirect to login
+    window.location.href = `${base}/login/`;
+  } else {
+    // Auto-fill email
+    const emailInput = document.getElementById('email') as HTMLInputElement;
+    if (emailInput) emailInput.value = session.user.email;
+
+    // Show greeting
+    const greeting = document.getElementById('userGreeting');
+    const greetingText = document.getElementById('greetingText');
+    if (greeting) greeting.style.display = 'flex';
+    if (greetingText) greetingText.textContent = `👋 Welcome, ${session.user.user_metadata?.full_name || session.user.email}`;
+  }
+
+  // Logout
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = `${base}/login/`;
+  });
+
+  // Price calculator
+  const levelSelect = document.getElementById('level') as HTMLSelectElement;
+  const pagesInput = document.getElementById('pages') as HTMLInputElement;
+  const deadlineInput = document.getElementById('deadline') as HTMLInputElement;
+
+  let addons = { graphics: 0, sources: 0, abstract: 0 };
+  const addonPrices = { graphics: 5, sources: 4, abstract: 7 };
+  let currentTotal = 12;
+
+  function changeAddon(type: string, delta: number) {
+    addons[type] = Math.max(0, (addons[type] || 0) + delta);
+    const el = document.getElementById(`${type}-qty`);
+    if (el) el.textContent = addons[type];
+    calculatePrice();
+  }
+
+  function calculatePrice() {
+    const selectedOption = levelSelect?.options[levelSelect.selectedIndex];
+    const rate = parseFloat(selectedOption?.getAttribute('data-rate') || '12');
+    const pages = parseInt(pagesInput?.value || '1');
+    const words = pages * 275;
+
+    const wordCountEl = document.getElementById('wordCount');
+    const pagesDisplayEl = document.getElementById('pagesDisplay');
+    const basePriceDisplayEl = document.getElementById('basePriceDisplay');
+    if (wordCountEl) wordCountEl.textContent = `${words.toLocaleString()} words`;
+    if (pagesDisplayEl) pagesDisplayEl.textContent = `x ${pages}`;
+    if (basePriceDisplayEl) basePriceDisplayEl.textContent = `$${rate.toFixed(2)}/pg`;
+
+    let urgencySurcharge = 0;
+    let urgencyText = '';
+    if (deadlineInput?.value) {
+      const hoursLeft = (new Date(deadlineInput.value).getTime() - new Date().getTime()) / 3600000;
+      if (hoursLeft < 6) { urgencySurcharge = rate * 0.5; urgencyText = '🔴 RUSH (under 6h): +50%'; }
+      else if (hoursLeft < 12) { urgencySurcharge = rate * 0.3; urgencyText = '🟠 Urgent (6-12h): +30%'; }
+      else if (hoursLeft < 24) { urgencySurcharge = rate * 0.2; urgencyText = '🟡 Same day (12-24h): +20%'; }
+      else if (hoursLeft < 48) { urgencySurcharge = rate * 0.1; urgencyText = '🟢 Standard (1-2 days): +10%'; }
+    }
+
+    const urgencyBadgeEl = document.getElementById('urgencyBadge');
+    const urgencyDisplayEl = document.getElementById('urgencyDisplay');
+    if (urgencyBadgeEl) urgencyBadgeEl.textContent = urgencyText;
+    if (urgencyDisplayEl) urgencyDisplayEl.style.display = urgencyText ? 'block' : 'none';
+
+    const baseTotal = rate * pages;
+    const urgencyTotal = urgencySurcharge * pages;
+    let addonsTotal = 0;
+    for (const [key, qty] of Object.entries(addons)) {
+      addonsTotal += (addonPrices[key] || 0) * qty;
+    }
+    const total = baseTotal + urgencyTotal + addonsTotal;
+    currentTotal = total;
+
+    const urgencyRowEl = document.getElementById('urgencyRow');
+    const urgencyLabelEl = document.getElementById('urgencyLabel');
+    const urgencyAmountEl = document.getElementById('urgencyAmount');
+    const addonsRowEl = document.getElementById('addonsRow');
+    const addonsAmountEl = document.getElementById('addonsAmount');
+    const calcTotalEl = document.getElementById('calcTotal');
+    const totalDisplayEl = document.getElementById('totalDisplay');
+
+    if (urgencyRowEl) urgencyRowEl.style.display = urgencyTotal > 0 ? 'flex' : 'none';
+    if (urgencyLabelEl) urgencyLabelEl.textContent = urgencyText.split(':')[0] || 'Urgency';
+    if (urgencyAmountEl) urgencyAmountEl.textContent = `+$${urgencyTotal.toFixed(2)}`;
+    if (addonsRowEl) addonsRowEl.style.display = addonsTotal > 0 ? 'flex' : 'none';
+    if (addonsAmountEl) addonsAmountEl.textContent = `+$${addonsTotal.toFixed(2)}`;
+    if (calcTotalEl) calcTotalEl.textContent = `$${total.toFixed(2)}`;
+    if (totalDisplayEl) totalDisplayEl.textContent = `$${total.toFixed(2)}`;
+  }
+
+  levelSelect?.addEventListener('change', calculatePrice);
+  pagesInput?.addEventListener('input', calculatePrice);
+  deadlineInput?.addEventListener('change', calculatePrice);
+
+  document.getElementById('minusBtn')?.addEventListener('click', () => {
+    const val = parseInt(pagesInput.value);
+    if (val > 1) { pagesInput.value = String(val - 1); calculatePrice(); }
+  });
+  document.getElementById('plusBtn')?.addEventListener('click', () => {
+    const val = parseInt(pagesInput.value);
+    if (val < 500) { pagesInput.value = String(val + 1); calculatePrice(); }
+  });
+
+  // Create Order button
+  document.getElementById('createOrderBtn')?.addEventListener('click', () => {
+    const total = currentTotal;
+    const amountToPay = total < 30 ? total : total * 0.5;
+    const isDeposit = total >= 30;
+
+    const paymentDetails = document.getElementById('paymentDetails');
+    const policyText = document.getElementById('policyText');
+
+    if (paymentDetails) {
+      paymentDetails.innerHTML = `
+        <p style="font-size:1.1rem; color:var(--navy); margin:0;">
+          Order Total: <strong>$${total.toFixed(2)}</strong>
+        </p>
+        <p style="font-size:1.3rem; color:var(--gold); font-weight:800; margin:0.5rem 0 0;">
+          Pay Now: <strong>$${amountToPay.toFixed(2)}</strong>
+        </p>
+      `;
+    }
+
+    if (policyText) {
+      policyText.textContent = isDeposit
+        ? `50% deposit required now. Remaining $${(total * 0.5).toFixed(2)} due on delivery.`
+        : `Full payment required for orders under $30.`;
+    }
+
+    document.getElementById('paymentModal')?.classList.add('active');
+    document.getElementById('confirmPaymentBtn')!.style.display = 'block';
+  });
+
+  // Close modals
+  document.getElementById('modalClose')?.addEventListener('click', () => {
+    document.getElementById('loginModal')?.classList.remove('active');
+  });
+  document.getElementById('paymentModalClose')?.addEventListener('click', () => {
+    document.getElementById('paymentModal')?.classList.remove('active');
+  });
+
+  // Confirm payment
+  document.getElementById('confirmPaymentBtn')?.addEventListener('click', () => {
+    document.getElementById('paymentModal')?.classList.remove('active');
+    document.getElementById('createOrderBtn')!.style.display = 'none';
+    document.getElementById('submitOrderBtn')!.style.display = 'block';
+  });
+
+  // Submit Order
+  const orderForm = document.getElementById('orderForm') as HTMLFormElement;
+  orderForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submitOrderBtn') as HTMLButtonElement;
+    btn.textContent = '⏳ Submitting your order...';
+    btn.disabled = true;
+
+    const orderNumber = 'T-' + (1000 + Math.floor(Math.random() * 9000));
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'order_number';
+    hiddenField.value = orderNumber;
+    orderForm.appendChild(hiddenField);
+
+    const formData = new FormData(orderForm);
+    try {
+      const response = await fetch(orderForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        window.location.href = `${base}/thankyou/`;
+      } else {
+        btn.textContent = '❌ Error — please try again';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = '❌ Error — please try again';
+      btn.disabled = false;
+    }
+  });
+
+  // Chat popup
+  const helpBtn = document.getElementById('helpBtn');
+  const chatPopup = document.getElementById('chatPopup');
+  const chatClose = document.getElementById('chatClose');
+  const chatOverlay = document.getElementById('chatOverlay');
+  helpBtn?.addEventListener('click', () => { chatPopup?.classList.add('active'); chatOverlay?.classList.add('active'); });
+  chatClose?.addEventListener('click', () => { chatPopup?.classList.remove('active'); chatOverlay?.classList.remove('active'); });
+  chatOverlay?.addEventListener('click', () => { chatPopup?.classList.remove('active'); chatOverlay?.classList.remove('active'); });
+
+  const chatTabs = document.querySelectorAll('.chat-tab');
+  chatTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => {
+      chatTabs.forEach(t => t.classList.remove('chat-tab--active'));
+      tab.classList.add('chat-tab--active');
+      if (index === 1) {
+        chatPopup?.classList.remove('active');
+        chatOverlay?.classList.remove('active');
+        setTimeout(() => {
+          if (typeof (window as any).tidioChatApi !== 'undefined') { (window as any).tidioChatApi.open(); }
+        }, 300);
+      }
+    });
+  });
+
+  calculatePrice();
+  (window as any).changeAddon = changeAddon;
+</script>
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
   const base = '/ThesisArcPro';
 
