@@ -156,10 +156,10 @@ const base = '/ThesisArcPro';
             <div class="card__icon">✦</div>
             <h3>Start Your Journey Today</h3>
             <p>Join over 2,000 students who have achieved academic success with ThesisArcPro.</p>
-            <a href={`${base}/contact`} class="btn-primary" style="width:100%; text-align:center; margin-top:1rem;">
+            <a href="#" class="btn-primary auth-gate-page" style="width:100%; text-align:center; margin-top:1rem; display:block;">
               Book Free Consultation
             </a>
-            <a href={`${base}/services`} class="btn-outline-gold" style="width:100%; text-align:center; margin-top:0.8rem;">
+            <a href={`${base}/services`} class="btn-outline-gold" style="width:100%; text-align:center; margin-top:0.8rem; display:block;">
               View Our Services
             </a>
           </div>
@@ -219,3 +219,14 @@ const base = '/ThesisArcPro';
   .values__grid { grid-template-columns: 1fr; }
 }
 </style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+  const base = '/ThesisArcPro';
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  const btns = document.querySelectorAll('.auth-gate-page');
+  btns.forEach(btn => {
+    btn.setAttribute('href', session ? `${base}/contact/` : `${base}/login/`);
+  });
+</script>
