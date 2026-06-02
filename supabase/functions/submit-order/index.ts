@@ -66,7 +66,10 @@ async function sendAutoReplyEmail(email: string, orderNumber: string) {
 export default async (req: Request) => {
   // Handle CORS
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { 
+      status: 200,
+      headers: corsHeaders 
+    });
   }
 
   try {
