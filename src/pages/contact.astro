@@ -727,14 +727,19 @@ const base = '/ThesisArcPro';
     btn.disabled = true;
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30000);
+
       const res = await fetch(
         'https://rehvwvujuamehoanfomj.supabase.co/functions/v1/verify-payment',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ transactionId: txnId })
+          body: JSON.stringify({ transactionId: txnId }),
+          signal: controller.signal
         }
       );
+      clearTimeout(timeout);
 
       const data = await res.json();
 
@@ -749,8 +754,12 @@ const base = '/ThesisArcPro';
         btn.textContent = '✅ I Have Paid — Submit My Order';
         btn.disabled = false;
       }
-    } catch (err) {
-      alert('❌ Verification failed. Please try again.');
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        alert('❌ Verification timed out after 30 seconds. Please try again.');
+      } else {
+        alert('❌ Verification failed. Please try again.');
+      }
       btn.textContent = '✅ I Have Paid — Submit My Order';
       btn.disabled = false;
     }
