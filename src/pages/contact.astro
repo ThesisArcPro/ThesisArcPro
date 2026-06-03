@@ -84,7 +84,12 @@ const base = '/ThesisArcPro';
         Pay with PayPal or Card
       </a>
       <p class="paypal-note">🔒 Secured by PayPal — Accepts Visa, Mastercard & PayPal</p>
-      <button class="btn-confirm-payment" id="confirmPaymentBtn">
+      <div class="txn-group">
+        <label for="txnId">Enter PayPal Transaction ID *</label>
+        <input type="text" id="txnId" placeholder="e.g. 7GH123456789" />
+        <span class="txn-note">Find it in your PayPal confirmation email</span>
+      </div>
+      <button class="btn-confirm-payment" id="confirmPaymentBtn" disabled>
         ✅ I Have Paid — Submit My Order
       </button>
     </div>
@@ -137,8 +142,8 @@ const base = '/ThesisArcPro';
             <div class="form-row">
               <div class="form-group">
                 <label for="type">Assignment Type *</label>
-                <select id="type" name="type" required>
-                  <option value="" disabled selected>Select type</option>
+                <input type="text" id="type" name="type" list="type-list" placeholder="Select or type..." required />
+                <datalist id="type-list">
                   <option>Essay</option>
                   <option>Research Paper</option>
                   <option>Discussion Post</option>
@@ -149,12 +154,12 @@ const base = '/ThesisArcPro';
                   <option>Literature Review</option>
                   <option>Case Study</option>
                   <option>Other</option>
-                </select>
+                </datalist>
               </div>
               <div class="form-group">
                 <label for="subject">Subject *</label>
-                <select id="subject" name="subject" required>
-                  <option value="" disabled selected>Select subject</option>
+                <input type="text" id="subject" name="subject" list="subject-list" placeholder="Select or type..." required />
+                <datalist id="subject-list">
                   <option>Nursing & Healthcare</option>
                   <option>Business Management</option>
                   <option>English & Literature</option>
@@ -168,22 +173,22 @@ const base = '/ThesisArcPro';
                   <option>IT & Computer Science</option>
                   <option>Finance & Accounting</option>
                   <option>Other</option>
-                </select>
+                </datalist>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label for="service">Service *</label>
-                <select id="service" name="service" required>
-                  <option value="" disabled selected>Select service</option>
+                <input type="text" id="service" name="service" list="service-list" placeholder="Select or type..." required />
+                <datalist id="service-list">
                   <option>Writing</option>
                   <option>Rewriting</option>
                   <option>Editing & Proofreading</option>
                   <option>Review My Work</option>
                   <option>Calculations / Problems</option>
                   <option>Other</option>
-                </select>
+                </datalist>
               </div>
               <div class="form-group">
                 <label for="language">Language *</label>
@@ -208,6 +213,15 @@ const base = '/ThesisArcPro';
               </div>
               <div class="form-group">
                 <label for="deadline">Deadline *</label>
+                <div class="quick-deadlines">
+                  <button type="button" class="quick-btn" data-hours="3">3hrs</button>
+                  <button type="button" class="quick-btn" data-hours="6">6hrs</button>
+                  <button type="button" class="quick-btn" data-hours="9">9hrs</button>
+                  <button type="button" class="quick-btn" data-hours="12">12hrs</button>
+                  <button type="button" class="quick-btn" data-hours="24">1 day</button>
+                  <button type="button" class="quick-btn" data-hours="48">2 days</button>
+                  <button type="button" class="quick-btn" data-hours="120">5 days</button>
+                </div>
                 <input type="datetime-local" id="deadline" name="deadline" />
               </div>
             </div>
@@ -232,6 +246,28 @@ const base = '/ThesisArcPro';
               </div>
             </div>
 
+            <div class="form-row">
+              <div class="form-group">
+                <label for="citation">Citation Style</label>
+                <select id="citation" name="citation">
+                  <option value="" disabled selected>Select style</option>
+                  <option>APA 7</option>
+                  <option>MLA 9</option>
+                  <option>Chicago</option>
+                  <option>Harvard</option>
+                  <option>APA 6</option>
+                  <option>Turabian</option>
+                  <option>IEEE</option>
+                  <option>Vancouver</option>
+                  <option>Other</option>
+                  <option>Not Required</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="sources">Sources Required</label>
+                <input type="number" id="sources" name="sources" min="0" max="999" placeholder="e.g. 5" />
+              </div>
+            </div>
             <div class="addons">
               <h3>Add-ons</h3>
               <div class="addons__grid">
@@ -486,6 +522,15 @@ const base = '/ThesisArcPro';
   .page-hero__illustration { display: none; }
   .calculator-card { position: static; }
 }
+.quick-deadlines { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+.quick-btn { background: var(--off-white); border: 1.5px solid var(--border); color: var(--navy); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.quick-btn:hover, .quick-btn.active { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+.txn-group { margin-bottom: 1rem; text-align: left; }
+.txn-group label { display: block; font-weight: 600; color: var(--navy); font-size: 0.9rem; margin-bottom: 0.4rem; }
+.txn-group input { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 6px; font-size: 0.95rem; outline: none; }
+.txn-group input:focus { border-color: var(--gold); }
+.txn-note { font-size: 0.76rem; color: var(--text-light); }
+.btn-confirm-payment:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
 
 <script>
@@ -610,8 +655,39 @@ const base = '/ThesisArcPro';
     if (val < 500) { pagesInput.value = String(val + 1); calculatePrice(); }
   });
 
-  // Create Order button — show payment modal
+  // Quick deadline buttons
+  document.querySelectorAll('.quick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const hours = parseInt((btn as HTMLElement).dataset.hours || '0');
+      const date = new Date();
+      date.setHours(date.getHours() + hours);
+      const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+        .toISOString().slice(0, 16);
+      deadlineInput.value = local;
+      document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      calculatePrice();
+    });
+  });
+
+  // Transaction ID enables confirm button
+  document.getElementById('txnId')?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value.trim();
+    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
+    btn.disabled = val.length < 5;
+  });
+
+  // Create Order button — validate then show payment modal
   document.getElementById('createOrderBtn')?.addEventListener('click', () => {
+    const requiredFields = ['topic', 'type', 'subject', 'service', 'language', 'level', 'deadline', 'instructions'];
+    for (const field of requiredFields) {
+      const el = document.getElementById(field) as HTMLInputElement;
+      if (!el?.value?.trim()) {
+        el?.focus();
+        alert(`Please fill in the "${field.charAt(0).toUpperCase() + field.slice(1)}" field before proceeding.`);
+        return;
+      }
+    }
     const total = currentTotal;
     const isDeposit = total >= 30;
     const amountToPay = isDeposit ? total * 0.5 : total;
