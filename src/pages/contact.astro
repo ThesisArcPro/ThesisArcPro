@@ -705,7 +705,7 @@ const base = '/ThesisArcPro';
         }
       });
       const countData = await countRes.json();
-      const ticketId = 'TAP-' + String((countData.length || 0) + 1).padStart(3, '0');
+      const ticketId = 'T-' + String(1000 + (countData.length || 0));
 
       // Save to Google Sheets
       await fetch(APPS_SCRIPT_URL, {
