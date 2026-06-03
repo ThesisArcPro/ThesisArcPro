@@ -698,14 +698,14 @@ const base = '/ThesisArcPro';
 
     try {
       // Save to Google Sheets
-      const sheetsRes = await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-      });
+      await fetch(APPS_SCRIPT_URL, {
+  method: 'POST',
+  mode: 'no-cors',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(orderData)
+});
 
-      const sheetsData = await sheetsRes.json();
-      const ticketId = sheetsData.ticketId || 'TAP-001';
+const ticketId = 'TAP-' + String(Math.floor(Math.random() * 900) + 100);
 
       // Save to Supabase
       if (currentSession) {
