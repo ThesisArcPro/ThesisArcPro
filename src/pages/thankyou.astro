@@ -14,6 +14,13 @@ const base = '/ThesisArcPro';
 
         <div class="thankyou__icon">✓</div>
         <h1>Order Received!</h1>
+
+        <div class="ticket-box" id="ticketBox" style="display:none;">
+          <p class="ticket-label">Your Order Ticket Number</p>
+          <div class="ticket-number" id="ticketNumber">TAP-001</div>
+          <p class="ticket-note">Save this number — you'll need it to track your order.</p>
+        </div>
+
         <p class="thankyou__sub">Thank you for choosing ThesisArcPro. We have received your order and will contact you within <strong>30 minutes</strong> with your confirmation and next steps.</p>
 
         <div class="thankyou__steps">
@@ -42,12 +49,12 @@ const base = '/ThesisArcPro';
         <div class="thankyou__contact">
           <p>Need to reach us urgently?</p>
           <div class="thankyou__buttons">
-            <a href="https://wa.me/+16224002088" target="_blank" class="btn-primary">
+            <a href="https://wa.me/16624002088" target="_blank" class="btn-primary">
               💬 Chat on WhatsApp
             </a>
-            <a href="https://mail.google.com/mail/?view=cm&to=thesisarcpro069@gmail.com&su=ThesisArcPro%20Order%20Followup" target="_blank" class="btn-secondary-dark">
-              📧 Send us an Email
-            </a>
+            <button onclick="openTidio()" class="btn-secondary-dark">
+              🗨️ Live Chat
+            </button>
           </div>
         </div>
 
@@ -66,6 +73,10 @@ const base = '/ThesisArcPro';
 .thankyou__icon { width: 80px; height: 80px; background-color: var(--gold); color: var(--navy); font-size: 2.5rem; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; animation: popIn 0.5s ease; }
 @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
 .thankyou h1 { color: var(--white); font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1.5rem; }
+.ticket-box { background: rgba(197,160,89,0.1); border: 2px solid var(--gold); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
+.ticket-label { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
+.ticket-number { color: var(--gold); font-size: 3rem; font-weight: 800; font-family: var(--font-heading); letter-spacing: 4px; margin-bottom: 0.5rem; }
+.ticket-note { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
 .thankyou__sub { color: rgba(255,255,255,0.75); font-size: 1.1rem; line-height: 1.8; max-width: 600px; margin: 0 auto 3rem; }
 .thankyou__sub strong { color: var(--gold); }
 .thankyou__steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
@@ -77,10 +88,33 @@ const base = '/ThesisArcPro';
 .thankyou__contact { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
 .thankyou__contact p { color: rgba(255,255,255,0.7); margin-bottom: 1.2rem; font-size: 1rem; }
 .thankyou__buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-.btn-secondary-dark { display: inline-block; background-color: transparent; color: var(--gold); padding: 0.85rem 2rem; border-radius: 4px; font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; border: 2px solid var(--gold); transition: all 0.3s ease; }
+.btn-secondary-dark { display: inline-block; background-color: transparent; color: var(--gold); padding: 0.85rem 2rem; border-radius: 4px; font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; border: 2px solid var(--gold); cursor: pointer; transition: all 0.3s ease; }
 .btn-secondary-dark:hover { background-color: var(--gold); color: var(--navy); transform: translateY(-2px); }
 .thankyou__home { color: rgba(255,255,255,0.5); font-size: 0.9rem; transition: color 0.3s ease; display: inline-block; }
 .thankyou__home:hover { color: var(--gold); }
 @media (max-width: 768px) { .thankyou__steps { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .thankyou__steps { grid-template-columns: 1fr; } }
 </style>
+
+<script>
+  // Read ticket number from URL
+  const params = new URLSearchParams(window.location.search);
+  const ticket = params.get('ticket');
+  if (ticket) {
+    const ticketBox = document.getElementById('ticketBox');
+    const ticketNumber = document.getElementById('ticketNumber');
+    if (ticketBox) ticketBox.style.display = 'block';
+    if (ticketNumber) ticketNumber.textContent = ticket;
+  }
+
+  // Open Tidio live chat
+  function openTidio() {
+    if (typeof (window as any).tidioChatApi !== 'undefined') {
+      (window as any).tidioChatApi.open();
+    } else {
+      window.open('https://wa.me/16624002088', '_blank');
+    }
+  }
+
+  (window as any).openTidio = openTidio;
+</script>
