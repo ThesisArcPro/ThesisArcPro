@@ -718,11 +718,42 @@ const base = '/ThesisArcPro';
     document.getElementById('paymentModal')?.classList.remove('active');
   });
 
-  // Confirm payment — show Submit Order button
-  document.getElementById('confirmPaymentBtn')?.addEventListener('click', () => {
-    document.getElementById('paymentModal')?.classList.remove('active');
-    document.getElementById('createOrderBtn')!.style.display = 'none';
-    document.getElementById('submitOrderBtn')!.style.display = 'block';
+  // Confirm payment — verify transaction ID then show Submit Order button
+  document.getElementById('confirmPaymentBtn')?.addEventListener('click', async () => {
+    const txnId = (document.getElementById('txnId') as HTMLInputElement).value.trim();
+    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
+    
+    btn.textContent = '⏳ Verifying payment...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(
+        'https://rehvwvujuamehoanfomj.supabase.co/functions/v1/verify-payment',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ transactionId: txnId })
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.valid) {
+        document.getElementById('paymentModal')?.classList.remove('active');
+        document.getElementById('createOrderBtn')!.style.display = 'none';
+        const submitBtn = document.getElementById('submitOrderBtn')!;
+        submitBtn.style.display = 'block';
+        submitBtn.setAttribute('data-txn', txnId);
+      } else {
+        alert('❌ ' + (data.error || 'Invalid transaction ID. Please check and try again.'));
+        btn.textContent = '✅ I Have Paid — Submit My Order';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      alert('❌ Verification failed. Please try again.');
+      btn.textContent = '✅ I Have Paid — Submit My Order';
+      btn.disabled = false;
+    }
   });
 
   // Submit Order — save to Google Sheets + Supabase
@@ -812,8 +843,9 @@ const base = '/ThesisArcPro';
             amount_paid: amountPaid,
             payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full',
             order_status: 'new',
-            instructions
-          })
+      instructions,
+      transaction_id: document.getElementById('submitOrderBtn')?.getAttribute('data-txn') || ''
+    })
         });
       }
 
