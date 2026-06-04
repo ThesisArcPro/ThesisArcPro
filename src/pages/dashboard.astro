@@ -14,17 +14,12 @@ const base = '/ThesisArcPro';
 
         <div class="dashboard__header">
           <h1>My Orders</h1>
-          <div class="dashboard__actions">
-            <a href={`${base}/contact/`} class="btn-primary">+ New Order</a>
-            <button id="logoutBtn" class="btn-logout">Log Out</button>
-          </div>
+          <a href={`${base}/contact/`} class="btn-new-order">+ New Order</a>
         </div>
 
         <div class="dashboard__tabs">
-          <button class="tab active" data-tab="all">All</button>
-          <button class="tab" data-tab="new">New</button>
-          <button class="tab" data-tab="in_progress">In Progress</button>
-          <button class="tab" data-tab="completed">Completed</button>
+          <button class="tab active" data-tab="in_progress">Active</button>
+          <button class="tab" data-tab="completed">Closed</button>
         </div>
 
         <div id="loadingState" class="loading-state">
@@ -33,13 +28,19 @@ const base = '/ThesisArcPro';
         </div>
 
         <div id="emptyState" class="empty-state" style="display:none;">
-          <div class="empty-icon">📋</div>
-          <h3>No orders yet</h3>
-          <p>Place your first order and it will appear here.</p>
-          <a href={`${base}/contact/`} class="btn-primary">Place Order</a>
+          <p>No orders yet</p>
         </div>
 
-        <div id="ordersGrid" class="orders-grid" style="display:none;"></div>
+        <div id="ordersGrid" class="orders-grid" style="display:none;">
+          <div class="order-header">
+            <div class="col-topic">Topic</div>
+            <div class="col-status">Status</div>
+            <div class="col-pages">Pages</div>
+            <div class="col-type">Type</div>
+            <div class="col-deadline">Deadline</div>
+          </div>
+          <div id="ordersList"></div>
+        </div>
 
       </div>
     </section>
@@ -59,54 +60,42 @@ const base = '/ThesisArcPro';
 
 <style>
 .dashboard { background: var(--navy); min-height: 100vh; padding: 8rem 0 4rem; }
-.dashboard__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+.dashboard__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 .dashboard__header h1 { color: white; font-size: 2rem; font-weight: 800; margin: 0; }
-.dashboard__actions { display: flex; gap: 1rem; }
-.btn-logout { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-.btn-logout:hover { background: rgba(255,255,255,0.2); }
-.dashboard__tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
-.tab { background: none; border: none; color: rgba(255,255,255,0.6); padding: 0.5rem 0; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; position: relative; }
-.tab.active { color: white; }
+.btn-new-order { background: var(--gold); color: var(--navy); padding: 0.7rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: all 0.2s ease; }
+.btn-new-order:hover { background: #f0c13f; }
+.dashboard__tabs { display: flex; gap: 2rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+.tab { background: none; border: none; color: white; padding: 0.5rem 0; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; position: relative; }
+.tab.active { color: var(--gold); }
 .tab.active::after { content: ''; position: absolute; bottom: -1rem; left: 0; right: 0; height: 2px; background: var(--gold); }
-.tab:hover { color: white; }
+.tab:hover { color: var(--gold); }
 .loading-state { text-align: center; padding: 4rem; color: rgba(255,255,255,0.5); }
 .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.empty-state { text-align: center; padding: 4rem; background: rgba(255,255,255,0.05); border-radius: 12px; }
-.empty-icon { font-size: 3rem; margin-bottom: 1rem; }
-.empty-state h3 { color: white; margin-bottom: 0.5rem; }
-.empty-state p { color: rgba(255,255,255,0.6); margin-bottom: 1.5rem; }
-.orders-grid { display: flex; flex-direction: column; gap: 1rem; }
-.order-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 1.2rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 2rem; transition: all 0.2s ease; cursor: pointer; }
-.order-card:hover { border-color: var(--gold); background: rgba(255,255,255,0.08); }
-.order-card__left { flex: 1; min-width: 0; display: flex; align-items: center; gap: 1.5rem; }
-.order-card__title { color: white; font-weight: 700; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.order-card__info { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-.status-badge { padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: capitalize; }
-.status-new { background: rgba(33,150,243,0.2); color: #64b5f6; }
-.status-in_progress { background: rgba(255,152,0,0.2); color: #ffb74d; }
-.status-completed { background: rgba(76,175,80,0.2); color: #81c784; }
-.order-info-item { color: white; font-size: 0.85rem; white-space: nowrap; }
-.order-info-separator { color: rgba(255,255,255,0.3); margin: 0 0.5rem; }
-.order-card__deadline { color: white; font-size: 0.85rem; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 0.4rem; }
-.deadline-overdue { color: #ff6b6b; }
+.empty-state { text-align: center; padding: 4rem; color: white; }
+.orders-grid { display: flex; flex-direction: column; }
+.order-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr; gap: 1.5rem; padding: 1rem 1.5rem; background: rgba(255,255,255,0.05); border-radius: 8px 8px 0 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 700; color: white; font-size: 0.9rem; }
+.order-card { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr; gap: 1.5rem; padding: 1.2rem 1.5rem; border: 1px solid rgba(255,255,255,0.1); border-top: none; background: rgba(255,255,255,0.02); transition: all 0.2s ease; cursor: pointer; }
+.order-card:last-child { border-radius: 0 0 8px 8px; }
+.order-card:hover { background: rgba(255,255,255,0.08); border-color: var(--gold); }
+.col-topic, .col-status, .col-pages, .col-type, .col-deadline { color: white; font-size: 0.9rem; display: flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status-badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; font-weight: 700; text-transform: capitalize; background: rgba(255,152,0,0.2); color: #ffb74d; }
 .detail-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
 .detail-modal__overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); }
 .detail-modal__content { position: relative; z-index: 1001; background: #1a1a1a; border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; color: white; }
 .detail-modal__close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: white; transition: 0.2s; }
 .detail-modal__close:hover { color: var(--gold); }
-.detail-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 1.5rem; }
+.detail-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 1.5rem; color: white; }
 .detail-section { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .detail-section-title { font-size: 0.75rem; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 700; margin-bottom: 0.8rem; letter-spacing: 0.5px; }
 .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .detail-item__label { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 0.3rem; }
 .detail-item__value { color: white; font-weight: 600; font-size: 0.95rem; }
-.download-btn-modal { display: inline-block; background: var(--gold); color: var(--navy); padding: 0.6rem 1.2rem; border-radius: 6px; text-decoration: none; font-weight: 700; margin-top: 1rem; transition: 0.2s; }
+.download-btn-modal { display: inline-block; background: var(--gold); color: var(--navy); padding: 0.7rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 700; margin-top: 1rem; transition: 0.2s; }
 .download-btn-modal:hover { background: #f0c13f; }
-@media (max-width: 768px) { 
-  .order-card { flex-direction: column; align-items: flex-start; } 
-  .order-card__info { flex-direction: column; gap: 0.5rem; }
-  .order-card__deadline { margin-top: 1rem; }
+@media (max-width: 1024px) { 
+  .order-header, .order-card { grid-template-columns: 2fr 1fr 1fr 1fr; }
+  .col-type { display: none; }
 }
 </style>
 
@@ -118,7 +107,7 @@ const base = '/ThesisArcPro';
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
 
   let allOrders: any[] = [];
-  let currentTab = 'all';
+  let currentTab = 'in_progress';
 
   async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -126,9 +115,6 @@ const base = '/ThesisArcPro';
       window.location.replace(`${base}/login/`);
       return;
     }
-
-    const welcomeText = document.getElementById('welcomeText');
-    if (welcomeText) welcomeText.textContent = `Welcome back, ${session.user.email}`;
 
     await loadOrders(session);
   }
@@ -151,15 +137,6 @@ const base = '/ThesisArcPro';
     }
   }
 
-  function getStatusBadge(status: string) {
-    const map: Record<string, string> = {
-      'new': '<span class="status-badge status-new">new</span>',
-      'in_progress': '<span class="status-badge status-in_progress">in progress</span>',
-      'completed': '<span class="status-badge status-completed">completed</span>',
-    };
-    return map[status] || `<span class="status-badge status-new">${status}</span>`;
-  }
-
   function getDeadlineText(deadline: string) {
     if (!deadline) return 'No deadline';
     const diff = new Date(deadline).getTime() - new Date().getTime();
@@ -168,7 +145,7 @@ const base = '/ThesisArcPro';
     
     if (diff < 0) {
       const overdueDays = Math.abs(days);
-      return `<span class="deadline-overdue">⚠️ ${overdueDays} day${overdueDays > 1 ? 's' : ''} overdue</span>`;
+      return `⚠️ ${overdueDays}d overdue`;
     }
     if (days > 0) return `⏰ ${days}d left`;
     if (hours > 0) return `⏰ ${hours}h left`;
@@ -179,10 +156,15 @@ const base = '/ThesisArcPro';
     const loading = document.getElementById('loadingState');
     const empty = document.getElementById('emptyState');
     const grid = document.getElementById('ordersGrid');
+    const list = document.getElementById('ordersList');
 
     if (loading) loading.style.display = 'none';
 
-    if (!orders || orders.length === 0) {
+    const filtered = currentTab === 'in_progress'
+      ? orders.filter(o => o.order_status === 'in_progress')
+      : orders.filter(o => o.order_status === 'completed');
+
+    if (!filtered || filtered.length === 0) {
       if (empty) empty.style.display = 'block';
       if (grid) grid.style.display = 'none';
       return;
@@ -191,30 +173,26 @@ const base = '/ThesisArcPro';
     if (empty) empty.style.display = 'none';
     if (grid) {
       grid.style.display = 'flex';
-      grid.innerHTML = orders.map(order => `
-        <div class="order-card" data-order-id="${order.id}">
-          <div class="order-card__left">
-            <div class="order-card__title">${order.topic || '(no topic)'}</div>
-            <div class="order-card__info">
-              ${getStatusBadge(order.order_status || 'new')}
-              <span class="order-info-separator">|</span>
-              <span class="order-info-item">${order.pages || 1} page${order.pages > 1 ? 's' : ''}</span>
-              <span class="order-info-separator">|</span>
-              <span class="order-info-item">${order.assignment_type || 'Essay'}</span>
-            </div>
+      if (list) {
+        list.innerHTML = filtered.map(order => `
+          <div class="order-card" data-order-id="${order.id}">
+            <div class="col-topic">${order.topic || '(no topic)'}</div>
+            <div class="col-status"><span class="status-badge">${order.order_status?.replace(/_/g, ' ')}</span></div>
+            <div class="col-pages">${order.pages || 1}</div>
+            <div class="col-type">${order.assignment_type || 'Essay'}</div>
+            <div class="col-deadline">${getDeadlineText(order.deadline)}</div>
           </div>
-          <div class="order-card__deadline">${getDeadlineText(order.deadline)}</div>
-        </div>
-      `).join('');
+        `).join('');
 
-      // Add click handlers
-      grid.querySelectorAll('.order-card').forEach(card => {
-        card.addEventListener('click', () => {
-          const orderId = card.getAttribute('data-order-id');
-          const order = orders.find(o => o.id === orderId);
-          if (order) showOrderDetail(order);
+        // Add click handlers
+        list.querySelectorAll('.order-card').forEach(card => {
+          card.addEventListener('click', () => {
+            const orderId = card.getAttribute('data-order-id');
+            const order = allOrders.find(o => o.id === orderId);
+            if (order) showOrderDetail(order);
+          });
         });
-      });
+      }
     }
   }
 
@@ -230,35 +208,38 @@ const base = '/ThesisArcPro';
       <div class="detail-title">${order.topic}</div>
       
       <div class="detail-section">
-        <div class="detail-section-title">Deadline</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+        <div class="detail-section-title">Status</div>
+        <div class="detail-grid">
           <div>
-            <div class="detail-item__label">Status</div>
+            <div class="detail-item__label">Current Status</div>
             <div class="detail-item__value" style="text-transform: capitalize;">${order.order_status?.replace(/_/g, ' ')}</div>
-            <div class="detail-item__label" style="margin-top: 1rem;">Started</div>
-            <div class="detail-item__value">${startedDate}</div>
           </div>
-          <div style="text-align: center;">
-            <div style="font-size: 2.5rem; font-weight: 800; color: var(--gold);">${daysLeft}d</div>
-            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">left</div>
-            <div style="margin-top: 1.5rem;">
-              <div class="detail-item__label">Due date</div>
-              <div class="detail-item__value">${dueDate}</div>
-            </div>
+          <div>
+            <div class="detail-item__label">Started</div>
+            <div class="detail-item__value">${startedDate}</div>
           </div>
         </div>
       </div>
       
       <div class="detail-section">
-        <div class="detail-section-title">Order</div>
+        <div class="detail-section-title">Deadline</div>
+        <div style="text-align: center; padding: 1rem;">
+          <div style="font-size: 2rem; font-weight: 800; color: var(--gold);">${daysLeft}d</div>
+          <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">left</div>
+          <div style="margin-top: 0.8rem; color: white;">${dueDate}</div>
+        </div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-title">Order Details</div>
         <div class="detail-grid">
-          <div>
-            <div class="detail-item__label">Type</div>
-            <div class="detail-item__value">${order.assignment_type}</div>
-          </div>
           <div>
             <div class="detail-item__label">Pages</div>
             <div class="detail-item__value">${order.pages}</div>
+          </div>
+          <div>
+            <div class="detail-item__label">Type</div>
+            <div class="detail-item__value">${order.assignment_type}</div>
           </div>
           <div>
             <div class="detail-item__label">Amount Paid</div>
@@ -276,8 +257,8 @@ const base = '/ThesisArcPro';
           <a href="${order.file_url}" target="_blank" class="download-btn-modal">📥 Download Work</a>
         </div>
       ` : `
-        <div style="color: rgba(255,255,255,0.6); text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 6px; margin-top: 1rem;">
-          ⏳ Work in progress... Download link will appear when completed.
+        <div style="color: rgba(255,255,255,0.6); text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+          ⏳ Work in progress...
         </div>
       `}
     `;
@@ -305,18 +286,9 @@ const base = '/ThesisArcPro';
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      currentTab = (tab as HTMLElement).dataset.tab || 'all';
-      const filtered = currentTab === 'all'
-        ? allOrders
-        : allOrders.filter(o => o.order_status === currentTab);
-      renderOrders(filtered);
+      currentTab = (tab as HTMLElement).dataset.tab || 'in_progress';
+      renderOrders(allOrders);
     });
-  });
-
-  // Logout
-  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
-    await supabase.auth.signOut();
-    window.location.replace(`${base}/login/`);
   });
 
   checkAuth();
