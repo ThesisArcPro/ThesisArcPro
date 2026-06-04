@@ -71,25 +71,46 @@ const base = '/ThesisArcPro';
 .empty-state h3 { color: white; margin-bottom: 0.5rem; }
 .empty-state p { color: rgba(255,255,255,0.5); margin-bottom: 1.5rem; }
 .orders-grid { display: flex; flex-direction: column; gap: 0.8rem; }
-.order-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1.2rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: all 0.2s ease; }
+.order-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1.2rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: all 0.2s ease; cursor: pointer; }
 .order-card:hover { border-color: var(--gold); background: rgba(255,255,255,0.08); }
 .order-card__left { flex: 1; min-width: 0; }
 .order-card__title { color: white; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.order-card__meta { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+.order-card__meta { display: flex; align-items: center; gap: 0.4rem; flex-wrap: nowrap; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .meta-dot { color: rgba(255,255,255,0.3); }
 .meta-item { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
 .order-card__right { display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0; }
 .order-card__deadline { color: var(--gold); font-size: 0.85rem; font-weight: 600; white-space: nowrap; }
 .order-card__amount { color: white; font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
 .amount-paid { color: rgba(255,255,255,0.4); font-weight: 400; font-size: 0.82rem; }
-.status-badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.status-badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: capitalize; letter-spacing: 0.5px; }
 .status-new { background: rgba(21,101,192,0.2); color: #90caf9; }
 .status-in_progress { background: rgba(230,81,0,0.2); color: #ffcc80; }
 .status-completed { background: rgba(46,125,50,0.2); color: #a5d6a7; }
 .download-btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--gold); color: var(--navy); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.82rem; font-weight: 700; text-decoration: none; transition: all 0.2s ease; white-space: nowrap; }
 .download-btn:hover { background: white; }
 @media (max-width: 768px) { .order-card { flex-direction: column; align-items: flex-start; } .order-card__right { width: 100%; justify-content: space-between; } }
+.detail-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.detail-modal__overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); }
+.detail-modal__content { position: relative; z-index: 1001; background: #1a1a1a; border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; color: white; }
+.detail-modal__close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: white; transition: 0.2s; }
+.detail-modal__close:hover { color: var(--gold); }
+.detail-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 1.5rem; }
+.detail-section { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.detail-section-title { font-size: 0.75rem; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 700; margin-bottom: 0.8rem; letter-spacing: 0.5px; }
+.detail-item__label { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 0.3rem; }
+.detail-item__value { color: white; font-weight: 600; font-size: 0.95rem; }
+.download-btn-modal { display: inline-block; background: var(--gold); color: var(--navy); padding: 0.6rem 1.2rem; border-radius: 6px; text-decoration: none; font-weight: 700; margin-top: 1rem; transition: 0.2s; }
+.download-btn-modal:hover { background: #f0c13f; }
 </style>
+
+<!-- Order Detail Modal -->
+<div id="detailModal" class="detail-modal" style="display:none;">
+  <div class="detail-modal__overlay"></div>
+  <div class="detail-modal__content">
+    <button id="closeModal" class="detail-modal__close">✕</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
 
 <script>
   import { supabase } from '../lib/supabase.js';
@@ -134,9 +155,9 @@ const base = '/ThesisArcPro';
 
   function getStatusBadge(status: string) {
     const map: Record<string, string> = {
-      'new': '<span class="status-badge status-new">🆕 New</span>',
-      'in_progress': '<span class="status-badge status-in_progress">⚙️ In Progress</span>',
-      'completed': '<span class="status-badge status-completed">✅ Completed</span>',
+      'new': '<span class="status-badge status-new">new</span>',
+      'in_progress': '<span class="status-badge status-in_progress">in progress</span>',
+      'completed': '<span class="status-badge status-completed">completed</span>',
     };
     return map[status] || `<span class="status-badge status-new">${status}</span>`;
   }
@@ -166,9 +187,9 @@ const base = '/ThesisArcPro';
 
     if (empty) empty.style.display = 'none';
     if (grid) {
-      grid.style.display = 'grid';
+      grid.style.display = 'flex';
       grid.innerHTML = orders.map(order => `
-        <div class="order-card">
+        <div class="order-card" data-order-id="${order.id}">
           <div class="order-card__left">
             <div class="order-card__title">${order.topic || 'N/A'}</div>
             <div class="order-card__meta">
@@ -178,7 +199,9 @@ const base = '/ThesisArcPro';
               <span class="meta-dot">·</span>
               <span class="meta-item">${order.assignment_type || 'N/A'}</span>
               <span class="meta-dot">·</span>
-              <span class="meta-item">${order.order_number}</span>
+              <span class="meta-item">🇺🇸</span>
+              <span class="meta-dot">|</span>
+              <span class="meta-item">ID ${order.order_number}</span>
             </div>
           </div>
           <div class="order-card__right">
@@ -188,8 +211,91 @@ const base = '/ThesisArcPro';
           </div>
         </div>
       `).join('');
+
+      // Add click handlers to cards
+      grid.querySelectorAll('.order-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const orderId = card.getAttribute('data-order-id');
+          const order = orders.find(o => o.id === orderId);
+          if (order) showOrderDetail(order);
+        });
+      });
     }
   }
+
+  function showOrderDetail(order: any) {
+    const modal = document.getElementById('detailModal');
+    const content = document.getElementById('detailContent');
+    
+    const daysLeft = Math.ceil((new Date(order.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+    const startedDate = new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    const dueDate = new Date(order.deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    
+    content!.innerHTML = `
+      <div class="detail-title">${order.topic}</div>
+      
+      <div class="detail-section">
+        <div class="detail-section-title">Deadline</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+          <div>
+            <div class="detail-item__label">Status</div>
+            <div class="detail-item__value" style="text-transform: capitalize;">${order.order_status?.replace(/_/g, ' ')}</div>
+            <div class="detail-item__label" style="margin-top: 1rem;">Started</div>
+            <div class="detail-item__value">${startedDate}</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--gold);">${daysLeft}d</div>
+            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">left</div>
+            <div style="margin-top: 1.5rem;">
+              <div class="detail-item__label">Due date</div>
+              <div class="detail-item__value">${dueDate}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-title">Order</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <div class="detail-item__label">My share</div>
+            <div class="detail-item__value">$${Number(order.amount_paid || 0).toFixed(2)}</div>
+          </div>
+          <div>
+            <div class="detail-item__label">Total</div>
+            <div class="detail-item__value">$${Number(order.total_amount || 0).toFixed(2)}</div>
+          </div>
+        </div>
+      </div>
+      
+      ${order.file_url ? `
+        <div class="detail-section">
+          <a href="${order.file_url}" target="_blank" class="download-btn-modal">📥 Download Work</a>
+        </div>
+      ` : `
+        <div style="color: rgba(255,255,255,0.6); text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 6px; margin-top: 1rem;">
+          ⏳ Work in progress... Download link will appear when completed.
+        </div>
+      `}
+    `;
+    
+    modal!.style.display = 'flex';
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('detailModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  // Close modal on overlay click
+  document.getElementById('detailModal')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('detailModal')) {
+      closeModal();
+    }
+  });
+
+  // Close modal button
+  document.getElementById('closeModal')?.addEventListener('click', closeModal);
 
   // Tabs
   document.querySelectorAll('.tab').forEach(tab => {
