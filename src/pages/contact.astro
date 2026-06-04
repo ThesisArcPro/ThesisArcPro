@@ -722,6 +722,282 @@ const base = '/ThesisArcPro';
   document.getElementById('confirmPaymentBtn')?.addEventListener('click', async () => {
     const txnId = (document.getElementById('txnId') as HTMLInputElement).value.trim();
     const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
+
+    // Validate format instantly on frontend
+    const isValidFormat = /^[A-Z0-9]{8,20}$/i.test(txnId);
+    if (!isValidFormat) {
+      alert('❌ Invalid Transaction ID. PayPal IDs are 8-20 characters (letters and numbers only).');
+      return;
+    }
+
+    btn.textContent = '⏳ Checking...';
+    btn.disabled = true;
+
+    // Check if already used in Supabase
+    try {
+      const checkRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${currentSession?.access_token}`
+          }
+        }
+      );
+      const checkData = await checkRes.json();
+
+      if (checkData.length > 0) {
+        alert('❌ This Transaction ID has already been used.');
+        btn.textContent = '✅ I Have Paid — Submit My Order';
+        btn.disabled = false;
+        return;
+      }
+
+      // All good — show submit button
+      document.getElementById('paymentModal')?.classList.remove('active');
+      document.getElementById('createOrderBtn')!.style.display = 'none';
+      const submitBtn = document.getElementById('submitOrderBtn')!;
+      submitBtn.style.display = 'block';
+      submitBtn.setAttribute('data-txn', txnId);
+
+    } catch (err) {
+      alert('❌ Verification failed. Please try again.');
+      btn.textContent = '✅ I Have Paid — Submit My Order';
+      btn.disabled = false;
+    }
+  });
+    const txnId = (document.getElementById('txnId') as HTMLInputElement).value.trim();
+    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
+
+    // Validate format instantly on frontend
+    const isValidFormat = /^[A-Z0-9]{8,20}$/i.test(txnId);
+    if (!isValidFormat) {
+      alert('❌ Invalid Transaction ID. PayPal IDs are 8-20 characters (letters and numbers only).');
+      return;
+    }
+
+    btn.textContent = '⏳ Checking...';
+    btn.disabled = true;
+
+    // Check if already used in Supabase
+    try {
+      const checkRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${currentSession?.access_token}`
+          }
+        }
+      );
+      const checkData = await checkRes.json();
+
+      if (checkData.length > 0) {
+        alert('❌ This Transaction ID has already been used.');
+        btn.textContent = '✅ I Have Paid — Submit My Order';
+        btn.disabled = false;
+        return;
+      }
+
+      // All good — show submit button
+      document.getElementById('paymentModal')?.classList.remove('active');
+      document.getElementById('createOrderBtn')!.style.display = 'none';
+      const submitBtn = document.getElementById('submitOrderBtn')!;
+      submitBtn.style.display = 'block';
+      submitBtn.setAttribute('data-txn', txnId);
+
+    } catch (err) {
+      alert('❌ Verification failed. Please try again.');
+      btn.textContent = '✅ I Have Paid — Submit My Order';
+      btn.disabled = false;
+    }
+  });
+    const txnId = (document.getElementById('txnId') as HTMLInputElement).value.trim();
+    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
+
+    // Validate format instantly on frontend
+    const isValidFormat = /^[A-Z0-9]{8,20}$/i.test(txnId);
+    if (!isValidFormat) {
+      alert('❌ Invalid Transaction ID. PayPal IDs are 8-20 characters (letters and numbers only).');
+      return;
+    }
+
+    btn.textContent = '⏳ Checking...';
+    btn.disabled = true;
+
+    // Check if already used in Supabase
+    try {
+      const checkRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${currentSession?.access_token}`
+          }
+        }
+      );
+      const checkData = await checkRes.json();
+
+      if (checkData.length > 0) {
+        alert('❌ This Transaction ID has already been used.');
+        btn.textContent = '✅ I Have Paid — Submit My Order';
+        btn.disabled = false;
+        return;
+      }
+
+      // All good — show submit button
+      document.getElementById('paymentModal')?.classList.remove('active');
+      document.getElementById('createOrderBtn')!.style.display = 'none';
+      const submitBtn = document.getElementById('submitOrderBtn')!;
+      submitBtn.style.display = 'block';
+      submitBtn.setAttribute('data-txn', txnId);
+
+    } catch (err) {
+      alert('❌ Verification failed. Please try again.');
+      btn.textContent = '✅ I Have Paid — Submit My Order';
+      btn.disabled = false;
+    }
+  });
+    const txnId = (document.getElementById('txnId') as HTMLInputElement).value.trim();
+    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
+
+    // Validate format instantly on frontend
+    const isValidFormat = /^[A-Z0-9]{8,20}$/i.test(txnId);
+    if (!isValidFormat) {
+      alert('❌ Invalid Transaction ID. PayPal IDs are 8-20 characters (letters and numbers only).');
+      return;
+    }
+
+    btn.textContent = '⏳ Checking...';
+    btn.disabled = true;
+
+    // Check if already used in Supabase
+    try {
+      const checkRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${currentSession?.access_token}`
+          }
+        }
+      );
+      const checkData = await checkRes.json();
+
+      if (checkData.length > 0) {
+        alert('❌ This Transaction ID has already been used.');
+        btn.textContent = '✅ I Have Paid — Submit My Order';
+        btn.disabled = false;
+        return;
+      }
+
+      // All good — show submit button
+      document.getElementById('paymentModal')?.classList.remove('active');
+      document.getElementById('createOrderBtn')!.style.display = 'none';
+      const submitBtn = document.getElementById('submitOrderBtn')!;
+      submitBtn.style.display = 'block';
+      submitBtn.setAttribute('data-txn', txnId);
+
+    } catch (err) {
+      alert('❌ Verification failed. Please try again.');
+      btn.textContent = '✅ I Have Paid — Submit My Order';
+      btn.disabled = false;
+    }
+  });
+    const txnId = (document.getElementById('txnId') as HTMLInputElement).value.trim();
+    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
+
+    // Validate format instantly on frontend
+    const isValidFormat = /^[A-Z0-9]{8,20}$/i.test(txnId);
+    if (!isValidFormat) {
+      alert('❌ Invalid Transaction ID. PayPal IDs are 8-20 characters (letters and numbers only).');
+      return;
+    }
+
+    btn.textContent = '⏳ Checking...';
+    btn.disabled = true;
+
+    // Check if already used in Supabase
+    try {
+      const checkRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${currentSession?.access_token}`
+          }
+        }
+      );
+      const checkData = await checkRes.json();
+
+      if (checkData.length > 0) {
+        alert('❌ This Transaction ID has already been used.');
+        btn.textContent = '✅ I Have Paid — Submit My Order';
+        btn.disabled = false;
+        return;
+      }
+
+      // All good — show submit button
+      document.getElementById('paymentModal')?.classList.remove('active');
+      document.getElementById('createOrderBtn')!.style.display = 'none';
+      const submitBtn = document.getElementById('submitOrderBtn')!;
+      submitBtn.style.display = 'block';
+      submitBtn.setAttribute('data-txn', txnId);
+
+    } catch (err) {
+      alert('❌ Verification failed. Please try again.');
+      btn.textContent = '✅ I Have Paid — Submit My Order';
+      btn.disabled = false;
+    }
+  });
+    const txnId = (document.getElementById('txnId') as HTMLInputElement).value.trim();
+    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
+
+    // Validate format instantly on frontend
+    const isValidFormat = /^[A-Z0-9]{8,20}$/i.test(txnId);
+    if (!isValidFormat) {
+      alert('❌ Invalid Transaction ID. PayPal IDs are 8-20 characters (letters and numbers only).');
+      return;
+    }
+
+    btn.textContent = '⏳ Checking...';
+    btn.disabled = true;
+
+    // Check if already used in Supabase
+    try {
+      const checkRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${currentSession?.access_token}`
+          }
+        }
+      );
+      const checkData = await checkRes.json();
+
+      if (checkData.length > 0) {
+        alert('❌ This Transaction ID has already been used.');
+        btn.textContent = '✅ I Have Paid — Submit My Order';
+        btn.disabled = false;
+        return;
+      }
+
+      // All good — show submit button
+      document.getElementById('paymentModal')?.classList.remove('active');
+      document.getElementById('createOrderBtn')!.style.display = 'none';
+      const submitBtn = document.getElementById('submitOrderBtn')!;
+      submitBtn.style.display = 'block';
+      submitBtn.setAttribute('data-txn', txnId);
+
+    } catch (err) {
+      alert('❌ Verification failed. Please try again.');
+      btn.textContent = '✅ I Have Paid — Submit My Order';
+      btn.disabled = false;
+    }
+  });
+    const txnId = (document.getElementById('txnId') as HTMLInputElement).value.trim();
+    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
     
     btn.textContent = '⏳ Verifying payment...';
     btn.disabled = true;
