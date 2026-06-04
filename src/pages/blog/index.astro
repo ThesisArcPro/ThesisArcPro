@@ -4,9 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 <BaseLayout 
   title="Academic Writing Blog | ThesisArcPro"
-  description="Expert tips, guides and advice on essay writing, 
-  thesis development, research papers and academic success for 
-  university students worldwide.">
+  description="Expert tips, guides and advice on essay writing, thesis development, research papers and academic success for university students worldwide.">
 
   <main class="blog-index">
     <section class="blog-hero">
@@ -16,7 +14,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </section>
 
     <section class="blog-grid">
+
       <article class="blog-card">
+        <span class="blog-category">Essay Writing</span>
         <h2>
           <a href="/ThesisArcPro/blog/how-to-write-an-essay-as-a-university-student">
             How to Write an Essay as a University Student: 
@@ -27,9 +27,31 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         to write an essay as a university student with our 
         step-by-step guide on structure, formatting, and 
         critical research.</p>
-        <a href="/ThesisArcPro/blog/how-to-write-an-essay-as-a-university-student" 
-          class="read-more">Read More →</a>
+        <div class="blog-card-footer">
+          <span class="blog-date">June 4, 2026</span>
+          <a href="/ThesisArcPro/blog/how-to-write-an-essay-as-a-university-student" 
+            class="read-more">Read More →</a>
+        </div>
       </article>
+
+      <article class="blog-card">
+        <span class="blog-category">Thesis & Dissertation</span>
+        <h2>
+          <a href="/ThesisArcPro/blog/how-to-write-a-masters-thesis">
+            How to Write a Master's Thesis: A Complete Guide 
+            for Graduate Students
+          </a>
+        </h2>
+        <p>Learn how to write a master's thesis step by step. 
+        Our complete guide covers structure, format, proposal 
+        writing and research tips for postgraduate students.</p>
+        <div class="blog-card-footer">
+          <span class="blog-date">June 4, 2026</span>
+          <a href="/ThesisArcPro/blog/how-to-write-a-masters-thesis" 
+            class="read-more">Read More →</a>
+        </div>
+      </article>
+
     </section>
   </main>
 
@@ -43,25 +65,53 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
   .blog-hero h1 {
     font-size: 2.5rem;
+    color: #1B2A4A;
     margin-bottom: 1rem;
+  }
+
+  .blog-hero p {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
   }
 
   .blog-grid {
     max-width: 900px;
     margin: 2rem auto;
     padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
   }
 
   .blog-card {
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 2rem;
-    margin-bottom: 2rem;
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .blog-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .blog-category {
+    display: inline-block;
+    background-color: #e8f0fe;
+    color: #1B2A4A;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
   }
 
   .blog-card h2 {
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
   }
 
   .blog-card h2 a {
@@ -73,11 +123,35 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     text-decoration: underline;
   }
 
+  .blog-card p {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .blog-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .blog-date {
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+
   .read-more {
     display: inline-block;
-    margin-top: 1rem;
     color: #1B2A4A;
     font-weight: bold;
+    font-size: 0.9rem;
     text-decoration: none;
+  }
+
+  .read-more:hover {
+    text-decoration: underline;
   }
 </style>
