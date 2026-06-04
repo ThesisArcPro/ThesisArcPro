@@ -4,9 +4,9 @@ const {
   title = 'ThesisArcPro', 
   description = 'Expert academic writing and research support for high school, college, Masters and PhD students. Essays, dissertations, research papers, editing and more.',
   image = 'https://thesisarcpro.github.io/ThesisArcPro/og-image.jpg',
-  url = 'https://thesisarcpro.github.io/ThesisArcPro/'
+  url = Astro.url.href
 } = Astro.props;
-const fullTitle = `${title} | ThesisArcPro – Expert Academic Writing Support`;
+const fullTitle = title.includes('ThesisArcPro') ? title : `${title} | ThesisArcPro`;
 ---
 <!doctype html>
 <html lang="en">
