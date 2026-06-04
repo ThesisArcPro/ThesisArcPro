@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Academic Writing Blog | ThesisArcPro"
+  description="Expert tips, guides and advice on essay writing, 
+  thesis development, research papers and academic success for 
+  university students worldwide.">
+
+  <main class="blog-index">
+    <section class="blog-hero">
+      <h1>Academic Writing Blog</h1>
+      <p>Expert guides to help university students write better 
+      essays, dissertations, and research papers.</p>
+    </section>
+
+    <section class="blog-grid">
+      <article class="blog-card">
+        <h2>
+          <a href="/ThesisArcPro/blog/how-to-write-an-essay-as-a-university-student">
+            How to Write an Essay as a University Student: 
+            A Step-by-Step Guide
+          </a>
+        </h2>
+        <p>Master the art of academic essay writing. Learn how 
+        to write an essay as a university student with our 
+        step-by-step guide on structure, formatting, and 
+        critical research.</p>
+        <a href="/ThesisArcPro/blog/how-to-write-an-essay-as-a-university-student" 
+          class="read-more">Read More →</a>
+      </article>
+    </section>
+  </main>
+
+</BaseLayout>
+
+<style>
+  .blog-hero {
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+  }
+
+  .blog-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .blog-grid {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+  }
+
+  .blog-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .blog-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .blog-card h2 a {
+    color: #1B2A4A;
+    text-decoration: none;
+  }
+
+  .blog-card h2 a:hover {
+    text-decoration: underline;
+  }
+
+  .read-more {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #1B2A4A;
+    font-weight: bold;
+    text-decoration: none;
+  }
+</style>
