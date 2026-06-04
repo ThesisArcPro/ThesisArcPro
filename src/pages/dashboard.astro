@@ -52,43 +52,43 @@ const base = '/ThesisArcPro';
 </BaseLayout>
 
 <style>
-.dashboard { background: var(--off-white); min-height: 100vh; padding: 8rem 0 4rem; }
+.dashboard { background: var(--navy); min-height: 100vh; padding: 8rem 0 4rem; }
 .dashboard__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-.dashboard__header h1 { color: var(--navy); font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 0.3rem; }
-.dashboard__header p { color: var(--text-mid); font-size: 0.95rem; }
+.dashboard__header h1 { color: var(--white); font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 0.3rem; }
+.dashboard__header p { color: rgba(255,255,255,0.6); font-size: 0.95rem; }
 .dashboard__actions { display: flex; gap: 1rem; align-items: center; }
-.btn-logout { background: none; border: 1.5px solid var(--navy); color: var(--navy); padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-.btn-logout:hover { background: var(--navy); color: white; }
-.dashboard__tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
-.tab { background: white; border: 1.5px solid var(--border); color: var(--text-mid); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-.tab.active { background: var(--navy); color: white; border-color: var(--navy); }
-.tab:hover:not(.active) { border-color: var(--navy); color: var(--navy); }
-.loading-state { text-align: center; padding: 4rem; color: var(--text-mid); }
-.spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+.btn-logout { background: none; border: 1.5px solid rgba(255,255,255,0.3); color: white; padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.btn-logout:hover { background: rgba(255,255,255,0.1); }
+.dashboard__tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+.tab { background: none; border: none; color: rgba(255,255,255,0.5); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.tab.active { background: var(--gold); color: var(--navy); }
+.tab:hover:not(.active) { color: white; }
+.loading-state { text-align: center; padding: 4rem; color: rgba(255,255,255,0.5); }
+.spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.empty-state { text-align: center; padding: 4rem; background: white; border-radius: 16px; }
+.empty-state { text-align: center; padding: 4rem; background: rgba(255,255,255,0.05); border-radius: 16px; }
 .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
-.empty-state h3 { color: var(--navy); margin-bottom: 0.5rem; }
-.empty-state p { color: var(--text-mid); margin-bottom: 1.5rem; }
-.orders-grid { display: grid; gap: 1rem; }
-.order-card { background: white; border-radius: 12px; padding: 1.5rem; border: 1.5px solid var(--border); transition: all 0.2s ease; }
-.order-card:hover { border-color: var(--gold); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-.order-card__top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
-.order-card__ticket { font-size: 1.1rem; font-weight: 800; color: var(--navy); }
-.order-card__date { color: var(--text-light); font-size: 0.82rem; }
-.status-badge { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-.status-new { background: #e3f2fd; color: #1565c0; }
-.status-in_progress { background: #fff3e0; color: #e65100; }
-.status-completed { background: #e8f5e9; color: #2e7d32; }
-.order-card__body { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
-.order-detail { display: flex; flex-direction: column; gap: 0.2rem; }
-.order-detail__label { color: var(--text-light); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.order-detail__value { color: var(--navy); font-size: 0.9rem; font-weight: 600; }
-.order-card__footer { border-top: 1px solid var(--border); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
-.order-card__instructions { color: var(--text-mid); font-size: 0.82rem; max-width: 600px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.download-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--gold); color: var(--navy); padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; text-decoration: none; transition: all 0.2s ease; }
-.download-btn:hover { background: var(--navy); color: white; }
-@media (max-width: 768px) { .dashboard__header { flex-direction: column; } .order-card__top { flex-direction: column; } }
+.empty-state h3 { color: white; margin-bottom: 0.5rem; }
+.empty-state p { color: rgba(255,255,255,0.5); margin-bottom: 1.5rem; }
+.orders-grid { display: flex; flex-direction: column; gap: 0.8rem; }
+.order-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1.2rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: all 0.2s ease; }
+.order-card:hover { border-color: var(--gold); background: rgba(255,255,255,0.08); }
+.order-card__left { flex: 1; min-width: 0; }
+.order-card__title { color: white; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.order-card__meta { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+.meta-dot { color: rgba(255,255,255,0.3); }
+.meta-item { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
+.order-card__right { display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0; }
+.order-card__deadline { color: var(--gold); font-size: 0.85rem; font-weight: 600; white-space: nowrap; }
+.order-card__amount { color: white; font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
+.amount-paid { color: rgba(255,255,255,0.4); font-weight: 400; font-size: 0.82rem; }
+.status-badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.status-new { background: rgba(21,101,192,0.2); color: #90caf9; }
+.status-in_progress { background: rgba(230,81,0,0.2); color: #ffcc80; }
+.status-completed { background: rgba(46,125,50,0.2); color: #a5d6a7; }
+.download-btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--gold); color: var(--navy); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.82rem; font-weight: 700; text-decoration: none; transition: all 0.2s ease; white-space: nowrap; }
+.download-btn:hover { background: white; }
+@media (max-width: 768px) { .order-card { flex-direction: column; align-items: flex-start; } .order-card__right { width: 100%; justify-content: space-between; } }
 </style>
 
 <script>
@@ -141,6 +141,16 @@ const base = '/ThesisArcPro';
     return map[status] || `<span class="status-badge status-new">${status}</span>`;
   }
 
+  function timeLeft(deadline: string) {
+    if (!deadline) return 'No deadline';
+    const diff = new Date(deadline).getTime() - new Date().getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    if (diff < 0) return '⚠️ Overdue';
+    if (days > 0) return `⏰ ${days} day${days > 1 ? 's' : ''} left`;
+    return `⏰ ${hours}h left`;
+  }
+
   function renderOrders(orders: any[]) {
     const loading = document.getElementById('loadingState');
     const empty = document.getElementById('emptyState');
@@ -159,42 +169,22 @@ const base = '/ThesisArcPro';
       grid.style.display = 'grid';
       grid.innerHTML = orders.map(order => `
         <div class="order-card">
-          <div class="order-card__top">
-            <div>
-              <div class="order-card__ticket">${order.order_number || 'N/A'}</div>
-              <div class="order-card__date">${new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
-            </div>
-            ${getStatusBadge(order.order_status || 'new')}
-          </div>
-          <div class="order-card__body">
-            <div class="order-detail">
-              <span class="order-detail__label">Topic</span>
-              <span class="order-detail__value">${order.topic || 'N/A'}</span>
-            </div>
-            <div class="order-detail">
-              <span class="order-detail__label">Type</span>
-              <span class="order-detail__value">${order.assignment_type || 'N/A'}</span>
-            </div>
-            <div class="order-detail">
-              <span class="order-detail__label">Pages</span>
-              <span class="order-detail__value">${order.pages || 'N/A'}</span>
-            </div>
-            <div class="order-detail">
-              <span class="order-detail__label">Deadline</span>
-              <span class="order-detail__value">${order.deadline ? new Date(order.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</span>
-            </div>
-            <div class="order-detail">
-              <span class="order-detail__label">Total</span>
-              <span class="order-detail__value">$${order.total_amount || '0'}</span>
-            </div>
-            <div class="order-detail">
-              <span class="order-detail__label">Amount Paid</span>
-              <span class="order-detail__value">$${order.amount_paid || '0'}</span>
+          <div class="order-card__left">
+            <div class="order-card__title">${order.topic || 'N/A'}</div>
+            <div class="order-card__meta">
+              ${getStatusBadge(order.order_status || 'new')} 
+              <span class="meta-dot">·</span>
+              <span class="meta-item">${order.pages || 1} page${order.pages > 1 ? 's' : ''}</span>
+              <span class="meta-dot">·</span>
+              <span class="meta-item">${order.assignment_type || 'N/A'}</span>
+              <span class="meta-dot">·</span>
+              <span class="meta-item">${order.order_number}</span>
             </div>
           </div>
-          <div class="order-card__footer">
-            <div class="order-card__instructions">${order.instructions || ''}</div>
-            ${order.file_url ? `<a href="${order.file_url}" target="_blank" class="download-btn">📥 Download Work</a>` : ''}
+          <div class="order-card__right">
+            <div class="order-card__deadline">${timeLeft(order.deadline)}</div>
+            <div class="order-card__amount">$${Number(order.total_amount || 0).toFixed(2)} <span class="amount-paid">($${Number(order.amount_paid || 0).toFixed(2)})</span></div>
+            ${order.file_url ? `<a href="${order.file_url}" target="_blank" class="download-btn">📥 Download</a>` : ''}
           </div>
         </div>
       `).join('');
