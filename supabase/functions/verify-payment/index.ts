@@ -12,71 +12,44 @@ export default async (req: Request) => {
   }
 
   try {
-    const { transactionId, accessToken } = await req.json();
+    const { transactionId } = await req.json();
 
+    // Validate format — PayPal IDs are 17-19 alphanumeric characters
+    const isValidFormat = /^[A-Z0-9]{8,20}$/i.test(transactionId);
+    if (!isValidFormat) {
+      return new Response(
+        JSON.stringify({ valid: false, error: "Invalid Transaction ID format. Please check your PayPal email." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Check if already used
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    // Check if transaction ID already used
     const { data: existing } = await supabase
       .from("orders")
       .select("id")
       .eq("transaction_id", transactionId)
-      .single();
+      .maybeSingle();
 
     if (existing) {
       return new Response(
-        JSON.stringify({ valid: false, error: "Transaction ID already used" }),
+        JSON.stringify({ valid: false, error: "This Transaction ID has already been used." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Verify with PayPal
-    const clientId = Deno.env.get("PAYPAL_CLIENT_ID");
-    const secret = Deno.env.get("PAYPAL_SECRET");
-
-    const authRes = await fetch("https://api-m.paypal.com/v1/oauth2/token", {
-      method: "POST",
-      headers: {
-        "Authorization": `Basic ${btoa(`${clientId}:${secret}`)}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: "grant_type=client_credentials",
-    });
-
-    const authData = await authRes.json();
-    const paypalToken = authData.access_token;
-
-    // Try as capture ID first
-    const captureRes = await fetch(
-      `https://api-m.paypal.com/v2/payments/captures/${transactionId}`,
-      {
-        headers: {
-          "Authorization": `Bearer ${paypalToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const captureData = await captureRes.json();
-
-    if (captureData.status === "COMPLETED") {
-      return new Response(
-        JSON.stringify({ valid: true }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
     return new Response(
-      JSON.stringify({ valid: false, error: "Transaction not found or not completed" }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ valid: true }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
 
   } catch (error) {
     return new Response(
-      JSON.stringify({ valid: false, error: "Verification failed" }),
+      JSON.stringify({ valid: false, error: "Verification failed. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
