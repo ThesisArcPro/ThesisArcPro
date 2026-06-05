@@ -84,7 +84,12 @@ const base = '/ThesisArcPro';
     window.location.href = '/ThesisArcPro/login/';
   });
 
-  // Mobile menu
+  </script>
+
+<script>
+  const burger = document.getElementById('burger');
+  const nav = document.querySelector('.header__nav');
+
   burger?.addEventListener('click', () => {
     nav?.classList.toggle('mobile-open');
   });
