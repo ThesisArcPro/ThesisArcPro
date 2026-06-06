@@ -6,5 +6,14 @@ export default defineConfig({
   site: 'https://thesisarcpro.github.io',
   base: '/ThesisArcPro',
   trailingSlash: 'always',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) =>
+        !page.includes('/admin/') &&
+        !page.includes('/dashboard/') &&
+        !page.includes('/login/') &&
+        !page.includes('/signup/') &&
+        !page.includes('/thankyou/')
+    }),
+  ],
 });
