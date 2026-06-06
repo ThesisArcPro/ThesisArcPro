@@ -1,0 +1,164 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+const base = '/ThesisArcPro';
+---
+
+<BaseLayout title="Payment Policy" description="ThesisArcPro Payment Policy — payment terms, refunds and revisions.">
+  <Header />
+
+  <main>
+    <section class="policy-hero">
+      <div class="container">
+        <h1>Payment Policy</h1>
+        <p>Last updated: June 2026</p>
+      </div>
+    </section>
+
+    <section class="policy-content">
+      <div class="container policy-inner">
+
+        <div class="policy-section highlight">
+          <h2>💰 Quick Summary</h2>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <div class="summary-icon">📦</div>
+              <h3>Under $30</h3>
+              <p>Full payment required upfront before work begins</p>
+            </div>
+            <div class="summary-item">
+              <div class="summary-icon">💳</div>
+              <h3>$30 and above</h3>
+              <p>50% deposit now, remaining 50% due on delivery</p>
+            </div>
+            <div class="summary-item">
+              <div class="summary-icon">🔄</div>
+              <h3>Free Revisions</h3>
+              <p>Unlimited free revisions within original scope</p>
+            </div>
+            <div class="summary-item">
+              <div class="summary-icon">✅</div>
+              <h3>Money Back</h3>
+              <p>Full refund if we miss your deadline</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="policy-section">
+          <h2>1. Payment Methods</h2>
+          <p>We accept payments through:</p>
+          <ul>
+            <li>PayPal (credit card, debit card, PayPal balance)</li>
+            <li>Visa, Mastercard via PayPal</li>
+          </ul>
+          <p>All payments are processed securely through PayPal. We never store your card details.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>2. Payment Structure</h2>
+          <div class="payment-table">
+            <div class="payment-row header">
+              <span>Order Total</span>
+              <span>Pay Now</span>
+              <span>Pay on Delivery</span>
+            </div>
+            <div class="payment-row">
+              <span>Under $30</span>
+              <span class="highlight-text">100% ($30 or less)</span>
+              <span>—</span>
+            </div>
+            <div class="payment-row">
+              <span>$30 and above</span>
+              <span class="highlight-text">50% deposit</span>
+              <span>50% on delivery</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="policy-section">
+          <h2>3. When Does Work Begin?</h2>
+          <p>Work begins immediately after:</p>
+          <ul>
+            <li>Payment is verified in our system</li>
+            <li>All order details are confirmed</li>
+            <li>Our team matches you with the right expert</li>
+          </ul>
+          <p>Matching typically takes <strong>30 minutes or less</strong>.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>4. Revisions Policy</h2>
+          <ul>
+            <li>✅ Free unlimited revisions within the original scope</li>
+            <li>✅ Revision requests accepted within 7 days of delivery</li>
+            <li>⚠️ Changes to original requirements may incur additional charges</li>
+            <li>⚠️ New topics or significantly expanded scope are treated as new orders</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>5. Refund Policy</h2>
+          <ul>
+            <li>✅ <strong>Full refund</strong> — if we fail to deliver by your deadline</li>
+            <li>✅ <strong>Full refund</strong> — if no writer is found for your order</li>
+            <li>⚠️ <strong>Partial refund</strong> — if delivered work does not meet requirements after revisions</li>
+            <li>❌ <strong>No refund</strong> — if work has been downloaded and submitted</li>
+            <li>❌ <strong>No refund</strong> — for change of mind after work has begun</li>
+          </ul>
+          <p>All refund disputes must be raised within <strong>7 days of delivery</strong>.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>6. Late Payments</h2>
+          <p>For orders with a 50% deposit structure:</p>
+          <ul>
+            <li>Completed work will be held until remaining balance is paid</li>
+            <li>We reserve the right to cancel orders with unpaid balances after 48 hours</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>7. Contact Us</h2>
+          <p>For payment-related queries:</p>
+          <ul>
+            <li>Email: <a href="mailto:thesisarcpro069@gmail.com">thesisarcpro069@gmail.com</a></li>
+            <li>WhatsApp: <a href="https://wa.me/16624002088">+1 (662) 400-2088</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+.policy-hero { background: var(--navy); padding: 10rem 0 4rem; text-align: center; }
+.policy-hero h1 { color: var(--white); margin-bottom: 0.5rem; }
+.policy-hero p { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+.policy-content { padding: var(--section-padding); background: var(--off-white); }
+.policy-inner { max-width: 800px; margin: 0 auto; }
+.policy-section { background: rgb(221, 229, 235); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
+.policy-section h2 { color: var(--navy); font-size: 1.2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gold); }
+.policy-section p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1rem; }
+.policy-section ul { color: var(--text-mid); line-height: 1.8; padding-left: 1.5rem; }
+.policy-section ul li { margin-bottom: 0.5rem; }
+.policy-section a { color: var(--gold); text-decoration: none; }
+.policy-section a:hover { text-decoration: underline; }
+.policy-section.highlight { background: var(--navy); border-color: var(--gold); }
+.policy-section.highlight h2 { color: var(--gold); border-bottom-color: rgba(255,255,255,0.1); }
+.summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.summary-item { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 1.2rem; text-align: center; }
+.summary-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.summary-item h3 { color: var(--gold); font-size: 1rem; margin-bottom: 0.3rem; }
+.summary-item p { color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0; }
+.payment-table { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.payment-row { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); }
+.payment-row:last-child { border-bottom: none; }
+.payment-row.header { background: var(--navy); color: white; font-weight: 700; font-size: 0.85rem; }
+.payment-row span { color: var(--text-mid); font-size: 0.9rem; }
+.highlight-text { color: var(--gold) !important; font-weight: 700; }
+@media (max-width: 600px) { .summary-grid { grid-template-columns: 1fr; } .payment-row { grid-template-columns: 1fr; gap: 0.3rem; } }
+</style>

@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+const base = '/ThesisArcPro';
+---
+
+<BaseLayout title="Privacy Policy" description="ThesisArcPro Privacy Policy — how we handle your data.">
+  <Header />
+
+  <main>
+    <section class="policy-hero">
+      <div class="container">
+        <h1>Privacy Policy</h1>
+        <p>Last updated: June 2026</p>
+      </div>
+    </section>
+
+    <section class="policy-content">
+      <div class="container policy-inner">
+
+        <div class="policy-section">
+          <h2>1. Information We Collect</h2>
+          <p>When you use ThesisArcPro, we collect the following information:</p>
+          <ul>
+            <li>Your email address (used for account creation and order communication)</li>
+            <li>Order details (topic, subject, pages, deadline, instructions)</li>
+            <li>Payment transaction ID (for verification purposes)</li>
+            <li>Usage data (pages visited, time spent on site)</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>2. How We Use Your Information</h2>
+          <p>We use your information to:</p>
+          <ul>
+            <li>Process and fulfill your academic writing orders</li>
+            <li>Send order confirmations and updates via email</li>
+            <li>Verify payments and prevent fraud</li>
+            <li>Improve our services and website experience</li>
+            <li>Respond to your inquiries and support requests</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>3. Data Storage & Security</h2>
+          <p>Your data is stored securely using Supabase, a trusted cloud database provider. We implement industry-standard security measures to protect your information. We do not store your full payment details — only transaction IDs for verification.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>4. Sharing Your Information</h2>
+          <p>We do not sell, trade, or share your personal information with third parties except:</p>
+          <ul>
+            <li>Writers assigned to complete your order (only order details, not personal info)</li>
+            <li>Payment processors (PayPal) for transaction verification</li>
+            <li>When required by law</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>5. Cookies</h2>
+          <p>We use essential cookies to maintain your login session. We do not use tracking or advertising cookies. You can disable cookies in your browser settings, but this may affect your ability to log in.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>6. Your Rights</h2>
+          <p>You have the right to:</p>
+          <ul>
+            <li>Access your personal data</li>
+            <li>Request deletion of your account and data</li>
+            <li>Update your information</li>
+            <li>Opt out of marketing emails</li>
+          </ul>
+          <p>To exercise these rights, contact us at <a href="mailto:thesisarcpro069@gmail.com">thesisarcpro069@gmail.com</a></p>
+        </div>
+
+        <div class="policy-section">
+          <h2>7. Contact Us</h2>
+          <p>If you have any questions about this Privacy Policy, contact us:</p>
+          <ul>
+            <li>Email: <a href="mailto:thesisarcpro069@gmail.com">thesisarcpro069@gmail.com</a></li>
+            <li>WhatsApp: <a href="https://wa.me/16624002088">+1 (662) 400-2088</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+.policy-hero { background: var(--navy); padding: 10rem 0 4rem; text-align: center; }
+.policy-hero h1 { color: var(--white); margin-bottom: 0.5rem; }
+.policy-hero p { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+.policy-content { padding: var(--section-padding); background: var(--off-white); }
+.policy-inner { max-width: 800px; margin: 0 auto; }
+.policy-section { background: rgb(219, 225, 233); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
+.policy-section h2 { color: var(--navy); font-size: 1.2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gold); }
+.policy-section p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1rem; }
+.policy-section ul { color: var(--text-mid); line-height: 1.8; padding-left: 1.5rem; }
+.policy-section ul li { margin-bottom: 0.4rem; }
+.policy-section a { color: var(--gold); text-decoration: none; }
+.policy-section a:hover { text-decoration: underline; }
+</style>

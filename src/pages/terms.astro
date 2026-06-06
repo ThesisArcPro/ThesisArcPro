@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+const base = '/ThesisArcPro';
+---
+
+<BaseLayout title="Terms of Service" description="ThesisArcPro Terms of Service — rules and guidelines for using our service.">
+  <Header />
+
+  <main>
+    <section class="policy-hero">
+      <div class="container">
+        <h1>Terms of Service</h1>
+        <p>Last updated: June 2026</p>
+      </div>
+    </section>
+
+    <section class="policy-content">
+      <div class="container policy-inner">
+
+        <div class="policy-section">
+          <h2>1. Acceptance of Terms</h2>
+          <p>By accessing and using ThesisArcPro, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>2. Our Services</h2>
+          <p>ThesisArcPro provides academic writing assistance including:</p>
+          <ul>
+            <li>Essay and research paper writing</li>
+            <li>Editing and proofreading</li>
+            <li>Dissertation and thesis support</li>
+            <li>Discussion posts and case studies</li>
+            <li>Literature reviews and research proposals</li>
+          </ul>
+          <p>All work provided is intended for reference and study purposes only.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>3. Academic Integrity</h2>
+          <p>Our services are intended to be used as reference material and study guides. You are responsible for ensuring your use of our services complies with your institution's academic integrity policies. ThesisArcPro is not responsible for any academic consequences resulting from misuse of our services.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>4. Account Responsibilities</h2>
+          <p>You are responsible for:</p>
+          <ul>
+            <li>Maintaining the confidentiality of your account credentials</li>
+            <li>All activities that occur under your account</li>
+            <li>Providing accurate order information</li>
+            <li>Notifying us of any unauthorized use of your account</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>5. Payment Terms</h2>
+          <ul>
+            <li>Orders under $30 require full payment upfront</li>
+            <li>Orders $30 and above require a 50% deposit, with the remainder due on delivery</li>
+            <li>Payments are processed via PayPal</li>
+            <li>Prices are quoted in USD</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>6. Revisions Policy</h2>
+          <ul>
+            <li>We offer free unlimited revisions within the original scope of work</li>
+            <li>Revision requests must be submitted within 7 days of delivery</li>
+            <li>Revisions that change the original requirements may incur additional charges</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>7. Refund Policy</h2>
+          <ul>
+            <li>Full refund if we fail to deliver within the agreed deadline</li>
+            <li>Partial refund if delivered work does not meet agreed requirements after revisions</li>
+            <li>No refund if work has been downloaded and submitted</li>
+            <li>Disputes must be raised within 7 days of delivery</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>8. Confidentiality</h2>
+          <p>We treat all client information and order details with strict confidentiality. We do not share your personal information or order content with any third parties except as required to fulfill your order.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>9. Limitation of Liability</h2>
+          <p>ThesisArcPro shall not be liable for any indirect, incidental, or consequential damages arising from the use of our services. Our maximum liability is limited to the amount paid for the specific order in dispute.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>10. Contact Us</h2>
+          <p>For any questions regarding these Terms of Service:</p>
+          <ul>
+            <li>Email: <a href="mailto:thesisarcpro069@gmail.com">thesisarcpro069@gmail.com</a></li>
+            <li>WhatsApp: <a href="https://wa.me/16624002088">+1 (662) 400-2088</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+.policy-hero { background: var(--navy); padding: 10rem 0 4rem; text-align: center; }
+.policy-hero h1 { color: var(--white); margin-bottom: 0.5rem; }
+.policy-hero p { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+.policy-content { padding: var(--section-padding); background: var(--off-white); }
+.policy-inner { max-width: 800px; margin: 0 auto; }
+.policy-section { background: rgb(229, 234, 238); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
+.policy-section h2 { color: var(--navy); font-size: 1.2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--gold); }
+.policy-section p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1rem; }
+.policy-section ul { color: var(--text-mid); line-height: 1.8; padding-left: 1.5rem; }
+.policy-section ul li { margin-bottom: 0.4rem; }
+.policy-section a { color: var(--gold); text-decoration: none; }
+.policy-section a:hover { text-decoration: underline; }
+</style>
