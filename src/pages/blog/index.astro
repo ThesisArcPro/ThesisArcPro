@@ -19,6 +19,14 @@ import Footer from '../../components/Footer.astro';
     <section class="blog-grid">
 
       <article class="blog-card">
+        <a href="/ThesisArcPro/blog/how-to-write-an-essay-as-a-university-student">
+          <img 
+            src="/ThesisArcPro/images/blog/blog-cover-essay-writing.webp"
+            alt="University student writing an essay"
+            class="blog-cover"
+            loading="lazy"
+          />
+        </a>
         <span class="blog-category">Essay Writing</span>
         <h2>
           <a href="/ThesisArcPro/blog/how-to-write-an-essay-as-a-university-student">
@@ -38,6 +46,14 @@ import Footer from '../../components/Footer.astro';
       </article>
 
       <article class="blog-card">
+        <a href="/ThesisArcPro/blog/how-to-write-a-masters-thesis">
+          <img 
+            src="/ThesisArcPro/images/blog/blog-cover-masters-thesis.webp"
+            alt="Graduate student researching for masters thesis"
+            class="blog-cover"
+            loading="lazy"
+          />
+        </a>
         <span class="blog-category">Thesis & Dissertation</span>
         <h2>
           <a href="/ThesisArcPro/blog/how-to-write-a-masters-thesis">
@@ -56,6 +72,14 @@ import Footer from '../../components/Footer.astro';
       </article>
 
       <article class="blog-card">
+        <a href="/ThesisArcPro/blog/how-to-write-a-research-paper-without-plagiarism">
+          <img 
+            src="/ThesisArcPro/images/blog/blog-cover-research-paper.webp"
+            alt="Student checking sources on laptop for research paper"
+            class="blog-cover"
+            loading="lazy"
+          />
+        </a>
         <span class="blog-category">Research Paper</span>
         <h2>
           <a href="/ThesisArcPro/blog/how-to-write-a-research-paper-without-plagiarism">
@@ -74,6 +98,14 @@ import Footer from '../../components/Footer.astro';
       </article>
 
       <article class="blog-card">
+        <a href="/ThesisArcPro/blog/essay-editing-checklist">
+          <img 
+            src="/ThesisArcPro/images/blog/blog-cover-essay-editing.webp"
+            alt="Student proofreading and editing essay at desk"
+            class="blog-cover"
+            loading="lazy"
+          />
+        </a>
         <span class="blog-category">Editing & Proofreading</span>
         <h2>
           <a href="/ThesisArcPro/blog/essay-editing-checklist">
@@ -129,7 +161,7 @@ import Footer from '../../components/Footer.astro';
   .blog-card {
     border: 1px solid #e2e8f0;
     border-radius: 10px;
-    padding: 1.5rem;
+    overflow: hidden;
     transition: box-shadow 0.3s ease;
   }
 
@@ -137,9 +169,16 @@ import Footer from '../../components/Footer.astro';
     box-shadow: 0 8px 24px rgba(0,0,0,0.1);
   }
 
+  .blog-cover {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+
   .blog-category {
     display: inline-block;
-    background-color: #e7f1f5;
+    background-color: #cddce2;
     color: #1B2A4A;
     font-size: 0.75rem;
     font-weight: bold;
@@ -147,12 +186,23 @@ import Footer from '../../components/Footer.astro';
     border-radius: 20px;
     margin-bottom: 1rem;
     text-transform: uppercase;
+    margin-top: 1rem;
+    margin-left: 1.5rem;
   }
 
   .blog-card h2 {
     font-size: 1.2rem;
     margin-bottom: 0.75rem;
     line-height: 1.4;
+    padding: 0 1.5rem;
+  }
+
+  .blog-card p {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    padding: 0 1.5rem;
   }
 
   .blog-card h2 a {
@@ -164,18 +214,11 @@ import Footer from '../../components/Footer.astro';
     text-decoration: underline;
   }
 
-  .blog-card p {
-    color: #64748b;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
   .blog-card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 1rem;
+    padding: 1rem 1.5rem;
     border-top: 1px solid #e2e8f0;
   }
 
