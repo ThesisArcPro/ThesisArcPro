@@ -10,9 +10,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <article>
 
       <header class="post-header">
+        <span class="post-category">Essay Writing</span>
         <h1>How to Write an Essay as a University Student: 
         A Step-by-Step Guide</h1>
-        <p class="post-meta">By ThesisArcPro Editorial Team</p>
+        <div class="post-meta">
+          <span>By ThesisArcPro Editorial Team</span>
+          <span>📅 Last Updated: June 4, 2026</span>
+          <span>⏱ Reading Time: 8 minutes</span>
+        </div>
       </header>
 
       <section class="post-body">
@@ -353,12 +358,27 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
       </section>
 
+      <div class="helpful-section">
+        <p>Was this helpful?</p>
+        <button class="helpful-btn" onclick="this.textContent='👍 Thank you!'">
+          👍 Yes
+        </button>
+        <button class="helpful-btn" onclick="this.textContent='👎 Sorry to hear that!'">
+          👎 No
+        </button>
+      </div>
+
       <footer class="author-bio">
-        <h3>About the Author</h3>
-        <p>Written by the ThesisArcPro Editorial Team — a group of 
-        professional academic writers and editors with over 7 years 
-        of combined experience supporting undergraduate, postgraduate, 
-        Master's, and PhD students across the UK, USA, and Australia.</p>
+        <div class="author-info">
+          <div>
+            <h3>About the Author</h3>
+            <p><strong>ThesisArcPro Editorial Team</strong> — a group 
+            of professional academic writers and editors with over 7 
+            years of combined experience supporting undergraduate, 
+            postgraduate, Master's, and PhD students across the UK, 
+            USA, and Australia.</p>
+          </div>
+        </div>
       </footer>
 
     </article>
@@ -378,7 +398,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   .post-header {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid #adcdf7;
   }
 
   .post-header h1 {
@@ -490,5 +510,63 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   .author-bio h3 {
     color: #1B2A4A;
     margin-bottom: 0.5rem;
+  }
+
+  .post-category {
+    display: inline-block;
+    background-color: #e8f0fe;
+    color: #1B2A4A;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: #64748b;
+    font-size: 0.85rem;
+  }
+
+  .helpful-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 1rem;
+    background-color: #f8fafc;
+    border-radius: 8px;
+  }
+
+  .helpful-section p {
+    margin: 0;
+    font-weight: bold;
+    color: #1B2A4A;
+  }
+
+  .helpful-btn {
+    padding: 0.5rem 1.5rem;
+    border: 2px solid #1B2A4A;
+    border-radius: 6px;
+    background: white;
+    color: #1B2A4A;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .helpful-btn:hover {
+    background-color: #1B2A4A;
+    color: white;
+  }
+
+  .author-info {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
   }
 </style>
