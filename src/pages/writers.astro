@@ -20,36 +20,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <script>
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
   async function loadWriters(): Promise<void> {
     const supabaseUrl = 'https://rehvwvujuamehoanfomj.supabase.co';
     const supabaseKey = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     try {
-      const response = await fetch(
-        `${supabaseUrl}/rest/v1/writers?select=*&order=rating.desc`,
-        {
-          headers: {
-            apikey: supabaseKey,
-            'Content-Type': 'application/json',
-          }
-        }
-      );
+      const { data: writers, error } = await supabase
+        .from('writers')
+        .select('*')
+        .order('rating', { ascending: false });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (error) {
+        throw error;
       }
 
-      const writers = await response.json() as any[];
       const container = document.getElementById('writers-container');
-      
       if (!container) {
         console.error('Container element not found');
         return;
       }
-      
+
       container.innerHTML = '';
 
-      if (writers.length === 0) {
+      if (!writers || writers.length === 0) {
         container.innerHTML = '<div class="no-writers">No writers found.</div>';
         return;
       }
