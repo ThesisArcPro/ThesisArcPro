@@ -6,13 +6,24 @@ const supabaseUrl = 'https://rehvwvujuamehoanfomj.supabase.co';
 const supabaseKey = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const { data: writers, error } = await supabase
-  .from('writers')
-  .select('*')
-  .order('rating', { ascending: false });
+let writers = [];
+let error = null;
 
-if (error) {
-  console.error('Error fetching writers:', error);
+try {
+  const { data, error: fetchError } = await supabase
+    .from('writers')
+    .select('*')
+    .order('rating', { ascending: false });
+  
+  if (fetchError) {
+    error = fetchError.message;
+    console.error('Supabase error:', fetchError);
+  } else {
+    writers = data || [];
+  }
+} catch (e) {
+  error = e.message;
+  console.error('Error:', e);
 }
 ---
 
@@ -26,55 +37,59 @@ if (error) {
       <p>Meet the qualified professionals behind ThesisArcPro. All our writers hold advanced degrees and have extensive experience supporting students across the UK, USA, Australia, and Canada.</p>
     </section>
 
-    <section class="writers-grid">
-      {writers && writers.map((writer) => (
-        <article class="writer-card">
-          <div class="writer-image">
-            {writer.photo ? (
-              <img
-                src={writer.photo}
-                alt={writer.name}
-                loading="lazy"
-              />
-            ) : (
-              <div class="placeholder">
-                <span>{writer.name.charAt(0)}</span>
-              </div>
-            )}
-          </div>
-
-          <div class="writer-info">
-            <h2>{writer.name}</h2>
-            <p class="qualification">{writer.qualification}</p>
-
-            <div class="writer-stats">
-              <div class="stat">
-                <span class="rating">⭐ {writer.rating.toFixed(1)}</span>
-              </div>
-              <div class="stat">
-                <span class="orders">{writer.orders_completed} orders</span>
-              </div>
+    {error ? (
+      <div class="error-message">
+        <p>Error loading writers: {error}</p>
+      </div>
+    ) : writers.length > 0 ? (
+      <section class="writers-grid">
+        {writers.map((writer) => (
+          <article class="writer-card">
+            <div class="writer-image">
+              {writer.photo ? (
+                <img
+                  src={writer.photo}
+                  alt={writer.name}
+                  loading="lazy"
+                />
+              ) : (
+                <div class="placeholder">
+                  <span>{writer.name.charAt(0)}</span>
+                </div>
+              )}
             </div>
 
-            <p class="experience">{writer.experience_years} years experience</p>
+            <div class="writer-info">
+              <h2>{writer.name}</h2>
+              <p class="qualification">{writer.qualification}</p>
 
-            <div class="specializations">
-              {writer.specializations && writer.specializations.split(', ').slice(0, 3).map((spec) => (
-                <span class="spec-badge">{spec}</span>
-              ))}
+              <div class="writer-stats">
+                <div class="stat">
+                  <span class="rating">⭐ {writer.rating.toFixed(1)}</span>
+                </div>
+                <div class="stat">
+                  <span class="orders">{writer.orders_completed} orders</span>
+                </div>
+              </div>
+
+              <p class="experience">{writer.experience_years} years experience</p>
+
+              <div class="specializations">
+                {writer.specializations && writer.specializations.split(', ').slice(0, 3).map((spec) => (
+                  <span class="spec-badge">{spec}</span>
+                ))}
+              </div>
+
+              <a href={`/writers/${writer.slug}`} class="view-profile">
+                View Profile →
+              </a>
             </div>
-
-            <a href={`/writers/${writer.slug}`} class="view-profile">
-              View Profile →
-            </a>
-          </div>
-        </article>
-      ))}
-    </section>
-
-    {!writers || writers.length === 0 && (
+          </article>
+        ))}
+      </section>
+    ) : (
       <div class="no-writers">
-        <p>Writers are being loaded. Please refresh the page.</p>
+        <p>No writers found. Please check back soon.</p>
       </div>
     )}
   </main>
@@ -232,6 +247,15 @@ if (error) {
   .view-profile:hover {
     color: #1B2A4A;
     text-decoration: underline;
+  }
+
+  .error-message {
+    text-align: center;
+    padding: 2rem;
+    color: #dc2626;
+    background-color: #fee2e2;
+    margin: 2rem;
+    border-radius: 8px;
   }
 
   .no-writers {
