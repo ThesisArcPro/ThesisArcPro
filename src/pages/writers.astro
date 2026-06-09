@@ -1,30 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = 'https://rehvwvujuamehoanfomj.supabase.co';
-const supabaseKey = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-let writers = [];
-let error = null;
-
-try {
-  const { data, error: fetchError } = await supabase
-    .from('writers')
-    .select('*')
-    .order('rating', { ascending: false });
-  
-  if (fetchError) {
-    error = fetchError.message;
-    console.error('Supabase error:', fetchError);
-  } else {
-    writers = data || [];
-  }
-} catch (e) {
-  error = e.message;
-  console.error('Error:', e);
-}
 ---
 
 <BaseLayout
@@ -37,64 +12,95 @@ try {
       <p>Meet the qualified professionals behind ThesisArcPro. All our writers hold advanced degrees and have extensive experience supporting students across the UK, USA, Australia, and Canada.</p>
     </section>
 
-    {error ? (
-      <div class="error-message">
-        <p>Error loading writers: {error}</p>
-      </div>
-    ) : writers.length > 0 ? (
-      <section class="writers-grid">
-        {writers.map((writer) => (
-          <article class="writer-card">
-            <div class="writer-image">
-              {writer.photo ? (
-                <img
-                  src={writer.photo}
-                  alt={writer.name}
-                  loading="lazy"
-                />
-              ) : (
-                <div class="placeholder">
-                  <span>{writer.name.charAt(0)}</span>
-                </div>
-              )}
-            </div>
-
-            <div class="writer-info">
-              <h2>{writer.name}</h2>
-              <p class="qualification">{writer.qualification}</p>
-
-              <div class="writer-stats">
-                <div class="stat">
-                  <span class="rating">⭐ {writer.rating.toFixed(1)}</span>
-                </div>
-                <div class="stat">
-                  <span class="orders">{writer.orders_completed} orders</span>
-                </div>
-              </div>
-
-              <p class="experience">{writer.experience_years} years experience</p>
-
-              <div class="specializations">
-                {writer.specializations && writer.specializations.split(', ').slice(0, 3).map((spec) => (
-                  <span class="spec-badge">{spec}</span>
-                ))}
-              </div>
-
-              <a href={`/writers/${writer.slug}`} class="view-profile">
-                View Profile →
-              </a>
-            </div>
-          </article>
-        ))}
-      </section>
-    ) : (
-      <div class="no-writers">
-        <p>No writers found. Please check back soon.</p>
-      </div>
-    )}
+    <div id="writers-container" class="writers-grid">
+      <div class="loading">Loading writers...</div>
+    </div>
   </main>
 
 </BaseLayout>
+
+<script>
+  async function loadWriters(): Promise<void> {
+    const supabaseUrl = 'https://rehvwvujuamehoanfomj.supabase.co';
+    const supabaseKey = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+
+    try {
+      const response = await fetch(
+        `${supabaseUrl}/rest/v1/writers?select=*&order=rating.desc`,
+        {
+          headers: {
+            apikey: supabaseKey,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const writers = await response.json() as any[];
+      const container = document.getElementById('writers-container');
+      
+      if (!container) {
+        console.error('Container element not found');
+        return;
+      }
+      
+      container.innerHTML = '';
+
+      if (writers.length === 0) {
+        container.innerHTML = '<div class="no-writers">No writers found.</div>';
+        return;
+      }
+
+      writers.forEach((writer: any) => {
+        const specs = writer.specializations ? writer.specializations.split(', ').slice(0, 3) : [];
+        const specBadges = specs.map((s: string) => `<span class="spec-badge">${s}</span>`).join('');
+
+        const writerCard = document.createElement('article');
+        writerCard.className = 'writer-card';
+        writerCard.innerHTML = `
+          <div class="writer-image">
+            ${writer.photo ? 
+              `<img src="${writer.photo}" alt="${writer.name}" loading="lazy" />` :
+              `<div class="placeholder"><span>${writer.name.charAt(0)}</span></div>`
+            }
+          </div>
+          <div class="writer-info">
+            <h2>${writer.name}</h2>
+            <p class="qualification">${writer.qualification}</p>
+            <div class="writer-stats">
+              <div class="stat">
+                <span class="rating">⭐ ${writer.rating.toFixed(1)}</span>
+              </div>
+              <div class="stat">
+                <span class="orders">${writer.orders_completed} orders</span>
+              </div>
+            </div>
+            <p class="experience">${writer.experience_years} years experience</p>
+            <div class="specializations">
+              ${specBadges}
+            </div>
+            <a href="/ThesisArcPro/writers/${writer.slug}" class="view-profile">
+              View Profile →
+            </a>
+          </div>
+        `;
+        container.appendChild(writerCard);
+      });
+    } catch (error: unknown) {
+      console.error('Error loading writers:', error);
+      const container = document.getElementById('writers-container');
+      if (container) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        container.innerHTML = `<div class="error-message">Error loading writers: ${errorMessage}</div>`;
+      }
+    }
+  }
+
+  loadWriters();
+</script>
 
 <style>
   .writers-page {
@@ -127,6 +133,19 @@ try {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
+  }
+
+  .loading, .error-message, .no-writers {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+  }
+
+  .error-message {
+    color: #dc2626;
+    background-color: #fee2e2;
+    border-radius: 8px;
   }
 
   .writer-card {
@@ -247,20 +266,5 @@ try {
   .view-profile:hover {
     color: #1B2A4A;
     text-decoration: underline;
-  }
-
-  .error-message {
-    text-align: center;
-    padding: 2rem;
-    color: #dc2626;
-    background-color: #fee2e2;
-    margin: 2rem;
-    border-radius: 8px;
-  }
-
-  .no-writers {
-    text-align: center;
-    padding: 2rem;
-    color: #64748b;
   }
 </style>
