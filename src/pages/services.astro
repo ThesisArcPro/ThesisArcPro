@@ -119,7 +119,7 @@ const base = '/ThesisArcPro';
         <p>Book a free consultation today and let us match you with the perfect expert for your needs.</p>
         <div class="services-cta__buttons">
           <a href="#" class="btn-primary auth-gate-page">Book Free Consultation</a>
-          <a href="#" class="btn-secondary auth-gate-page">Get a Free Quote</a>
+          <a href="#" class="btn-secondary auth-gate-page">Get a Quote</a>
         </div>
       </div>
     </section>
@@ -134,21 +134,21 @@ const base = '/ThesisArcPro';
 .page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
 .page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
 .page-hero__sub { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
-.services-detail { padding: var(--section-padding); background-color: var(--white); }
-.service-row { display: grid; grid-template-columns: auto 1fr; gap: 3rem; align-items: start; padding: 3rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.services-detail { padding: var(--section-padding); background-color: var(--bg-body); }
+.service-row { display: grid; grid-template-columns: auto 1fr; gap: 3rem; align-items: start; padding: 3rem 0; border-bottom: 1px solid var(--card-border); }
 .service-row:last-child { border-bottom: none; }
 .service-row--reverse { grid-template-columns: 1fr auto; }
 .service-row--reverse .service-row__icon { order: 2; }
 .service-row--reverse .service-row__content { order: 1; }
-.service-row__icon { font-size: 4rem; width: 100px; height: 100px; background-color: var(--off-white); border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.service-row__content h2 { color: var(--navy); margin-bottom: 1rem; font-size: 1.8rem; }
-.service-row__content p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1.5rem; max-width: 680px; }
+.service-row__icon { font-size: 4rem; width: 100px; height: 100px; background-color: var(--bg-section-alt); border: 1px solid var(--card-border); border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.service-row__content h2 { color: var(--heading-color); margin-bottom: 1rem; font-size: 1.8rem; }
+.service-row__content p { color: var(--body-color); line-height: 1.8; margin-bottom: 1.5rem; max-width: 680px; }
 .service-row__features { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.5rem; }
-.service-row__features span { background-color: var(--off-white); color: var(--navy); font-size: 0.85rem; font-weight: 600; padding: 0.4rem 1rem; border-radius: 20px; border: 1px solid var(--border); }
-.services-cta { background-color: var(--navy); padding: 5rem 0; }
+.service-row__features span { background-color: var(--bg-section-alt); color: var(--heading-color); font-size: 0.85rem; font-weight: 600; padding: 0.4rem 1rem; border-radius: 20px; border: 1px solid var(--card-border); }
+.services-cta { background-color: var(--bg-section-alt); padding: 5rem 0; }
 .services-cta__inner { text-align: center; }
-.services-cta h2 { color: var(--white); margin-bottom: 1rem; }
-.services-cta p { color: rgba(255,255,255,0.7); margin-bottom: 2rem; font-size: 1.1rem; }
+.services-cta h2 { color: var(--heading-color); margin-bottom: 1rem; }
+.services-cta p { color: var(--body-color); margin-bottom: 2rem; font-size: 1.1rem; }
 .services-cta__buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
 @media (max-width: 768px) {
   .service-row { grid-template-columns: 1fr; gap: 1.5rem; }
