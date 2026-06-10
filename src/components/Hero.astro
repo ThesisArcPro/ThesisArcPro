@@ -41,17 +41,17 @@ const base = '/ThesisArcPro';
 </section>
 
 <style>
-.hero { background-color: var(--navy); padding: 10rem 0 6rem; position: relative; overflow: hidden; }
+.hero { background-color: var(--bg-body); padding: 10rem 0 6rem; position: relative; overflow: hidden; }
 .hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(197,160,89,0.08) 0%, transparent 70%); pointer-events: none; }
 .hero__inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
 .hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.2rem; }
-.hero h1 { color: var(--white); margin-bottom: 1.5rem; }
-.hero__sub { color: rgba(255,255,255,0.75); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2.5rem; max-width: 520px; }
+.hero h1 { color: var(--heading-color); margin-bottom: 1.5rem; }
+.hero__sub { color: var(--body-color); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2.5rem; max-width: 520px; }
 .hero__buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
 .hero__trust { display: flex; align-items: center; gap: 1.5rem; }
 .trust-item { display: flex; flex-direction: column; gap: 0.2rem; }
 .trust-number { color: var(--gold); font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; line-height: 1; }
-.trust-label { color: rgba(255,255,255,0.55); font-size: 0.8rem; letter-spacing: 0.5px; }
+.trust-label { color: var(--muted-color); font-size: 0.8rem; letter-spacing: 0.5px; }
 .trust-divider { width: 1px; height: 40px; background-color: var(--border); }
 .hero__visual { display: flex; justify-content: center; align-items: center; }
 .hero__visual img { width: 100%; max-width: 480px; height: auto; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); }
