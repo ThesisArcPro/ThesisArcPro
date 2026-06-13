@@ -663,7 +663,7 @@ const base = '/ThesisArcPro';
 
     let filtered = allOrders.filter((o: any) =>
       currentTab === 'in_progress'
-        ? o.order_status === 'in_progress'
+        ? (o.order_status === 'in_progress' || o.order_status === 'new')
         : o.order_status === 'completed'
     );
 
