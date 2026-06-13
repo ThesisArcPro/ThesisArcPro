@@ -333,8 +333,10 @@ const base = '/ThesisArcPro';
   }
 
   .order-row {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
     padding: 1.2rem 1.5rem;
     border: 1px solid var(--border);
@@ -342,19 +344,19 @@ const base = '/ThesisArcPro';
     background: rgba(255,255,255,0.02);
     cursor: pointer;
     transition: 0.2s;
-    align-items: center;
   }
 
   .order-row:last-child { border-radius: 0 0 8px 8px; }
   .order-row:hover { background: rgba(255,255,255,0.05); border-color: var(--active-blue); }
 
-  .col-topic { display: flex; flex-direction: column; gap: 0.4rem; }
-  .order-title { font-size: 0.95rem; font-weight: 600; color: var(--text); }
-  .order-meta { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text-muted); flex-wrap: wrap; }
+  .col-topic { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 0; overflow: hidden; }
+  .order-title { font-size: 0.95rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .order-meta { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text-muted); flex-wrap: nowrap; overflow: hidden; }
   .meta-dot { color: rgba(255,255,255,0.2); }
-  .order-id { color: rgba(255,255,255,0.35); }
-  .col-deadline { font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; }
-  .col-amount { font-size: 0.9rem; font-weight: 700; color: var(--text); white-space: nowrap; }
+  .order-id { color: rgba(255,255,255,0.35); flex-shrink: 0; }
+  .col-right { display: flex; align-items: center; gap: 2rem; flex-shrink: 0; }
+  .col-deadline { font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; min-width: 100px; text-align: right; }
+  .col-amount { font-size: 0.9rem; font-weight: 700; color: var(--text); white-space: nowrap; min-width: 80px; text-align: right; }
 
   .status-badge {
     display: inline-block;
@@ -672,8 +674,10 @@ const base = '/ThesisArcPro';
             <span class="order-id">ID ${o.order_number || o.id}</span>
           </div>
         </div>
-        <div class="col-deadline">${deadlineText(o.deadline)}</div>
-        <div class="col-amount">$${Number(o.amount_paid || 0).toFixed(2)}</div>
+        <div class="col-right">
+          <div class="col-deadline">${deadlineText(o.deadline)}</div>
+          <div class="col-amount">$${Number(o.amount_paid || 0).toFixed(2)}</div>
+        </div>
       </div>
     `).join('');
 
