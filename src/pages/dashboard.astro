@@ -327,6 +327,7 @@ const base = '/ThesisArcPro';
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
+  .order-table-head-right { display: flex; gap: 3rem; }
 
   .order-row {
     display: flex;
@@ -530,8 +531,10 @@ const base = '/ThesisArcPro';
     <div class="order-table" id="orderTable" style="display:none;">
       <div class="order-table-head">
         <div>Topic</div>
-        <div>Time Left</div>
-        <div>Amount Paid</div>
+        <div class="order-table-head-right">
+          <span>Time Left</span>
+          <span>Amount Paid</span>
+        </div>
       </div>
       <div id="ordersList"></div>
     </div>
