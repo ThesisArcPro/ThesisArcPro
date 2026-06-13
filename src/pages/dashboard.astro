@@ -17,6 +17,12 @@ const base = '/ThesisArcPro';
           <a href={`${base}/contact/`} class="btn-new-order">+ New Order</a>
         </div>
 
+        <div class="client-id-bar">
+          <span class="client-id-bar__label">🔒 Your Client ID:</span>
+          <span class="client-id-bar__number" id="clientIdDisplay">—</span>
+          <span class="client-id-bar__note">Use this for all order references — no personal info needed</span>
+        </div>
+
         <div class="dashboard__tabs">
           <button class="tab active" data-tab="in_progress">Active</button>
           <button class="tab" data-tab="completed">Closed</button>
@@ -116,7 +122,21 @@ const base = '/ThesisArcPro';
       return;
     }
 
+    await loadClientId(session);
     await loadOrders(session);
+  }
+
+  async function loadClientId(session: any) {
+    const { data } = await supabase
+      .from('profiles')
+      .select('client_id')
+      .eq('id', session.user.id)
+      .single();
+
+    const display = document.getElementById('clientIdDisplay');
+    if (display && data?.client_id) {
+      display.textContent = '#' + data.client_id;
+    }
   }
 
   async function loadOrders(session: any) {

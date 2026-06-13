@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThesisArcPro – Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy: #1a2340;
+      --gold: #c5a059;
+      --gold-light: #f0c13f;
+      --sidebar-bg: #111827;
+      --rail-bg: #0d1117;
+      --main-bg: #0f172a;
+      --panel-bg: #1e293b;
+      --border: rgba(255,255,255,0.08);
+      --text: #f1f5f9;
+      --text-muted: rgba(255,255,255,0.45);
+      --active-blue: #6366f1;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: var(--main-bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── ICON RAIL ── */
+    .icon-rail {
+      width: 64px;
+      background: var(--rail-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem 0;
+      gap: 0.5rem;
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .rail-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      gap: 2px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .rail-icon span.label {
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .rail-icon:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+    .rail-icon.active { background: rgba(99,102,241,0.15); color: var(--active-blue); }
+
+    .rail-spacer { flex: 1; }
+    .rail-divider { width: 32px; height: 1px; background: var(--border); margin: 0.4rem 0; }
+
+    .rail-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .badge-wrap { position: relative; }
+    .badge {
+      position: absolute;
+      top: 4px; right: 4px;
+      width: 16px; height: 16px;
+      background: var(--active-blue);
+      border-radius: 50%;
+      font-size: 0.6rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 220px;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 0;
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .sidebar-new-order {
+      margin: 0 1rem 1.2rem;
+      background: var(--active-blue);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.2s;
+      text-decoration: none;
+      justify-content: center;
+    }
+
+    .sidebar-new-order:hover { background: #4f46e5; }
+
+    .sidebar-nav { display: flex; flex-direction: column; gap: 0.2rem; padding: 0 0.5rem; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .nav-item.active { background: rgba(99,102,241,0.12); color: var(--active-blue); font-weight: 600; }
+    .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    .sidebar-divider { height: 1px; background: var(--border); margin: 0.8rem 0.75rem; }
+
+    /* Client ID badge in sidebar */
+    .client-id-box {
+      margin: 0.5rem 1rem 0;
+      background: rgba(197,160,89,0.08);
+      border: 1px solid rgba(197,160,89,0.25);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+    }
+
+    .client-id-box__label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+
+    .client-id-box__number {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: 1px;
+    }
+
+    .client-id-box__copy {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+      line-height: 1.4;
+    }
+
+    .client-id-box__privacy {
+      margin-top: 0.6rem;
+      font-size: 0.68rem;
+      color: var(--gold);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.3rem;
+      line-height: 1.4;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .main-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 2rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .main-header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .btn-new-order-main {
+      background: var(--panel-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-new-order-main:hover { background: rgba(255,255,255,0.08); border-color: var(--gold); }
+
+    /* Tabs */
+    .tabs-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.8rem 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tabs { display: flex; gap: 0.2rem; }
+
+    .tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.6rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+      top: 1px;
+    }
+
+    .tab.active { color: var(--active-blue); border-bottom-color: var(--active-blue); font-weight: 600; }
+    .tab:hover:not(.active) { color: var(--text); }
+
+    .tab .count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--panel-bg);
+      border-radius: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.1rem 0.45rem;
+      margin-left: 0.4rem;
+      color: var(--text-muted);
+    }
+
+    .tab.active .count { background: rgba(99,102,241,0.2); color: var(--active-blue); }
+
+    /* Sort + Search bar */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+    }
+
+    .sort-wrap { display: flex; align-items: center; gap: 0.5rem; }
+    .sort-label { font-size: 0.82rem; color: var(--text-muted); }
+
+    .sort-select {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.82rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: 220px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.7rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem 0.4rem 2rem;
+      font-size: 0.82rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .search-input:focus { border-color: var(--active-blue); }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    /* Orders area */
+    .orders-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 2rem 2rem;
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 4rem;
+      text-align: center;
+    }
+
+    .empty-illustration {
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      font-size: 3rem;
+    }
+
+    .empty-state h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-empty-order {
+      background: var(--active-blue);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-empty-order:hover { background: #4f46e5; }
+
+    /* Order table */
+    .order-table { display: flex; flex-direction: column; }
+
+    .order-table-head {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--panel-bg);
+      border-radius: 8px 8px 0 0;
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .order-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr;
+      gap: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-top: none;
+      background: rgba(255,255,255,0.02);
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.88rem;
+      align-items: center;
+    }
+
+    .order-row:last-child { border-radius: 0 0 8px 8px; }
+    .order-row:hover { background: rgba(255,255,255,0.05); border-color: var(--active-blue); }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(251,191,36,0.15);
+      color: #fbbf24;
+    }
+
+    /* Loading spinner */
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 1rem;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,0.08);
+      border-top-color: var(--active-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Detail Modal */
+    .modal {
+      position: fixed; inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.open { display: flex; }
+
+    .modal-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.65);
+    }
+
+    .modal-box {
+      position: relative; z-index: 101;
+      background: #1e293b;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 480px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: none; border: none;
+      color: var(--text-muted); font-size: 1.2rem;
+      cursor: pointer; transition: 0.2s;
+    }
+
+    .modal-close:hover { color: var(--text); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <!-- ICON RAIL -->
+  <nav class="icon-rail">
+    <a class="rail-icon" href="#" title="Browse">
+      <span>🌐</span>
+      <span class="label">Browse</span>
+    </a>
+    <a class="rail-icon active" href="#" title="Dashboard">
+      <span>✏️</span>
+      <span class="label">Orders</span>
+    </a>
+
+    <div class="rail-spacer"></div>
+    <div class="rail-divider"></div>
+
+    <div class="rail-bottom">
+      <a class="rail-icon" href="#" title="Support">
+        <span>🎧</span>
+      </a>
+      <a class="rail-icon badge-wrap" href="#" title="Notifications">
+        <span>🔔</span>
+        <span class="badge" id="notifBadge" style="display:none;">1</span>
+      </a>
+      <a class="rail-icon" href="#" title="Profile" id="profileRailIcon">
+        <span>👤</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="/ThesisArcPro/contact/" class="sidebar-new-order">
+      ＋ New order
+    </a>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item active" href="#">
+        <span class="icon">📁</span> My Orders
+      </a>
+      <a class="nav-item" href="/ThesisArcPro/contact/" id="supportLink">
+        <span class="icon">💬</span> Support
+      </a>
+    </nav>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Client ID -->
+    <div class="client-id-box">
+      <div class="client-id-box__label">🔒 Your Client ID</div>
+      <div class="client-id-box__number" id="clientIdDisplay">—</div>
+      <div class="client-id-box__copy">Use this ID for all order references & reviews — no personal info needed.</div>
+      <div class="client-id-box__privacy">🛡️ Your identity stays private. We never share your details.</div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="#" id="logoutBtn">
+        <span class="icon">🚪</span> Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="main-header">
+      <h1>My Orders</h1>
+      <a href="/ThesisArcPro/contact/" class="btn-new-order-main">New order ＋</a>
+    </div>
+
+    <div class="tabs-bar">
+      <div class="tabs">
+        <button class="tab active" data-tab="in_progress">
+          Active <span class="count" id="activeCount">0</span>
+        </button>
+        <button class="tab" data-tab="completed">
+          Closed <span class="count" id="closedCount">0</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="controls-bar">
+      <div class="sort-wrap">
+        <span class="sort-label">Sort by</span>
+        <select class="sort-select" id="sortSelect">
+          <option>Deadline, latest</option>
+          <option>Deadline, earliest</option>
+          <option>Newest first</option>
+        </select>
+      </div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" placeholder="Search" id="searchInput" />
+      </div>
+    </div>
+
+    <div class="orders-area">
+
+      <div class="loading-state" id="loadingState">
+        <div class="spinner"></div>
+        <p>Loading your orders...</p>
+      </div>
+
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="empty-illustration">📄</div>
+        <h3>You have no active orders</h3>
+        <p>Place your first order and track it right here.</p>
+        <a href="/ThesisArcPro/contact/" class="btn-empty-order">New order ＋</a>
+      </div>
+
+      <div class="order-table" id="orderTable" style="display:none;">
+        <div class="order-table-head">
+          <div>Topic</div>
+          <div>Status</div>
+          <div>Pages</div>
+          <div>Type</div>
+          <div>Deadline</div>
+        </div>
+        <div id="ordersList"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ORDER DETAIL MODAL -->
+  <div class="modal" id="detailModal">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+    const BASE = '/ThesisArcPro';
+
+    const { createClient } = supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let allOrders = [];
+    let currentTab = 'in_progress';
+
+    // ── AUTH CHECK ──
+    async function init() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) {
+        window.location.replace(`${BASE}/login/`);
+        return;
+      }
+      await loadClientId(session);
+      await loadOrders(session);
+    }
+
+    // ── CLIENT ID ──
+    async function loadClientId(session) {
+      const { data } = await sb.from('profiles')
+        .select('client_id')
+        .eq('id', session.user.id)
+        .single();
+
+      if (data?.client_id) {
+        document.getElementById('clientIdDisplay').textContent = '#' + data.client_id;
+      }
+    }
+
+    // ── ORDERS ──
+    async function loadOrders(session) {
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/orders?client_email=eq.${session.user.email}&order=created_at.desc`,
+          {
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${session.access_token}`
+            }
+          }
+        );
+        allOrders = await res.json();
+        updateCounts();
+        renderOrders();
+      } catch (err) {
+        console.error(err);
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'flex';
+      }
+    }
+
+    function updateCounts() {
+      const active = allOrders.filter(o => o.order_status === 'in_progress').length;
+      const closed = allOrders.filter(o => o.order_status === 'completed').length;
+      document.getElementById('activeCount').textContent = active;
+      document.getElementById('closedCount').textContent = closed;
+    }
+
+    function deadlineText(deadline) {
+      if (!deadline) return 'No deadline';
+      const diff = new Date(deadline).getTime() - Date.now();
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      if (diff < 0) return `⚠️ ${Math.abs(days)}d overdue`;
+      if (days > 0) return `⏰ ${days}d left`;
+      if (hours > 0) return `⏰ ${hours}h left`;
+      return '⏰ Due soon';
+    }
+
+    function renderOrders() {
+      const loading = document.getElementById('loadingState');
+      const empty = document.getElementById('emptyState');
+      const table = document.getElementById('orderTable');
+      const list = document.getElementById('ordersList');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+
+      loading.style.display = 'none';
+
+      let filtered = allOrders.filter(o =>
+        currentTab === 'in_progress'
+          ? o.order_status === 'in_progress'
+          : o.order_status === 'completed'
+      );
+
+      if (search) {
+        filtered = filtered.filter(o =>
+          (o.topic || '').toLowerCase().includes(search) ||
+          (o.assignment_type || '').toLowerCase().includes(search)
+        );
+      }
+
+      if (!filtered.length) {
+        empty.style.display = 'flex';
+        table.style.display = 'none';
+        return;
+      }
+
+      empty.style.display = 'none';
+      table.style.display = 'flex';
+
+      list.innerHTML = filtered.map(o => `
+        <div class="order-row" data-id="${o.id}">
+          <div>${o.topic || '(no topic)'}</div>
+          <div><span class="status-badge">${(o.order_status || '').replace(/_/g, ' ')}</span></div>
+          <div>${o.pages || 1}</div>
+          <div>${o.assignment_type || 'Essay'}</div>
+          <div>${deadlineText(o.deadline)}</div>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.order-row').forEach(row => {
+        row.addEventListener('click', () => {
+          const order = allOrders.find(o => o.id === row.dataset.id);
+          if (order) showModal(order);
+        });
+      });
+    }
+
+    // ── MODAL ──
+    function showModal(order) {
+      const daysLeft = Math.ceil((new Date(order.deadline) - Date.now()) / 86400000);
+      const startDate = new Date(order.created_at).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+      const dueDate = new Date(order.deadline).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+
+      document.getElementById('modalContent').innerHTML = `
+        <div style="font-size:1.2rem;font-weight:800;margin-bottom:1.5rem;">${order.topic}</div>
+
+        <div style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.08);">
+          <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:0.6rem;font-weight:700;">Status</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Current</div>
+              <div style="font-weight:600;text-transform:capitalize;">${(order.order_status||'').replace(/_/g,' ')}</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Started</div>
+              <div style="font-weight:600;">${startDate}</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.08);text-align:center;">
+          <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:0.6rem;font-weight:700;">Deadline</div>
+          <div style="font-size:2.2rem;font-weight:800;color:var(--gold);">${daysLeft}d</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);">left</div>
+          <div style="margin-top:0.5rem;">${dueDate}</div>
+        </div>
+
+        <div style="margin-bottom:1.2rem;">
+          <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:0.6rem;font-weight:700;">Details</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Pages</div>
+              <div style="font-weight:600;">${order.pages}</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Type</div>
+              <div style="font-weight:600;">${order.assignment_type}</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Paid</div>
+              <div style="font-weight:600;">$${Number(order.amount_paid||0).toFixed(2)}</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Total</div>
+              <div style="font-weight:600;">$${Number(order.total_amount||0).toFixed(2)}</div>
+            </div>
+          </div>
+        </div>
+
+        ${order.file_url
+          ? `<a href="${order.file_url}" target="_blank" style="display:inline-block;background:var(--gold);color:#0f172a;padding:0.7rem 1.5rem;border-radius:6px;text-decoration:none;font-weight:700;">📥 Download Work</a>`
+          : `<div style="text-align:center;padding:1rem;background:rgba(255,255,255,0.04);border-radius:6px;color:rgba(255,255,255,0.5);">⏳ Work in progress...</div>`
+        }
+      `;
+
+      document.getElementById('detailModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('open');
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalOverlay').addEventListener('click', closeModal);
+
+    // ── TABS ──
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentTab = tab.dataset.tab;
+        renderOrders();
+      });
+    });
+
+    // ── SEARCH ──
+    document.getElementById('searchInput').addEventListener('input', renderOrders);
+
+    // ── LOGOUT ──
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await sb.auth.signOut();
+      window.location.href = `${BASE}/login/`;
+    });
+
+    init();
+  </script>
+</body>
+</html>

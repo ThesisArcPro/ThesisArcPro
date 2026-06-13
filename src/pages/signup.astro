@@ -178,11 +178,22 @@ import Footer from '../components/Footer.astro';
 
       // Save profile to database
       if (data.user) {
+        const { data: lastProfile } = await supabase
+          .from('profiles')
+          .select('client_id')
+          .order('client_id', { ascending: false })
+          .limit(1)
+          .single();
+
+        const lastId = lastProfile?.client_id ? parseInt(lastProfile.client_id) : 205877;
+        const newClientId = (lastId + 1).toString();
+
         await supabase.from('profiles').insert({
           id: data.user.id,
           email,
           full_name: fullName,
-          phone
+          phone,
+          client_id: newClientId
         });
       }
 
