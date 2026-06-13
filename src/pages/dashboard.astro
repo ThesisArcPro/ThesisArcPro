@@ -1,109 +1,582 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
 const base = '/ThesisArcPro';
 ---
 
 <BaseLayout title="My Orders" description="View your orders on ThesisArcPro">
-  <Header />
 
-  <main>
-    <section class="dashboard">
-      <div class="container">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        <div class="dashboard__header">
-          <h1>My Orders</h1>
-          <a href={`${base}/contact/`} class="btn-new-order">+ New Order</a>
-        </div>
+  :root {
+    --gold: #c5a059;
+    --sidebar-bg: #111827;
+    --rail-bg: #0d1117;
+    --main-bg: #0f172a;
+    --panel-bg: #1e293b;
+    --border: rgba(255,255,255,0.08);
+    --text: #f1f5f9;
+    --text-muted: rgba(255,255,255,0.45);
+    --active-blue: #6366f1;
+  }
 
-        <div class="client-id-bar">
-          <span class="client-id-bar__label">🔒 Your Client ID:</span>
-          <span class="client-id-bar__number" id="clientIdDisplay">—</span>
-          <span class="client-id-bar__note">Use this for all order references — no personal info needed</span>
-        </div>
+  body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: var(--main-bg);
+    color: var(--text);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
 
-        <div class="dashboard__tabs">
-          <button class="tab active" data-tab="in_progress">Active</button>
-          <button class="tab" data-tab="completed">Closed</button>
-        </div>
+  /* ── ICON RAIL ── */
+  .icon-rail {
+    width: 64px;
+    background: var(--rail-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    gap: 0.5rem;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+    z-index: 10;
+  }
 
-        <div id="loadingState" class="loading-state">
-          <div class="spinner"></div>
-          <p>Loading your orders...</p>
-        </div>
+  .rail-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    gap: 2px;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
 
-        <div id="emptyState" class="empty-state" style="display:none;">
-          <p>No orders yet</p>
-        </div>
+  .rail-icon span.label {
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
 
-        <div id="ordersGrid" class="orders-grid" style="display:none;">
-          <div class="order-header">
-            <div class="col-topic">Topic</div>
-            <div class="col-status">Status</div>
-            <div class="col-pages">Pages</div>
-            <div class="col-type">Type</div>
-            <div class="col-deadline">Deadline</div>
-          </div>
-          <div id="ordersList"></div>
-        </div>
+  .rail-icon:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+  .rail-icon.active { background: rgba(99,102,241,0.15); color: var(--active-blue); }
 
-      </div>
-    </section>
-  </main>
+  .rail-spacer { flex: 1; }
+  .rail-divider { width: 32px; height: 1px; background: var(--border); margin: 0.4rem 0; }
 
-  <!-- Order Detail Modal -->
-  <div id="detailModal" class="detail-modal" style="display:none;">
-    <div class="detail-modal__overlay"></div>
-    <div class="detail-modal__content">
-      <button id="closeModal" class="detail-modal__close">✕</button>
-      <div id="detailContent"></div>
+  .rail-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .badge-wrap { position: relative; }
+  .badge {
+    position: absolute;
+    top: 4px; right: 4px;
+    width: 16px; height: 16px;
+    background: var(--active-blue);
+    border-radius: 50%;
+    font-size: 0.6rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .sidebar-new-order {
+    margin: 0 1rem 1.2rem;
+    background: var(--active-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: 0.2s;
+    text-decoration: none;
+    justify-content: center;
+  }
+
+  .sidebar-new-order:hover { background: #4f46e5; }
+
+  .sidebar-nav { display: flex; flex-direction: column; gap: 0.2rem; padding: 0 0.5rem; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+  .nav-item.active { background: rgba(99,102,241,0.12); color: var(--active-blue); font-weight: 600; }
+  .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
+
+  .sidebar-divider { height: 1px; background: var(--border); margin: 0.8rem 0.75rem; }
+
+  .client-id-box {
+    margin: 0.5rem 1rem 0;
+    background: rgba(197,160,89,0.08);
+    border: 1px solid rgba(197,160,89,0.25);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+  }
+
+  .client-id-box__label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+
+  .client-id-box__number {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+
+  .client-id-box__copy {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+    line-height: 1.4;
+  }
+
+  .client-id-box__privacy {
+    margin-top: 0.6rem;
+    font-size: 0.68rem;
+    color: var(--gold);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.3rem;
+    line-height: 1.4;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .main-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+
+  .btn-new-order-main {
+    background: var(--panel-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-new-order-main:hover { background: rgba(255,255,255,0.08); border-color: var(--gold); }
+
+  .tabs-bar {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tabs { display: flex; gap: 0.2rem; }
+
+  .tab {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.6rem 1rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+    top: 1px;
+  }
+
+  .tab.active { color: var(--active-blue); border-bottom-color: var(--active-blue); font-weight: 600; }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  .tab .count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--panel-bg);
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.1rem 0.45rem;
+    margin-left: 0.4rem;
+    color: var(--text-muted);
+  }
+
+  .tab.active .count { background: rgba(99,102,241,0.2); color: var(--active-blue); }
+
+  .controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+  }
+
+  .sort-wrap { display: flex; align-items: center; gap: 0.5rem; }
+  .sort-label { font-size: 0.82rem; color: var(--text-muted); }
+
+  .sort-select {
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.82rem;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .search-wrap { position: relative; width: 220px; }
+
+  .search-icon {
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem 0.4rem 2rem;
+    font-size: 0.82rem;
+    outline: none;
+    transition: 0.2s;
+  }
+
+  .search-input:focus { border-color: var(--active-blue); }
+  .search-input::placeholder { color: var(--text-muted); }
+
+  .orders-area { flex: 1; overflow-y: auto; padding: 1.5rem 2rem 2rem; }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 4rem;
+    text-align: center;
+  }
+
+  .empty-illustration {
+    width: 120px;
+    height: 120px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 3rem;
+  }
+
+  .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .empty-state p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  .btn-empty-order {
+    background: var(--active-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-empty-order:hover { background: #4f46e5; }
+
+  .order-table { display: flex; flex-direction: column; }
+
+  .order-table-head {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--panel-bg);
+    border-radius: 8px 8px 0 0;
+    border: 1px solid var(--border);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .order-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-top: none;
+    background: rgba(255,255,255,0.02);
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.88rem;
+    align-items: center;
+  }
+
+  .order-row:last-child { border-radius: 0 0 8px 8px; }
+  .order-row:hover { background: rgba(255,255,255,0.05); border-color: var(--active-blue); }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: rgba(251,191,36,0.15);
+    color: #fbbf24;
+  }
+
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 1rem;
+    color: var(--text-muted);
+  }
+
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid rgba(255,255,255,0.08);
+    border-top-color: var(--active-blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .modal {
+    position: fixed; inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal.open { display: flex; }
+
+  .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.65); }
+
+  .modal-box {
+    position: relative; z-index: 101;
+    background: #1e293b;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 480px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none;
+    color: var(--text-muted); font-size: 1.2rem;
+    cursor: pointer; transition: 0.2s;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+</style>
+
+<!-- ICON RAIL -->
+<nav class="icon-rail">
+  <a class="rail-icon" href={`${base}/`} title="Home">
+    <span>🌐</span>
+    <span class="label">Home</span>
+  </a>
+  <a class="rail-icon active" href="#" title="Orders">
+    <span>✏️</span>
+    <span class="label">Orders</span>
+  </a>
+  <div class="rail-spacer"></div>
+  <div class="rail-divider"></div>
+  <div class="rail-bottom">
+    <a class="rail-icon" href={`${base}/contact/`} title="Support">
+      <span>🎧</span>
+    </a>
+    <a class="rail-icon" href="#" title="Profile">
+      <span>👤</span>
+    </a>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href={`${base}/contact/`} class="sidebar-new-order">＋ New order</a>
+
+  <nav class="sidebar-nav">
+    <a class="nav-item active" href="#">
+      <span class="icon">📁</span> My Orders
+    </a>
+    <a class="nav-item" href={`${base}/contact/`}>
+      <span class="icon">💬</span> Support
+    </a>
+  </nav>
+
+  <div class="sidebar-divider"></div>
+
+  <div class="client-id-box">
+    <div class="client-id-box__label">🔒 Your Client ID</div>
+    <div class="client-id-box__number" id="clientIdDisplay">—</div>
+    <div class="client-id-box__copy">Use this ID for all order references & reviews — no personal info needed.</div>
+    <div class="client-id-box__privacy">🛡️ Your identity stays private. We never share your details.</div>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#" id="logoutBtn">
+      <span class="icon">🚪</span> Logout
+    </a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="main-header">
+    <h1>My Orders</h1>
+    <a href={`${base}/contact/`} class="btn-new-order-main">New order ＋</a>
+  </div>
+
+  <div class="tabs-bar">
+    <div class="tabs">
+      <button class="tab active" data-tab="in_progress">
+        Active <span class="count" id="activeCount">0</span>
+      </button>
+      <button class="tab" data-tab="completed">
+        Closed <span class="count" id="closedCount">0</span>
+      </button>
     </div>
   </div>
 
-  <Footer />
-</BaseLayout>
+  <div class="controls-bar">
+    <div class="sort-wrap">
+      <span class="sort-label">Sort by</span>
+      <select class="sort-select" id="sortSelect">
+        <option>Deadline, latest</option>
+        <option>Deadline, earliest</option>
+        <option>Newest first</option>
+      </select>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" placeholder="Search" id="searchInput" />
+    </div>
+  </div>
 
-<style>
-.dashboard { background: var(--navy); min-height: 100vh; padding: 8rem 0 4rem; }
-.dashboard__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-.dashboard__header h1 { color: white; font-size: 2rem; font-weight: 800; margin: 0; }
-.btn-new-order { background: var(--gold); color: var(--navy); padding: 0.7rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: all 0.2s ease; }
-.btn-new-order:hover { background: #f0c13f; }
-.dashboard__tabs { display: flex; gap: 2rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
-.tab { background: none; border: none; color: white; padding: 0.5rem 0; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; position: relative; }
-.tab.active { color: var(--gold); }
-.tab.active::after { content: ''; position: absolute; bottom: -1rem; left: 0; right: 0; height: 2px; background: var(--gold); }
-.tab:hover { color: var(--gold); }
-.loading-state { text-align: center; padding: 4rem; color: rgba(255,255,255,0.5); }
-.spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.empty-state { text-align: center; padding: 4rem; color: white; }
-.orders-grid { display: flex; flex-direction: column; }
-.order-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr; gap: 1.5rem; padding: 1rem 1.5rem; background: rgba(255,255,255,0.05); border-radius: 8px 8px 0 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 700; color: white; font-size: 0.9rem; }
-.order-card { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr; gap: 1.5rem; padding: 1.2rem 1.5rem; border: 1px solid rgba(255,255,255,0.1); border-top: none; background: rgba(255,255,255,0.02); transition: all 0.2s ease; cursor: pointer; }
-.order-card:last-child { border-radius: 0 0 8px 8px; }
-.order-card:hover { background: rgba(255,255,255,0.08); border-color: var(--gold); }
-.col-topic, .col-status, .col-pages, .col-type, .col-deadline { color: white; font-size: 0.9rem; display: flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.status-badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; font-weight: 700; text-transform: capitalize; background: rgba(255,152,0,0.2); color: #ffb74d; }
-.detail-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.detail-modal__overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); }
-.detail-modal__content { position: relative; z-index: 1001; background: #1a1a1a; border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; color: white; }
-.detail-modal__close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: white; transition: 0.2s; }
-.detail-modal__close:hover { color: var(--gold); }
-.detail-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 1.5rem; color: white; }
-.detail-section { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.detail-section-title { font-size: 0.75rem; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 700; margin-bottom: 0.8rem; letter-spacing: 0.5px; }
-.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.detail-item__label { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 0.3rem; }
-.detail-item__value { color: white; font-weight: 600; font-size: 0.95rem; }
-.download-btn-modal { display: inline-block; background: var(--gold); color: var(--navy); padding: 0.7rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 700; margin-top: 1rem; transition: 0.2s; }
-.download-btn-modal:hover { background: #f0c13f; }
-@media (max-width: 1024px) { 
-  .order-header, .order-card { grid-template-columns: 2fr 1fr 1fr 1fr; }
-  .col-type { display: none; }
-}
-</style>
+  <div class="orders-area">
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      <p>Loading your orders...</p>
+    </div>
+
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="empty-illustration">📄</div>
+      <h3>You have no active orders</h3>
+      <p>Place your first order and track it right here.</p>
+      <a href={`${base}/contact/`} class="btn-empty-order">New order ＋</a>
+    </div>
+
+    <div class="order-table" id="orderTable" style="display:none;">
+      <div class="order-table-head">
+        <div>Topic</div>
+        <div>Status</div>
+        <div>Pages</div>
+        <div>Type</div>
+        <div>Deadline</div>
+      </div>
+      <div id="ordersList"></div>
+    </div>
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal" id="detailModal">
+  <div class="modal-overlay" id="modalOverlay"></div>
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
 
 <script>
   import { supabase } from '../lib/supabase.js';
@@ -115,13 +588,12 @@ const base = '/ThesisArcPro';
   let allOrders: any[] = [];
   let currentTab = 'in_progress';
 
-  async function checkAuth() {
+  async function init() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       window.location.replace(`${base}/login/`);
       return;
     }
-
     await loadClientId(session);
     await loadOrders(session);
   }
@@ -151,165 +623,161 @@ const base = '/ThesisArcPro';
         }
       );
       allOrders = await res.json();
-      renderOrders(allOrders);
+      updateCounts();
+      renderOrders();
     } catch (err) {
-      console.error('Error loading orders:', err);
+      console.error(err);
+      document.getElementById('loadingState')!.style.display = 'none';
+      document.getElementById('emptyState')!.style.display = 'flex';
     }
   }
 
-  function getDeadlineText(deadline: string) {
+  function updateCounts() {
+    const active = allOrders.filter((o: any) => o.order_status === 'in_progress').length;
+    const closed = allOrders.filter((o: any) => o.order_status === 'completed').length;
+    document.getElementById('activeCount')!.textContent = String(active);
+    document.getElementById('closedCount')!.textContent = String(closed);
+  }
+
+  function deadlineText(deadline: string) {
     if (!deadline) return 'No deadline';
-    const diff = new Date(deadline).getTime() - new Date().getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    
-    if (diff < 0) {
-      const overdueDays = Math.abs(days);
-      return `⚠️ ${overdueDays}d overdue`;
-    }
+    const diff = new Date(deadline).getTime() - Date.now();
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    if (diff < 0) return `⚠️ ${Math.abs(days)}d overdue`;
     if (days > 0) return `⏰ ${days}d left`;
     if (hours > 0) return `⏰ ${hours}h left`;
     return '⏰ Due soon';
   }
 
-  function renderOrders(orders: any[]) {
-    const loading = document.getElementById('loadingState');
-    const empty = document.getElementById('emptyState');
-    const grid = document.getElementById('ordersGrid');
-    const list = document.getElementById('ordersList');
+  function renderOrders() {
+    const loading = document.getElementById('loadingState')!;
+    const empty = document.getElementById('emptyState')!;
+    const table = document.getElementById('orderTable')!;
+    const list = document.getElementById('ordersList')!;
+    const search = (document.getElementById('searchInput') as HTMLInputElement).value.toLowerCase();
 
-    if (loading) loading.style.display = 'none';
+    loading.style.display = 'none';
 
-    const filtered = currentTab === 'in_progress'
-      ? orders.filter(o => o.order_status === 'in_progress')
-      : orders.filter(o => o.order_status === 'completed');
+    let filtered = allOrders.filter((o: any) =>
+      currentTab === 'in_progress'
+        ? o.order_status === 'in_progress'
+        : o.order_status === 'completed'
+    );
 
-    if (!filtered || filtered.length === 0) {
-      if (empty) empty.style.display = 'block';
-      if (grid) grid.style.display = 'none';
+    if (search) {
+      filtered = filtered.filter((o: any) =>
+        (o.topic || '').toLowerCase().includes(search) ||
+        (o.assignment_type || '').toLowerCase().includes(search)
+      );
+    }
+
+    if (!filtered.length) {
+      empty.style.display = 'flex';
+      table.style.display = 'none';
       return;
     }
 
-    if (empty) empty.style.display = 'none';
-    if (grid) {
-      grid.style.display = 'flex';
-      if (list) {
-        list.innerHTML = filtered.map(order => `
-          <div class="order-card" data-order-id="${order.id}">
-            <div class="col-topic">${order.topic || '(no topic)'}</div>
-            <div class="col-status"><span class="status-badge">${order.order_status?.replace(/_/g, ' ')}</span></div>
-            <div class="col-pages">${order.pages || 1}</div>
-            <div class="col-type">${order.assignment_type || 'Essay'}</div>
-            <div class="col-deadline">${getDeadlineText(order.deadline)}</div>
-          </div>
-        `).join('');
+    empty.style.display = 'none';
+    table.style.display = 'flex';
 
-        // Add click handlers
-        list.querySelectorAll('.order-card').forEach(card => {
-          card.addEventListener('click', () => {
-            const orderId = card.getAttribute('data-order-id');
-            const order = allOrders.find(o => o.id === orderId);
-            if (order) showOrderDetail(order);
-          });
-        });
-      }
-    }
+    list.innerHTML = filtered.map((o: any) => `
+      <div class="order-row" data-id="${o.id}">
+        <div>${o.topic || '(no topic)'}</div>
+        <div><span class="status-badge">${(o.order_status || '').replace(/_/g, ' ')}</span></div>
+        <div>${o.pages || 1}</div>
+        <div>${o.assignment_type || 'Essay'}</div>
+        <div>${deadlineText(o.deadline)}</div>
+      </div>
+    `).join('');
+
+    list.querySelectorAll('.order-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const order = allOrders.find((o: any) => o.id === (row as HTMLElement).dataset.id);
+        if (order) showModal(order);
+      });
+    });
   }
 
-  function showOrderDetail(order: any) {
-    const modal = document.getElementById('detailModal');
-    const content = document.getElementById('detailContent');
-    
-    const daysLeft = Math.ceil((new Date(order.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-    const startedDate = new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  function showModal(order: any) {
+    const daysLeft = Math.ceil((new Date(order.deadline).getTime() - Date.now()) / 86400000);
+    const startDate = new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     const dueDate = new Date(order.deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-    
-    content!.innerHTML = `
-      <div class="detail-title">${order.topic}</div>
-      
-      <div class="detail-section">
-        <div class="detail-section-title">Status</div>
-        <div class="detail-grid">
+
+    document.getElementById('modalContent')!.innerHTML = `
+      <div style="font-size:1.2rem;font-weight:800;margin-bottom:1.5rem;">${order.topic}</div>
+      <div style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:0.6rem;font-weight:700;">Status</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
           <div>
-            <div class="detail-item__label">Current Status</div>
-            <div class="detail-item__value" style="text-transform: capitalize;">${order.order_status?.replace(/_/g, ' ')}</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Current</div>
+            <div style="font-weight:600;text-transform:capitalize;">${(order.order_status || '').replace(/_/g, ' ')}</div>
           </div>
           <div>
-            <div class="detail-item__label">Started</div>
-            <div class="detail-item__value">${startedDate}</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="detail-section">
-        <div class="detail-section-title">Deadline</div>
-        <div style="text-align: center; padding: 1rem;">
-          <div style="font-size: 2rem; font-weight: 800; color: var(--gold);">${daysLeft}d</div>
-          <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">left</div>
-          <div style="margin-top: 0.8rem; color: white;">${dueDate}</div>
-        </div>
-      </div>
-      
-      <div class="detail-section">
-        <div class="detail-section-title">Order Details</div>
-        <div class="detail-grid">
-          <div>
-            <div class="detail-item__label">Pages</div>
-            <div class="detail-item__value">${order.pages}</div>
-          </div>
-          <div>
-            <div class="detail-item__label">Type</div>
-            <div class="detail-item__value">${order.assignment_type}</div>
-          </div>
-          <div>
-            <div class="detail-item__label">Amount Paid</div>
-            <div class="detail-item__value">$${Number(order.amount_paid || 0).toFixed(2)}</div>
-          </div>
-          <div>
-            <div class="detail-item__label">Total</div>
-            <div class="detail-item__value">$${Number(order.total_amount || 0).toFixed(2)}</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Started</div>
+            <div style="font-weight:600;">${startDate}</div>
           </div>
         </div>
       </div>
-      
-      ${order.file_url ? `
-        <div class="detail-section">
-          <a href="${order.file_url}" target="_blank" class="download-btn-modal">📥 Download Work</a>
+      <div style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.08);text-align:center;">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:0.6rem;font-weight:700;">Deadline</div>
+        <div style="font-size:2.2rem;font-weight:800;color:#c5a059;">${daysLeft}d</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);">left</div>
+        <div style="margin-top:0.5rem;">${dueDate}</div>
+      </div>
+      <div style="margin-bottom:1.2rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:0.6rem;font-weight:700;">Details</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Pages</div>
+            <div style="font-weight:600;">${order.pages}</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Type</div>
+            <div style="font-weight:600;">${order.assignment_type}</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Paid</div>
+            <div style="font-weight:600;">$${Number(order.amount_paid || 0).toFixed(2)}</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Total</div>
+            <div style="font-weight:600;">$${Number(order.total_amount || 0).toFixed(2)}</div>
+          </div>
         </div>
-      ` : `
-        <div style="color: rgba(255,255,255,0.6); text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
-          ⏳ Work in progress...
-        </div>
-      `}
+      </div>
+      ${order.file_url
+        ? `<a href="${order.file_url}" target="_blank" style="display:inline-block;background:#c5a059;color:#0f172a;padding:0.7rem 1.5rem;border-radius:6px;text-decoration:none;font-weight:700;">📥 Download Work</a>`
+        : `<div style="text-align:center;padding:1rem;background:rgba(255,255,255,0.04);border-radius:6px;color:rgba(255,255,255,0.5);">⏳ Work in progress...</div>`
+      }
     `;
-    
-    modal!.style.display = 'flex';
+
+    document.getElementById('detailModal')!.classList.add('open');
   }
 
   function closeModal() {
-    const modal = document.getElementById('detailModal');
-    if (modal) modal.style.display = 'none';
+    document.getElementById('detailModal')!.classList.remove('open');
   }
 
-  // Close modal on overlay click
-  document.getElementById('detailModal')?.addEventListener('click', (e) => {
-    if (e.target === document.getElementById('detailModal')) {
-      closeModal();
-    }
-  });
+  document.getElementById('modalClose')!.addEventListener('click', closeModal);
+  document.getElementById('modalOverlay')!.addEventListener('click', closeModal);
 
-  // Close modal button
-  document.getElementById('closeModal')?.addEventListener('click', closeModal);
-
-  // Tabs
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       currentTab = (tab as HTMLElement).dataset.tab || 'in_progress';
-      renderOrders(allOrders);
+      renderOrders();
     });
   });
 
-  checkAuth();
+  document.getElementById('searchInput')!.addEventListener('input', renderOrders);
+
+  document.getElementById('logoutBtn')!.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = `${base}/login/`;
+  });
+
+  init();
 </script>
