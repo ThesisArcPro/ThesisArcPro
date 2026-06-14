@@ -29,7 +29,6 @@ const base = '/ThesisArcPro';
     overflow: hidden;
   }
 
-  /* ── ICON RAIL ── */
   .icon-rail {
     width: 64px;
     background: var(--rail-bg);
@@ -59,15 +58,9 @@ const base = '/ThesisArcPro';
     text-decoration: none;
   }
 
-  .rail-icon span.label {
-    font-size: 0.55rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-  }
-
+  .rail-icon span.label { font-size: 0.55rem; font-weight: 600; letter-spacing: 0.3px; }
   .rail-icon:hover { color: var(--text); background: rgba(255,255,255,0.06); }
   .rail-icon.active { background: rgba(99,102,241,0.15); color: var(--active-blue); }
-
   .rail-spacer { flex: 1; }
   .rail-divider { width: 32px; height: 1px; background: var(--border); margin: 0.4rem 0; }
 
@@ -92,7 +85,6 @@ const base = '/ThesisArcPro';
     color: white;
   }
 
-  /* ── SIDEBAR ── */
   .sidebar {
     width: 220px;
     background: var(--sidebar-bg);
@@ -122,7 +114,6 @@ const base = '/ThesisArcPro';
   }
 
   .sidebar-new-order:hover { background: #4f46e5; }
-
   .sidebar-nav { display: flex; flex-direction: column; gap: 0.2rem; padding: 0 0.5rem; }
 
   .nav-item {
@@ -142,16 +133,9 @@ const base = '/ThesisArcPro';
   .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
   .nav-item.active { background: rgba(99,102,241,0.12); color: var(--active-blue); font-weight: 600; }
   .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
-
   .sidebar-divider { height: 1px; background: var(--border); margin: 0.8rem 0.75rem; }
 
-  /* ── MAIN ── */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
   .main-header {
     display: flex;
@@ -268,7 +252,6 @@ const base = '/ThesisArcPro';
 
   .search-input:focus { border-color: var(--active-blue); }
   .search-input::placeholder { color: var(--text-muted); }
-
   .orders-area { flex: 1; overflow-y: auto; padding: 1.5rem 2rem 2rem; }
 
   .empty-state {
@@ -314,61 +297,67 @@ const base = '/ThesisArcPro';
 
   .btn-empty-order:hover { background: #4f46e5; }
 
-  /* ── ORDER TABLE ── */
-  .order-table { display: flex; flex-direction: column; gap: 0.5rem; }
+  /* ── ORDER CARDS ── */
+  .order-table { display: flex; flex-direction: column; gap: 0.6rem; }
 
   .order-table-head {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.6rem 1.5rem;
-    font-size: 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr 130px 120px;
+    padding: 0.4rem 1.5rem;
+    font-size: 0.72rem;
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
   }
-  .order-table-head-right { display: flex; gap: 3rem; }
+
+  .order-table-head > div:nth-child(2),
+  .order-table-head > div:nth-child(3) { text-align: right; }
 
   .order-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 130px 120px;
     align-items: center;
     gap: 1rem;
-    padding: 1.2rem 1.5rem;
-    border: 1px solid var(--border);
-    border-top: none;
-    background: rgba(255,255,255,0.02);
+    padding: 1.1rem 1.5rem;
+    background: #141e35;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.18s;
   }
 
-  .order-row { border-radius: 10px; }
-  .order-row:hover { background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.4); }
+  .order-row:hover {
+    background: #1a2a4a;
+    border-color: rgba(99,102,241,0.45);
+  }
 
-  .col-topic { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 0; overflow: hidden; }
-  .order-title { font-size: 0.95rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .order-meta { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text-muted); flex-wrap: nowrap; overflow: hidden; }
-  .meta-dot { color: rgba(255,255,255,0.2); }
-  .order-id { color: rgba(255,255,255,0.35); flex-shrink: 0; }
-  .col-right { display: flex; align-items: center; gap: 2rem; flex-shrink: 0; }
-  .col-deadline { font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; min-width: 100px; text-align: right; }
-  .col-amount { font-size: 0.9rem; font-weight: 700; color: var(--text); white-space: nowrap; min-width: 80px; text-align: right; }
+  .col-topic { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+  .order-title { font-size: 0.93rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .order-meta { display: flex; align-items: center; gap: 0.3rem; font-size: 0.76rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; }
+  .meta-dot { color: rgba(255,255,255,0.15); }
+  .order-id { color: rgba(255,255,255,0.28); }
+
+  .col-deadline { font-size: 0.82rem; color: var(--text-muted); text-align: right; white-space: nowrap; }
+  .col-deadline.overdue { color: #f87171; }
+  .col-deadline.urgent { color: #fb923c; }
+  .col-deadline.ok { color: #34d399; }
+
+  .col-amount { font-size: 0.9rem; font-weight: 700; color: var(--text); text-align: right; white-space: nowrap; }
 
   .status-badge {
     display: inline-block;
-    padding: 0.2rem 0.6rem;
+    padding: 0.18rem 0.55rem;
     border-radius: 4px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    background: rgba(251,191,36,0.15);
+    background: rgba(251,191,36,0.12);
     color: #fbbf24;
   }
 
   .status-badge.new { background: rgba(99,102,241,0.15); color: #818cf8; }
-  .status-badge.completed { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .status-badge.completed { background: rgba(34,197,94,0.12); color: #4ade80; }
 
-  /* ── LOADING ── */
   .loading-state {
     display: flex;
     flex-direction: column;
@@ -389,7 +378,6 @@ const base = '/ThesisArcPro';
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── MODAL ── */
   .modal {
     position: fixed; inset: 0;
     z-index: 100;
@@ -408,7 +396,7 @@ const base = '/ThesisArcPro';
     border-radius: 14px;
     padding: 2rem;
     width: 90%;
-    max-width: 480px;
+    max-width: 520px;
     max-height: 80vh;
     overflow-y: auto;
   }
@@ -460,7 +448,6 @@ const base = '/ThesisArcPro';
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <a href={`${base}/contact/`} class="sidebar-new-order">＋ New order</a>
-
   <nav class="sidebar-nav">
     <a class="nav-item active" href="#">
       <span class="icon">📁</span> My Orders
@@ -472,9 +459,7 @@ const base = '/ThesisArcPro';
       <span class="icon">💬</span> Chats
     </a>
   </nav>
-
   <div class="sidebar-divider"></div>
-
   <nav class="sidebar-nav">
     <a class="nav-item" href="#" id="logoutBtn">
       <span class="icon">🚪</span> Logout
@@ -531,10 +516,8 @@ const base = '/ThesisArcPro';
     <div class="order-table" id="orderTable" style="display:none;">
       <div class="order-table-head">
         <div>Topic</div>
-        <div class="order-table-head-right">
-          <span>Time Left</span>
-          <span>Amount Paid</span>
-        </div>
+        <div>Time Left</div>
+        <div>Amount Paid</div>
       </div>
       <div id="ordersList"></div>
     </div>
@@ -562,37 +545,22 @@ const base = '/ThesisArcPro';
 
   async function init() {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      window.location.replace(`${base}/login/`);
-      return;
-    }
+    if (!session) { window.location.replace(`${base}/login/`); return; }
     await loadClientId(session);
     await loadOrders(session);
   }
 
   async function loadClientId(session: any) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('client_id')
-      .eq('id', session.user.id)
-      .single();
-
+    const { data } = await supabase.from('profiles').select('client_id').eq('id', session.user.id).single();
     const display = document.getElementById('clientIdDisplay');
-    if (display && data?.client_id) {
-      display.textContent = '#' + data.client_id;
-    }
+    if (display && data?.client_id) display.textContent = '#' + data.client_id;
   }
 
   async function loadOrders(session: any) {
     try {
       const res = await fetch(
         `${SUPABASE_URL}/rest/v1/orders?client_email=eq.${session.user.email}&order=created_at.desc`,
-        {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${session.access_token}`
-          }
-        }
+        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
       );
       allOrders = await res.json();
       updateCounts();
@@ -611,15 +579,15 @@ const base = '/ThesisArcPro';
     document.getElementById('closedCount')!.textContent = String(closed);
   }
 
-  function deadlineText(deadline: string) {
-    if (!deadline) return 'No deadline';
+  function deadlineInfo(deadline: string) {
+    if (!deadline) return { text: 'No deadline', cls: '' };
     const diff = new Date(deadline).getTime() - Date.now();
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
-    if (diff < 0) return `⚠️ ${Math.abs(days)}d overdue`;
-    if (days > 0) return `⏰ ${days}d left`;
-    if (hours > 0) return `⏰ ${hours}h left`;
-    return '⏰ Due soon';
+    if (diff < 0) return { text: `⚠️ ${Math.abs(days)}d overdue`, cls: 'overdue' };
+    if (days === 0 && hours > 0) return { text: `⏰ ${hours}h left`, cls: 'urgent' };
+    if (days <= 2) return { text: `⏰ ${days}d left`, cls: 'urgent' };
+    return { text: `⏰ ${days}d left`, cls: 'ok' };
   }
 
   function statusClass(status: string) {
@@ -659,26 +627,27 @@ const base = '/ThesisArcPro';
     empty.style.display = 'none';
     table.style.display = 'flex';
 
-    list.innerHTML = filtered.map((o: any) => `
-      <div class="order-row" data-id="${o.id}">
-        <div class="col-topic">
-          <div class="order-title">${o.topic || '(no topic)'}</div>
-          <div class="order-meta">
-            <span class="status-badge ${statusClass(o.order_status)}">${(o.order_status || '').replace(/_/g, ' ')}</span>
-            <span class="meta-dot">·</span>
-            <span>${o.pages || 1} page${o.pages > 1 ? 's' : ''}</span>
-            <span class="meta-dot">·</span>
-            <span>${o.assignment_type || 'Essay'}</span>
-            <span class="meta-dot">·</span>
-            <span class="order-id">ID ${o.order_number || o.id}</span>
+    list.innerHTML = filtered.map((o: any) => {
+      const dl = deadlineInfo(o.deadline);
+      return `
+        <div class="order-row" data-id="${o.id}">
+          <div class="col-topic">
+            <div class="order-title">${o.topic || '(no topic)'}</div>
+            <div class="order-meta">
+              <span class="status-badge ${statusClass(o.order_status)}">${(o.order_status || '').replace(/_/g, ' ')}</span>
+              <span class="meta-dot">·</span>
+              <span>${o.pages || 1} page${o.pages > 1 ? 's' : ''}</span>
+              <span class="meta-dot">·</span>
+              <span>${o.assignment_type || 'Essay'}</span>
+              <span class="meta-dot">·</span>
+              <span class="order-id">ID ${o.order_number || o.id}</span>
+            </div>
           </div>
-        </div>
-        <div class="col-right">
-          <div class="col-deadline">${deadlineText(o.deadline)}</div>
+          <div class="col-deadline ${dl.cls}">${dl.text}</div>
           <div class="col-amount">$${Number(o.amount_paid || 0).toFixed(2)}</div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     list.querySelectorAll('.order-row').forEach(row => {
       row.addEventListener('click', () => {
@@ -689,55 +658,70 @@ const base = '/ThesisArcPro';
   }
 
   function showModal(order: any) {
-    const daysLeft = Math.ceil((new Date(order.deadline).getTime() - Date.now()) / 86400000);
+    const dl = deadlineInfo(order.deadline);
     const startDate = new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-    const dueDate = new Date(order.deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    const dueDate = order.deadline ? new Date(order.deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
 
     document.getElementById('modalContent')!.innerHTML = `
-      <div style="font-size:1.2rem;font-weight:800;margin-bottom:1.5rem;">${order.topic}</div>
-      <div style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.08);">
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:0.6rem;font-weight:700;">Status</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-          <div>
-            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Current</div>
-            <div style="font-weight:600;text-transform:capitalize;">${(order.order_status || '').replace(/_/g, ' ')}</div>
-          </div>
-          <div>
-            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Started</div>
-            <div style="font-weight:600;">${startDate}</div>
-          </div>
+      <div style="font-size:1.15rem;font-weight:800;margin-bottom:0.5rem;color:var(--text);">${order.topic}</div>
+      <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;">ID ${order.order_number || order.id}</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Status</div>
+          <div style="font-weight:600;text-transform:capitalize;">${(order.order_status || '').replace(/_/g, ' ')}</div>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Started</div>
+          <div style="font-weight:600;">${startDate}</div>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Deadline</div>
+          <div style="font-weight:600;">${dueDate}</div>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Time Left</div>
+          <div style="font-weight:600;">${dl.text}</div>
         </div>
       </div>
-      <div style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.08);text-align:center;">
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:0.6rem;font-weight:700;">Deadline</div>
-        <div style="font-size:2.2rem;font-weight:800;color:#c5a059;">${daysLeft}d</div>
-        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);">left</div>
-        <div style="margin-top:0.5rem;">${dueDate}</div>
-      </div>
-      <div style="margin-bottom:1.2rem;">
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:0.6rem;font-weight:700;">Details</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-          <div>
-            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Pages</div>
-            <div style="font-weight:600;">${order.pages}</div>
-          </div>
-          <div>
-            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Type</div>
-            <div style="font-weight:600;">${order.assignment_type}</div>
-          </div>
-          <div>
-            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Paid</div>
-            <div style="font-weight:600;">$${Number(order.amount_paid || 0).toFixed(2)}</div>
-          </div>
-          <div>
-            <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">Total</div>
-            <div style="font-weight:600;">$${Number(order.total_amount || 0).toFixed(2)}</div>
-          </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Pages</div>
+          <div style="font-weight:600;">${order.pages || 1}</div>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Type</div>
+          <div style="font-weight:600;">${order.assignment_type || 'Essay'}</div>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Subject</div>
+          <div style="font-weight:600;">${order.subject || '—'}</div>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Level</div>
+          <div style="font-weight:600;">${order.education_level || '—'}</div>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Amount Paid</div>
+          <div style="font-weight:600;color:#4ade80;">$${Number(order.amount_paid || 0).toFixed(2)}</div>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.5px;">Total</div>
+          <div style="font-weight:600;">$${Number(order.total_amount || 0).toFixed(2)}</div>
         </div>
       </div>
+
+      ${order.instructions ? `
+        <div style="margin-bottom:1.5rem;">
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;">Instructions</div>
+          <div style="font-size:0.85rem;color:rgba(255,255,255,0.7);line-height:1.6;max-height:150px;overflow-y:auto;">${order.instructions}</div>
+        </div>
+      ` : ''}
+
       ${order.file_url
         ? `<a href="${order.file_url}" target="_blank" style="display:inline-block;background:#c5a059;color:#0f172a;padding:0.7rem 1.5rem;border-radius:6px;text-decoration:none;font-weight:700;">📥 Download Work</a>`
-        : `<div style="text-align:center;padding:1rem;background:rgba(255,255,255,0.04);border-radius:6px;color:rgba(255,255,255,0.5);">⏳ Work in progress...</div>`
+        : `<div style="text-align:center;padding:1rem;background:rgba(255,255,255,0.04);border-radius:6px;color:rgba(255,255,255,0.4);font-size:0.85rem;">⏳ Work in progress...</div>`
       }
     `;
 
