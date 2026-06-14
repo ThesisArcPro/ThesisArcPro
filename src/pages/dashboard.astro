@@ -298,12 +298,13 @@ const base = '/ThesisArcPro';
   .btn-empty-order:hover { background: #4f46e5; }
 
   /* ── ORDER CARDS ── */
-  .order-table { display: flex; flex-direction: column; gap: 0.75rem; }
+  .order-table { display: flex; flex-direction: column; gap: 0.5rem; }
 
   .order-table-head {
     display: grid;
-    grid-template-columns: 1fr 140px 120px;
-    padding: 0.5rem 1.5rem;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr 120px 120px;
+    align-items: center;
+    padding: 0.6rem 1.2rem;
     font-size: 0.72rem;
     font-weight: 700;
     color: var(--text-muted);
@@ -311,39 +312,33 @@ const base = '/ThesisArcPro';
     letter-spacing: 0.5px;
   }
 
-  .order-table-head > div:nth-child(2),
-  .order-table-head > div:nth-child(3) { text-align: right; }
+  .order-table-head > div:nth-child(5),
+  .order-table-head > div:nth-child(6) { text-align: right; }
 
   .order-row {
     display: grid;
-    grid-template-columns: 1fr 140px 120px;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr 120px 120px;
     align-items: center;
-    gap: 1rem;
-    padding: 1.2rem 1.5rem;
-    background: #16213e;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
+    gap: 0.8rem;
+    padding: 1rem 1.2rem;
+    background: #141e35;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.18s;
   }
 
-  .order-row:hover {
-    background: #1a2a4a;
-    border-color: rgba(99,102,241,0.45);
-  }
+  .order-row:hover { background: #1a2a4a; border-color: rgba(99,102,241,0.45); }
 
-  .col-topic { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
-  .order-title { font-size: 0.93rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .order-meta { display: flex; align-items: center; gap: 0.3rem; font-size: 0.76rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; }
-  .meta-dot { color: rgba(255,255,255,0.15); }
-  .order-id { color: rgba(255,255,255,0.28); }
-
+  .col-topic { font-size: 0.9rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .col-pages { font-size: 0.82rem; color: var(--text-muted); }
+  .col-type { font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .col-orderid { font-size: 0.82rem; color: rgba(255,255,255,0.3); }
   .col-deadline { font-size: 0.82rem; color: var(--text-muted); text-align: right; white-space: nowrap; }
   .col-deadline.overdue { color: #f87171; }
   .col-deadline.urgent { color: #fb923c; }
   .col-deadline.ok { color: #34d399; }
-
-  .col-amount { font-size: 0.9rem; font-weight: 700; color: var(--text); text-align: right; white-space: nowrap; }
+  .col-amount { font-size: 0.88rem; font-weight: 700; color: var(--text); text-align: right; white-space: nowrap; }
 
   .status-badge {
     display: inline-block;
@@ -516,7 +511,10 @@ const base = '/ThesisArcPro';
     <div class="order-table" id="orderTable" style="display:none;">
       <div class="order-table-head">
         <div>Topic</div>
-        <div>Time Left</div>
+        <div>Pages</div>
+        <div>Type</div>
+        <div>Order No</div>
+        <div>Time</div>
         <div>Amount Paid</div>
       </div>
       <div id="ordersList"></div>
@@ -631,16 +629,10 @@ const base = '/ThesisArcPro';
       const dl = deadlineInfo(o.deadline);
       return `
         <div class="order-row" data-id="${o.id}">
-          <div class="col-topic">
-            <div class="order-title">${o.topic || '(no topic)'}</div>
-            <div class="order-meta">
-              <span class="status-badge ${statusClass(o.order_status)}">${(o.order_status || '').replace(/_/g, ' ')}</span>
-              <span class="meta-dot">·</span>
-              <span>${o.pages || 1} pg</span>
-              <span class="meta-dot">·</span>
-              <span class="order-id">ID ${o.order_number || o.id}</span>
-            </div>
-          </div>
+          <div class="col-topic">${o.topic || '(no topic)'}</div>
+          <div class="col-pages">${o.pages || 1}p</div>
+          <div class="col-type">${o.assignment_type || 'Essay'}</div>
+          <div class="col-orderid">${o.order_number || o.id}</div>
           <div class="col-deadline ${dl.cls}">${dl.text}</div>
           <div class="col-amount">$${Number(o.amount_paid || 0).toFixed(2)}</div>
         </div>
