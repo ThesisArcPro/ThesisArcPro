@@ -6,6 +6,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Secret token to protect the endpoint
+const SECRET_TOKEN = "thesisarcpro_action_2026";
+
 export default async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -16,6 +19,12 @@ export default async (req: Request) => {
     const orderId = url.searchParams.get("orderId");
     const status = url.searchParams.get("status");
     const fileUrl = url.searchParams.get("fileUrl");
+    const token = url.searchParams.get("token");
+
+    // Verify secret token
+    if (token !== SECRET_TOKEN) {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
     if (!orderId || !status) {
       return new Response("Missing orderId or status", { status: 400 });
