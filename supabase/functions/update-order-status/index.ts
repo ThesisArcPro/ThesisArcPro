@@ -1,17 +1,11 @@
-import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
-// Secret token to protect the endpoint
 const SECRET_TOKEN = "thesisarcpro_action_2026";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz6jQ58s2mYI8NWjo-1gVbyBXUjsYG_ffd3IncQ4lOELCmlAOaMpxPRjA6O3LDO0aX7_g/exec";
 
-export default async (req: Request) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok");
   }
 
   try {
@@ -21,11 +15,9 @@ export default async (req: Request) => {
     const fileUrl = url.searchParams.get("fileUrl");
     const token = url.searchParams.get("token");
 
-    // Verify secret token
     if (token !== SECRET_TOKEN) {
-      return new Response("Unauthorized", { status: 401 });
+      return new Response("Unauthorized — missing or wrong token", { status: 401 });
     }
-
     if (!orderId || !status) {
       return new Response("Missing orderId or status", { status: 400 });
     }
@@ -35,50 +27,54 @@ export default async (req: Request) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    // Update order status
     const updateData: any = {
       order_status: status,
-      status_updated_at: new Date().toISOString()
+      status_updated_at: new Date().toISOString(),
     };
-
-    if (fileUrl) {
-      updateData.file_url = fileUrl;
-    }
+    if (fileUrl) updateData.file_url = fileUrl;
 
     const { error } = await supabase
       .from("orders")
       .update(updateData)
-      .eq("id", orderId);
+      .eq("order_number", orderId);
 
     if (error) throw error;
 
-    // Get order details for confirmation
     const { data: order } = await supabase
       .from("orders")
       .select("order_number, client_email, topic")
-      .eq("id", orderId)
-      .single();
+      .eq("order_number", orderId)
+      .maybeSingle();
 
-    // Send email to client if status changed to completed
+    // Notify client only when completed — hard 5s timeout so it can never hang
     if (status === "completed" && order?.client_email) {
-      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAjvDXT5kJylGmH9Amczt3IPxiPct0ehphNzDa2TAD3ZrqPLdaqffJCiJ_S83PnOk5JQ/exec";
-      
-      await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "status_update",
-          clientEmail: order.client_email,
-          orderNumber: order.order_number,
-          topic: order.topic,
-          status: status,
-          fileUrl: fileUrl || ""
-        })
-      });
+      try {
+        const controller = new AbortController();
+        const t = setTimeout(() => controller.abort(), 5000);
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "status_update",
+            clientEmail: order.client_email,
+            orderNumber: order.order_number,
+            topic: order.topic,
+            status,
+            fileUrl: fileUrl || "",
+          }),
+          signal: controller.signal,
+        });
+        clearTimeout(t);
+      } catch (_) {
+        // ignore email errors so the page still loads
+      }
     }
 
-    // Return success HTML page
+    const badgeClass = status === "completed" ? "badge-completed"
+      : status === "revision" ? "badge-revision"
+      : "badge-progress";
+    const label = status.replace("_", " ").toUpperCase();
+
     return new Response(`
       <!DOCTYPE html>
       <html>
@@ -99,16 +95,13 @@ export default async (req: Request) => {
           <div class="card">
             <div style="font-size:3rem;">✅</div>
             <h1>Order Updated!</h1>
-            <div class="badge badge-${status}">${status.replace('_', ' ').toUpperCase()}</div>
-            <p>Order <strong>${order?.order_number || orderId}</strong> has been marked as <strong>${status.replace('_', ' ')}</strong>.</p>
+            <div class="badge ${badgeClass}">${label}</div>
+            <p>Order <strong>${order?.order_number || orderId}</strong> has been marked as <strong>${status.replace("_", " ")}</strong>.</p>
             <p style="font-size:0.85rem; color:#999;">You can close this tab.</p>
           </div>
         </body>
       </html>
-    `, {
-      status: 200,
-      headers: { "Content-Type": "text/html" }
-    });
+    `, { status: 200, headers: { "Content-Type": "text/html" } });
 
   } catch (error) {
     return new Response(`
@@ -119,9 +112,6 @@ export default async (req: Request) => {
           <p>${error}</p>
         </body>
       </html>
-    `, {
-      status: 500,
-      headers: { "Content-Type": "text/html" }
-    });
+    `, { status: 500, headers: { "Content-Type": "text/html" } });
   }
-};
+});
