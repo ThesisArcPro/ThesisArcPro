@@ -624,6 +624,9 @@ const base = '/ThesisArcPro';
 
     empty.style.display = 'none';
     table.style.display = 'flex';
+    list.style.display = 'flex';
+    list.style.flexDirection = 'column';
+    list.style.gap = '0.5rem';
 
     list.innerHTML = filtered.map((o: any) => {
       const dl = deadlineInfo(o.deadline);
