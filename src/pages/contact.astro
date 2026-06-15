@@ -848,15 +848,18 @@ const base = '/ThesisArcPro';
             topic,
             assignment_type: type,
             subject,
+            service,
+            language,
+            education_level: level,
             pages: parseInt(pages),
             deadline,
             total_amount: total,
             amount_paid: amountPaid,
             payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full',
             order_status: 'new',
-      instructions,
-      transaction_id: document.getElementById('submitOrderBtn')?.getAttribute('data-txn') || ''
-    })
+            instructions,
+            transaction_id: document.getElementById('submitOrderBtn')?.getAttribute('data-txn') || ''
+          })
         });
       }
 
