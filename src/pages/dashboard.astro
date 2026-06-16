@@ -29,62 +29,6 @@ const base = '/ThesisArcPro';
     overflow: hidden;
   }
 
-  .icon-rail {
-    width: 64px;
-    background: var(--rail-bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem 0;
-    gap: 0.5rem;
-    border-right: 1px solid var(--border);
-    flex-shrink: 0;
-    z-index: 10;
-  }
-
-  .rail-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-muted);
-    font-size: 1.2rem;
-    gap: 2px;
-    transition: all 0.2s;
-    text-decoration: none;
-  }
-
-  .rail-icon span.label { font-size: 0.55rem; font-weight: 600; letter-spacing: 0.3px; }
-  .rail-icon:hover { color: var(--text); background: rgba(255,255,255,0.06); }
-  .rail-icon.active { background: rgba(99,102,241,0.15); color: var(--active-blue); }
-  .rail-spacer { flex: 1; }
-  .rail-divider { width: 32px; height: 1px; background: var(--border); margin: 0.4rem 0; }
-
-  .rail-bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-
-  .badge-wrap { position: relative; }
-  .badge {
-    position: absolute;
-    top: 4px; right: 4px;
-    width: 16px; height: 16px;
-    background: var(--active-blue);
-    border-radius: 50%;
-    font-size: 0.6rem;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    color: white;
-  }
-
   .sidebar {
     width: 220px;
     background: var(--sidebar-bg);
@@ -170,6 +114,7 @@ const base = '/ThesisArcPro';
     align-items: center;
     padding: 0.8rem 2rem 0;
     border-bottom: 1px solid var(--border);
+    overflow-x: auto;
   }
 
   .tabs { display: flex; gap: 0.2rem; }
@@ -186,6 +131,7 @@ const base = '/ThesisArcPro';
     transition: all 0.2s;
     position: relative;
     top: 1px;
+    white-space: nowrap;
   }
 
   .tab.active { color: var(--active-blue); border-bottom-color: var(--active-blue); font-weight: 600; }
@@ -886,6 +832,17 @@ const base = '/ThesisArcPro';
   });
 
   document.getElementById('searchInput')!.addEventListener('input', renderOrders);
+
+  // Open Tidio chat when "Chats" is clicked
+  document.getElementById('chatsLink')!.addEventListener('click', (e) => {
+    e.preventDefault();
+    const tidio = (window as any).tidioChatApi;
+    if (tidio && typeof tidio.open === 'function') {
+      tidio.open();
+    } else {
+      alert('Chat is still loading, please try again in a moment.');
+    }
+  });
 
   document.getElementById('logoutBtn')!.addEventListener('click', async (e) => {
     e.preventDefault();
