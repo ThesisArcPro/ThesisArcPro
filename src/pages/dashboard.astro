@@ -516,36 +516,6 @@ const base = '/ThesisArcPro';
   }
 </style>
 
-<!-- ICON RAIL -->
-<nav class="icon-rail">
-  <a class="rail-icon" href={`${base}/`} title="Home">
-    <span>🌐</span>
-    <span class="label">Home</span>
-  </a>
-  <a class="rail-icon active" href="#" title="Orders">
-    <span>✏️</span>
-    <span class="label">Orders</span>
-  </a>
-  <div class="rail-spacer"></div>
-  <div class="rail-divider"></div>
-  <div class="rail-bottom">
-    <a class="rail-icon" href="#" title="Balance">
-      <span>👛</span>
-      <span class="label">$0.00</span>
-    </a>
-    <a class="rail-icon" href={`${base}/contact/`} title="Support">
-      <span>🎧</span>
-    </a>
-    <a class="rail-icon badge-wrap" href="#" title="Notifications">
-      <span>🔔</span>
-      <span class="badge" id="notifBadge">1</span>
-    </a>
-    <a class="rail-icon" href="#" title="Profile">
-      <span>👤</span>
-    </a>
-  </div>
-</nav>
-
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <a href={`${base}/contact/`} class="sidebar-new-order">＋ New order</a>
@@ -578,10 +548,19 @@ const base = '/ThesisArcPro';
   <div class="tabs-bar">
     <div class="tabs">
       <button class="tab active" data-tab="in_progress">
-        Active <span class="count" id="activeCount">0</span>
+        In Progress <span class="count" id="count_in_progress">0</span>
+      </button>
+      <button class="tab" data-tab="in_review">
+        In Review <span class="count" id="count_in_review">0</span>
+      </button>
+      <button class="tab" data-tab="revision">
+        In Revision <span class="count" id="count_revision">0</span>
       </button>
       <button class="tab" data-tab="completed">
-        Closed <span class="count" id="closedCount">0</span>
+        Completed <span class="count" id="count_completed">0</span>
+      </button>
+      <button class="tab" data-tab="cancelled">
+        Cancelled <span class="count" id="count_cancelled">0</span>
       </button>
     </div>
   </div>
@@ -609,7 +588,7 @@ const base = '/ThesisArcPro';
 
     <div class="empty-state" id="emptyState" style="display:none;">
       <div class="empty-illustration">📄</div>
-      <h3>You have no active orders</h3>
+      <h3 id="emptyHeading">You have no active orders</h3>
       <p>Place your first order and track it right here.</p>
       <a href={`${base}/contact/`} class="btn-empty-order">New order ＋</a>
     </div>
@@ -669,10 +648,22 @@ const base = '/ThesisArcPro';
   }
 
   function updateCounts() {
-    const active = allOrders.filter((o: any) => o.order_status === 'in_progress' || o.order_status === 'new').length;
-    const closed = allOrders.filter((o: any) => o.order_status === 'completed').length;
-    document.getElementById('activeCount')!.textContent = String(active);
-    document.getElementById('closedCount')!.textContent = String(closed);
+    // 'new' orders are counted under In Progress
+    const countFor = (tab: string) => allOrders.filter((o: any) => {
+      const s = o.order_status;
+      if (tab === 'in_progress') return s === 'in_progress' || s === 'new';
+      return s === tab;
+    }).length;
+
+    const set = (id: string, val: number) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = String(val);
+    };
+    set('count_in_progress', countFor('in_progress'));
+    set('count_in_review', countFor('in_review'));
+    set('count_revision', countFor('revision'));
+    set('count_completed', countFor('completed'));
+    set('count_cancelled', countFor('cancelled'));
   }
 
   function deadlineInfo(deadline: string) {
@@ -712,7 +703,7 @@ const base = '/ThesisArcPro';
     let filtered = allOrders.filter((o: any) =>
       currentTab === 'in_progress'
         ? (o.order_status === 'in_progress' || o.order_status === 'new')
-        : o.order_status === 'completed'
+        : o.order_status === currentTab
     );
 
     if (search) {
@@ -725,6 +716,8 @@ const base = '/ThesisArcPro';
     if (!filtered.length) {
       empty.style.display = 'flex';
       table.style.display = 'none';
+      const emptyHeading = document.getElementById('emptyHeading');
+      if (emptyHeading) emptyHeading.textContent = 'No orders in this view';
       return;
     }
 
