@@ -860,6 +860,18 @@ const base = '/ThesisArcPro';
 
   document.getElementById('searchInput')!.addEventListener('input', renderOrders);
 
+  // Open Tidio chat when "Chats" is clicked
+  document.getElementById('chatsLink')!.addEventListener('click', (e) => {
+    e.preventDefault();
+    const tidio = (window as any).tidioChatApi;
+    if (tidio && typeof tidio.open === 'function') {
+      tidio.open();
+    } else {
+      // Tidio hasn't finished loading yet — nudge the user
+      alert('Chat is still loading, please try again in a moment.');
+    }
+  });
+
   document.getElementById('logoutBtn')!.addEventListener('click', async (e) => {
     e.preventDefault();
     await supabase.auth.signOut();
