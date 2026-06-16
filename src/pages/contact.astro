@@ -124,12 +124,25 @@ const base = '/ThesisArcPro';
             <button id="logoutBtn" class="logout-btn">Log Out</button>
           </div>
 
+          <!-- Success message (hidden until order submitted) -->
+          <div class="order-success" id="orderSuccess" style="display:none;">
+            <div class="order-success__icon">🎉</div>
+            <h2>Order Received!</h2>
+            <p>Your order has been submitted successfully. We will match you with an expert within 30 minutes.</p>
+            <div class="order-success__ticket">
+              <span class="order-success__ticket-label">Your Ticket Number</span>
+              <span class="order-success__ticket-id" id="successTicketId">T-0000</span>
+            </div>
+            <a href="" id="successDashboardLink" class="order-success__btn">Go to My Dashboard →</a>
+          </div>
+
+          <div id="formContainer">
           <h2>Order Details</h2>
           <p>Complete the form below to get your instant quote.</p>
 
           <form class="order-form" id="orderForm">
 
-            <div class="form-group">
+            <div class="form-group" id="emailGroup" style="display:none;">
               <label for="email">Email Address *</label>
               <input type="email" id="email" name="email" placeholder="your@email.com" required readonly />
             </div>
@@ -341,6 +354,8 @@ const base = '/ThesisArcPro';
             </button>
 
           </form>
+          </div>
+
         </div>
 
         <div class="order__calculator">
@@ -451,6 +466,17 @@ const base = '/ThesisArcPro';
 .logout-btn { background: none; border: 1px solid var(--navy); color: var(--navy); padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; }
 .logout-btn:hover { background: var(--navy); color: var(--white); }
 
+/* Order success message */
+.order-success { background: var(--white); border: 1.5px solid rgba(45,106,79,0.3); border-radius: 16px; padding: 3rem 2rem; text-align: center; }
+.order-success__icon { font-size: 3.5rem; margin-bottom: 1rem; }
+.order-success h2 { color: var(--navy); margin-bottom: 0.8rem; }
+.order-success p { color: var(--text-mid); margin-bottom: 1.8rem; max-width: 420px; margin-left: auto; margin-right: auto; }
+.order-success__ticket { background: var(--off-white); border-radius: 12px; padding: 1.3rem; margin-bottom: 1.8rem; }
+.order-success__ticket-label { display: block; color: var(--text-mid); font-size: 0.85rem; margin-bottom: 0.4rem; }
+.order-success__ticket-id { display: block; color: var(--gold); font-size: 2.4rem; font-weight: 800; }
+.order-success__btn { display: inline-block; background: var(--navy); color: var(--white); padding: 0.9rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 700; transition: background 0.2s ease; }
+.order-success__btn:hover { background: var(--gold); color: var(--navy); }
+
 .page-hero { background-color: var(--navy); padding: 10rem 0 5rem; }
 .page-hero__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
 .page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
@@ -556,10 +582,21 @@ const base = '/ThesisArcPro';
       const emailInput = document.getElementById('email') as HTMLInputElement;
       if (emailInput) emailInput.value = session.user.email || '';
 
+      // Greet by name (from profile), fall back to email if no name
+      let displayName = session.user.email || '';
+      try {
+        const profRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}&select=full_name`,
+          { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
+        );
+        const profData = await profRes.json();
+        if (profData[0]?.full_name) displayName = profData[0].full_name;
+      } catch {}
+
       const greeting = document.getElementById('userGreeting');
       const greetingText = document.getElementById('greetingText');
       if (greeting) greeting.style.display = 'flex';
-      if (greetingText) greetingText.textContent = `👋 Welcome, ${session.user.email}`;
+      if (greetingText) greetingText.textContent = `👋 Welcome, ${displayName}`;
     } catch {
       window.location.replace(`${base}/login/`);
     }
@@ -680,7 +717,8 @@ const base = '/ThesisArcPro';
   // Create Order button — validate then show payment modal
   document.getElementById('createOrderBtn')?.addEventListener('click', () => {
     const requiredFields = ['topic', 'type', 'subject', 'service', 'language', 'level', 'deadline', 'instructions'];
-    for (const field of requiredFields) {
+    for (let i = 0; i < requiredFields.length; i++) {
+      const field = requiredFields[i];
       const el = document.getElementById(field) as HTMLInputElement;
       if (!el?.value?.trim()) {
         el?.focus();
@@ -863,8 +901,16 @@ const base = '/ThesisArcPro';
         });
       }
 
-      // Redirect to thank you page with ticket number
-      window.location.href = `${base}/dashboard/`;
+      // Show success message with ticket number instead of redirecting straight away
+      const successTicketId = document.getElementById('successTicketId');
+      const successDashboardLink = document.getElementById('successDashboardLink') as HTMLAnchorElement;
+      const formContainer = document.getElementById('formContainer');
+      const orderSuccess = document.getElementById('orderSuccess');
+      if (successTicketId) successTicketId.textContent = ticketId;
+      if (successDashboardLink) successDashboardLink.href = `${base}/dashboard/`;
+      if (formContainer) formContainer.style.display = 'none';
+      if (orderSuccess) orderSuccess.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
     } catch (err) {
       btn.textContent = '❌ Error — please try again';
