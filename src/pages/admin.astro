@@ -20,11 +20,37 @@ const base = '/ThesisArcPro';
           <button id="logoutBtn" class="btn-logout">Log Out</button>
         </div>
 
-        <div class="admin__tabs">
-          <button class="tab active" data-tab="all">All Orders</button>
-          <button class="tab" data-tab="new">New</button>
-          <button class="tab" data-tab="in_progress">In Progress</button>
-          <button class="tab" data-tab="completed">Completed</button>
+        <!-- Stat tiles -->
+        <div class="stat-tiles">
+          <div class="stat-tile">
+            <div class="stat-label">Total</div>
+            <div class="stat-value" id="statTotal">0</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-label">New</div>
+            <div class="stat-value stat-new" id="statNew">0</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-label">In Progress</div>
+            <div class="stat-value stat-progress" id="statProgress">0</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-label">Collected</div>
+            <div class="stat-value stat-money" id="statCollected">$0</div>
+          </div>
+        </div>
+
+        <div class="controls-row">
+          <div class="admin__tabs">
+            <button class="tab active" data-tab="all">All Orders</button>
+            <button class="tab" data-tab="new">New</button>
+            <button class="tab" data-tab="in_progress">In Progress</button>
+            <button class="tab" data-tab="completed">Completed</button>
+          </div>
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="search-input" type="text" id="searchInput" placeholder="Search topic, email, ticket" />
+          </div>
         </div>
 
         <div id="loadingState" class="loading-state">
@@ -34,7 +60,7 @@ const base = '/ThesisArcPro';
 
         <div id="emptyState" class="empty-state" style="display:none;">
           <div class="empty-icon">📋</div>
-          <h3>No orders yet</h3>
+          <h3>No orders match this view</h3>
         </div>
 
         <div id="ordersGrid" class="orders-grid" style="display:none;"></div>
@@ -76,42 +102,40 @@ const base = '/ThesisArcPro';
 
 <style>
 .admin { background: var(--navy); min-height: 100vh; padding: 8rem 0 4rem; }
-.admin__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+.admin__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
 .admin__header h1 { color: var(--white); font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 0.3rem; }
 .admin__header p { color: rgba(255,255,255,0.6); font-size: 0.95rem; }
 .btn-logout { background: none; border: 1.5px solid rgba(255,255,255,0.3); color: white; padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
 .btn-logout:hover { background: rgba(255,255,255,0.1); }
-.admin__tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+
+/* Stat tiles */
+.stat-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+.stat-tile { background: #141e35; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 1rem 1.2rem; }
+.stat-label { color: rgba(255,255,255,0.45); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { color: #f1f5f9; font-size: 1.7rem; font-weight: 800; margin-top: 0.3rem; }
+.stat-value.stat-new { color: #818cf8; }
+.stat-value.stat-progress { color: #fbbf24; }
+.stat-value.stat-money { color: #4ade80; }
+@media (max-width: 768px) { .stat-tiles { grid-template-columns: repeat(2, 1fr); } }
+
+.controls-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+.admin__tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .tab { background: none; border: none; color: rgba(255,255,255,0.5); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
 .tab.active { background: var(--gold); color: var(--navy); }
 .tab:hover:not(.active) { color: white; }
+
+.search-wrap { position: relative; width: 260px; max-width: 100%; }
+.search-icon { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: rgba(255,255,255,0.4); }
+.search-input { width: 100%; background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #f1f5f9; border-radius: 6px; padding: 0.5rem 0.8rem 0.5rem 2rem; font-size: 0.85rem; outline: none; transition: 0.2s; }
+.search-input:focus { border-color: var(--gold); }
+.search-input::placeholder { color: rgba(255,255,255,0.4); }
+
 .loading-state { text-align: center; padding: 4rem; color: rgba(255,255,255,0.5); }
 .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .empty-state { text-align: center; padding: 4rem; background: rgba(255,255,255,0.05); border-radius: 16px; }
 .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
 .empty-state h3 { color: white; }
-.orders-grid { display: flex; flex-direction: column; gap: 0.8rem; }
-.order-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1.2rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: all 0.2s ease; }
-.order-card:hover { border-color: var(--gold); background: rgba(255,255,255,0.08); }
-.order-card__left { flex: 1; min-width: 0; }
-.order-card__title { color: white; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.order-card__email { color: var(--gold); font-size: 0.82rem; margin-bottom: 0.4rem; }
-.order-card__meta { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
-.meta-dot { color: rgba(255,255,255,0.3); }
-.meta-item { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
-.order-card__right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-.order-card__deadline { color: var(--gold); font-size: 0.85rem; font-weight: 600; white-space: nowrap; }
-.order-card__amount { color: white; font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
-.amount-paid { color: rgba(255,255,255,0.4); font-weight: 400; font-size: 0.82rem; }
-.status-badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-.status-new { background: rgba(21,101,192,0.2); color: #90caf9; }
-.status-in_progress { background: rgba(230,81,0,0.2); color: #ffcc80; }
-.status-completed { background: rgba(46,125,50,0.2); color: #a5d6a7; }
-.status-revision { background: rgba(156,39,176,0.2); color: #ce93d8; }
-.status-cancelled { background: rgba(211,47,47,0.2); color: #ef9a9a; }
-.btn-update-order { background: var(--gold); color: var(--navy); border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
-.btn-update-order:hover { background: white; }
 
 /* Modal */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 20000; align-items: center; justify-content: center; }
@@ -127,7 +151,56 @@ const base = '/ThesisArcPro';
 .input-note { color: var(--text-light); font-size: 0.76rem; }
 .btn-update { width: 100%; padding: 1rem; background: var(--navy); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.3s ease; }
 .btn-update:hover { background: var(--gold); color: var(--navy); }
-@media (max-width: 768px) { .order-card { flex-direction: column; align-items: flex-start; } .order-card__right { width: 100%; justify-content: space-between; } }
+</style>
+
+<style is:global>
+  /* Order cards are injected via innerHTML, so these must be global and use
+     explicit colors (CSS variables don't resolve in injected content). */
+  .orders-grid { display: flex; flex-direction: column; gap: 0.7rem; }
+
+  .order-card {
+    background: #141e35;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.18s ease;
+  }
+  .order-card:hover { border-color: rgba(197,160,89,0.55); background: #1a2540; }
+
+  .order-card__left { flex: 1; min-width: 0; }
+  .order-card__title { color: #f1f5f9; font-weight: 700; font-size: 0.93rem; margin-bottom: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .order-card__email { color: #c5a059; font-size: 0.8rem; margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .order-card__meta { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
+  .meta-dot { color: rgba(255,255,255,0.2); }
+  .meta-item { color: rgba(255,255,255,0.55); font-size: 0.78rem; }
+
+  .order-card__right { display: flex; align-items: center; gap: 1.4rem; flex-shrink: 0; }
+  .order-card__deadline { font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+  .order-card__deadline.ok { color: #34d399; }
+  .order-card__deadline.urgent { color: #fb923c; }
+  .order-card__deadline.overdue { color: #f87171; }
+  .order-card__deadline.none { color: rgba(255,255,255,0.4); }
+  .order-card__amount { color: #f1f5f9; font-weight: 700; font-size: 0.92rem; white-space: nowrap; }
+  .amount-paid { color: rgba(255,255,255,0.4); font-weight: 400; font-size: 0.8rem; }
+
+  .status-badge { padding: 0.18rem 0.55rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+  .status-new { background: rgba(99,102,241,0.18); color: #818cf8; }
+  .status-in_progress { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .status-completed { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .status-revision { background: rgba(168,85,247,0.18); color: #c084fc; }
+  .status-cancelled { background: rgba(239,68,68,0.16); color: #f87171; }
+
+  .btn-update-order { background: #c5a059; color: #0f172a; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+  .btn-update-order:hover { background: #f1f5f9; }
+
+  @media (max-width: 768px) {
+    .order-card { flex-direction: column; align-items: flex-start; }
+    .order-card__right { width: 100%; justify-content: space-between; }
+  }
 </style>
 
 <script>
@@ -140,6 +213,7 @@ const base = '/ThesisArcPro';
   let allOrders: any[] = [];
   let currentOrderId: string = '';
   let currentSession: any = null;
+  let currentTab = 'all';
 
   async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -181,50 +255,86 @@ const base = '/ThesisArcPro';
         }
       );
       allOrders = await res.json();
-
-      const statsText = document.getElementById('statsText');
-      if (statsText) {
-        const total = allOrders.length;
-        const newOrders = allOrders.filter(o => o.order_status === 'new').length;
-        const inProgress = allOrders.filter(o => o.order_status === 'in_progress').length;
-        statsText.textContent = `${total} total orders · ${newOrders} new · ${inProgress} in progress`;
-      }
-
-      renderOrders(allOrders);
+      updateStats();
+      renderOrders();
     } catch (err) {
       console.error('Error:', err);
     }
   }
 
-  function getStatusBadge(status: string) {
-    const map: Record<string, string> = {
-      'new': '<span class="status-badge status-new">🆕 New</span>',
-      'in_progress': '<span class="status-badge status-in_progress">⚙️ In Progress</span>',
-      'completed': '<span class="status-badge status-completed">✅ Completed</span>',
-      'revision': '<span class="status-badge status-revision">🔄 Revision</span>',
-      'cancelled': '<span class="status-badge status-cancelled">❌ Cancelled</span>',
+  function updateStats() {
+    const total = allOrders.length;
+    const newOrders = allOrders.filter(o => o.order_status === 'new').length;
+    const inProgress = allOrders.filter(o => o.order_status === 'in_progress').length;
+    const collected = allOrders.reduce((sum, o) => sum + Number(o.amount_paid || 0), 0);
+
+    const set = (id: string, val: string) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
     };
-    return map[status] || `<span class="status-badge status-new">${status}</span>`;
+    set('statTotal', String(total));
+    set('statNew', String(newOrders));
+    set('statProgress', String(inProgress));
+    set('statCollected', '$' + collected.toFixed(0));
+
+    const statsText = document.getElementById('statsText');
+    if (statsText) statsText.textContent = `${total} orders · managing all clients`;
   }
 
-  function timeLeft(deadline: string) {
-    if (!deadline) return 'No deadline';
-    const diff = new Date(deadline).getTime() - new Date().getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    if (diff < 0) return '⚠️ Overdue';
-    if (days > 0) return `⏰ ${days}d left`;
-    return `⏰ ${hours}h left`;
+  // Escape values before injecting into innerHTML
+  function esc(v: any) {
+    return String(v ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
-  function renderOrders(orders: any[]) {
+  function getStatusBadge(status: string) {
+    const labels: Record<string, string> = {
+      'new': '🆕 New',
+      'in_progress': '⚙️ In Progress',
+      'completed': '✅ Completed',
+      'revision': '🔄 Revision',
+      'cancelled': '❌ Cancelled',
+    };
+    const cls = ['new','in_progress','completed','revision','cancelled'].includes(status) ? status : 'new';
+    const label = labels[status] || status;
+    return `<span class="status-badge status-${cls}">${esc(label)}</span>`;
+  }
+
+  function deadlineInfo(deadline: string) {
+    if (!deadline) return { text: 'No deadline', cls: 'none' };
+    const diff = new Date(deadline).getTime() - Date.now();
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    if (diff < 0) return { text: '⚠️ Overdue', cls: 'overdue' };
+    if (days === 0 && hours > 0) return { text: `⏰ ${hours}h left`, cls: 'urgent' };
+    if (days <= 2) return { text: `⏰ ${days}d left`, cls: 'urgent' };
+    return { text: `⏰ ${days}d left`, cls: 'ok' };
+  }
+
+  function renderOrders() {
     const loading = document.getElementById('loadingState');
     const empty = document.getElementById('emptyState');
     const grid = document.getElementById('ordersGrid');
+    const search = (document.getElementById('searchInput') as HTMLInputElement)?.value.toLowerCase() || '';
 
     if (loading) loading.style.display = 'none';
 
-    if (!orders || orders.length === 0) {
+    let filtered = currentTab === 'all'
+      ? allOrders
+      : allOrders.filter(o => o.order_status === currentTab);
+
+    if (search) {
+      filtered = filtered.filter(o =>
+        (o.topic || '').toLowerCase().includes(search) ||
+        (o.client_email || '').toLowerCase().includes(search) ||
+        (o.order_number || '').toLowerCase().includes(search)
+      );
+    }
+
+    if (!filtered.length) {
       if (empty) empty.style.display = 'block';
       if (grid) grid.style.display = 'none';
       return;
@@ -233,30 +343,40 @@ const base = '/ThesisArcPro';
     if (empty) empty.style.display = 'none';
     if (grid) {
       grid.style.display = 'flex';
-      grid.innerHTML = orders.map(order => `
+      grid.innerHTML = filtered.map(order => {
+        const dl = deadlineInfo(order.deadline);
+        return `
         <div class="order-card">
           <div class="order-card__left">
-            <div class="order-card__title">${order.topic || 'N/A'}</div>
-            <div class="order-card__email">${order.client_email || ''}</div>
+            <div class="order-card__title">${esc(order.topic || 'N/A')}</div>
+            <div class="order-card__email">${esc(order.client_email || '')}</div>
             <div class="order-card__meta">
               ${getStatusBadge(order.order_status || 'new')}
               <span class="meta-dot">·</span>
-              <span class="meta-item">${order.order_number}</span>
+              <span class="meta-item">${esc(order.order_number || '')}</span>
               <span class="meta-dot">·</span>
-              <span class="meta-item">${order.pages || 1} pages</span>
+              <span class="meta-item">${esc(order.pages || 1)} pages</span>
               <span class="meta-dot">·</span>
-              <span class="meta-item">${order.assignment_type || 'N/A'}</span>
+              <span class="meta-item">${esc(order.assignment_type || 'N/A')}</span>
             </div>
           </div>
           <div class="order-card__right">
-            <div class="order-card__deadline">${timeLeft(order.deadline)}</div>
+            <div class="order-card__deadline ${dl.cls}">${dl.text}</div>
             <div class="order-card__amount">$${Number(order.total_amount || 0).toFixed(2)} <span class="amount-paid">($${Number(order.amount_paid || 0).toFixed(2)})</span></div>
-            <button class="btn-update-order" onclick="openUpdateModal('${order.id}', '${order.order_number}', '${order.order_status}', '${order.file_url || ''}')">
-              ✏️ Update
-            </button>
+            <button class="btn-update-order" data-id="${esc(order.id)}">✏️ Update</button>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
+
+      // Attach click listeners (safer than inline onclick with quoted values)
+      grid.querySelectorAll('.btn-update-order').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = (btn as HTMLElement).dataset.id;
+          const order = allOrders.find(o => String(o.id) === id);
+          if (order) openUpdateModal(order);
+        });
+      });
     }
   }
 
@@ -265,25 +385,25 @@ const base = '/ThesisArcPro';
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      const currentTab = (tab as HTMLElement).dataset.tab || 'all';
-      const filtered = currentTab === 'all'
-        ? allOrders
-        : allOrders.filter(o => o.order_status === currentTab);
-      renderOrders(filtered);
+      currentTab = (tab as HTMLElement).dataset.tab || 'all';
+      renderOrders();
     });
   });
 
+  // Search
+  document.getElementById('searchInput')?.addEventListener('input', renderOrders);
+
   // Open update modal
-  function openUpdateModal(id: string, orderNum: string, status: string, fileUrl: string) {
-    currentOrderId = id;
+  function openUpdateModal(order: any) {
+    currentOrderId = String(order.id);
     const modal = document.getElementById('updateModal');
     const modalOrderNum = document.getElementById('modalOrderNum');
     const statusSelect = document.getElementById('statusSelect') as HTMLSelectElement;
     const fileUrlInput = document.getElementById('fileUrl') as HTMLInputElement;
 
-    if (modalOrderNum) modalOrderNum.textContent = `Order ${orderNum}`;
-    if (statusSelect) statusSelect.value = status;
-    if (fileUrlInput) fileUrlInput.value = fileUrl;
+    if (modalOrderNum) modalOrderNum.textContent = `Order ${order.order_number || order.id}`;
+    if (statusSelect) statusSelect.value = order.order_status || 'new';
+    if (fileUrlInput) fileUrlInput.value = order.file_url || '';
     modal?.classList.add('active');
   }
 
@@ -332,8 +452,6 @@ const base = '/ThesisArcPro';
     await supabase.auth.signOut();
     window.location.replace(`${base}/login/`);
   });
-
-  (window as any).openUpdateModal = openUpdateModal;
 
   checkAuth();
 </script>
