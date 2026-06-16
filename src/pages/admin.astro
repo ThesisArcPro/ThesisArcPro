@@ -79,6 +79,7 @@ const base = '/ThesisArcPro';
         <select id="statusSelect">
           <option value="new">🆕 New</option>
           <option value="in_progress">⚙️ In Progress</option>
+          <option value="in_review">🔍 In Review</option>
           <option value="completed">✅ Completed</option>
           <option value="revision">🔄 Revision</option>
           <option value="cancelled">❌ Cancelled</option>
@@ -86,9 +87,13 @@ const base = '/ThesisArcPro';
       </div>
 
       <div class="form-group">
-        <label>Completed File URL (Google Drive link)</label>
-        <input type="text" id="fileUrl" placeholder="https://drive.google.com/..." />
-        <span class="input-note">Paste shareable Google Drive link here</span>
+        <label>Completed File</label>
+        <div class="current-file" id="currentFile" style="display:none;">
+          <span id="currentFileName">📎 A file is already attached</span>
+        </div>
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.zip,.ppt,.pptx,.xls,.xlsx" />
+        <span class="input-note">Choose the completed file to deliver to the client. Leave empty to keep the current file.</span>
+        <div class="upload-progress" id="uploadProgress" style="display:none;">⏳ Uploading file…</div>
       </div>
 
       <button class="btn-update" id="saveUpdateBtn">💾 Save Changes</button>
@@ -146,9 +151,13 @@ const base = '/ThesisArcPro';
 .form-group label { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
 .form-group select, .form-group input { padding: 0.85rem 1rem; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; font-size: 0.95rem; outline: none; }
 .form-group select:focus, .form-group input:focus { border-color: var(--gold); }
+.form-group input[type="file"] { padding: 0.6rem; background: var(--off-white); cursor: pointer; }
+.current-file { background: #e8f5e9; color: #2e7d32; padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; }
+.upload-progress { color: var(--navy); font-size: 0.85rem; font-weight: 600; }
 .input-note { color: var(--text-light); font-size: 0.76rem; }
 .btn-update { width: 100%; padding: 1rem; background: var(--navy); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.3s ease; }
 .btn-update:hover { background: var(--gold); color: var(--navy); }
+.btn-update:disabled { opacity: 0.6; cursor: not-allowed; }
 </style>
 
 <style is:global>
@@ -188,6 +197,7 @@ const base = '/ThesisArcPro';
   .status-badge { padding: 0.18rem 0.55rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
   .status-new { background: rgba(99,102,241,0.18); color: #818cf8; }
   .status-in_progress { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .status-in_review { background: rgba(56,138,221,0.18); color: #60a5fa; }
   .status-completed { background: rgba(34,197,94,0.15); color: #4ade80; }
   .status-revision { background: rgba(168,85,247,0.18); color: #c084fc; }
   .status-cancelled { background: rgba(239,68,68,0.16); color: #f87171; }
@@ -207,9 +217,10 @@ const base = '/ThesisArcPro';
   const base = '/ThesisArcPro';
   const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+  const BUCKET = 'completed-files';
 
   let allOrders: any[] = [];
-  let currentOrderId: string = '';
+  let currentOrder: any = null;
   let currentSession: any = null;
   let currentTab = 'all';
 
@@ -292,11 +303,12 @@ const base = '/ThesisArcPro';
     const labels: Record<string, string> = {
       'new': '🆕 New',
       'in_progress': '⚙️ In Progress',
+      'in_review': '🔍 In Review',
       'completed': '✅ Completed',
       'revision': '🔄 Revision',
       'cancelled': '❌ Cancelled',
     };
-    const cls = ['new','in_progress','completed','revision','cancelled'].includes(status) ? status : 'new';
+    const cls = ['new','in_progress','in_review','completed','revision','cancelled'].includes(status) ? status : 'new';
     const label = labels[status] || status;
     return `<span class="status-badge status-${cls}">${esc(label)}</span>`;
   }
@@ -391,17 +403,31 @@ const base = '/ThesisArcPro';
 
   // Open update modal
   function openUpdateModal(order: any) {
-    currentOrderId = String(order.id);
+    currentOrder = order;
     const modal = document.getElementById('updateModal');
     const modalOrderNum = document.getElementById('modalOrderNum');
     const statusSelect = document.getElementById('statusSelect') as HTMLSelectElement;
-    const fileUrlInput = document.getElementById('fileUrl') as HTMLInputElement;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const currentFile = document.getElementById('currentFile');
+    const currentFileName = document.getElementById('currentFileName');
 
     if (modalOrderNum) modalOrderNum.textContent = `Order ${order.order_number || order.id}`;
     const modalClientEmail = document.getElementById('modalClientEmail');
     if (modalClientEmail) modalClientEmail.textContent = order.client_email || '';
     if (statusSelect) statusSelect.value = order.order_status || 'new';
-    if (fileUrlInput) fileUrlInput.value = order.file_url || '';
+    if (fileInput) fileInput.value = '';
+
+    // Show whether a file is already attached
+    if (currentFile && currentFileName) {
+      if (order.file_url) {
+        const parts = String(order.file_url).split('/');
+        currentFileName.textContent = '📎 Attached: ' + parts[parts.length - 1];
+        currentFile.style.display = 'block';
+      } else {
+        currentFile.style.display = 'none';
+      }
+    }
+
     modal?.classList.add('active');
   }
 
@@ -410,17 +436,43 @@ const base = '/ThesisArcPro';
     document.getElementById('updateModal')?.classList.remove('active');
   });
 
-  // Save update
+  // Save update — uploads file to Storage if one is chosen
   document.getElementById('saveUpdateBtn')?.addEventListener('click', async () => {
+    if (!currentOrder) return;
     const status = (document.getElementById('statusSelect') as HTMLSelectElement).value;
-    const fileUrl = (document.getElementById('fileUrl') as HTMLInputElement).value.trim();
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     const btn = document.getElementById('saveUpdateBtn') as HTMLButtonElement;
+    const progress = document.getElementById('uploadProgress');
 
-    btn.textContent = '⏳ Saving...';
     btn.disabled = true;
 
+    // Keep existing file path unless a new file is uploaded
+    let filePath = currentOrder.file_url || null;
+
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${currentOrderId}`, {
+      const file = fileInput.files && fileInput.files[0];
+      if (file) {
+        if (progress) progress.style.display = 'block';
+        btn.textContent = '⏳ Uploading…';
+
+        const ticket = currentOrder.order_number || String(currentOrder.id);
+        // Sanitize the filename and store under the ticket folder
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = `${ticket}/${safeName}`;
+
+        const { error: uploadError } = await supabase
+          .storage
+          .from(BUCKET)
+          .upload(path, file, { upsert: true });
+
+        if (uploadError) throw uploadError;
+        filePath = path;
+        if (progress) progress.style.display = 'none';
+      }
+
+      btn.textContent = '⏳ Saving…';
+
+      await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${currentOrder.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -429,7 +481,7 @@ const base = '/ThesisArcPro';
         },
         body: JSON.stringify({
           order_status: status,
-          file_url: fileUrl || null,
+          file_url: filePath,
           status_updated_at: new Date().toISOString()
         })
       });
@@ -440,7 +492,9 @@ const base = '/ThesisArcPro';
       await loadOrders();
 
     } catch (err) {
-      btn.textContent = '❌ Error — try again';
+      console.error(err);
+      if (progress) progress.style.display = 'none';
+      btn.textContent = '❌ Upload failed — try again';
       btn.disabled = false;
     }
   });

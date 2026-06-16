@@ -415,7 +415,11 @@ const base = '/ThesisArcPro';
   }
 
   .status-badge.new { background: rgba(99,102,241,0.15); color: #818cf8; }
+  .status-badge.in_progress { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .status-badge.in_review { background: rgba(56,138,221,0.18); color: #60a5fa; }
   .status-badge.completed { background: rgba(34,197,94,0.12); color: #4ade80; }
+  .status-badge.revision { background: rgba(168,85,247,0.18); color: #c084fc; }
+  .status-badge.cancelled { background: rgba(239,68,68,0.16); color: #f87171; }
 
   /* ── ORDER DETAIL MODAL ── */
   .om-header { margin-bottom: 1.2rem; padding-right: 2rem; }
@@ -491,12 +495,16 @@ const base = '/ThesisArcPro';
     background: #c5a059;
     color: #0f172a;
     padding: 0.7rem 1.5rem;
+    border: none;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 700;
     font-size: 0.88rem;
+    cursor: pointer;
   }
   .om-download:hover { background: #d4b06a; }
+  .om-download:disabled { opacity: 0.6; cursor: not-allowed; }
+  .om-dl-note { color: #f87171; font-size: 0.8rem; margin-top: 0.6rem; }
 
   .om-nofile {
     text-align: center;
@@ -679,9 +687,8 @@ const base = '/ThesisArcPro';
   }
 
   function statusClass(status: string) {
-    if (status === 'new') return 'new';
-    if (status === 'completed') return 'completed';
-    return '';
+    const known = ['new','in_progress','in_review','completed','revision','cancelled'];
+    return known.includes(status) ? status : 'new';
   }
 
   // Escape user-supplied text before injecting into innerHTML
@@ -821,11 +828,38 @@ const base = '/ThesisArcPro';
       <!-- FILES -->
       <div class="om-panel" data-mpanel="files">
         ${order.file_url
-          ? `<a href="${esc(order.file_url)}" target="_blank" rel="noopener" class="om-download">📥 Download completed work</a>`
+          ? `<button class="om-download" id="downloadBtn" data-path="${esc(order.file_url)}">📥 Download completed work</button>
+             <div class="om-dl-note" id="dlNote"></div>`
           : `<div class="om-nofile">Your file will appear here once the work is delivered.</div>`
         }
       </div>
     `;
+
+    // Signed download — generate a temporary link on click (private bucket)
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', async () => {
+        const path = (downloadBtn as HTMLElement).dataset.path || '';
+        const note = document.getElementById('dlNote');
+        (downloadBtn as HTMLButtonElement).disabled = true;
+        downloadBtn.textContent = '⏳ Preparing download…';
+        try {
+          const { data, error } = await supabase
+            .storage
+            .from('completed-files')
+            .createSignedUrl(path, 120);
+          if (error || !data?.signedUrl) throw error || new Error('No URL');
+          window.open(data.signedUrl, '_blank');
+          downloadBtn.textContent = '📥 Download completed work';
+          (downloadBtn as HTMLButtonElement).disabled = false;
+        } catch (err) {
+          console.error(err);
+          downloadBtn.textContent = '📥 Download completed work';
+          (downloadBtn as HTMLButtonElement).disabled = false;
+          if (note) note.textContent = 'Could not prepare the download. Please try again or contact support.';
+        }
+      });
+    }
 
     // Tab switching inside the modal
     const content = document.getElementById('modalContent')!;
@@ -859,18 +893,6 @@ const base = '/ThesisArcPro';
   });
 
   document.getElementById('searchInput')!.addEventListener('input', renderOrders);
-
-  // Open Tidio chat when "Chats" is clicked
-  document.getElementById('chatsLink')!.addEventListener('click', (e) => {
-    e.preventDefault();
-    const tidio = (window as any).tidioChatApi;
-    if (tidio && typeof tidio.open === 'function') {
-      tidio.open();
-    } else {
-      // Tidio hasn't finished loading yet — nudge the user
-      alert('Chat is still loading, please try again in a moment.');
-    }
-  });
 
   document.getElementById('logoutBtn')!.addEventListener('click', async (e) => {
     e.preventDefault();
