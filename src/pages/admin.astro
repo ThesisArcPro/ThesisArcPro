@@ -1,12 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
 const base = '/ThesisArcPro';
 ---
 
 <BaseLayout title="Admin Dashboard" description="ThesisArcPro Admin">
-  <Header />
 
   <main>
     <section class="admin">
@@ -75,6 +72,7 @@ const base = '/ThesisArcPro';
       <button class="modal-close" id="modalClose">✕</button>
       <h2>Update Order</h2>
       <p id="modalOrderNum" class="modal-order-num"></p>
+      <p id="modalClientEmail" class="modal-client-email"></p>
 
       <div class="form-group">
         <label>Order Status</label>
@@ -97,7 +95,6 @@ const base = '/ThesisArcPro';
     </div>
   </div>
 
-  <Footer />
 </BaseLayout>
 
 <style>
@@ -143,7 +140,8 @@ const base = '/ThesisArcPro';
 .modal-card { background: white; border-radius: 16px; padding: 2rem; max-width: 480px; width: 90%; position: relative; }
 .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-mid); }
 .modal-card h2 { color: var(--navy); margin-bottom: 0.3rem; }
-.modal-order-num { color: var(--gold); font-weight: 700; margin-bottom: 1.5rem; }
+.modal-order-num { color: var(--gold); font-weight: 700; margin-bottom: 0.2rem; }
+.modal-client-email { color: var(--text-mid); font-size: 0.85rem; margin-bottom: 1.5rem; }
 .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.2rem; }
 .form-group label { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
 .form-group select, .form-group input { padding: 0.85rem 1rem; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; font-size: 0.95rem; outline: none; }
@@ -349,11 +347,9 @@ const base = '/ThesisArcPro';
         <div class="order-card">
           <div class="order-card__left">
             <div class="order-card__title">${esc(order.topic || 'N/A')}</div>
-            <div class="order-card__email">${esc(order.client_email || '')}</div>
+            <div class="order-card__email">${esc(order.order_number || order.id)}</div>
             <div class="order-card__meta">
               ${getStatusBadge(order.order_status || 'new')}
-              <span class="meta-dot">·</span>
-              <span class="meta-item">${esc(order.order_number || '')}</span>
               <span class="meta-dot">·</span>
               <span class="meta-item">${esc(order.pages || 1)} pages</span>
               <span class="meta-dot">·</span>
@@ -402,6 +398,8 @@ const base = '/ThesisArcPro';
     const fileUrlInput = document.getElementById('fileUrl') as HTMLInputElement;
 
     if (modalOrderNum) modalOrderNum.textContent = `Order ${order.order_number || order.id}`;
+    const modalClientEmail = document.getElementById('modalClientEmail');
+    if (modalClientEmail) modalClientEmail.textContent = order.client_email || '';
     if (statusSelect) statusSelect.value = order.order_status || 'new';
     if (fileUrlInput) fileUrlInput.value = order.file_url || '';
     modal?.classList.add('active');
