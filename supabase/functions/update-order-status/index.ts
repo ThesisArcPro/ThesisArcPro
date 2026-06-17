@@ -101,7 +101,7 @@ Deno.serve(async (req) => {
           </div>
         </body>
       </html>
-    `, { status: 200, headers: { "Content-Type": "text/html" } });
+    `, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8" } });
 
   } catch (error) {
     return new Response(`
@@ -112,6 +112,6 @@ Deno.serve(async (req) => {
           <p>${error}</p>
         </body>
       </html>
-    `, { status: 500, headers: { "Content-Type": "text/html" } });
+    `, { status: 500, headers: { "Content-Type": "text/html; charset=utf-8" } });
   }
 });
