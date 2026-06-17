@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Order Updated" description="Order status updated">
+<style>
+  .page {
+    min-height: 100vh;
+    background: #0a1628;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+  .emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+  h1 { color: #0a1628; margin-bottom: 0.5rem; }
+  p { color: #666; }
+  .badge {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 700;
+    margin: 1rem 0;
+    text-transform: uppercase;
+  }
+  .badge-progress { background: #fff3e0; color: #e65100; }
+  .badge-completed { background: #e8f5e9; color: #2e7d32; }
+  .badge-revision { background: #f3e5f5; color: #6a1b9a; }
+  .badge-in_review { background: #e3f2fd; color: #1565c0; }
+  .badge-cancelled { background: #fce4ec; color: #880e4f; }
+</style>
+
+<div class="page">
+  <div class="card">
+    <div class="emoji">✅</div>
+    <h1>Order Updated!</h1>
+    <div class="badge" id="badge"></div>
+    <p>Order <strong id="orderNum"></strong> has been marked as <strong id="statusText"></strong>.</p>
+    <p style="font-size:0.85rem; color:#999; margin-top:0.5rem;">You can close this tab.</p>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const order = params.get('order') || '—';
+  const status = params.get('status') || '';
+  const label = status.replace(/_/g, ' ').toUpperCase();
+
+  document.getElementById('orderNum')!.textContent = order;
+  document.getElementById('statusText')!.textContent = status.replace(/_/g, ' ');
+
+  const badge = document.getElementById('badge')!;
+  badge.textContent = label;
+  badge.className = `badge badge-${status}`;
+</script>
+</BaseLayout>
