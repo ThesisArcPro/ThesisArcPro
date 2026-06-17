@@ -70,38 +70,13 @@ Deno.serve(async (req) => {
       }
     }
 
-    const badgeClass = status === "completed" ? "badge-completed"
-      : status === "revision" ? "badge-revision"
-      : "badge-progress";
-    const label = status.replace("_", " ").toUpperCase();
+    // Redirect to the success page on the live site — avoids sandbox/encoding issues
+    const redirectUrl = `https://thesisarcpro.github.io/ThesisArcPro/order-updated/?order=${order?.order_number || orderId}&status=${status}`;
 
-    return new Response(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Order Updated</title>
-          <style>
-            body { font-family: Arial, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #0a1628; }
-            .card { background: white; border-radius: 16px; padding: 2.5rem; text-align: center; max-width: 400px; }
-            h1 { color: #0a1628; margin-bottom: 0.5rem; }
-            p { color: #666; }
-            .badge { display: inline-block; padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: 700; margin: 1rem 0; }
-            .badge-progress { background: #fff3e0; color: #e65100; }
-            .badge-completed { background: #e8f5e9; color: #2e7d32; }
-            .badge-revision { background: #f3e5f5; color: #6a1b9a; }
-          </style>
-        </head>
-        <body>
-          <div class="card">
-            <div style="font-size:3rem;">✅</div>
-            <h1>Order Updated!</h1>
-            <div class="badge ${badgeClass}">${label}</div>
-            <p>Order <strong>${order?.order_number || orderId}</strong> has been marked as <strong>${status.replace("_", " ")}</strong>.</p>
-            <p style="font-size:0.85rem; color:#999;">You can close this tab.</p>
-          </div>
-        </body>
-      </html>
-    `, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8" } });
+    return new Response(null, {
+      status: 302,
+      headers: { "Location": redirectUrl },
+    });
 
   } catch (error) {
     return new Response(`
