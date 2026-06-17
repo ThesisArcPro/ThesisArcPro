@@ -176,25 +176,13 @@ import Footer from '../components/Footer.astro';
 
       if (error) throw error;
 
-      // Save profile to database
+      // Profile is created automatically by the database trigger (handle_new_user).
+      // We only need to update the phone number, which the trigger doesn't have.
       if (data.user) {
-        const { data: lastProfile } = await supabase
+        await supabase
           .from('profiles')
-          .select('client_id')
-          .order('client_id', { ascending: false })
-          .limit(1)
-          .single();
-
-        const lastId = lastProfile?.client_id ? parseInt(lastProfile.client_id) : 205877;
-        const newClientId = (lastId + 1).toString();
-
-        await supabase.from('profiles').insert({
-          id: data.user.id,
-          email,
-          full_name: fullName,
-          phone,
-          client_id: newClientId
-        });
+          .update({ phone })
+          .eq('id', data.user.id);
       }
 
       successMsg!.textContent = '✅ Account created! Please check your email to verify your account, then login.';
