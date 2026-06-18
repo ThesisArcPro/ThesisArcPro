@@ -957,9 +957,12 @@ ${String(err?.message || err)}
   }
 
   // ── UPDATE ORDER STATUS (client-side) ──
-  async function updateOrderStatus(orderId: string, newStatus: string): Promise<boolean> {
+  // Optionally saves a revision note in the same PATCH.
+  async function updateOrderStatus(orderId: string, newStatus: string, revisionNote?: string): Promise<boolean> {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return false;
+    const body: any = { order_status: newStatus, status_updated_at: new Date().toISOString() };
+    if (typeof revisionNote === 'string') body.revision_note = revisionNote;
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`,
       {
@@ -970,7 +973,7 @@ ${String(err?.message || err)}
           'Content-Type': 'application/json',
           'Prefer': 'return=minimal'
         },
-        body: JSON.stringify({ order_status: newStatus, status_updated_at: new Date().toISOString() })
+        body: JSON.stringify(body)
       }
     );
     return res.ok;
@@ -1087,18 +1090,19 @@ ${String(err?.message || err)}
         (revisionSubmit as HTMLButtonElement).disabled = true;
         revisionSubmit.textContent = 'Submitting…';
 
-        // Update order status to revision and store the reason in instructions addendum
-        const ok = await updateOrderStatus(String(order.id), 'revision');
+        // Update status to revision AND save the client's note in the same PATCH
+        const ok = await updateOrderStatus(String(order.id), 'revision', reason);
         if (ok) {
-          // Update local cache so card re-renders correctly
           const idx = allOrders.findIndex((o: any) => o.id === order.id);
-          if (idx !== -1) allOrders[idx].order_status = 'revision';
+          if (idx !== -1) {
+            allOrders[idx].order_status = 'revision';
+            allOrders[idx].revision_note = reason;
+          }
           updateCounts();
           renderOrders();
           actionMsg.textContent = '✅ Revision request submitted successfully.';
           actionMsg.className = 'om-action-msg success';
           (revisionForm as HTMLElement).classList.remove('open');
-          // Close modal after short delay
           setTimeout(() => closeModal(), 1800);
         } else {
           actionMsg.textContent = 'Something went wrong. Please try again or contact support.';
@@ -1121,13 +1125,11 @@ ${String(err?.message || err)}
 
         const ok = await updateOrderStatus(String(order.id), 'completed');
         if (ok) {
-          // Update local cache
           const idx = allOrders.findIndex((o: any) => o.id === order.id);
           if (idx !== -1) allOrders[idx].order_status = 'completed';
           updateCounts();
           renderOrders();
           closeModal();
-          // Show review popup
           reviewOrderNumber = order.order_number || String(order.id);
           reviewClientEmail = currentSession?.user?.email || '';
           reviewClientId = order.client_id || '';
@@ -1182,7 +1184,6 @@ ${String(err?.message || err)}
   // ── REVIEW MODAL ──
   function openReviewModal() {
     selectedRating = 0;
-    // Reset stars
     document.querySelectorAll('.star').forEach(s => s.classList.remove('selected'));
     (document.getElementById('reviewText') as HTMLTextAreaElement).value = '';
     document.getElementById('reviewSuccess')!.style.display = 'none';

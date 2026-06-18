@@ -77,6 +77,11 @@ const base = '/ThesisArcPro';
       <p id="modalOrderNum" class="modal-order-num"></p>
       <p id="modalClientEmail" class="modal-client-email"></p>
 
+      <div class="revision-note-box" id="revisionNoteBox" style="display:none;">
+        <div class="revision-note-label">🔄 Client's revision request</div>
+        <div class="revision-note-text" id="revisionNoteText"></div>
+      </div>
+
       <div class="form-group">
         <label>Order Status</label>
         <select id="statusSelect">
@@ -161,6 +166,9 @@ const base = '/ThesisArcPro';
 .btn-update { width: 100%; padding: 1rem; background: var(--navy); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.3s ease; }
 .btn-update:hover { background: var(--gold); color: var(--navy); }
 .btn-update:disabled { opacity: 0.6; cursor: not-allowed; }
+.revision-note-box { background: #f3e8ff; border: 1px solid #d8b4fe; border-radius: 8px; padding: 0.9rem 1rem; margin-bottom: 1.2rem; }
+.revision-note-label { color: #7c3aed; font-weight: 700; font-size: 0.8rem; margin-bottom: 0.35rem; }
+.revision-note-text { color: #4c1d6b; font-size: 0.88rem; line-height: 1.5; white-space: pre-wrap; }
 </style>
 
 <style is:global>
@@ -227,77 +235,50 @@ const base = '/ThesisArcPro';
   let currentSession: any = null;
   let currentTab = 'all';
 
-  // ── TEMPORARY DEBUG HELPERS (remove once the mobile loading issue is fixed) ──
-  function setStatus(text: string) {
-    const p = document.querySelector('#loadingState p');
-    if (p) p.textContent = text;
-  }
-
-  function showDebugError(err: any) {
-    console.error(err);
-    const loading = document.getElementById('loadingState');
-    if (loading) {
-      loading.innerHTML = `
-        <div style="max-width:480px;text-align:left;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:1rem;color:#f87171;font-size:0.78rem;font-family:monospace;white-space:pre-wrap;word-break:break-word;margin:0 auto;">
-⚠️ Debug error:
-${String(err?.message || err)}
-        </div>`;
+  async function checkAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.replace(`${base}/login/`);
+      return;
     }
-  }
+    currentSession = session;
 
-  function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
-    return Promise.race([
-      promise,
-      new Promise<T>((_, reject) =>
-        setTimeout(() => reject(new Error(`${label} timed out after ${ms / 1000}s — likely a hang, not a thrown error`)), ms)
-      )
-    ]);
-  }
-
-  window.addEventListener('error', (e) => showDebugError((e as ErrorEvent).error || (e as ErrorEvent).message));
-  window.addEventListener('unhandledrejection', (e) => showDebugError((e as PromiseRejectionEvent).reason));
-  // ── END DEBUG HELPERS ──
-
-  // Fetches orders via the get-orders edge function (also tells us isAdmin).
-  // Used both on initial load and to refresh after saving an update.
-  async function loadOrders() {
-    const res = await withTimeout(
-      fetch(`${SUPABASE_URL}/functions/v1/get-orders`, {
+    // Check if admin
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/profiles?email=eq.${session.user.email}&select=is_admin`,
+      {
         headers: {
           'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${currentSession.access_token}`
+          'Authorization': `Bearer ${session.access_token}`
         }
-      }),
-      10000,
-      'Orders fetch'
+      }
     );
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `Orders request failed (${res.status})`);
-    allOrders = json.orders;
-    updateStats();
-    renderOrders();
-    return json.isAdmin;
+    const data = await res.json();
+
+    if (!data[0]?.is_admin) {
+      window.location.replace(`${base}/dashboard/`);
+      return;
+    }
+
+    await loadOrders();
   }
 
-  async function checkAuth() {
+  async function loadOrders() {
     try {
-      setStatus('Checking your login…');
-      const { data: { session } } = await withTimeout(supabase.auth.getSession(), 10000, 'Session check');
-      if (!session) {
-        window.location.replace(`${base}/login/`);
-        return;
-      }
-      currentSession = session;
-
-      setStatus('Loading orders…');
-      const isAdmin = await loadOrders();
-
-      if (!isAdmin) {
-        window.location.replace(`${base}/dashboard/`);
-        return;
-      }
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?order=created_at.desc`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${currentSession.access_token}`
+          }
+        }
+      );
+      allOrders = await res.json();
+      updateStats();
+      renderOrders();
     } catch (err) {
-      showDebugError(err);
+      console.error('Error:', err);
     }
   }
 
@@ -446,6 +427,18 @@ ${String(err?.message || err)}
     if (modalClientEmail) modalClientEmail.textContent = order.client_email || '';
     if (statusSelect) statusSelect.value = order.order_status || 'new';
     if (fileInput) fileInput.value = '';
+
+    // Show the client's revision note if one exists
+    const revisionNoteBox = document.getElementById('revisionNoteBox');
+    const revisionNoteText = document.getElementById('revisionNoteText');
+    if (revisionNoteBox && revisionNoteText) {
+      if (order.revision_note && String(order.revision_note).trim()) {
+        revisionNoteText.textContent = order.revision_note;
+        revisionNoteBox.style.display = 'block';
+      } else {
+        revisionNoteBox.style.display = 'none';
+      }
+    }
 
     // Show whether a file is already attached
     if (currentFile && currentFileName) {
