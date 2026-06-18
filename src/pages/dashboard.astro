@@ -829,17 +829,15 @@ ${String(err?.message || err)}
       setStatus('Fetching your orders…');
       const res = await withTimeout(
         fetch(
-          `${SUPABASE_URL}/rest/v1/orders?client_email=eq.${encodeURIComponent(session.user.email)}&order=created_at.desc`,
+          `${SUPABASE_URL}/functions/v1/get-orders`,
           { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
         ),
         10000,
         'Orders fetch'
       );
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Orders request failed (${res.status}): ${text}`);
-      }
-      allOrders = await res.json();
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || `Orders request failed (${res.status})`);
+      allOrders = json.orders;
       updateCounts();
       renderOrders();
     } catch (err) {
