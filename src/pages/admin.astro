@@ -227,50 +227,103 @@ const base = '/ThesisArcPro';
   let currentSession: any = null;
   let currentTab = 'all';
 
+  // ── TEMPORARY DEBUG HELPERS (remove once the mobile loading issue is fixed) ──
+  function setStatus(text: string) {
+    const p = document.querySelector('#loadingState p');
+    if (p) p.textContent = text;
+  }
+
+  function showDebugError(err: any) {
+    console.error(err);
+    const loading = document.getElementById('loadingState');
+    if (loading) {
+      loading.innerHTML = `
+        <div style="max-width:480px;text-align:left;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:1rem;color:#f87171;font-size:0.78rem;font-family:monospace;white-space:pre-wrap;word-break:break-word;margin:0 auto;">
+⚠️ Debug error:
+${String(err?.message || err)}
+        </div>`;
+    }
+  }
+
+  function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+    return Promise.race([
+      promise,
+      new Promise<T>((_, reject) =>
+        setTimeout(() => reject(new Error(`${label} timed out after ${ms / 1000}s — likely a hang, not a thrown error`)), ms)
+      )
+    ]);
+  }
+
+  window.addEventListener('error', (e) => showDebugError((e as ErrorEvent).error || (e as ErrorEvent).message));
+  window.addEventListener('unhandledrejection', (e) => showDebugError((e as PromiseRejectionEvent).reason));
+  // ── END DEBUG HELPERS ──
+
   async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      window.location.replace(`${base}/login/`);
-      return;
-    }
-    currentSession = session;
-
-    // Check if admin
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/profiles?email=eq.${session.user.email}&select=is_admin`,
-      {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${session.access_token}`
-        }
+    try {
+      setStatus('Checking your login…');
+      const { data: { session } } = await withTimeout(supabase.auth.getSession(), 10000, 'Session check');
+      if (!session) {
+        window.location.replace(`${base}/login/`);
+        return;
       }
-    );
-    const data = await res.json();
+      currentSession = session;
 
-    if (!data[0]?.is_admin) {
-      window.location.replace(`${base}/dashboard/`);
-      return;
+      setStatus('Verifying admin access…');
+      const res = await withTimeout(
+        fetch(
+          `${SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(session.user.email)}&select=is_admin`,
+          {
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${session.access_token}`
+            }
+          }
+        ),
+        10000,
+        'Admin check'
+      );
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Admin check failed (${res.status}): ${text}`);
+      }
+      const data = await res.json();
+
+      if (!data[0]?.is_admin) {
+        window.location.replace(`${base}/dashboard/`);
+        return;
+      }
+
+      setStatus('Loading orders…');
+      await loadOrders();
+    } catch (err) {
+      showDebugError(err);
     }
-
-    await loadOrders();
   }
 
   async function loadOrders() {
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders?order=created_at.desc`,
-        {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${currentSession.access_token}`
+      const res = await withTimeout(
+        fetch(
+          `${SUPABASE_URL}/rest/v1/orders?order=created_at.desc`,
+          {
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${currentSession.access_token}`
+            }
           }
-        }
+        ),
+        10000,
+        'Orders fetch'
       );
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Orders request failed (${res.status}): ${text}`);
+      }
       allOrders = await res.json();
       updateStats();
       renderOrders();
     } catch (err) {
-      console.error('Error:', err);
+      showDebugError(err);
     }
   }
 

@@ -781,26 +781,69 @@ const base = '/ThesisArcPro';
   let reviewClientId = '';
   let selectedRating = 0;
 
+  // ── TEMPORARY DEBUG HELPERS (remove once the mobile loading issue is fixed) ──
+  function setStatus(text: string) {
+    const p = document.querySelector('#loadingState p');
+    if (p) p.textContent = text;
+  }
+
+  function showDebugError(err: any) {
+    console.error(err);
+    const loading = document.getElementById('loadingState');
+    if (loading) {
+      loading.innerHTML = `
+        <div style="max-width:480px;text-align:left;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:1rem;color:#f87171;font-size:0.78rem;font-family:monospace;white-space:pre-wrap;word-break:break-word;">
+⚠️ Debug error:
+${String(err?.message || err)}
+        </div>`;
+    }
+  }
+
+  function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+    return Promise.race([
+      promise,
+      new Promise<T>((_, reject) =>
+        setTimeout(() => reject(new Error(`${label} timed out after ${ms / 1000}s — likely a hang, not a thrown error`)), ms)
+      )
+    ]);
+  }
+
+  window.addEventListener('error', (e) => showDebugError((e as ErrorEvent).error || (e as ErrorEvent).message));
+  window.addEventListener('unhandledrejection', (e) => showDebugError((e as PromiseRejectionEvent).reason));
+  // ── END DEBUG HELPERS ──
+
   async function init() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { window.location.replace(`${base}/login/`); return; }
-    currentSession = session;
-    await loadOrders(session);
+    try {
+      setStatus('Checking your login…');
+      const { data: { session } } = await withTimeout(supabase.auth.getSession(), 10000, 'Session check');
+      if (!session) { window.location.replace(`${base}/login/`); return; }
+      currentSession = session;
+      await loadOrders(session);
+    } catch (err) {
+      showDebugError(err);
+    }
   }
 
   async function loadOrders(session: any) {
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders?client_email=eq.${session.user.email}&order=created_at.desc`,
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
+      setStatus('Fetching your orders…');
+      const res = await withTimeout(
+        fetch(
+          `${SUPABASE_URL}/rest/v1/orders?client_email=eq.${encodeURIComponent(session.user.email)}&order=created_at.desc`,
+          { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
+        ),
+        10000,
+        'Orders fetch'
       );
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Orders request failed (${res.status}): ${text}`);
+      }
       allOrders = await res.json();
       updateCounts();
       renderOrders();
     } catch (err) {
-      console.error(err);
-      document.getElementById('loadingState')!.style.display = 'none';
-      document.getElementById('emptyState')!.style.display = 'flex';
+      showDebugError(err);
     }
   }
 
