@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThesisArcPro — Academic Writing</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#0a1628;--gold:#c5a059;--gold2:#e0bc7a;--white:#f5f3ee;--muted:rgba(245,243,238,0.55)}
+body{background:#060e1c;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Inter',sans-serif;overflow:hidden}
+#ad{position:relative;width:900px;height:506px;background:var(--navy);overflow:hidden;cursor:pointer}
+.bg-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(197,160,89,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(197,160,89,0.03) 1px,transparent 1px);background-size:60px 60px;opacity:0;animation:fadeIn 1.5s 0.2s forwards}
+.accent-left{position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(to bottom,var(--gold),var(--gold2),var(--gold));transform:scaleY(0);transform-origin:bottom;animation:scaleUp 0.8s 0.3s cubic-bezier(0.16,1,0.3,1) forwards}
+.accent-bottom{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));background-size:200% 100%;transform:scaleX(0);transform-origin:left;animation:scaleRight 1s 0.8s cubic-bezier(0.16,1,0.3,1) forwards,shimmer 3s 2s linear infinite}
+.divider-v{position:absolute;left:510px;top:50px;bottom:50px;width:1px;background:linear-gradient(to bottom,transparent,rgba(197,160,89,0.2),transparent);opacity:0;animation:fadeIn 0.6s 1s forwards}
+.left-col{position:absolute;left:36px;top:0;bottom:0;width:450px;display:flex;flex-direction:column;justify-content:center}
+.logo-block{opacity:0;transform:translateY(-14px);animation:fadeUp 0.7s 0.5s cubic-bezier(0.16,1,0.3,1) forwards}
+.logo-eyebrow{font-size:10px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:5px}
+.logo-name{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:var(--white);line-height:1;letter-spacing:-1px}
+.logo-name span{color:var(--gold)}
+.divider-h{width:36px;height:2px;background:var(--gold);margin:14px 0;opacity:0;transform:scaleX(0);transform-origin:left;animation:scaleRight 0.5s 1s forwards}
+.headline-line{overflow:hidden;margin-bottom:2px}
+.headline-line span{display:block;font-family:'Playfair Display',serif;font-weight:700;font-size:44px;line-height:1.08;color:var(--white);transform:translateY(110%);animation:slideUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards}
+.headline-line:nth-child(1) span{animation-delay:1.1s}
+.headline-line:nth-child(2) span{animation-delay:1.25s;color:var(--gold);font-style:italic}
+.sub-copy{font-size:11.5px;font-weight:300;line-height:1.75;color:var(--muted);letter-spacing:0.3px;opacity:0;animation:fadeIn 0.8s 1.9s forwards;margin:12px 0 16px}
+.offers-row{display:flex;gap:10px;opacity:0;animation:fadeUp 0.6s 2s forwards;margin-bottom:16px}
+.offer-badge{border-radius:3px;padding:8px 12px;flex:1}
+.offer-badge.first{background:rgba(197,160,89,0.13);border:1px solid rgba(197,160,89,0.35)}
+.offer-badge.refer{background:rgba(197,160,89,0.07);border:1px solid rgba(197,160,89,0.2)}
+.offer-pct{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--gold);line-height:1}
+.offer-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(245,243,238,0.45);margin-top:2px}
+.offer-cap{font-size:9px;color:rgba(197,160,89,0.55);margin-top:3px}
+.stats-row{display:flex;gap:20px;opacity:0;animation:fadeUp 0.7s 2.2s forwards}
+.stat{border-left:2px solid var(--gold);padding-left:10px}
+.stat-num{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--white);line-height:1}
+.stat-num em{color:var(--gold);font-style:normal}
+.stat-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,243,238,0.35);margin-top:2px}
+.right-col{position:absolute;right:36px;top:0;bottom:0;width:310px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+.cap-wrap{text-align:center;opacity:0;animation:fadeIn 0.6s 0.8s forwards}
+.cap-svg{display:inline-block;animation:float 3s 2s ease-in-out infinite}
+.services-block{opacity:0;transform:translateX(20px);animation:fadeLeft 0.7s 1.4s cubic-bezier(0.16,1,0.3,1) forwards}
+.svc-tag{display:inline-block;padding:3px 10px;border:1px solid rgba(197,160,89,0.3);color:var(--gold);font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;border-radius:2px}
+.svc-list{display:flex;flex-direction:column;gap:5px}
+.svc-item{font-size:11px;color:rgba(245,243,238,0.45);letter-spacing:0.6px;display:flex;align-items:center;gap:7px}
+.svc-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;flex-shrink:0}
+.testimonial-wrap{opacity:0;animation:fadeIn 0.7s 2.4s forwards;min-height:80px;position:relative}
+.testimonial{position:absolute;inset:0;opacity:0;transition:opacity 0.6s ease;display:flex;flex-direction:column;justify-content:center}
+.testimonial.active{opacity:1}
+.testimonial-quote{font-family:'Playfair Display',serif;font-style:italic;font-size:12.5px;line-height:1.6;color:var(--white);margin-bottom:6px;border-left:2px solid var(--gold);padding-left:10px}
+.testimonial-author{font-size:9.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);padding-left:12px}
+.t-dots{display:flex;gap:6px;padding-left:12px;margin-top:7px}
+.t-dot{width:5px;height:5px;border-radius:50%;background:rgba(197,160,89,0.28);cursor:pointer;transition:background 0.3s}
+.t-dot.active{background:var(--gold)}
+.cta-wrap{opacity:0;animation:fadeIn 0.7s 2.6s forwards;text-align:center}
+.cta-btn{display:inline-block;padding:11px 30px;background:var(--gold);color:var(--navy);font-family:'Inter',sans-serif;font-weight:700;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all 0.2s}
+.cta-btn:hover{background:var(--gold2);transform:translateY(-1px)}
+.cta-sub{font-size:9px;letter-spacing:2px;color:rgba(245,243,238,0.28);margin-top:6px;text-transform:uppercase}
+.contact-line{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;color:rgba(245,243,238,0.17);text-transform:uppercase;white-space:nowrap;opacity:0;animation:fadeIn 1s 3.2s forwards}
+.replay-btn{position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);color:rgba(245,243,238,0.3);font-family:'Inter',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:5px 11px;cursor:pointer;border-radius:2px;z-index:10;transition:all 0.2s}
+.replay-btn:hover{background:rgba(197,160,89,0.1);border-color:var(--gold);color:var(--gold)}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{to{transform:translateY(0)}}
+@keyframes scaleUp{to{transform:scaleY(1)}}
+@keyframes scaleRight{to{transform:scaleX(1)}}
+@keyframes fadeLeft{to{opacity:1;transform:translateX(0)}}
+@keyframes shimmer{0%{background-position:0% 0%}100%{background-position:200% 0%}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+</style>
+</head>
+<body>
+<div id="ad">
+  <div class="bg-pattern"></div>
+  <div class="accent-left"></div>
+  <div class="accent-bottom"></div>
+  <div class="divider-v"></div>
+  <div class="left-col">
+    <div class="logo-block">
+      <div class="logo-eyebrow">Academic Writing Service</div>
+      <div class="logo-name">Thesis<span>Arc</span>Pro</div>
+    </div>
+    <div class="divider-h"></div>
+    <div class="headline-line"><span>Struggling with</span></div>
+    <div class="headline-line"><span>your assignment?</span></div>
+    <div class="sub-copy">Professional academic writing for High School,<br>College, Masters &amp; PhD students worldwide.<br>Essays · Research Papers · Dissertations · More</div>
+    <div class="offers-row">
+      <div class="offer-badge first">
+        <div class="offer-pct">50% OFF</div>
+        <div class="offer-label">Your First Order</div>
+        <div class="offer-cap">Min. 3 pages · Use code FIRST50</div>
+      </div>
+      <div class="offer-badge refer">
+        <div class="offer-pct">50% OFF</div>
+        <div class="offer-label">Refer a Friend</div>
+        <div class="offer-cap">Both you &amp; your friend save</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num"><em>2,000</em>+</div><div class="stat-label">Students</div></div>
+      <div class="stat"><div class="stat-num"><em>4.9</em>/5</div><div class="stat-label">Rating</div></div>
+      <div class="stat"><div class="stat-num"><em>98</em>%</div><div class="stat-label">On-Time</div></div>
+      <div class="stat"><div class="stat-num">From <em>$12</em></div><div class="stat-label">Per Page</div></div>
+    </div>
+  </div>
+  <div class="right-col">
+    <div class="cap-wrap">
+      <svg class="cap-svg" width="70" height="52" viewBox="0 0 72 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="36,4 72,22 36,40 0,22" fill="#c5a059" opacity="0.9"/>
+        <polygon points="36,40 72,22 72,34 36,50 0,34 0,22" fill="#e0bc7a" opacity="0.55"/>
+        <circle cx="36" cy="22" r="5" fill="#f5f3ee" opacity="0.85"/>
+        <line x1="64" y1="22" x2="64" y2="38" stroke="#c5a059" stroke-width="2"/>
+        <circle cx="64" cy="40" r="4" fill="none" stroke="#c5a059" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="services-block">
+      <div class="svc-tag">Our Services</div>
+      <div class="svc-list">
+        <div class="svc-item"><div class="svc-dot"></div> Essay Writing</div>
+        <div class="svc-item"><div class="svc-dot"></div> Research Papers</div>
+        <div class="svc-item"><div class="svc-dot"></div> Dissertations</div>
+        <div class="svc-item"><div class="svc-dot"></div> Discussion Posts</div>
+        <div class="svc-item"><div class="svc-dot"></div> Editing &amp; Proofreading</div>
+      </div>
+    </div>
+    <div class="testimonial-wrap" id="testimonials">
+      <div class="testimonial active" id="t0">
+        <div class="testimonial-quote" id="tq0"></div>
+        <div class="testimonial-author">— Sarah M., Columbia University</div>
+        <div class="t-dots"><div class="t-dot active" onclick="goTo(0)"></div><div class="t-dot" onclick="goTo(1)"></div><div class="t-dot" onclick="goTo(2)"></div></div>
+      </div>
+      <div class="testimonial" id="t1">
+        <div class="testimonial-quote" id="tq1"></div>
+        <div class="testimonial-author">— James K., University of Texas</div>
+        <div class="t-dots"><div class="t-dot" onclick="goTo(0)"></div><div class="t-dot active" onclick="goTo(1)"></div><div class="t-dot" onclick="goTo(2)"></div></div>
+      </div>
+      <div class="testimonial" id="t2">
+        <div class="testimonial-quote" id="tq2"></div>
+        <div class="testimonial-author">— Faith N., University of Toronto</div>
+        <div class="t-dots"><div class="t-dot" onclick="goTo(0)"></div><div class="t-dot" onclick="goTo(1)"></div><div class="t-dot active" onclick="goTo(2)"></div></div>
+      </div>
+    </div>
+    <div class="cta-wrap">
+      <a href="https://thesisarcpro.github.io/ThesisArcPro/" target="_blank" class="cta-btn">Claim Offer</a>
+      <div class="cta-sub">thesisarcpro.github.io</div>
+    </div>
+  </div>
+  <div class="contact-line">WhatsApp: +1 (662) 400-2088 &nbsp;|&nbsp; thesisarcpro069@gmail.com</div>
+  <button class="replay-btn" onclick="location.reload()">↺ Replay</button>
+</div>
+<script>
+const quotes=['Got an A on my research paper!','Delivered in 6 hours, perfectly written.','My dissertation was approved first attempt!'];
+let cur=0,tTimer=null;
+function typeText(id,text,speed,cb){let i=0;const el=document.getElementById(id);const iv=setInterval(()=>{el.textContent+=text[i++];if(i>=text.length){clearInterval(iv);if(cb)cb();}},speed);}
+function goTo(n){document.getElementById('t'+cur).classList.remove('active');cur=n;document.getElementById('t'+cur).classList.add('active');clearTimeout(tTimer);tTimer=setTimeout(()=>goTo((cur+1)%3),3500);}
+window.addEventListener('load',()=>{
+  setTimeout(()=>{typeText('tq0',quotes[0],38,()=>{setTimeout(()=>{typeText('tq1',quotes[1],38,()=>{typeText('tq2',quotes[2],38,()=>{tTimer=setTimeout(()=>goTo(1),3500);});});},150);});},2600);
+});
+</script>
+</body>
+</html>
