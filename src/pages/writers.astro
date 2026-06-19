@@ -1,0 +1,365 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = '/ThesisArcPro';
+---
+
+<BaseLayout title="Our Writers" description="Meet the qualified writers behind ThesisArcPro">
+
+  <main>
+    <section class="writers-page">
+      <div class="container">
+
+        <div class="writers-hero">
+          <h1>Meet Our Writers</h1>
+          <p>Qualified, subject-matter experts handpicked for your work. Every order is handled by a vetted professional in the relevant field.</p>
+        </div>
+
+        <div id="loadingState" class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading writers…</p>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <div class="empty-icon">👥</div>
+          <h3>Our writer profiles are coming soon</h3>
+          <p>Check back shortly to meet the team.</p>
+        </div>
+
+        <div id="writersGrid" class="writers-grid" style="display:none;"></div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Full Profile Popup -->
+  <div class="wp-modal" id="profileModal">
+    <div class="wp-overlay" id="profileOverlay"></div>
+    <div class="wp-box">
+      <button class="wp-close" id="profileClose">✕</button>
+      <div id="profileContent"></div>
+    </div>
+  </div>
+
+</BaseLayout>
+
+<style>
+.writers-page { background: var(--navy); min-height: 100vh; padding: 8rem 0 4rem; }
+.writers-hero { text-align: center; max-width: 640px; margin: 0 auto 3rem; }
+.writers-hero h1 { color: var(--white); font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.8rem; }
+.writers-hero p { color: rgba(255,255,255,0.6); font-size: 1.02rem; line-height: 1.6; }
+
+.loading-state { text-align: center; padding: 4rem; color: rgba(255,255,255,0.5); }
+.spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { text-align: center; padding: 4rem; background: rgba(255,255,255,0.05); border-radius: 16px; max-width: 480px; margin: 0 auto; }
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state h3 { color: white; margin-bottom: 0.4rem; }
+.empty-state p { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+
+.wp-modal { position: fixed; inset: 0; z-index: 20000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+.wp-modal.open { display: flex; }
+.wp-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); }
+.wp-box { position: relative; z-index: 1; background: white; border-radius: 16px; padding: 2rem; max-width: 540px; width: 100%; max-height: 88vh; overflow-y: auto; }
+.wp-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; }
+</style>
+
+<style is:global>
+  .writers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.2rem; }
+
+  /* CARD */
+  .wcard {
+    background: white;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 16px;
+    padding: 1.4rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .wcard:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.14); }
+
+  .wcard__top { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1rem; }
+  .wcard__avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #94a3b8; }
+  .wcard__name { font-weight: 800; font-size: 1.05rem; color: #0f172a; display: flex; align-items: center; gap: 0.35rem; }
+  .wcard__verified { color: #3b82f6; font-size: 0.9rem; }
+  .wcard__rating { display: flex; align-items: center; gap: 0.35rem; margin-top: 0.25rem; font-size: 0.85rem; }
+  .wcard__stars { color: #fbbf24; letter-spacing: 1px; }
+  .wcard__rating-num { font-weight: 700; color: #0f172a; }
+  .wcard__reviews { color: #64748b; }
+  .wcard__new { display: inline-block; background: #eef2ff; color: #6366f1; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 4px; margin-top: 0.3rem; }
+
+  .wcard__orders { font-size: 0.95rem; color: #0f172a; margin-bottom: 0.8rem; }
+  .wcard__orders strong { font-weight: 800; }
+  .wcard__orders span { color: #64748b; font-weight: 500; }
+
+  .wcard__tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .wtag { background: #f1f5f9; color: #475569; font-size: 0.78rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 16px; }
+
+  /* PROFILE POPUP */
+  .wp-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.3rem; padding-right: 2rem; }
+  .wp-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #94a3b8; flex-shrink: 0; }
+  .wp-name { font-weight: 800; font-size: 1.3rem; color: #0f172a; display: flex; align-items: center; gap: 0.4rem; }
+  .wp-verified { color: #3b82f6; font-size: 1rem; }
+  .wp-rating { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem; font-size: 0.9rem; }
+  .wp-stars { color: #fbbf24; letter-spacing: 1px; }
+  .wp-rating-num { font-weight: 700; color: #0f172a; }
+  .wp-reviews { color: #64748b; }
+
+  .wp-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 1.2rem 0; margin-bottom: 1.3rem; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+  .wp-stat { text-align: center; }
+  .wp-stat__num { font-size: 1.4rem; font-weight: 800; color: #0f172a; }
+  .wp-stat__label { font-size: 0.72rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem; }
+
+  .wp-section { margin-bottom: 1.3rem; }
+  .wp-section__title { font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 0.6rem; }
+  .wp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .wp-edu { color: #334155; font-size: 0.9rem; line-height: 1.6; }
+  .wp-bio { color: #475569; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap; }
+
+  .wp-reviews-list { display: flex; flex-direction: column; gap: 0.8rem; }
+  .wp-review { background: #f8fafc; border-radius: 10px; padding: 0.9rem 1rem; }
+  .wp-review__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }
+  .wp-review__stars { color: #fbbf24; font-size: 0.85rem; }
+  .wp-review__date { color: #94a3b8; font-size: 0.74rem; }
+  .wp-review__text { color: #475569; font-size: 0.85rem; line-height: 1.5; }
+  .wp-no-reviews { color: #94a3b8; font-size: 0.85rem; text-align: center; padding: 1rem; }
+</style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+
+  const base = '/ThesisArcPro';
+  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+
+  let writers: any[] = [];
+  let statsById: Record<string, any> = {};
+
+  function esc(v: any) {
+    return String(v ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function starString(rating: number) {
+    const full = Math.round(rating || 0);
+    return '★★★★★'.slice(0, full) + '☆☆☆☆☆'.slice(0, 5 - full);
+  }
+
+  function tagsFrom(specialties: string) {
+    if (!specialties) return [];
+    return specialties.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  async function load() {
+    try {
+      // Writers (public read of active writers)
+      const wRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/writers?is_active=eq.true&order=created_at.desc`,
+        { headers: { 'apikey': SUPABASE_KEY } }
+      );
+      writers = await wRes.json();
+
+      // Aggregate stats via the safe function (no private data exposed)
+      try {
+        const sRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/writer_stats`, {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+          body: '{}'
+        });
+        const stats = await sRes.json();
+        if (Array.isArray(stats)) {
+          stats.forEach((s: any) => { statsById[String(s.writer_id)] = s; });
+        }
+      } catch (e) {
+        console.warn('Stats unavailable', e);
+      }
+
+      renderGrid();
+    } catch (err) {
+      console.error(err);
+      document.getElementById('loadingState')!.style.display = 'none';
+      document.getElementById('emptyState')!.style.display = 'block';
+    }
+  }
+
+  function renderGrid() {
+    const loading = document.getElementById('loadingState')!;
+    const empty = document.getElementById('emptyState')!;
+    const grid = document.getElementById('writersGrid')!;
+    loading.style.display = 'none';
+
+    if (!writers.length) {
+      empty.style.display = 'block';
+      grid.style.display = 'none';
+      return;
+    }
+
+    empty.style.display = 'none';
+    grid.style.display = 'grid';
+
+    grid.innerHTML = writers.map(w => {
+      const st = statsById[String(w.id)] || {};
+      const completed = Number(st.completed_orders || 0);
+      const reviewCount = Number(st.review_count || 0);
+      const avg = st.avg_rating != null ? Number(st.avg_rating) : 0;
+      const tags = tagsFrom(w.specialties);
+      const avatar = w.photo_url
+        ? `<img class="wcard__avatar" src="${esc(w.photo_url)}" alt="${esc(w.full_name)}" />`
+        : `<div class="wcard__avatar">👤</div>`;
+
+      const ratingBlock = reviewCount > 0
+        ? `<div class="wcard__rating">
+             <span class="wcard__stars">${starString(avg)}</span>
+             <span class="wcard__rating-num">${avg.toFixed(2)}</span>
+             <span class="wcard__reviews">(${reviewCount} review${reviewCount === 1 ? '' : 's'})</span>
+           </div>`
+        : `<span class="wcard__new">New writer</span>`;
+
+      const tagHtml = tags.slice(0, 3).map(t => `<span class="wtag">${esc(t)}</span>`).join('')
+        + (tags.length > 3 ? `<span class="wtag">+${tags.length - 3} more</span>` : '');
+
+      return `
+        <div class="wcard" data-id="${esc(w.id)}">
+          <div class="wcard__top">
+            ${avatar}
+            <div>
+              <div class="wcard__name">${esc(w.full_name)} <span class="wcard__verified">✔</span></div>
+              ${ratingBlock}
+            </div>
+          </div>
+          <div class="wcard__orders"><strong>${completed}</strong> <span>completed order${completed === 1 ? '' : 's'}</span></div>
+          <div class="wcard__tags">${tagHtml}</div>
+        </div>
+      `;
+    }).join('');
+
+    grid.querySelectorAll('.wcard').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = (card as HTMLElement).dataset.id;
+        const w = writers.find(x => String(x.id) === id);
+        if (w) openProfile(w);
+      });
+    });
+  }
+
+  async function openProfile(w: any) {
+    const st = statsById[String(w.id)] || {};
+    const completed = Number(st.completed_orders || 0);
+    const reviewCount = Number(st.review_count || 0);
+    const avg = st.avg_rating != null ? Number(st.avg_rating) : 0;
+    const tags = tagsFrom(w.specialties);
+
+    const avatar = w.photo_url
+      ? `<img class="wp-avatar" src="${esc(w.photo_url)}" alt="${esc(w.full_name)}" />`
+      : `<div class="wp-avatar">👤</div>`;
+
+    const ratingBlock = reviewCount > 0
+      ? `<div class="wp-rating">
+           <span class="wp-stars">${starString(avg)}</span>
+           <span class="wp-rating-num">${avg.toFixed(2)}</span>
+           <span class="wp-reviews">(${reviewCount} review${reviewCount === 1 ? '' : 's'})</span>
+         </div>`
+      : `<div class="wp-rating"><span class="wcard__new">New writer — no reviews yet</span></div>`;
+
+    document.getElementById('profileContent')!.innerHTML = `
+      <div class="wp-head">
+        ${avatar}
+        <div>
+          <div class="wp-name">${esc(w.full_name)} <span class="wp-verified">✔</span></div>
+          ${ratingBlock}
+        </div>
+      </div>
+
+      <div class="wp-stats">
+        <div class="wp-stat">
+          <div class="wp-stat__num">${completed}</div>
+          <div class="wp-stat__label">Completed orders</div>
+        </div>
+        <div class="wp-stat">
+          <div class="wp-stat__num">${w.years_experience ? w.years_experience + '+' : '—'}</div>
+          <div class="wp-stat__label">Years experience</div>
+        </div>
+        <div class="wp-stat">
+          <div class="wp-stat__num">${reviewCount}</div>
+          <div class="wp-stat__label">Reviews</div>
+        </div>
+        <div class="wp-stat">
+          <div class="wp-stat__num">${avg > 0 ? avg.toFixed(2) : '—'}</div>
+          <div class="wp-stat__label">Avg rating</div>
+        </div>
+      </div>
+
+      ${tags.length ? `
+        <div class="wp-section">
+          <div class="wp-section__title">Skilled in</div>
+          <div class="wp-tags">${tags.map(t => `<span class="wtag">${esc(t)}</span>`).join('')}</div>
+        </div>` : ''}
+
+      ${(w.education_level || w.credentials) ? `
+        <div class="wp-section">
+          <div class="wp-section__title">Education & credentials</div>
+          <div class="wp-edu">${esc([w.education_level, w.credentials].filter(Boolean).join(' · '))}</div>
+        </div>` : ''}
+
+      ${w.bio ? `
+        <div class="wp-section">
+          <div class="wp-section__title">Bio</div>
+          <div class="wp-bio">${esc(w.bio)}</div>
+        </div>` : ''}
+
+      <div class="wp-section">
+        <div class="wp-section__title">Recent reviews</div>
+        <div class="wp-reviews-list" id="wpReviews">
+          <div class="wp-no-reviews">Loading reviews…</div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('profileModal')!.classList.add('open');
+    loadWriterReviews(w.id);
+  }
+
+  // Load this writer's reviews via the safe function
+  async function loadWriterReviews(writerId: any) {
+    const box = document.getElementById('wpReviews');
+    if (!box) return;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/writer_reviews`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_writer_id: writerId })
+      });
+      const reviews = await res.json();
+      if (!Array.isArray(reviews) || !reviews.length) {
+        box.innerHTML = `<div class="wp-no-reviews">No reviews yet — this writer is just getting started.</div>`;
+        return;
+      }
+      box.innerHTML = reviews.map((r: any) => {
+        const d = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+        return `
+          <div class="wp-review">
+            <div class="wp-review__top">
+              <span class="wp-review__stars">${starString(Number(r.rating || 0))}</span>
+              <span class="wp-review__date">${esc(d)}</span>
+            </div>
+            ${r.review_text ? `<div class="wp-review__text">${esc(r.review_text)}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      box.innerHTML = `<div class="wp-no-reviews">Reviews unavailable right now.</div>`;
+    }
+  }
+
+  function closeProfile() {
+    document.getElementById('profileModal')!.classList.remove('open');
+  }
+  document.getElementById('profileClose')!.addEventListener('click', closeProfile);
+  document.getElementById('profileOverlay')!.addEventListener('click', closeProfile);
+
+  load();
+</script>
+</BaseLayout>
