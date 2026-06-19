@@ -1,0 +1,419 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = '/ThesisArcPro';
+---
+
+<BaseLayout title="Manage Writers" description="ThesisArcPro Admin — Writers">
+
+  <main>
+    <section class="admin">
+      <div class="container">
+
+        <div class="admin__header">
+          <div>
+            <h1>Manage Writers</h1>
+            <p id="countText">Loading writers…</p>
+          </div>
+          <div class="header-actions">
+            <a href={`${base}/admin/`} class="btn-secondary">← Back to Orders</a>
+            <button id="addWriterBtn" class="btn-primary">＋ Add Writer</button>
+          </div>
+        </div>
+
+        <div id="loadingState" class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading writers…</p>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <div class="empty-icon">👥</div>
+          <h3>No writers yet</h3>
+          <p>Add your first writer to get started.</p>
+        </div>
+
+        <div id="writersGrid" class="writers-grid" style="display:none;"></div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Add / Edit Writer Modal -->
+  <div class="modal-overlay" id="writerModal">
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose">✕</button>
+      <h2 id="modalTitle">Add Writer</h2>
+
+      <div class="form-group">
+        <label>Display name</label>
+        <input type="text" id="fullName" placeholder="e.g. Maria P." />
+        <span class="input-note">Use first name + last initial for privacy (e.g. "Maria P.").</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Years of experience</label>
+          <input type="number" id="yearsExperience" min="0" placeholder="e.g. 5" />
+        </div>
+        <div class="form-group">
+          <label>Education level</label>
+          <input type="text" id="educationLevel" placeholder="e.g. PhD, Master's" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Credentials</label>
+        <input type="text" id="credentials" placeholder="e.g. MSc Economics, 200+ papers" />
+      </div>
+
+      <div class="form-group">
+        <label>Specialties</label>
+        <input type="text" id="specialties" placeholder="e.g. Economics, History, Business" />
+      </div>
+
+      <div class="form-group">
+        <label>Bio</label>
+        <textarea id="bio" rows="3" placeholder="A short professional summary shown on the public writers page."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Photo</label>
+        <div class="current-photo" id="currentPhoto" style="display:none;">
+          <img id="currentPhotoImg" src="" alt="" />
+          <span>Current photo (choose a new file to replace)</span>
+        </div>
+        <input type="file" id="photoInput" accept="image/png,image/jpeg,image/webp" />
+        <span class="input-note">Public, professional headshot. JPG, PNG, or WebP.</span>
+        <div class="upload-progress" id="uploadProgress" style="display:none;">⏳ Uploading photo…</div>
+      </div>
+
+      <div class="form-group form-group--row">
+        <label class="checkbox-label">
+          <input type="checkbox" id="isActive" checked />
+          Active (visible on the public writers page)
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-danger" id="deleteWriterBtn" style="display:none;">Delete</button>
+        <button class="btn-update" id="saveWriterBtn">💾 Save Writer</button>
+      </div>
+    </div>
+  </div>
+
+</BaseLayout>
+
+<style>
+.admin { background: var(--navy); min-height: 100vh; padding: 8rem 0 4rem; }
+.admin__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+.admin__header h1 { color: var(--white); font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 0.3rem; }
+.admin__header p { color: rgba(255,255,255,0.6); font-size: 0.95rem; }
+.header-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.btn-secondary { background: none; border: 1.5px solid rgba(255,255,255,0.3); color: white; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s ease; }
+.btn-secondary:hover { background: rgba(255,255,255,0.1); }
+.btn-primary { background: var(--gold); border: none; color: var(--navy); padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+.btn-primary:hover { filter: brightness(1.08); }
+
+.loading-state { text-align: center; padding: 4rem; color: rgba(255,255,255,0.5); }
+.spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { text-align: center; padding: 4rem; background: rgba(255,255,255,0.05); border-radius: 16px; }
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state h3 { color: white; margin-bottom: 0.4rem; }
+.empty-state p { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 20000; align-items: center; justify-content: center; padding: 1rem; }
+.modal-overlay.active { display: flex; }
+.modal-card { background: white; border-radius: 16px; padding: 2rem; max-width: 520px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; }
+.modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-mid); }
+.modal-card h2 { color: var(--navy); margin-bottom: 1.5rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.1rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group label { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
+.form-group input, .form-group textarea { padding: 0.8rem 1rem; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; font-size: 0.95rem; outline: none; font-family: inherit; }
+.form-group input:focus, .form-group textarea:focus { border-color: var(--gold); }
+.form-group input[type="file"] { padding: 0.6rem; background: var(--off-white); cursor: pointer; }
+.input-note { color: var(--text-light); font-size: 0.76rem; }
+.checkbox-label { display: flex; flex-direction: row; align-items: center; gap: 0.5rem; color: var(--navy); font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+.checkbox-label input { width: auto; }
+.current-photo { display: flex; align-items: center; gap: 0.7rem; font-size: 0.8rem; color: var(--text-mid); }
+.current-photo img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+.upload-progress { color: var(--navy); font-size: 0.85rem; font-weight: 600; }
+.modal-actions { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 0.5rem; }
+.btn-update { flex: 1; padding: 1rem; background: var(--navy); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.3s ease; }
+.btn-update:hover { background: var(--gold); color: var(--navy); }
+.btn-update:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-danger { padding: 1rem 1.2rem; background: none; border: 1.5px solid #ef4444; color: #ef4444; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+.btn-danger:hover { background: #ef4444; color: white; }
+</style>
+
+<style is:global>
+  .writers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+
+  .writer-card {
+    background: #141e35;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 1.3rem;
+    transition: all 0.18s ease;
+  }
+  .writer-card:hover { border-color: rgba(197,160,89,0.55); background: #1a2540; }
+
+  .writer-card__top { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.9rem; }
+  .writer-card__avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: #243049; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: rgba(255,255,255,0.5); }
+  .writer-card__name { color: #f1f5f9; font-weight: 700; font-size: 1.02rem; }
+  .writer-card__edu { color: #c5a059; font-size: 0.78rem; margin-top: 0.15rem; }
+  .writer-card__spec { color: rgba(255,255,255,0.55); font-size: 0.8rem; margin-bottom: 0.7rem; }
+  .writer-card__bio { color: rgba(255,255,255,0.45); font-size: 0.8rem; line-height: 1.5; margin-bottom: 0.9rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .writer-card__footer { display: flex; justify-content: space-between; align-items: center; }
+  .writer-pill { font-size: 0.7rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 4px; text-transform: uppercase; }
+  .writer-pill.active { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .writer-pill.inactive { background: rgba(239,68,68,0.16); color: #f87171; }
+  .btn-edit-writer { background: #c5a059; color: #0f172a; border: none; padding: 0.45rem 0.9rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+  .btn-edit-writer:hover { background: #f1f5f9; }
+</style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+
+  const base = '/ThesisArcPro';
+  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+  const PHOTO_BUCKET = 'writer-photos';
+
+  let writers: any[] = [];
+  let currentSession: any = null;
+  let editingId: string | null = null;
+
+  async function checkAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { window.location.replace(`${base}/login/`); return; }
+    currentSession = session;
+
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/profiles?email=eq.${session.user.email}&select=is_admin`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
+    );
+    const data = await res.json();
+    if (!data[0]?.is_admin) { window.location.replace(`${base}/dashboard/`); return; }
+
+    await loadWriters();
+  }
+
+  async function loadWriters() {
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/writers?order=created_at.desc`,
+        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
+      );
+      writers = await res.json();
+      renderWriters();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function esc(v: any) {
+    return String(v ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderWriters() {
+    const loading = document.getElementById('loadingState');
+    const empty = document.getElementById('emptyState');
+    const grid = document.getElementById('writersGrid');
+    const countText = document.getElementById('countText');
+
+    if (loading) loading.style.display = 'none';
+    if (countText) countText.textContent = `${writers.length} writer${writers.length === 1 ? '' : 's'}`;
+
+    if (!writers.length) {
+      if (empty) empty.style.display = 'block';
+      if (grid) grid.style.display = 'none';
+      return;
+    }
+
+    if (empty) empty.style.display = 'none';
+    if (grid) {
+      grid.style.display = 'grid';
+      grid.innerHTML = writers.map(w => {
+        const avatar = w.photo_url
+          ? `<img class="writer-card__avatar" src="${esc(w.photo_url)}" alt="${esc(w.full_name)}" />`
+          : `<div class="writer-card__avatar">👤</div>`;
+        const eduExp = [w.education_level, w.years_experience ? `${w.years_experience} yrs` : '']
+          .filter(Boolean).join(' · ');
+        return `
+          <div class="writer-card">
+            <div class="writer-card__top">
+              ${avatar}
+              <div>
+                <div class="writer-card__name">${esc(w.full_name)}</div>
+                <div class="writer-card__edu">${esc(eduExp)}</div>
+              </div>
+            </div>
+            <div class="writer-card__spec">${esc(w.specialties || '—')}</div>
+            <div class="writer-card__bio">${esc(w.bio || '')}</div>
+            <div class="writer-card__footer">
+              <span class="writer-pill ${w.is_active ? 'active' : 'inactive'}">${w.is_active ? 'Active' : 'Hidden'}</span>
+              <button class="btn-edit-writer" data-id="${esc(w.id)}">✏️ Edit</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      grid.querySelectorAll('.btn-edit-writer').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = (btn as HTMLElement).dataset.id;
+          const w = writers.find(x => String(x.id) === id);
+          if (w) openModal(w);
+        });
+      });
+    }
+  }
+
+  function openModal(writer: any | null) {
+    editingId = writer ? String(writer.id) : null;
+    (document.getElementById('modalTitle') as HTMLElement).textContent = writer ? 'Edit Writer' : 'Add Writer';
+    (document.getElementById('fullName') as HTMLInputElement).value = writer?.full_name || '';
+    (document.getElementById('yearsExperience') as HTMLInputElement).value = writer?.years_experience ?? '';
+    (document.getElementById('educationLevel') as HTMLInputElement).value = writer?.education_level || '';
+    (document.getElementById('credentials') as HTMLInputElement).value = writer?.credentials || '';
+    (document.getElementById('specialties') as HTMLInputElement).value = writer?.specialties || '';
+    (document.getElementById('bio') as HTMLTextAreaElement).value = writer?.bio || '';
+    (document.getElementById('isActive') as HTMLInputElement).checked = writer ? !!writer.is_active : true;
+    (document.getElementById('photoInput') as HTMLInputElement).value = '';
+
+    const currentPhoto = document.getElementById('currentPhoto');
+    const currentPhotoImg = document.getElementById('currentPhotoImg') as HTMLImageElement;
+    if (currentPhoto && currentPhotoImg) {
+      if (writer?.photo_url) {
+        currentPhotoImg.src = writer.photo_url;
+        currentPhoto.style.display = 'flex';
+      } else {
+        currentPhoto.style.display = 'none';
+      }
+    }
+
+    const delBtn = document.getElementById('deleteWriterBtn');
+    if (delBtn) delBtn.style.display = writer ? 'block' : 'none';
+
+    document.getElementById('writerModal')?.classList.add('active');
+  }
+
+  document.getElementById('addWriterBtn')?.addEventListener('click', () => openModal(null));
+  document.getElementById('modalClose')?.addEventListener('click', () => {
+    document.getElementById('writerModal')?.classList.remove('active');
+  });
+
+  // Save (insert or update)
+  document.getElementById('saveWriterBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('saveWriterBtn') as HTMLButtonElement;
+    const progress = document.getElementById('uploadProgress');
+    const fullName = (document.getElementById('fullName') as HTMLInputElement).value.trim();
+
+    if (!fullName) {
+      alert('Please enter a display name.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Saving…';
+
+    // Find existing photo_url (if editing)
+    let photoUrl: string | null = null;
+    if (editingId) {
+      const existing = writers.find(w => String(w.id) === editingId);
+      photoUrl = existing?.photo_url || null;
+    }
+
+    try {
+      // Upload a new photo if chosen
+      const photoInput = document.getElementById('photoInput') as HTMLInputElement;
+      const file = photoInput.files && photoInput.files[0];
+      if (file) {
+        if (progress) progress.style.display = 'block';
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = `${Date.now()}_${safeName}`;
+        const { error: upErr } = await supabase.storage.from(PHOTO_BUCKET).upload(path, file, { upsert: true });
+        if (upErr) throw upErr;
+        const { data: pub } = supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path);
+        photoUrl = pub.publicUrl;
+        if (progress) progress.style.display = 'none';
+      }
+
+      const payload: any = {
+        full_name: fullName,
+        years_experience: (document.getElementById('yearsExperience') as HTMLInputElement).value
+          ? Number((document.getElementById('yearsExperience') as HTMLInputElement).value) : null,
+        education_level: (document.getElementById('educationLevel') as HTMLInputElement).value.trim() || null,
+        credentials: (document.getElementById('credentials') as HTMLInputElement).value.trim() || null,
+        specialties: (document.getElementById('specialties') as HTMLInputElement).value.trim() || null,
+        bio: (document.getElementById('bio') as HTMLTextAreaElement).value.trim() || null,
+        is_active: (document.getElementById('isActive') as HTMLInputElement).checked,
+        photo_url: photoUrl
+      };
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${currentSession.access_token}`
+      };
+
+      let res;
+      if (editingId) {
+        res = await fetch(`${SUPABASE_URL}/rest/v1/writers?id=eq.${editingId}`, {
+          method: 'PATCH', headers, body: JSON.stringify(payload)
+        });
+      } else {
+        res = await fetch(`${SUPABASE_URL}/rest/v1/writers`, {
+          method: 'POST', headers, body: JSON.stringify(payload)
+        });
+      }
+
+      if (!res.ok) throw new Error('Save failed (' + res.status + ')');
+
+      document.getElementById('writerModal')?.classList.remove('active');
+      btn.textContent = '💾 Save Writer';
+      btn.disabled = false;
+      await loadWriters();
+    } catch (err) {
+      console.error(err);
+      if (progress) progress.style.display = 'none';
+      btn.textContent = '❌ Error — try again';
+      btn.disabled = false;
+    }
+  });
+
+  // Delete
+  document.getElementById('deleteWriterBtn')?.addEventListener('click', async () => {
+    if (!editingId) return;
+    if (!window.confirm('Delete this writer permanently? This cannot be undone. (Tip: you can instead untick "Active" to just hide them.)')) return;
+
+    const btn = document.getElementById('deleteWriterBtn') as HTMLButtonElement;
+    btn.disabled = true;
+    btn.textContent = 'Deleting…';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/writers?id=eq.${editingId}`, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` }
+      });
+      if (!res.ok) throw new Error('Delete failed');
+      document.getElementById('writerModal')?.classList.remove('active');
+      btn.disabled = false;
+      btn.textContent = 'Delete';
+      await loadWriters();
+    } catch (err) {
+      console.error(err);
+      btn.textContent = 'Delete';
+      btn.disabled = false;
+      alert('Could not delete. Please try again.');
+    }
+  });
+
+  // Logout not needed here; Back link returns to /admin/
+  checkAuth();
+</script>
+</BaseLayout>
