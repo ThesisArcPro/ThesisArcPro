@@ -650,7 +650,8 @@ const base = '/ThesisArcPro';
     <a class="nav-item active" href="#">
       <span class="icon">📁</span> My Orders
     </a>
-    <a class="nav-item" href="#" id="writersLink">
+    <a class="nav-item" href={`${base}/writers/`} id="writersLink"
+       onclick="window.location.assign('/ThesisArcPro/writers/'); return false;">
       <span class="icon">👥</span> Writers
     </a>
     <a class="nav-item" href="#" id="chatsLink">
