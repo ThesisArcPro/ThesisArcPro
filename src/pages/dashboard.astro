@@ -12,11 +12,11 @@ const base = '/ThesisArcPro';
     --gold: #c5a059;
     --sidebar-bg: #111827;
     --rail-bg: #0d1117;
-    --main-bg: #0f172a;
-    --panel-bg: #1e293b;
-    --border: rgba(255,255,255,0.08);
-    --text: #f1f5f9;
-    --text-muted: rgba(255,255,255,0.45);
+    --main-bg: #f1f5f9;
+    --panel-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #64748b;
     --active-blue: #6366f1;
   }
 
@@ -276,7 +276,7 @@ const base = '/ThesisArcPro';
 
   .modal-box {
     position: relative; z-index: 101;
-    background: #1e293b;
+    background: #ffffff;
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 2rem;
@@ -308,8 +308,8 @@ const base = '/ThesisArcPro';
   .review-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.75); }
   .review-box {
     position: relative; z-index: 201;
-    background: #1e293b;
-    border: 1px solid rgba(255,255,255,0.1);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 14px;
     padding: 2rem;
     width: 90%;
@@ -331,7 +331,7 @@ const base = '/ThesisArcPro';
     padding: 0.4rem 1.2rem;
     font-size: 0.72rem;
     font-weight: 700;
-    color: rgba(255,255,255,0.45);
+    color: #94a3b8;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -344,27 +344,28 @@ const base = '/ThesisArcPro';
     justify-content: space-between;
     gap: 1rem;
     padding: 1rem 1.2rem;
-    background: #141e35;
-    border: 1px solid rgba(255,255,255,0.07);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.18s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   }
 
-  .order-row:hover { background: #1a2a4a; border-color: rgba(99,102,241,0.45); }
+  .order-row:hover { background: #fafafa; border-color: rgba(99,102,241,0.45); }
 
   .col-left { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 0; overflow: hidden; }
-  .order-title { font-size: 0.93rem; font-weight: 600; color: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .order-meta { display: flex; align-items: center; gap: 0.35rem; font-size: 0.76rem; color: rgba(255,255,255,0.45); white-space: nowrap; overflow: hidden; }
-  .meta-dot { color: rgba(255,255,255,0.15); }
-  .order-id { color: rgba(255,255,255,0.28); }
+  .order-title { font-size: 0.93rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .order-meta { display: flex; align-items: center; gap: 0.35rem; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; }
+  .meta-dot { color: #cbd5e1; }
+  .order-id { color: #94a3b8; }
 
   .col-right { display: flex; align-items: center; gap: 2.5rem; flex-shrink: 0; }
-  .col-deadline { font-size: 0.82rem; color: rgba(255,255,255,0.45); white-space: nowrap; min-width: 90px; text-align: right; }
+  .col-deadline { font-size: 0.82rem; color: #64748b; white-space: nowrap; min-width: 90px; text-align: right; }
   .col-deadline.overdue { color: #f87171; }
   .col-deadline.urgent { color: #fb923c; }
   .col-deadline.ok { color: #34d399; }
-  .col-amount { font-size: 0.9rem; font-weight: 700; color: #f1f5f9; white-space: nowrap; min-width: 70px; text-align: right; }
+  .col-amount { font-size: 0.9rem; font-weight: 700; color: #0f172a; white-space: nowrap; min-width: 70px; text-align: right; }
 
   .status-badge {
     display: inline-block;
@@ -385,8 +386,8 @@ const base = '/ThesisArcPro';
 
   /* ── ORDER DETAIL MODAL ── */
   .om-header { margin-bottom: 1.2rem; padding-right: 2rem; }
-  .om-title { font-size: 1.15rem; font-weight: 800; color: #f1f5f9; line-height: 1.3; }
-  .om-id { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 0.3rem; }
+  .om-title { font-size: 1.15rem; font-weight: 800; color: #0f172a; line-height: 1.3; }
+  .om-id { font-size: 0.75rem; color: #94a3b8; margin-top: 0.3rem; }
 
   .om-tabs {
     display: flex;
@@ -409,7 +410,7 @@ const base = '/ThesisArcPro';
     transition: all 0.2s;
   }
 
-  .om-tab:hover:not(.om-tab--active) { color: #f1f5f9; }
+  .om-tab:hover:not(.om-tab--active) { color: #0f172a; }
   .om-tab--active { color: #818cf8; border-bottom-color: #6366f1; }
 
   .om-panel { display: none; }
@@ -427,24 +428,24 @@ const base = '/ThesisArcPro';
 
   .om-label {
     font-size: 0.66rem;
-    color: rgba(255,255,255,0.35);
+    color: #94a3b8;
     margin-bottom: 0.25rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-  .om-value { font-weight: 600; font-size: 0.88rem; color: #f1f5f9; text-transform: capitalize; }
+  .om-value { font-weight: 600; font-size: 0.88rem; color: #0f172a; text-transform: capitalize; }
   .om-value.green { color: #4ade80; }
 
   .om-desc-label {
     font-size: 0.66rem;
-    color: rgba(255,255,255,0.35);
+    color: #94a3b8;
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
   .om-desc {
     font-size: 0.83rem;
-    color: rgba(255,255,255,0.65);
+    color: #475569;
     line-height: 1.7;
     max-height: 220px;
     overflow-y: auto;
@@ -471,9 +472,10 @@ const base = '/ThesisArcPro';
   .om-nofile {
     text-align: center;
     padding: 1.4rem;
-    background: rgba(255,255,255,0.03);
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
-    color: rgba(255,255,255,0.4);
+    color: #64748b;
     font-size: 0.85rem;
   }
 
@@ -526,10 +528,10 @@ const base = '/ThesisArcPro';
 
   .revision-textarea {
     width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
     border-radius: 8px;
-    color: #f1f5f9;
+    color: #0f172a;
     font-size: 0.85rem;
     padding: 0.75rem;
     resize: vertical;
@@ -538,7 +540,7 @@ const base = '/ThesisArcPro';
     outline: none;
   }
   .revision-textarea:focus { border-color: #c084fc; }
-  .revision-textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .revision-textarea::placeholder { color: #94a3b8; }
 
   .revision-submit {
     background: #c084fc;
@@ -566,8 +568,8 @@ const base = '/ThesisArcPro';
   .om-action-msg.error { background: rgba(239,68,68,0.12); color: #f87171; display: block; }
 
   /* ── REVIEW POPUP ── */
-  .review-box h2 { font-size: 1.2rem; font-weight: 800; color: #f1f5f9; margin-bottom: 0.4rem; }
-  .review-box p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 1.2rem; }
+  .review-box h2 { font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem; }
+  .review-box p { font-size: 0.85rem; color: #64748b; margin-bottom: 1.2rem; }
 
   .star-row {
     display: flex;
@@ -579,7 +581,7 @@ const base = '/ThesisArcPro';
   .star {
     font-size: 2rem;
     cursor: pointer;
-    color: rgba(255,255,255,0.2);
+    color: #cbd5e1;
     transition: color 0.15s;
     background: none;
     border: none;
@@ -591,10 +593,10 @@ const base = '/ThesisArcPro';
 
   .review-textarea {
     width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
     border-radius: 8px;
-    color: #f1f5f9;
+    color: #0f172a;
     font-size: 0.85rem;
     padding: 0.75rem;
     resize: vertical;
@@ -604,7 +606,7 @@ const base = '/ThesisArcPro';
     margin-bottom: 1rem;
   }
   .review-textarea:focus { border-color: #c5a059; }
-  .review-textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .review-textarea::placeholder { color: #94a3b8; }
 
   .review-actions { display: flex; gap: 0.75rem; justify-content: center; }
 
