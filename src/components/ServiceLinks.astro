@@ -1,0 +1,107 @@
+---
+const base = '/ThesisArcPro';
+---
+<section class="sl">
+  <div class="container">
+    <div class="sl__card">
+      <div class="sl__grid">
+        <div class="sl__col">
+          <a href={`${base}/services`}>Research Paper Writing Service</a>
+          <a href={`${base}/services`}>Pay For Homework</a>
+          <a href={`${base}/services`}>Custom Term Paper Writing</a>
+          <a href={`${base}/services`}>Admission essay</a>
+          <a href={`${base}/services`}>Dissertation Writing Help</a>
+          <a href={`${base}/services`}>Math Assignment Help</a>
+        </div>
+        <div class="sl__col">
+          <a href={`${base}/services`}>Assignment Writing Service</a>
+          <a href={`${base}/services`}>Coursework Help</a>
+          <a href={`${base}/services`}>Assignment Help</a>
+          <a href={`${base}/services`}>Annotated bibliography</a>
+          <a href={`${base}/services`}>Personal Statement Writer</a>
+          <a href={`${base}/services`}>Nursing Assignment Help</a>
+        </div>
+        <div class="sl__col">
+          <a href={`${base}/services`}>Do My Homework</a>
+          <a href={`${base}/services`}>Case Study Writers</a>
+          <a href={`${base}/services`}>Powerpoint Presentation Writers</a>
+          <a href={`${base}/services`}>Capstone Project Writing Service</a>
+        </div>
+      </div>
+      <div class="sl__cta">
+        <a href="#" class="sl__btn auth-gate">Place an order</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.sl {
+  background: var(--bg-body, #ffffff);
+  padding: 2rem 0 3.5rem;
+}
+.sl__card {
+  border: 1px solid var(--color-secondary-lightest, #eef6fb);
+  border-radius: 16px;
+  padding: 2rem 2.5rem 1.8rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.sl__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+}
+.sl__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.sl__col a {
+  font-size: 0.88rem;
+  color: var(--color-main, #303b4f);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.sl__col a:hover {
+  color: var(--color-secondary, #046fcd);
+}
+.sl__cta {
+  text-align: center;
+}
+.sl__btn {
+  display: inline-block;
+  background: var(--color-main, #303b4f);
+  color: #ffffff;
+  padding: 0.7rem 1.8rem;
+  border-radius: 25px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+.sl__btn:hover {
+  background: #1a2332;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(48,59,79,0.3);
+}
+
+@media (max-width: 600px) {
+  .sl__grid { grid-template-columns: 1fr; gap: 1rem; }
+  .sl__card { padding: 1.5rem; }
+}
+</style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+
+  const { data: { session } } = await supabase.auth.getSession();
+  document.querySelectorAll('.sl .auth-gate').forEach(link => {
+    if (session) {
+      link.setAttribute('href', '/ThesisArcPro/contact/');
+    } else {
+      link.setAttribute('href', '/ThesisArcPro/login/');
+    }
+  });
+</script>
