@@ -1,516 +1,190 @@
 ---
-import { supabase } from '../lib/supabase.js';
-
 const base = '/ThesisArcPro';
-
-// Fetch active writers from Supabase
-const { data: writers, error } = await supabase
-  .from('writers')
-  .select('id, full_name, photo_url, specialties, rating, completed_orders, years_experience')
-  .eq('is_active', true)
-  .order('completed_orders', { ascending: false })
-  .limit(12);
-
-const writersList = writers || [];
 ---
-
 <section class="hero">
   <div class="container hero__inner">
-
-    <h1 class="hero__headline">Expert Academic Writing<br/>& Research Support</h1>
-    <p class="hero__sub">From high school essays to PhD dissertations — we provide expert guidance, writing support, and professional editing at every academic level.</p>
-
-    <!-- Value badge (EduBirdie has their "$8/page" strip — this is yours) -->
-    <div class="hero__value-badge">
-      <span class="vb-highlight">From $5/page</span>
-      <span class="vb-sep">·</span>
-      <span class="vb-text">Any deadline or complexity</span>
-      <a href="#" class="vb-cta auth-gate">Get a Free Quote →</a>
+    <div class="hero__content">
+      <h1>Expert Academic Writing<br/>& Research Support</h1>
+      <p class="hero__sub">From high school essays to PhD dissertations — we provide expert guidance, writing support, and professional editing at every academic level.</p>
+      <a href="#" class="hero__btn auth-gate">Place your order</a>
     </div>
-
-    <!-- CTA -->
-    <a href="#" class="hero__cta auth-gate">Place Your Order</a>
-
-    <!-- Trust strip -->
-    <div class="hero__trust">
-      <div class="trust-item">
-        <span class="trust-icon">👩‍🎓</span>
-        <div class="trust-text">
-          <span class="trust-number">2,000+</span>
-          <span class="trust-label">Students Helped</span>
-        </div>
-      </div>
-      <div class="trust-sep"></div>
-      <div class="trust-item">
-        <span class="trust-icon">✅</span>
-        <div class="trust-text">
-          <span class="trust-number">98%</span>
-          <span class="trust-label">Satisfaction Rate</span>
-        </div>
-      </div>
-      <div class="trust-sep"></div>
-      <div class="trust-item">
-        <span class="trust-icon">✍️</span>
-        <div class="trust-text">
-          <span class="trust-number">50+</span>
-          <span class="trust-label">Expert Writers</span>
-        </div>
-      </div>
+    <div class="hero__visual">
+      <img
+        src="/ThesisArcPro/images/hero.svg"
+        alt="Students receiving expert academic writing and research support"
+        width="500"
+        height="400"
+        loading="eager"
+      />
     </div>
-
-    <!-- Writers Carousel Section -->
-    {writersList.length > 0 && (
-      <div class="writers-section">
-        <h2 class="writers-title">Top essay writers ready to help you</h2>
-        <p class="writers-subtitle">500+ writers who always follow instructions. <a href="#" class="writers-link">See all writers →</a></p>
-
-        <div class="writers-carousel-wrapper">
-          <div class="writers-carousel">
-            {writersList.map((writer) => (
-              <div class="writer-card">
-                <img src={writer.photo_url} alt={writer.full_name} class="writer-photo" />
-                <div class="writer-info">
-                  <h3 class="writer-name">{writer.full_name}</h3>
-                  <div class="writer-rating">
-                    <span class="rating-stars">★ {writer.rating || 'N/A'}</span>
-                    <span class="rating-count">({writer.completed_orders || 0} orders)</span>
-                  </div>
-                  <p class="writer-specialty">{writer.specialties}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button class="carousel-nav carousel-prev" aria-label="Previous writers">‹</button>
-          <button class="carousel-nav carousel-next" aria-label="Next writers">›</button>
-        </div>
-
-        <div class="writers-cta-wrap">
-          <a href="#" class="writers-cta auth-gate">Hire essay writer</a>
-          <p class="writers-badge">✓ Certified pros, ready to help</p>
-        </div>
-      </div>
-    )}
-
-    <!-- Bottom tagline (EduBirdie has "No AI, no shortcuts...") -->
-    <p class="hero__tagline">🛡️ Original, plagiarism-free work — written by real qualified writers, not AI.</p>
-
   </div>
+
+  <!-- Navy trust strip (full-width bar) -->
+  <div class="hero__trust-bar">
+    <div class="container hero__trust-inner">
+      <div class="trust-stat">
+        <span class="trust-num">2,000+</span>
+        <span class="trust-lbl">Students Helped</span>
+      </div>
+      <div class="trust-div"></div>
+      <div class="trust-stat">
+        <span class="trust-num">98%</span>
+        <span class="trust-lbl">Satisfaction Rate</span>
+      </div>
+      <div class="trust-div"></div>
+      <div class="trust-stat">
+        <span class="trust-num">Deadlines from</span>
+        <span class="trust-lbl">3 hours</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tagline below strip -->
+  <p class="hero__tagline">
+    <span class="tagline-icon">🛡️</span>
+    No AI, no shortcuts — just real writers delivering plagiarism-free essays
+  </p>
 </section>
 
 <style>
-/* ── Hero: white bg, centered content, matching EduBirdie layout ── */
+/* ── Hero section ── */
 .hero {
-  background-color: var(--bg-body, #ffffff);
-  padding: 9rem 0 4rem;
-  text-align: center;
+  background: var(--bg-body, #ffffff);
+  padding-top: 7rem;
 }
 
 .hero__inner {
-  max-width: 720px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 3rem;
   align-items: center;
+  padding-bottom: 3rem;
 }
 
-/* ── Headline ── */
-.hero__headline {
+/* ── Left content ── */
+.hero__content {
+  max-width: 520px;
+}
+
+.hero h1 {
   font-family: var(--font-heading, 'Poppins', sans-serif);
-  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-size: clamp(2rem, 4.5vw, 2.6rem);
   font-weight: 800;
   color: var(--color-main, #303b4f);
   line-height: 1.2;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .hero__sub {
   color: var(--color-main-light, #6d7483);
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   line-height: 1.7;
-  margin-bottom: 1.8rem;
-  max-width: 560px;
+  margin-bottom: 2rem;
 }
 
-/* ── Value badge (gold strip, like EduBirdie's yellow "$8/page" bar) ── */
-.hero__value-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: var(--color-primary, #C5A059);
-  border-radius: var(--border-radius-button, 8px);
-  padding: 0.65rem 1.2rem;
-  margin-bottom: 1.8rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.vb-highlight {
-  font-weight: 700;
-  font-size: 0.92rem;
-  color: #303b4f;
-}
-.vb-sep {
-  color: rgba(48,59,79,0.4);
-  font-size: 0.85rem;
-}
-.vb-text {
-  font-size: 0.85rem;
-  color: #303b4f;
-  font-weight: 500;
-}
-.vb-cta {
-  background: #303b4f;
-  color: #ffffff;
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.35rem 0.9rem;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background 0.2s;
-  white-space: nowrap;
-}
-.vb-cta:hover { background: #1a2332; }
-
-/* ── Main CTA button ── */
-.hero__cta {
+.hero__btn {
   display: inline-block;
-  background: var(--color-secondary, #046fcd);
+  background: var(--color-main, #303b4f);
   color: #ffffff;
-  padding: 0.9rem 2.5rem;
-  border-radius: var(--border-radius-button, 8px);
-  font-size: 1rem;
+  padding: 0.8rem 2.2rem;
+  border-radius: 25px;
+  font-size: 0.92rem;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.25s ease;
-  margin-bottom: 2.2rem;
-  box-shadow: 0 4px 14px rgba(4,111,205,0.25);
 }
-.hero__cta:hover {
-  background: #0361b3;
+.hero__btn:hover {
+  background: #1a2332;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(4,111,205,0.35);
+  box-shadow: 0 4px 14px rgba(48,59,79,0.3);
 }
 
-/* ── Trust strip ── */
-.hero__trust {
+/* ── Right image ── */
+.hero__visual {
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
 }
-.trust-item {
+.hero__visual img {
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+}
+
+/* ── Navy trust bar (full-width) ── */
+.hero__trust-bar {
+  background: var(--navy, #1B2A4A);
+  padding: 1.2rem 0;
+}
+
+.hero__trust-inner {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
 }
-.trust-icon {
-  font-size: 1.3rem;
-  line-height: 1;
-}
-.trust-text {
+
+.trust-stat {
   display: flex;
   flex-direction: column;
-  text-align: left;
+  align-items: center;
+  gap: 0.15rem;
 }
-.trust-number {
+.trust-num {
   font-family: var(--font-heading, 'Poppins', sans-serif);
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: var(--color-main, #303b4f);
+  color: #ffffff;
   line-height: 1.2;
 }
-.trust-label {
-  font-size: 0.72rem;
-  color: var(--color-main-light, #6d7483);
+.trust-lbl {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.3px;
 }
-.trust-sep {
+
+.trust-div {
   width: 1px;
-  height: 32px;
-  background: var(--color-secondary-lightest, #eef6fb);
-}
-
-/* ── Writers Carousel Section ── */
-.writers-section {
-  width: 100%;
-  max-width: 900px;
-  margin: 2.5rem 0 2rem;
-  padding: 0 1rem;
-}
-
-.writers-title {
-  font-family: var(--font-heading, 'Poppins', sans-serif);
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--color-main, #303b4f);
-  margin-bottom: 0.5rem;
-}
-
-.writers-subtitle {
-  font-size: 0.85rem;
-  color: var(--color-main-light, #6d7483);
-  margin-bottom: 1.5rem;
-}
-
-.writers-link {
-  color: var(--color-secondary, #046fcd);
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s;
-}
-.writers-link:hover { color: #0361b3; }
-
-/* ── Carousel Container (CSS scroll-snap, no dependencies) ── */
-.writers-carousel-wrapper {
-  position: relative;
-  margin-bottom: 1.5rem;
-}
-
-.writers-carousel {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  padding: 8px 0;
-  margin: 0 -1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  scrollbar-width: none;
-}
-
-.writers-carousel::-webkit-scrollbar {
-  display: none;
-}
-
-.writer-card {
-  flex: 0 0 calc(50% - 8px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
-  cursor: pointer;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-.writer-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-}
-
-.writer-photo {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  background: #f0f0f0;
-}
-
-.writer-info {
-  padding: 1rem;
-  text-align: center;
-  width: 100%;
-}
-
-.writer-name {
-  font-family: var(--font-heading, 'Poppins', sans-serif);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--color-main, #303b4f);
-  margin-bottom: 0.3rem;
-}
-
-.writer-rating {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.8rem;
-}
-
-.rating-stars {
-  color: var(--color-primary, #C5A059);
-  font-weight: 600;
-}
-
-.rating-count {
-  color: var(--color-main-light, #6d7483);
-}
-
-.writer-specialty {
-  font-size: 0.75rem;
-  color: var(--color-main-light, #6d7483);
-  line-height: 1.4;
-  margin: 0;
-}
-
-/* ── Carousel Navigation Buttons ── */
-.carousel-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px;
   height: 36px;
-  background: var(--color-secondary, #046fcd);
-  border-radius: 50%;
-  color: #ffffff;
-  border: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: bold;
-  transition: background 0.2s;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(255,255,255,0.2);
 }
 
-.carousel-nav:hover {
-  background: #0361b3;
-}
-
-.carousel-prev {
-  left: -18px;
-}
-
-.carousel-next {
-  right: -18px;
-}
-
-/* ── Writers CTA Section ── */
-.writers-cta-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.writers-cta {
-  display: inline-block;
-  background: var(--color-primary, #C5A059);
-  color: #303b4f;
-  padding: 0.75rem 2rem;
-  border-radius: var(--border-radius-button, 8px);
-  font-size: 0.95rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 8px rgba(197, 160, 89, 0.2);
-}
-
-.writers-cta:hover {
-  background: #b39349;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3);
-}
-
-.writers-badge {
-  font-size: 0.75rem;
-  color: var(--color-main-light, #6d7483);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-/* ── Bottom tagline ── */
+/* ── Tagline below bar ── */
 .hero__tagline {
+  text-align: center;
+  padding: 1rem 0 0;
   font-size: 0.85rem;
   color: var(--color-main-light, #6d7483);
   display: flex;
   align-items: center;
-  gap: 0.4rem;
   justify-content: center;
+  gap: 0.5rem;
+  background: var(--bg-body, #ffffff);
 }
-
-/* ── Tablet & Desktop ── */
-@media (min-width: 768px) {
-  .writer-card {
-    flex: 0 0 calc(33.333% - 11px);
-  }
-  
-  .carousel-prev {
-    left: -50px;
-  }
-  
-  .carousel-next {
-    right: -50px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .writer-card {
-    flex: 0 0 calc(25% - 12px);
-  }
+.tagline-icon {
+  font-size: 1rem;
 }
 
 /* ── Mobile ── */
-@media (max-width: 640px) {
-  .hero { padding: 7.5rem 0 3rem; }
-  .hero__headline { font-size: 1.8rem; }
-  .hero__trust { gap: 1rem; }
-  .hero__value-badge { flex-direction: column; gap: 0.3rem; padding: 0.8rem 1rem; }
-  .vb-sep { display: none; }
-
-  .writers-section {
-    margin: 1.5rem 0 1rem;
+@media (max-width: 768px) {
+  .hero { padding-top: 5.5rem; }
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
   }
-
-  .writers-title {
-    font-size: 1.1rem;
-  }
-
-  .writers-subtitle {
-    font-size: 0.8rem;
-  }
-
-  .writer-photo {
-    height: 180px;
-  }
-
-  .carousel-prev,
-  .carousel-next {
-    width: 32px;
-    height: 32px;
-    font-size: 1.2rem;
-  }
-
-  .carousel-prev {
-    left: -16px;
-  }
-
-  .carousel-next {
-    right: -16px;
-  }
+  .hero__content { max-width: 100%; }
+  .hero__visual { order: -1; }
+  .hero__visual img { max-width: 280px; }
+  .hero__trust-inner { gap: 1.5rem; }
+  .trust-div { display: none; }
 }
 </style>
 
 <script>
   import { supabase } from '../lib/supabase.js';
 
-  // Carousel navigation
-  const carouselEl = document.querySelector('.writers-carousel');
-  const prevBtn = document.querySelector('.carousel-prev');
-  const nextBtn = document.querySelector('.carousel-next');
-
-  if (carouselEl && prevBtn && nextBtn) {
-    const cardWidth = carouselEl.querySelector('.writer-card')?.offsetWidth || 280;
-    const gap = 16;
-
-    prevBtn.addEventListener('click', () => {
-      carouselEl.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
-    });
-
-    nextBtn.addEventListener('click', () => {
-      carouselEl.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
-    });
-  }
-
-  // Auth gate logic
   const { data: { session } } = await supabase.auth.getSession();
   const authGateLinks = document.querySelectorAll('.auth-gate');
 
