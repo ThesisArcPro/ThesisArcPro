@@ -6,20 +6,92 @@ const base = '/ThesisArcPro';
     <a href={`${base}/`} class="header__logo">
       <span class="logo-thesis">Thesis</span><span class="logo-arc">Arc</span><span class="logo-pro">Pro</span>
     </a>
-    <nav class="header__nav">
-      <a href={`${base}/services`}>Services</a>
-      <a href={`${base}/blog`}>Blog</a>
-      <a href={`${base}/how-it-works`}>How It Works</a>
-      <a href={`${base}/writers`}>Writers</a>
-      <a href={`${base}/about`}>About</a>
-      <a href={`${base}/academic-integrity`}>Academic Integrity</a>
-      <a href={`${base}/contact`}>Contact</a>
+
+    <nav class="header__nav" id="mainNav">
+
+      <!-- SERVICES (mega dropdown) -->
+      <div class="nav-item has-dropdown">
+        <button class="nav-link nav-toggle" aria-haspopup="true" aria-expanded="false">
+          Services <span class="caret">▾</span>
+        </button>
+        <div class="dropdown dropdown--mega">
+          <div class="mega-col">
+            <p class="mega-col__title">Essays &amp; Papers</p>
+            <!-- TODO: point each to its own page when built -->
+            <a href={`${base}/services`}>Essay Writing</a>
+            <a href={`${base}/services`}>Research Paper Writing</a>
+            <a href={`${base}/services`}>APA Paper Writing</a>
+            <a href={`${base}/services`}>Dissertation Writing</a>
+            <a href={`${base}/services`}>Coursework Writing</a>
+            <a href={`${base}/services`}>Case Study Writing</a>
+          </div>
+          <div class="mega-col">
+            <p class="mega-col__title">Homework &amp; Assignment</p>
+            <a href={`${base}/services`}>English Assignment Help</a>
+            <a href={`${base}/services`}>Do My Assignment</a>
+            <a href={`${base}/services`}>Assignment Help</a>
+            <a href={`${base}/services`}>Finance Assignment Help</a>
+            <a href={`${base}/services`}>Do My Math Homework</a>
+            <a href={`${base}/services`}>SPSS Assignment Help</a>
+            <a href={`${base}/services`}>Do My Homework</a>
+            <a href={`${base}/services`}>Biology Assignment Help</a>
+            <a href={`${base}/services`}>Chemistry Assignment Help</a>
+          </div>
+          <div class="mega-col">
+            <p class="mega-col__title">More Services</p>
+            <a href={`${base}/services`}>Personal Statement Writing</a>
+            <a href={`${base}/services`}>Capstone Project Writing</a>
+            <a href={`${base}/services`}>Write My Lab Report</a>
+            <a href={`${base}/services`}>Nursing Assignment Help</a>
+            <a href={`${base}/services`}>Annotated Bibliography</a>
+            <a href={`${base}/services`}>Do My PowerPoint Presentation</a>
+            <a href={`${base}/services`}>Law Essay Writing</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS (standalone) -->
+      <a class="nav-link" href={`${base}/how-it-works`}>How It Works</a>
+
+      <!-- WRITERS (standalone) -->
+      <a class="nav-link" href={`${base}/writers`}>Writers</a>
+
+      <!-- RESOURCES (dropdown) -->
+      <div class="nav-item has-dropdown">
+        <button class="nav-link nav-toggle" aria-haspopup="true" aria-expanded="false">
+          Resources <span class="caret">▾</span>
+        </button>
+        <div class="dropdown">
+          <!-- TODO: build Study Notes / Samples pages, then repoint -->
+          <a href={`${base}/blog`}>Study Notes</a>
+          <a href={`${base}/blog`}>Samples</a>
+          <a href={`${base}/blog`}>Blog</a>
+        </div>
+      </div>
+
+      <!-- WHO WE ARE (dropdown) -->
+      <div class="nav-item has-dropdown">
+        <button class="nav-link nav-toggle" aria-haspopup="true" aria-expanded="false">
+          Who We Are <span class="caret">▾</span>
+        </button>
+        <div class="dropdown">
+          <a href={`${base}/about`}>About Us</a>
+          <!-- TODO: build Reviews + FAQ pages, then repoint -->
+          <a href={`${base}/writers`}>Reviews</a>
+          <a href={`${base}/contact`}>FAQ</a>
+          <a href={`${base}/academic-integrity`}>Academic Integrity</a>
+          <a href={`${base}/contact`}>Contact Us</a>
+        </div>
+      </div>
+
     </nav>
+
     <div class="header__actions">
-      <a href={`${base}/login`} class="btn-secondary header__login" id="loginBtn">Login</a>
-      <a href={`${base}/contact`} class="btn-primary header__cta" id="getStartedBtn">Get Started</a>
+      <a href={`${base}/login`} class="header__login" id="loginBtn">Login</a>
+      <a href={`${base}/contact`} class="header__cta" id="getStartedBtn">Get Started</a>
       <button class="header__logout" id="logoutBtn" style="display:none;">Logout</button>
     </div>
+
     <button class="header__burger" id="burger" aria-label="Open menu">
       <span></span>
       <span></span>
@@ -29,29 +101,110 @@ const base = '/ThesisArcPro';
 </header>
 
 <style>
-.header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: var(--navy); border-bottom: 1px solid var(--border); padding: 1rem 0; }
-.header__inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+/* LIGHT HEADER */
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 0.9rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.header__inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
 .header__logo { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; }
-.logo-thesis { color: var(--white); }
+.logo-thesis { color: #1B2A4A; }
 .logo-arc { color: var(--gold); }
-.logo-pro { color: var(--white); }
-.header__nav { display: flex; align-items: center; gap: 1.8rem; }
-.header__nav a { color: rgba(255,255,255,0.85); font-family: var(--font-body); font-size: 0.9rem; letter-spacing: 0.3px; transition: color 0.3s ease; }
-.header__nav a:hover { color: var(--gold); }
-.header__actions { display: flex; align-items: center; gap: 0.8rem; }
-.header__cta { font-size: 0.85rem; padding: 0.6rem 1.4rem; white-space: nowrap; }
-.header__login { font-size: 0.85rem; padding: 0.6rem 1.4rem; white-space: nowrap; background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: white; border-radius: 6px; text-decoration: none; transition: all 0.3s ease; }
+.logo-pro { color: #1B2A4A; }
+
+.header__nav { display: flex; align-items: center; gap: 1.4rem; }
+
+.nav-item { position: relative; }
+.nav-link {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  color: #334155; font-family: var(--font-body); font-size: 0.9rem; font-weight: 500;
+  letter-spacing: 0.2px; transition: color 0.2s ease; cursor: pointer;
+  background: none; border: none; padding: 0.4rem 0;
+}
+.nav-link:hover { color: var(--gold); }
+.caret { font-size: 0.65rem; transition: transform 0.2s ease; }
+.has-dropdown:hover .caret { transform: rotate(180deg); }
+
+/* Dropdown panels */
+.dropdown {
+  position: absolute; top: 100%; left: 0; margin-top: 0.6rem;
+  background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+  padding: 0.8rem; min-width: 230px;
+  display: none; flex-direction: column; gap: 0.1rem; z-index: 1001;
+}
+.dropdown a {
+  color: #475569; font-size: 0.86rem; padding: 0.5rem 0.7rem; border-radius: 7px;
+  white-space: nowrap; transition: all 0.15s ease;
+}
+.dropdown a:hover { background: #f1f5f9; color: #2563EB; }
+
+/* Mega (3-column) dropdown for Services */
+.dropdown--mega {
+  display: none; grid-template-columns: repeat(3, minmax(190px, 1fr)); gap: 0.6rem 1.4rem;
+  left: 50%; transform: translateX(-50%); min-width: 640px; padding: 1.3rem 1.5rem;
+}
+.mega-col { display: flex; flex-direction: column; gap: 0.05rem; }
+.mega-col__title {
+  color: #1B2A4A; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.6px; margin-bottom: 0.5rem; padding-bottom: 0.4rem; border-bottom: 1px solid #e2e8f0;
+}
+
+/* Show on hover (desktop) */
+.has-dropdown:hover .dropdown { display: flex; }
+.has-dropdown:hover .dropdown--mega { display: grid; }
+
+/* Also show when JS adds .open (click / mobile) */
+.has-dropdown.open .dropdown { display: flex; }
+.has-dropdown.open .dropdown--mega { display: grid; }
+
+/* Actions */
+.header__actions { display: flex; align-items: center; gap: 0.7rem; }
+.header__cta {
+  font-size: 0.85rem; padding: 0.6rem 1.4rem; white-space: nowrap;
+  background: var(--gold); color: #1B2A4A; border: 1.5px solid var(--gold);
+  border-radius: 6px; font-weight: 700; text-decoration: none; transition: all 0.2s ease;
+}
+.header__cta:hover { background: #d4b47a; border-color: #d4b47a; }
+.header__login {
+  font-size: 0.85rem; padding: 0.6rem 1.4rem; white-space: nowrap;
+  background: transparent; border: 1.5px solid #cbd5e1; color: #334155;
+  border-radius: 6px; text-decoration: none; transition: all 0.2s ease;
+}
 .header__login:hover { border-color: var(--gold); color: var(--gold); }
-.header__logout { font-size: 0.85rem; padding: 0.6rem 1.4rem; white-space: nowrap; background: transparent; border: 1.5px solid rgba(255,0,0,0.4); color: rgba(255,100,100,0.9); border-radius: 6px; cursor: pointer; transition: all 0.3s ease; }
-.header__logout:hover { background: rgba(255,0,0,0.1); }
+.header__logout {
+  font-size: 0.85rem; padding: 0.6rem 1.4rem; white-space: nowrap;
+  background: transparent; border: 1.5px solid #fca5a5; color: #dc2626;
+  border-radius: 6px; cursor: pointer; transition: all 0.2s ease;
+}
+.header__logout:hover { background: #fef2f2; }
+
 .header__burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-.header__burger span { display: block; width: 24px; height: 2px; background-color: var(--white); transition: all 0.3s ease; }
-@media (max-width: 768px) {
+.header__burger span { display: block; width: 24px; height: 2px; background-color: #1B2A4A; transition: all 0.3s ease; }
+
+/* MOBILE */
+@media (max-width: 900px) {
   .header__nav { display: none; }
   .header__actions { display: none; }
   .header__burger { display: flex; }
-  .header__nav.mobile-open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background-color: var(--navy); padding: 1.5rem 2rem; border-top: 1px solid var(--border); gap: 1.2rem; z-index: 999; }
-  .header__nav.mobile-open a { font-size: 1rem; padding: 0.3rem 0; border-bottom: 1px solid var(--border); }
+
+  .header__nav.mobile-open {
+    display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0;
+    background-color: #ffffff; padding: 1rem 1.5rem 2rem; border-top: 1px solid #e2e8f0;
+    gap: 0.3rem; z-index: 999; max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+  }
+  .header__nav.mobile-open .nav-item { width: 100%; }
+  .header__nav.mobile-open .nav-link { width: 100%; justify-content: space-between; padding: 0.7rem 0; border-bottom: 1px solid #f1f5f9; }
+
+  /* On mobile, dropdowns are static (accordion) not absolute */
+  .header__nav.mobile-open .dropdown,
+  .header__nav.mobile-open .dropdown--mega {
+    position: static; transform: none; min-width: 0; box-shadow: none; border: none;
+    margin: 0 0 0.5rem; padding: 0 0 0.5rem 0.8rem; grid-template-columns: 1fr; border-radius: 0;
+  }
+  .header__nav.mobile-open .has-dropdown:hover .dropdown,
+  .header__nav.mobile-open .has-dropdown:hover .dropdown--mega { display: none; }
+  .header__nav.mobile-open .has-dropdown.open .dropdown { display: flex; }
+  .header__nav.mobile-open .has-dropdown.open .dropdown--mega { display: grid; }
+  .header__nav.mobile-open .mega-col { margin-bottom: 0.6rem; }
 }
 </style>
 
@@ -61,37 +214,51 @@ const base = '/ThesisArcPro';
   const loginBtn = document.getElementById('loginBtn');
   const logoutBtn = document.getElementById('logoutBtn');
   const getStartedBtn = document.getElementById('getStartedBtn');
-  const burger = document.getElementById('burger');
-  const nav = document.querySelector('.header__nav');
 
-  // Check if user is logged in
   const { data: { session } } = await supabase.auth.getSession();
-
   if (session) {
-    // User is logged in
     loginBtn!.style.display = 'none';
     logoutBtn!.style.display = 'block';
     getStartedBtn!.setAttribute('href', '/ThesisArcPro/contact/');
   } else {
-    // User is not logged in
     loginBtn!.style.display = 'block';
     logoutBtn!.style.display = 'none';
     getStartedBtn!.setAttribute('href', '/ThesisArcPro/login/');
   }
 
-  // Logout
   logoutBtn?.addEventListener('click', async () => {
     await supabase.auth.signOut();
     window.location.href = '/ThesisArcPro/login/';
   });
-
-  </script>
+</script>
 
 <script>
   const burger = document.getElementById('burger');
-  const nav = document.querySelector('.header__nav');
+  const nav = document.getElementById('mainNav');
 
   burger?.addEventListener('click', () => {
     nav?.classList.toggle('mobile-open');
+  });
+
+  // Dropdown toggles: hover works on desktop via CSS; click handles mobile + touch
+  document.querySelectorAll('.has-dropdown .nav-toggle').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      // Only intercept as accordion when in mobile menu OR on touch
+      const parent = (btn as HTMLElement).closest('.has-dropdown');
+      const inMobile = document.getElementById('mainNav')?.classList.contains('mobile-open');
+      if (inMobile || window.matchMedia('(max-width: 900px)').matches) {
+        e.preventDefault();
+        // close siblings
+        document.querySelectorAll('.has-dropdown').forEach(d => { if (d !== parent) d.classList.remove('open'); });
+        parent?.classList.toggle('open');
+      }
+    });
+  });
+
+  // Close dropdowns when clicking outside (desktop click-open case)
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('.has-dropdown')) {
+      document.querySelectorAll('.has-dropdown.open').forEach(d => d.classList.remove('open'));
+    }
   });
 </script>
