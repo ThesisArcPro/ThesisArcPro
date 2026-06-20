@@ -1,0 +1,247 @@
+---
+const base = '/ThesisArcPro';
+---
+<section class="ws">
+  <div class="container">
+    <h2 class="ws__title">Top Writers Ready to Help You</h2>
+    <p class="ws__sub">50+ expert writers who always follow instructions. <a href={`${base}/writers`} class="ws__link">See all writers →</a></p>
+
+    <div class="ws__track" id="writersTrack">
+      <!-- Cards loaded by JS -->
+      <div class="ws__loading">Loading writers...</div>
+    </div>
+
+    <div class="ws__actions">
+      <a href={`${base}/writers`} class="ws__cta">Browse All Writers</a>
+      <p class="ws__note">✍️ Qualified pros, ready to help</p>
+    </div>
+  </div>
+</section>
+
+<style>
+.ws {
+  background: var(--bg-body, #ffffff);
+  padding: 4rem 0;
+}
+.ws__title {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+.ws__sub {
+  text-align: center;
+  color: var(--color-main-light, #6d7483);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+.ws__link {
+  color: var(--color-secondary, #046fcd);
+  font-weight: 600;
+  text-decoration: none;
+}
+.ws__link:hover { text-decoration: underline; }
+
+/* ── Horizontal scroll track ── */
+.ws__track {
+  display: flex;
+  gap: 1.2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0.5rem 0 1.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+.ws__track::-webkit-scrollbar { height: 4px; }
+.ws__track::-webkit-scrollbar-thumb { background: var(--color-secondary-lighter, #cce2f5); border-radius: 4px; }
+
+.ws__loading {
+  width: 100%;
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-main-light, #6d7483);
+  font-size: 0.9rem;
+}
+
+/* ── Individual writer card ── */
+.ws__card {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  border-radius: var(--border-radius-primary, 16px);
+  overflow: hidden;
+  border: 1px solid var(--color-secondary-lightest, #eef6fb);
+  background: var(--bg-card, #ffffff);
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+.ws__card:hover {
+  box-shadow: var(--box-shadow-md, 0 4px 12px rgba(0,0,0,0.08));
+  transform: translateY(-3px);
+}
+
+/* Photo area */
+.ws__card-photo {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: var(--color-secondary-lightest, #eef6fb);
+  display: block;
+}
+.ws__card-photo-placeholder {
+  width: 100%;
+  height: 180px;
+  background: var(--color-secondary-lightest, #eef6fb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: var(--color-secondary-lighter, #cce2f5);
+}
+
+/* Card body */
+.ws__card-body {
+  padding: 0.9rem 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+}
+.ws__card-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-main, #303b4f);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.ws__card-verified {
+  color: var(--color-secondary, #046fcd);
+  font-size: 0.8rem;
+}
+.ws__card-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+}
+.ws__card-stars { color: #fbbf24; }
+.ws__card-score { font-weight: 600; color: var(--color-main, #303b4f); }
+.ws__card-edu {
+  font-size: 0.78rem;
+  color: var(--color-main-light, #6d7483);
+}
+.ws__card-orders {
+  font-size: 0.78rem;
+  color: var(--color-main-light, #6d7483);
+  margin-top: auto;
+}
+.ws__card-orders strong {
+  color: var(--color-main, #303b4f);
+  font-weight: 600;
+}
+
+/* ── Bottom actions ── */
+.ws__actions {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+.ws__cta {
+  display: inline-block;
+  background: var(--color-primary, #C5A059);
+  color: var(--color-main, #303b4f);
+  padding: 0.75rem 2rem;
+  border-radius: var(--border-radius-button, 8px);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  margin-bottom: 0.6rem;
+}
+.ws__cta:hover {
+  background: var(--gold-light, #D4B47A);
+  transform: translateY(-2px);
+}
+.ws__note {
+  font-size: 0.8rem;
+  color: var(--color-main-light, #6d7483);
+}
+
+@media (max-width: 640px) {
+  .ws__card { flex: 0 0 180px; }
+  .ws__card-photo, .ws__card-photo-placeholder { height: 140px; }
+}
+</style>
+
+<script>
+  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlaHZ3dnVqdWFtZWhvYW5mb21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0NTMyNjcsImV4cCI6MjA2MjAyOTI2N30.sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+
+  function esc(s: string) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  async function loadShowcase() {
+    const track = document.getElementById('writersTrack');
+    if (!track) return;
+
+    try {
+      // Fetch active writers
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/writers?is_active=eq.true&order=full_name.asc`,
+        { headers: { 'apikey': SUPABASE_KEY } }
+      );
+      const writers = await res.json();
+
+      // Fetch stats
+      const statsRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/rpc/writer_stats`,
+        { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY }, body: '{}' }
+      );
+      const stats = await statsRes.json();
+      const statsMap: Record<string, any> = {};
+      if (Array.isArray(stats)) stats.forEach((s: any) => { statsMap[s.writer_id] = s; });
+
+      if (!writers.length) {
+        track.innerHTML = '<div class="ws__loading">Our writers are being onboarded — check back soon!</div>';
+        return;
+      }
+
+      const photoBase = `${SUPABASE_URL}/storage/v1/object/public/writer-photos/`;
+
+      track.innerHTML = writers.map((w: any) => {
+        const s = statsMap[w.id] || {};
+        const rating = s.avg_rating ? Number(s.avg_rating).toFixed(1) : null;
+        const completed = s.completed_orders || 0;
+        const stars = rating ? '★'.repeat(Math.round(Number(rating))) : '';
+
+        const photoHtml = w.photo_url
+          ? `<img class="ws__card-photo" src="${photoBase}${encodeURIComponent(w.photo_url)}" alt="${esc(w.full_name || '')}" loading="lazy" />`
+          : `<div class="ws__card-photo-placeholder">👤</div>`;
+
+        return `
+          <a class="ws__card" href="/ThesisArcPro/writers/">
+            ${photoHtml}
+            <div class="ws__card-body">
+              <span class="ws__card-name">${esc(w.full_name || 'Writer')} <span class="ws__card-verified">✓</span></span>
+              ${rating
+                ? `<span class="ws__card-rating"><span class="ws__card-stars">${stars}</span> <span class="ws__card-score">${rating}</span></span>`
+                : `<span class="ws__card-rating" style="color:var(--color-main-light)">New writer</span>`
+              }
+              ${w.education_level ? `<span class="ws__card-edu">${esc(w.education_level)}</span>` : ''}
+              <span class="ws__card-orders">Orders completed: <strong>${completed}</strong></span>
+            </div>
+          </a>
+        `;
+      }).join('');
+
+    } catch (err) {
+      console.error('Writers showcase error:', err);
+      track.innerHTML = '<div class="ws__loading">Could not load writers.</div>';
+    }
+  }
+
+  loadShowcase();
+</script>
