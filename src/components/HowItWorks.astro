@@ -1,94 +1,182 @@
 ---
 const base = '/ThesisArcPro';
 ---
-
 <section class="hiw">
   <div class="container">
+    <h2 class="hiw__title">How ThesisArcPro Works</h2>
+    <p class="hiw__sub">Getting expert academic support has never been easier. Follow these simple steps and get your work done professionally.</p>
 
-    <p class="hiw__eyebrow">Simple Process</p>
-    <h2 class="section-title">How ThesisArcPro Works</h2>
-    <hr class="gold-line" />
-    <p class="section-subtitle">Getting expert academic support has never been easier. Follow these simple steps and get your work done professionally.</p>
+    <div class="hiw__inner">
 
-    <div class="hiw__illustration">
-      <img src="/ThesisArcPro/images/process.svg" alt="Simple 3 step process to get expert academic writing and research support" width="600" height="350" loading="lazy" />
+      <!-- Left: 4 steps -->
+      <div class="hiw__steps">
+
+        <div class="hiw__step">
+          <h3>1. Create your order (it's free)</h3>
+          <p>Fill out our order form to be matched with the best writers</p>
+          <a href="#" class="hiw__step-btn auth-gate">Place your order</a>
+        </div>
+
+        <div class="hiw__step">
+          <h3>2. Choose a writer</h3>
+          <p>Choose expert profiles, read reviews, and chat before you choose</p>
+        </div>
+
+        <div class="hiw__step">
+          <h3>3. Make a payment</h3>
+          <p>The deposit will stay on your balance until the order is ready</p>
+        </div>
+
+        <div class="hiw__step">
+          <h3>4. Get your paper</h3>
+          <p>our money stays in your account until you approve the result</p>
+        </div>
+
+      </div>
+
+      <!-- Right: Promise card -->
+      <div class="hiw__promise">
+        <h3>Our Promise To You</h3>
+        <ul>
+          <li>✔ Original work every time</li>
+          <li>✔ Expert qualified writers</li>
+          <li>✔ On time delivery guaranteed</li>
+          <li>✔ Free unlimited revisions</li>
+          <li>✔ 24/7 customer support</li>
+          <li>✔ Money back guarantee</li>
+        </ul>
+        <a href="#" class="hiw__promise-btn auth-gate">Order now</a>
+      </div>
+
     </div>
-
-    <div class="hiw__steps">
-      <div class="hiw__step">
-        <div class="step__number">01</div>
-        <div class="step__icon">📋</div>
-        <h3>Submit Your Details</h3>
-        <p>Fill out our simple order form with your assignment details — subject, deadline, academic level, and any specific requirements.</p>
-      </div>
-      <div class="hiw__connector">
-        <div class="connector__line"></div>
-        <div class="connector__arrow">→</div>
-      </div>
-      <div class="hiw__step">
-        <div class="step__number">02</div>
-        <div class="step__icon">🔍</div>
-        <h3>Match With an Expert</h3>
-        <p>We match you with the best qualified writer or researcher for your specific subject, academic level, and requirements.</p>
-      </div>
-      <div class="hiw__connector">
-        <div class="connector__line"></div>
-        <div class="connector__arrow">→</div>
-      </div>
-      <div class="hiw__step">
-        <div class="step__number">03</div>
-        <div class="step__icon">✅</div>
-        <h3>Receive Quality Work</h3>
-        <p>Get your completed, plagiarism-free work delivered before your deadline — ready to submit with confidence.</p>
-      </div>
-    </div>
-
-    <div class="hiw__features">
-      <div class="hiw__feature"><span class="feature__icon">⚡</span><span>Fast Turnaround</span></div>
-      <div class="hiw__feature"><span class="feature__icon">🔒</span><span>100% Confidential</span></div>
-      <div class="hiw__feature"><span class="feature__icon">✅</span><span>Plagiarism Free</span></div>
-      <div class="hiw__feature"><span class="feature__icon">💬</span><span>24/7 Support</span></div>
-      <div class="hiw__feature"><span class="feature__icon">🔄</span><span>Free Revisions</span></div>
-    </div>
-
-    <div class="hiw__cta">
-      <a href="#" class="btn-primary auth-gate-hiw">Get Started Now</a>
-    </div>
-
   </div>
 </section>
 
 <style>
-.hiw { padding: var(--section-padding); background-color: var(--bg-body); }
-.hiw__eyebrow { text-align: center; color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
-.hiw__illustration { display: flex; justify-content: center; margin-bottom: 3rem; }
-.hiw__illustration img { width: 100%; max-width: 550px; height: auto; }
-.hiw__steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 4rem; flex-wrap: wrap; }
-.hiw__step { background-color: var(--bg-section-alt); border: 1px solid var(--card-border); border-radius: 16px; padding: 2.5rem 2rem; text-align: center; flex: 1; min-width: 220px; max-width: 280px; position: relative; transition: all 0.3s ease; }
-.hiw__step:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(27,42,74,0.12); border-color: var(--gold); }
-.step__number { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); background-color: var(--navy); color: var(--gold); font-family: var(--font-heading); font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; padding: 0.3rem 1rem; border-radius: 20px; }
-.step__icon { font-size: 2.5rem; margin-bottom: 1rem; margin-top: 0.5rem; }
-.hiw__step h3 { color: var(--heading-color); font-size: 1.1rem; margin-bottom: 0.8rem; }
-.hiw__step p { color: var(--body-color); font-size: 0.9rem; line-height: 1.7; }
-.hiw__connector { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; padding: 0 1rem; color: var(--gold); }
-.connector__line { width: 40px; height: 2px; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%); }
-.connector__arrow { color: var(--gold); font-size: 1.2rem; }
-.hiw__features { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 3rem; padding: 2rem; background-color: var(--navy); border-radius: 12px; }
-.hiw__feature { display: flex; align-items: center; gap: 0.6rem; color: rgba(255,255,255,0.85); font-size: 0.9rem; font-weight: 500; }
-.feature__icon { color: var(--gold); font-size: 1.1rem; }
-.hiw__cta { text-align: center; }
-@media (max-width: 768px) {
-  .hiw__steps { flex-direction: column; align-items: center; }
-  .hiw__connector { flex-direction: row; transform: rotate(90deg); padding: 0.5rem 0; }
-  .hiw__step { max-width: 100%; width: 100%; }
+.hiw {
+  background: var(--bg-body, #ffffff);
+  padding: 3.5rem 0;
+  border-top: 1px solid #eef2f7;
+}
+.hiw__title {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.hiw__sub {
+  text-align: center;
+  color: var(--color-main-light, #6d7483);
+  font-size: 0.9rem;
+  max-width: 580px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+.hiw__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* ── Steps (left) ── */
+.hiw__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+.hiw__step h3 {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  margin-bottom: 0.3rem;
+}
+.hiw__step p {
+  font-size: 0.88rem;
+  color: var(--color-main-light, #6d7483);
+  line-height: 1.6;
+}
+.hiw__step-btn {
+  display: inline-block;
+  background: var(--color-main, #303b4f);
+  color: #ffffff;
+  padding: 0.55rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 0.6rem;
+  transition: all 0.2s;
+}
+.hiw__step-btn:hover {
+  background: #1a2332;
+  transform: translateY(-2px);
+}
+
+/* ── Promise card (right) ── */
+.hiw__promise {
+  background: var(--color-secondary, #046fcd);
+  border-radius: 20px;
+  padding: 2rem 2rem 1.8rem;
+  color: #ffffff;
+}
+.hiw__promise h3 {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+.hiw__promise ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.hiw__promise li {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+.hiw__promise-btn {
+  display: block;
+  background: #ffffff;
+  color: var(--color-main, #303b4f);
+  padding: 0.65rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s;
+  max-width: 180px;
+  margin: 0 auto;
+}
+.hiw__promise-btn:hover {
+  background: #f1f5f9;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 700px) {
+  .hiw__inner { grid-template-columns: 1fr; gap: 2rem; }
 }
 </style>
 
 <script>
   import { supabase } from '../lib/supabase.js';
+
   const { data: { session } } = await supabase.auth.getSession();
-  const btns = document.querySelectorAll('.auth-gate-hiw');
-  btns.forEach(btn => {
-    btn.setAttribute('href', session ? '/ThesisArcPro/contact/' : '/ThesisArcPro/login/');
+  document.querySelectorAll('.auth-gate').forEach(link => {
+    if (session) {
+      link.setAttribute('href', '/ThesisArcPro/contact/');
+    } else {
+      link.setAttribute('href', '/ThesisArcPro/login/');
+    }
   });
 </script>
