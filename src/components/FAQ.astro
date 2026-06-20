@@ -1,0 +1,142 @@
+<section class="faq">
+  <div class="container">
+    <h2 class="faq__title">ThesisArcPro Frequently Asked Questions</h2>
+
+    <div class="faq__list">
+
+      <div class="faq__item">
+        <button class="faq__question">
+          Can you help me find a research consultant for my specific subject?
+          <span class="faq__arrow">▾</span>
+        </button>
+        <div class="faq__answer">
+          <p>Yes, our consultancy service connects you with experts across 30+ disciplines. We specialize in matching your specific research topic with a consultant who has the academic background and technical expertise to guide your work to success.</p>
+        </div>
+      </div>
+
+      <div class="faq__item">
+        <button class="faq__question">
+          Is ThesisArcPro research consultancy legal?
+          <span class="faq__arrow">▾</span>
+        </button>
+        <div class="faq__answer">
+          <p>Yes, our services are structured as legitimate academic research mentorship. We provide expert guidance, structural support, and methodological advice to help you navigate your academic requirements safely and ethically.</p>
+        </div>
+      </div>
+
+      <div class="faq__item">
+        <button class="faq__question">
+          Is it safe to engage a research consultant?
+          <span class="faq__arrow">▾</span>
+        </button>
+        <div class="faq__answer">
+          <p>Your privacy is our highest priority. All interactions, data sharing, and research files are kept strictly confidential and anonymous, ensuring your academic work and personal information remain secure.</p>
+        </div>
+      </div>
+
+      <div class="faq__item">
+        <button class="faq__question">
+          How fast can you assist with my thesis or dissertation?
+          <span class="faq__arrow">▾</span>
+        </button>
+        <div class="faq__answer">
+          <p>We specialize in delivering high-quality research guidance even under tight deadlines. Whether you need help with a proposal or a final chapter polish, we work with you to ensure your milestones are met on time.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.faq {
+  background: var(--bg-body, #ffffff);
+  padding: 3.5rem 0;
+  border-top: 1px solid #eef2f7;
+}
+.faq__title {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.faq__list {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.faq__item {
+  border-bottom: 1px solid #eef2f7;
+}
+.faq__item:first-child {
+  border-top: 1px solid #eef2f7;
+}
+
+.faq__question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body, 'Poppins', sans-serif);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  text-align: left;
+  line-height: 1.4;
+  transition: color 0.2s;
+}
+.faq__question:hover {
+  color: var(--color-secondary, #046fcd);
+}
+
+.faq__arrow {
+  font-size: 1rem;
+  color: var(--color-main-light, #6d7483);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+.faq__item.open .faq__arrow {
+  transform: rotate(180deg);
+}
+
+.faq__answer {
+  display: none;
+  padding: 0 0 1.1rem;
+}
+.faq__item.open .faq__answer {
+  display: block;
+}
+.faq__answer p {
+  font-size: 0.88rem;
+  color: var(--color-main-light, #6d7483);
+  line-height: 1.7;
+  padding-left: 0.5rem;
+  border-left: 2px solid var(--color-secondary-lightest, #eef6fb);
+}
+</style>
+
+<script>
+  document.querySelectorAll('.faq__question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq__item');
+      const wasOpen = item?.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq__item.open').forEach(el => el.classList.remove('open'));
+
+      // Toggle clicked
+      if (!wasOpen) item?.classList.add('open');
+    });
+  });
+</script>
