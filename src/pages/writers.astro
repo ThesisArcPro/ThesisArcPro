@@ -136,7 +136,8 @@ const base = '/ThesisArcPro';
   .wp-reviews-list { display: flex; flex-direction: column; gap: 0.8rem; }
   .wp-review { background: #f8fafc; border-radius: 10px; padding: 0.9rem 1rem; }
   .wp-review__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }
-  .wp-review__stars { color: #fbbf24; font-size: 0.85rem; }
+  .wp-review__stars { color: #fbbf24; font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .wp-review__who { color: #0f172a; font-size: 0.82rem; font-weight: 700; }
   .wp-review__date { color: #94a3b8; font-size: 0.74rem; }
   .wp-review__text { color: #475569; font-size: 0.85rem; line-height: 1.5; }
   .wp-no-reviews { color: #94a3b8; font-size: 0.85rem; text-align: center; padding: 1rem; }
@@ -377,12 +378,15 @@ const base = '/ThesisArcPro';
       }
       box.innerHTML = reviews.map((r: any) => {
         const d = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+        const who = r.client_id ? `Customer #${esc(r.client_id)}` : 'Verified customer';
+        const onWhat = r.assignment_type ? ` · on ${esc(r.assignment_type)}` : '';
         return `
           <div class="wp-review">
             <div class="wp-review__top">
-              <span class="wp-review__stars">${starString(Number(r.rating || 0))}</span>
+              <span class="wp-review__who">${who}${onWhat}</span>
               <span class="wp-review__date">${esc(d)}</span>
             </div>
+            <div class="wp-review__stars">${starString(Number(r.rating || 0))}</div>
             ${r.review_text ? `<div class="wp-review__text">${esc(r.review_text)}</div>` : ''}
           </div>
         `;
