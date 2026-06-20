@@ -185,9 +185,8 @@ const base = '/ThesisArcPro';
         const completed = s.completed_orders || 0;
         const stars = rating ? '★'.repeat(Math.round(Number(rating))) : '';
 
-        const photoBase = 'https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/';
         const photoHtml = w.photo_url
-          ? `<img class="ws__card-photo" src="${photoBase}${w.photo_url}" alt="${esc(w.full_name || '')}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="ws__card-placeholder" style="display:none;">👤</div>`
+          ? `<img class="ws__card-photo" src="${w.photo_url}" alt="${esc(w.full_name || '')}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="ws__card-placeholder" style="display:none;">👤</div>`
           : `<div class="ws__card-placeholder">👤</div>`;
 
         return `
