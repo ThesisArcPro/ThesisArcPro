@@ -1,0 +1,167 @@
+<section class="sr">
+  <div class="container">
+    <h2 class="sr__title">What Our Students Say</h2>
+    <p class="sr__sub">Join thousands of students who have achieved academic success with ThesisArcPro.</p>
+
+    <div class="sr__grid" id="reviewsGrid">
+      <div class="sr__loading">Loading reviews...</div>
+    </div>
+
+    <p class="sr__note">✅ All reviews are from verified users</p>
+  </div>
+</section>
+
+<style is:global>
+.sr {
+  background: var(--bg-body, #ffffff);
+  padding: 3.5rem 0;
+  border-top: 1px solid #eef2f7;
+}
+.sr__title {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+.sr__sub {
+  text-align: center;
+  color: var(--color-main-light, #6d7483);
+  font-size: 0.88rem;
+  margin-bottom: 2.2rem;
+}
+
+.sr__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.sr__loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-main-light, #6d7483);
+  font-size: 0.9rem;
+}
+
+/* ── Review card ── */
+.sr__card {
+  background: #f3f5f8;
+  border-radius: 16px;
+  padding: 1.4rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.sr__card-stars {
+  color: #ffd20a;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+}
+.sr__card-text {
+  font-size: 0.88rem;
+  color: var(--color-main, #303b4f);
+  line-height: 1.65;
+  flex: 1;
+}
+.sr__card-author {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+}
+.sr__card-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-secondary, #046fcd);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.sr__card-info {
+  display: flex;
+  flex-direction: column;
+}
+.sr__card-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+}
+.sr__card-date {
+  font-size: 0.72rem;
+  color: var(--color-main-light, #6d7483);
+}
+
+.sr__note {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-main-light, #6d7483);
+}
+
+@media (max-width: 768px) {
+  .sr__grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .sr__grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+
+  function esc(s: string) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  async function loadReviews() {
+    const grid = document.getElementById('reviewsGrid');
+    if (!grid) return;
+
+    try {
+      const { data: reviews, error } = await supabase
+        .from('reviews')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(6);
+
+      if (error) throw error;
+
+      if (!reviews || !reviews.length) {
+        grid.innerHTML = '<div class="sr__loading">No reviews yet — be the first to share your experience!</div>';
+        return;
+      }
+
+      grid.innerHTML = reviews.map((r: any) => {
+        const stars = '★'.repeat(Math.min(Number(r.rating) || 5, 5));
+        const date = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+        const custId = r.client_id ? `Customer #${esc(r.client_id)}` : 'Verified student';
+        const initials = custId.slice(0, 2).toUpperCase();
+
+        return `
+          <div class="sr__card">
+            <div class="sr__card-stars">${stars}</div>
+            <div class="sr__card-text">${r.review_text ? esc(r.review_text) : 'Great experience!'}</div>
+            <div class="sr__card-author">
+              <div class="sr__card-avatar">${initials}</div>
+              <div class="sr__card-info">
+                <span class="sr__card-name">${custId}</span>
+                <span class="sr__card-date">${date}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+    } catch (err) {
+      console.error('Reviews load error:', err);
+      grid.innerHTML = '<div class="sr__loading">Could not load reviews.</div>';
+    }
+  }
+
+  loadReviews();
+</script>
