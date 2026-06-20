@@ -76,6 +76,23 @@ const base = '/ThesisArcPro';
       </div>
 
       <div class="form-group">
+        <label>Highlights</label>
+        <textarea id="highlights" rows="3" placeholder="One per line, e.g.&#10;10+ yrs experience&#10;Draft development consulting&#10;Outline & thesis guidance"></textarea>
+        <span class="input-note">Capability tags shown on the profile. Put each on its own line (or separate with commas).</span>
+      </div>
+
+      <div class="form-group">
+        <label>Writing Sample (optional)</label>
+        <div class="current-photo" id="currentSample" style="display:none;">
+          <span id="currentSampleName">📄 A sample is attached</span>
+        </div>
+        <input type="text" id="sampleName" placeholder="Sample title, e.g. Sustainable Marketing Practices" />
+        <input type="file" id="sampleInput" accept=".pdf,.doc,.docx" style="margin-top:0.5rem;" />
+        <span class="input-note">A public portfolio document. Uploading a new file replaces the old one.</span>
+        <div class="upload-progress" id="sampleProgress" style="display:none;">⏳ Uploading sample…</div>
+      </div>
+
+      <div class="form-group">
         <label>Photo</label>
         <div class="current-photo" id="currentPhoto" style="display:none;">
           <img id="currentPhotoImg" src="" alt="" />
@@ -283,8 +300,21 @@ const base = '/ThesisArcPro';
     (document.getElementById('credentials') as HTMLInputElement).value = writer?.credentials || '';
     (document.getElementById('specialties') as HTMLInputElement).value = writer?.specialties || '';
     (document.getElementById('bio') as HTMLTextAreaElement).value = writer?.bio || '';
+    (document.getElementById('highlights') as HTMLTextAreaElement).value = writer?.highlights || '';
+    (document.getElementById('sampleName') as HTMLInputElement).value = writer?.sample_name || '';
     (document.getElementById('isActive') as HTMLInputElement).checked = writer ? !!writer.is_active : true;
     (document.getElementById('photoInput') as HTMLInputElement).value = '';
+    (document.getElementById('sampleInput') as HTMLInputElement).value = '';
+    const curSample = document.getElementById('currentSample');
+    const curSampleName = document.getElementById('currentSampleName');
+    if (curSample && curSampleName) {
+      if (writer?.sample_url) {
+        curSampleName.textContent = '📄 Attached: ' + (writer.sample_name || 'sample');
+        curSample.style.display = 'flex';
+      } else {
+        curSample.style.display = 'none';
+      }
+    }
 
     const currentPhoto = document.getElementById('currentPhoto');
     const currentPhotoImg = document.getElementById('currentPhotoImg') as HTMLImageElement;
@@ -344,6 +374,27 @@ const base = '/ThesisArcPro';
         if (progress) progress.style.display = 'none';
       }
 
+      // Upload a new sample file if chosen
+      let sampleUrl: string | null = null;
+      let sampleName: string | null = (document.getElementById('sampleName') as HTMLInputElement).value.trim() || null;
+      if (editingId) {
+        const ex = writers.find(w => String(w.id) === editingId);
+        sampleUrl = ex?.sample_url || null;
+      }
+      const sampleInput = document.getElementById('sampleInput') as HTMLInputElement;
+      const sampleFile = sampleInput.files && sampleInput.files[0];
+      if (sampleFile) {
+        const sp = document.getElementById('sampleProgress');
+        if (sp) sp.style.display = 'block';
+        const safe = sampleFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const spath = `${Date.now()}_${safe}`;
+        const { error: sErr } = await supabase.storage.from('writer-samples').upload(spath, sampleFile, { upsert: true });
+        if (sErr) throw sErr;
+        sampleUrl = spath;
+        if (!sampleName) sampleName = sampleFile.name;
+        if (sp) sp.style.display = 'none';
+      }
+
       const payload: any = {
         full_name: fullName,
         years_experience: (document.getElementById('yearsExperience') as HTMLInputElement).value
@@ -352,6 +403,9 @@ const base = '/ThesisArcPro';
         credentials: (document.getElementById('credentials') as HTMLInputElement).value.trim() || null,
         specialties: (document.getElementById('specialties') as HTMLInputElement).value.trim() || null,
         bio: (document.getElementById('bio') as HTMLTextAreaElement).value.trim() || null,
+        highlights: (document.getElementById('highlights') as HTMLTextAreaElement).value.trim() || null,
+        sample_url: sampleUrl,
+        sample_name: sampleName,
         is_active: (document.getElementById('isActive') as HTMLInputElement).checked,
         photo_url: photoUrl
       };

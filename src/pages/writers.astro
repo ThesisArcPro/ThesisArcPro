@@ -25,7 +25,7 @@ const base = '/ThesisArcPro';
           <p>Check back shortly to meet the team.</p>
         </div>
 
-        <div id="writersGrid" class="writers-grid" style="display:none;"></div>
+        <div id="writersList" class="writers-list" style="display:none;"></div>
 
       </div>
     </section>
@@ -59,62 +59,79 @@ const base = '/ThesisArcPro';
 .wp-modal { position: fixed; inset: 0; z-index: 20000; display: none; align-items: center; justify-content: center; padding: 1rem; }
 .wp-modal.open { display: flex; }
 .wp-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); }
-.wp-box { position: relative; z-index: 1; background: white; border-radius: 16px; padding: 2rem; max-width: 540px; width: 100%; max-height: 88vh; overflow-y: auto; }
-.wp-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; }
+.wp-box { position: relative; z-index: 1; background: white; border-radius: 16px; padding: 2rem; max-width: 560px; width: 100%; max-height: 88vh; overflow-y: auto; }
+.wp-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; z-index: 2; }
 </style>
 
 <style is:global>
-  .writers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.2rem; }
+  .writers-list { display: flex; flex-direction: column; gap: 1rem; max-width: 880px; margin: 0 auto; }
 
-  /* CARD */
-  .wcard {
+  /* HORIZONTAL ROW CARD */
+  .wrow {
     background: white;
     border: 1px solid rgba(0,0,0,0.07);
-    border-radius: 16px;
-    padding: 1.4rem;
+    border-radius: 14px;
+    padding: 1.3rem 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
     cursor: pointer;
     transition: all 0.18s ease;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
-  .wcard:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.14); }
+  .wrow:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(-2px); }
 
-  .wcard__top { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1rem; }
-  .wcard__avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #94a3b8; }
-  .wcard__name { font-weight: 800; font-size: 1.05rem; color: #0f172a; display: flex; align-items: center; gap: 0.35rem; }
-  .wcard__verified { color: #3b82f6; font-size: 0.9rem; }
-  .wcard__rating { display: flex; align-items: center; gap: 0.35rem; margin-top: 0.25rem; font-size: 0.85rem; }
-  .wcard__stars { color: #fbbf24; letter-spacing: 1px; }
-  .wcard__rating-num { font-weight: 700; color: #0f172a; }
-  .wcard__reviews { color: #64748b; }
-  .wcard__new { display: inline-block; background: #eef2ff; color: #6366f1; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 4px; margin-top: 0.3rem; }
+  .wrow__id { display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0; }
+  .wrow__avatar { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #94a3b8; position: relative; }
+  .wrow__name { font-weight: 800; font-size: 1.02rem; color: #0f172a; display: flex; align-items: center; gap: 0.35rem; }
+  .wrow__verified { color: #3b82f6; font-size: 0.9rem; }
+  .wrow__edu { color: #64748b; font-size: 0.8rem; margin-top: 0.15rem; }
 
-  .wcard__orders { font-size: 0.95rem; color: #0f172a; margin-bottom: 0.8rem; }
-  .wcard__orders strong { font-weight: 800; }
-  .wcard__orders span { color: #64748b; font-weight: 500; }
+  .wrow__stat { text-align: center; flex-shrink: 0; padding: 0 0.6rem; }
+  .wrow__stat-label { font-size: 0.68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.2rem; }
+  .wrow__stat-val { font-size: 0.95rem; font-weight: 800; color: #0f172a; }
+  .wrow__stat-val .star { color: #fbbf24; font-size: 0.85rem; }
+  .wrow__new { display: inline-block; background: #eef2ff; color: #6366f1; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; }
 
-  .wcard__tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .wtag { background: #f1f5f9; color: #475569; font-size: 0.78rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 16px; }
+  .wrow__cta { flex-shrink: 0; }
+  .wrow__btn { background: #c5a059; color: #0f172a; border: none; padding: 0.6rem 1.3rem; border-radius: 8px; font-size: 0.83rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+  .wrow__btn:hover { background: #d4b06a; }
+
+  @media (max-width: 680px) {
+    .wrow { flex-wrap: wrap; gap: 1rem; }
+    .wrow__id { flex: 1 1 100%; }
+    .wrow__stat { flex: 1; padding: 0; }
+    .wrow__cta { flex: 1 1 100%; }
+    .wrow__btn { width: 100%; }
+  }
 
   /* PROFILE POPUP */
   .wp-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.3rem; padding-right: 2rem; }
-  .wp-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #94a3b8; flex-shrink: 0; }
-  .wp-name { font-weight: 800; font-size: 1.3rem; color: #0f172a; display: flex; align-items: center; gap: 0.4rem; }
+  .wp-avatar { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.9rem; color: #94a3b8; flex-shrink: 0; }
+  .wp-name { font-weight: 800; font-size: 1.35rem; color: #0f172a; display: flex; align-items: center; gap: 0.4rem; }
   .wp-verified { color: #3b82f6; font-size: 1rem; }
   .wp-rating { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem; font-size: 0.9rem; }
   .wp-stars { color: #fbbf24; letter-spacing: 1px; }
   .wp-rating-num { font-weight: 700; color: #0f172a; }
   .wp-reviews { color: #64748b; }
 
-  .wp-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 1.2rem 0; margin-bottom: 1.3rem; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+  .wp-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 1.2rem 0; margin-bottom: 1.3rem; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
   .wp-stat { text-align: center; }
   .wp-stat__num { font-size: 1.4rem; font-weight: 800; color: #0f172a; }
-  .wp-stat__label { font-size: 0.72rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem; }
+  .wp-stat__label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem; }
 
   .wp-section { margin-bottom: 1.3rem; }
   .wp-section__title { font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 0.6rem; }
   .wp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .wtag { background: #f1f5f9; color: #475569; font-size: 0.78rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 16px; }
   .wp-edu { color: #334155; font-size: 0.9rem; line-height: 1.6; }
   .wp-bio { color: #475569; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap; }
+
+  .wp-sample { display: flex; align-items: center; gap: 0.8rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.9rem 1rem; }
+  .wp-sample__icon { font-size: 1.4rem; }
+  .wp-sample__name { flex: 1; font-size: 0.88rem; font-weight: 600; color: #0f172a; }
+  .wp-sample__btn { background: #0f172a; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; text-decoration: none; white-space: nowrap; }
+  .wp-sample__btn:hover { background: #1e293b; }
 
   .wp-reviews-list { display: flex; flex-direction: column; gap: 0.8rem; }
   .wp-review { background: #f8fafc; border-radius: 10px; padding: 0.9rem 1rem; }
@@ -148,21 +165,20 @@ const base = '/ThesisArcPro';
     return '★★★★★'.slice(0, full) + '☆☆☆☆☆'.slice(0, 5 - full);
   }
 
-  function tagsFrom(specialties: string) {
-    if (!specialties) return [];
-    return specialties.split(',').map(s => s.trim()).filter(Boolean);
+  // Split a comma OR newline separated string into trimmed items
+  function listFrom(str: string) {
+    if (!str) return [];
+    return str.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
   }
 
   async function load() {
     try {
-      // Writers (public read of active writers)
       const wRes = await fetch(
         `${SUPABASE_URL}/rest/v1/writers?is_active=eq.true&order=created_at.desc`,
         { headers: { 'apikey': SUPABASE_KEY } }
       );
       writers = await wRes.json();
 
-      // Aggregate stats via the safe function (no private data exposed)
       try {
         const sRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/writer_stats`, {
           method: 'POST',
@@ -170,14 +186,10 @@ const base = '/ThesisArcPro';
           body: '{}'
         });
         const stats = await sRes.json();
-        if (Array.isArray(stats)) {
-          stats.forEach((s: any) => { statsById[String(s.writer_id)] = s; });
-        }
-      } catch (e) {
-        console.warn('Stats unavailable', e);
-      }
+        if (Array.isArray(stats)) stats.forEach((s: any) => { statsById[String(s.writer_id)] = s; });
+      } catch (e) { console.warn('Stats unavailable', e); }
 
-      renderGrid();
+      renderList();
     } catch (err) {
       console.error(err);
       document.getElementById('loadingState')!.style.display = 'none';
@@ -185,60 +197,66 @@ const base = '/ThesisArcPro';
     }
   }
 
-  function renderGrid() {
+  function renderList() {
     const loading = document.getElementById('loadingState')!;
     const empty = document.getElementById('emptyState')!;
-    const grid = document.getElementById('writersGrid')!;
+    const list = document.getElementById('writersList')!;
     loading.style.display = 'none';
 
     if (!writers.length) {
       empty.style.display = 'block';
-      grid.style.display = 'none';
+      list.style.display = 'none';
       return;
     }
 
     empty.style.display = 'none';
-    grid.style.display = 'grid';
+    list.style.display = 'flex';
 
-    grid.innerHTML = writers.map(w => {
+    list.innerHTML = writers.map(w => {
       const st = statsById[String(w.id)] || {};
       const completed = Number(st.completed_orders || 0);
       const reviewCount = Number(st.review_count || 0);
       const avg = st.avg_rating != null ? Number(st.avg_rating) : 0;
-      const tags = tagsFrom(w.specialties);
       const avatar = w.photo_url
-        ? `<img class="wcard__avatar" src="${esc(w.photo_url)}" alt="${esc(w.full_name)}" />`
-        : `<div class="wcard__avatar">👤</div>`;
+        ? `<img class="wrow__avatar" src="${esc(w.photo_url)}" alt="${esc(w.full_name)}" />`
+        : `<div class="wrow__avatar">👤</div>`;
+      const eduExp = [w.education_level, w.years_experience ? `${w.years_experience}+ yrs` : ''].filter(Boolean).join(' · ');
 
-      const ratingBlock = reviewCount > 0
-        ? `<div class="wcard__rating">
-             <span class="wcard__stars">${starString(avg)}</span>
-             <span class="wcard__rating-num">${avg.toFixed(2)}</span>
-             <span class="wcard__reviews">(${reviewCount} review${reviewCount === 1 ? '' : 's'})</span>
+      const ratingStat = reviewCount > 0
+        ? `<div class="wrow__stat">
+             <div class="wrow__stat-label">Rating</div>
+             <div class="wrow__stat-val"><span class="star">★</span> ${avg.toFixed(1)}</div>
+           </div>
+           <div class="wrow__stat">
+             <div class="wrow__stat-label">Reviews</div>
+             <div class="wrow__stat-val">${reviewCount}</div>
            </div>`
-        : `<span class="wcard__new">New writer</span>`;
-
-      const tagHtml = tags.slice(0, 3).map(t => `<span class="wtag">${esc(t)}</span>`).join('')
-        + (tags.length > 3 ? `<span class="wtag">+${tags.length - 3} more</span>` : '');
+        : `<div class="wrow__stat"><span class="wrow__new">New writer</span></div>`;
 
       return `
-        <div class="wcard" data-id="${esc(w.id)}">
-          <div class="wcard__top">
+        <div class="wrow" data-id="${esc(w.id)}">
+          <div class="wrow__id">
             ${avatar}
             <div>
-              <div class="wcard__name">${esc(w.full_name)} <span class="wcard__verified">✔</span></div>
-              ${ratingBlock}
+              <div class="wrow__name">${esc(w.full_name)} <span class="wrow__verified">✔</span></div>
+              <div class="wrow__edu">${esc(eduExp || 'Qualified academic writer')}</div>
             </div>
           </div>
-          <div class="wcard__orders"><strong>${completed}</strong> <span>completed order${completed === 1 ? '' : 's'}</span></div>
-          <div class="wcard__tags">${tagHtml}</div>
+          ${ratingStat}
+          <div class="wrow__stat">
+            <div class="wrow__stat-label">Completed</div>
+            <div class="wrow__stat-val">${completed}</div>
+          </div>
+          <div class="wrow__cta">
+            <button class="wrow__btn">About writer</button>
+          </div>
         </div>
       `;
     }).join('');
 
-    grid.querySelectorAll('.wcard').forEach(card => {
-      card.addEventListener('click', () => {
-        const id = (card as HTMLElement).dataset.id;
+    list.querySelectorAll('.wrow').forEach(row => {
+      row.addEventListener('click', () => {
+        const id = (row as HTMLElement).dataset.id;
         const w = writers.find(x => String(x.id) === id);
         if (w) openProfile(w);
       });
@@ -250,7 +268,8 @@ const base = '/ThesisArcPro';
     const completed = Number(st.completed_orders || 0);
     const reviewCount = Number(st.review_count || 0);
     const avg = st.avg_rating != null ? Number(st.avg_rating) : 0;
-    const tags = tagsFrom(w.specialties);
+    const specialties = listFrom(w.specialties);
+    const highlights = listFrom(w.highlights);
 
     const avatar = w.photo_url
       ? `<img class="wp-avatar" src="${esc(w.photo_url)}" alt="${esc(w.full_name)}" />`
@@ -262,7 +281,23 @@ const base = '/ThesisArcPro';
            <span class="wp-rating-num">${avg.toFixed(2)}</span>
            <span class="wp-reviews">(${reviewCount} review${reviewCount === 1 ? '' : 's'})</span>
          </div>`
-      : `<div class="wp-rating"><span class="wcard__new">New writer — no reviews yet</span></div>`;
+      : `<div class="wp-rating"><span class="wrow__new">New writer — no reviews yet</span></div>`;
+
+    // Sample download (public bucket → public URL)
+    let sampleBlock = '';
+    if (w.sample_url) {
+      const { data: pub } = supabase.storage.from('writer-samples').getPublicUrl(w.sample_url);
+      const sampleName = w.sample_name || 'Writing sample';
+      sampleBlock = `
+        <div class="wp-section">
+          <div class="wp-section__title">Writing sample</div>
+          <div class="wp-sample">
+            <span class="wp-sample__icon">📄</span>
+            <span class="wp-sample__name">${esc(sampleName)}</span>
+            <a class="wp-sample__btn" href="${esc(pub.publicUrl)}" target="_blank" rel="noopener">View sample</a>
+          </div>
+        </div>`;
+    }
 
     document.getElementById('profileContent')!.innerHTML = `
       <div class="wp-head">
@@ -283,19 +318,27 @@ const base = '/ThesisArcPro';
           <div class="wp-stat__label">Years experience</div>
         </div>
         <div class="wp-stat">
-          <div class="wp-stat__num">${reviewCount}</div>
-          <div class="wp-stat__label">Reviews</div>
-        </div>
-        <div class="wp-stat">
           <div class="wp-stat__num">${avg > 0 ? avg.toFixed(2) : '—'}</div>
           <div class="wp-stat__label">Avg rating</div>
         </div>
       </div>
 
-      ${tags.length ? `
+      ${w.bio ? `
+        <div class="wp-section">
+          <div class="wp-section__title">About me</div>
+          <div class="wp-bio">${esc(w.bio)}</div>
+        </div>` : ''}
+
+      ${highlights.length ? `
+        <div class="wp-section">
+          <div class="wp-section__title">Highlights</div>
+          <div class="wp-tags">${highlights.map(h => `<span class="wtag">${esc(h)}</span>`).join('')}</div>
+        </div>` : ''}
+
+      ${specialties.length ? `
         <div class="wp-section">
           <div class="wp-section__title">Skilled in</div>
-          <div class="wp-tags">${tags.map(t => `<span class="wtag">${esc(t)}</span>`).join('')}</div>
+          <div class="wp-tags">${specialties.map(t => `<span class="wtag">${esc(t)}</span>`).join('')}</div>
         </div>` : ''}
 
       ${(w.education_level || w.credentials) ? `
@@ -304,14 +347,10 @@ const base = '/ThesisArcPro';
           <div class="wp-edu">${esc([w.education_level, w.credentials].filter(Boolean).join(' · '))}</div>
         </div>` : ''}
 
-      ${w.bio ? `
-        <div class="wp-section">
-          <div class="wp-section__title">Bio</div>
-          <div class="wp-bio">${esc(w.bio)}</div>
-        </div>` : ''}
+      ${sampleBlock}
 
       <div class="wp-section">
-        <div class="wp-section__title">Recent reviews</div>
+        <div class="wp-section__title">Customer reviews</div>
         <div class="wp-reviews-list" id="wpReviews">
           <div class="wp-no-reviews">Loading reviews…</div>
         </div>
@@ -322,7 +361,6 @@ const base = '/ThesisArcPro';
     loadWriterReviews(w.id);
   }
 
-  // Load this writer's reviews via the safe function
   async function loadWriterReviews(writerId: any) {
     const box = document.getElementById('wpReviews');
     if (!box) return;
