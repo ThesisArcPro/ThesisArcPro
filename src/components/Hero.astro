@@ -64,27 +64,24 @@ const writersList = writers || [];
         <h2 class="writers-title">Top essay writers ready to help you</h2>
         <p class="writers-subtitle">500+ writers who always follow instructions. <a href="#" class="writers-link">See all writers →</a></p>
 
-        <div class="swiper writers-carousel">
-          <div class="swiper-wrapper">
+        <div class="writers-carousel-wrapper">
+          <div class="writers-carousel">
             {writersList.map((writer) => (
-              <div class="swiper-slide">
-                <div class="writer-card">
-                  <img src={writer.photo_url} alt={writer.full_name} class="writer-photo" />
-                  <div class="writer-info">
-                    <h3 class="writer-name">{writer.full_name}</h3>
-                    <div class="writer-rating">
-                      <span class="rating-stars">★ {writer.rating || 'N/A'}</span>
-                      <span class="rating-count">({writer.completed_orders || 0} orders)</span>
-                    </div>
-                    <p class="writer-specialty">{writer.specialties}</p>
+              <div class="writer-card">
+                <img src={writer.photo_url} alt={writer.full_name} class="writer-photo" />
+                <div class="writer-info">
+                  <h3 class="writer-name">{writer.full_name}</h3>
+                  <div class="writer-rating">
+                    <span class="rating-stars">★ {writer.rating || 'N/A'}</span>
+                    <span class="rating-count">({writer.completed_orders || 0} orders)</span>
                   </div>
+                  <p class="writer-specialty">{writer.specialties}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div class="swiper-pagination"></div>
-          <button class="swiper-button-prev"></button>
-          <button class="swiper-button-next"></button>
+          <button class="carousel-nav carousel-prev" aria-label="Previous writers">‹</button>
+          <button class="carousel-nav carousel-next" aria-label="Next writers">›</button>
         </div>
 
         <div class="writers-cta-wrap">
@@ -263,24 +260,31 @@ const writersList = writers || [];
 }
 .writers-link:hover { color: #0361b3; }
 
-/* ── Swiper Carousel Container ── */
-.writers-carousel {
-  margin-bottom: 1.5rem;
+/* ── Carousel Container (CSS scroll-snap, no dependencies) ── */
+.writers-carousel-wrapper {
   position: relative;
+  margin-bottom: 1.5rem;
 }
 
-.swiper-wrapper {
+.writers-carousel {
   display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 8px 0;
+  margin: 0 -1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  scrollbar-width: none;
 }
 
-.swiper-slide {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+.writers-carousel::-webkit-scrollbar {
+  display: none;
 }
 
-/* ── Writer Card ── */
 .writer-card {
+  flex: 0 0 calc(50% - 8px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -289,8 +293,8 @@ const writersList = writers || [];
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
-  max-width: 280px;
-  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .writer-card:hover {
@@ -300,7 +304,7 @@ const writersList = writers || [];
 
 .writer-photo {
   width: 100%;
-  height: 280px;
+  height: 220px;
   object-fit: cover;
   background: #f0f0f0;
 }
@@ -344,25 +348,11 @@ const writersList = writers || [];
   margin: 0;
 }
 
-/* ── Swiper Pagination & Navigation ── */
-.swiper-pagination {
-  position: relative;
-  margin-top: 1rem;
-}
-
-.swiper-pagination-bullet {
-  background: var(--color-main-light, #6d7483);
-  opacity: 0.5;
-  transition: all 0.3s;
-}
-
-.swiper-pagination-bullet-active {
-  background: var(--color-secondary, #046fcd);
-  opacity: 1;
-}
-
-.swiper-button-prev,
-.swiper-button-next {
+/* ── Carousel Navigation Buttons ── */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   width: 36px;
   height: 36px;
   background: var(--color-secondary, #046fcd);
@@ -370,23 +360,25 @@ const writersList = writers || [];
   color: #ffffff;
   border: none;
   cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: background 0.2s;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
-.swiper-button-prev:hover,
-.swiper-button-next:hover {
+.carousel-nav:hover {
   background: #0361b3;
 }
 
-.swiper-button-prev::after,
-.swiper-button-next::after {
-  font-size: 1.2rem;
-  font-weight: bold;
+.carousel-prev {
+  left: -18px;
+}
+
+.carousel-next {
+  right: -18px;
 }
 
 /* ── Writers CTA Section ── */
@@ -435,13 +427,28 @@ const writersList = writers || [];
   justify-content: center;
 }
 
-/* ── Mobile Responsive ── */
-@media (max-width: 1024px) {
-  .writers-section {
-    max-width: 100%;
+/* ── Tablet & Desktop ── */
+@media (min-width: 768px) {
+  .writer-card {
+    flex: 0 0 calc(33.333% - 11px);
+  }
+  
+  .carousel-prev {
+    left: -50px;
+  }
+  
+  .carousel-next {
+    right: -50px;
   }
 }
 
+@media (min-width: 1024px) {
+  .writer-card {
+    flex: 0 0 calc(25% - 12px);
+  }
+}
+
+/* ── Mobile ── */
 @media (max-width: 640px) {
   .hero { padding: 7.5rem 0 3rem; }
   .hero__headline { font-size: 1.8rem; }
@@ -461,56 +468,47 @@ const writersList = writers || [];
     font-size: 0.8rem;
   }
 
-  .writer-card {
-    max-width: 100%;
-  }
-
   .writer-photo {
-    height: 200px;
+    height: 180px;
   }
 
-  .swiper-button-prev,
-  .swiper-button-next {
+  .carousel-prev,
+  .carousel-next {
     width: 32px;
     height: 32px;
+    font-size: 1.2rem;
+  }
+
+  .carousel-prev {
+    left: -16px;
+  }
+
+  .carousel-next {
+    right: -16px;
   }
 }
 </style>
 
 <script>
-  import Swiper from 'swiper';
-  import { Pagination, Navigation } from 'swiper/modules';
-  import 'swiper/css';
-  import 'swiper/css/pagination';
-  import 'swiper/css/navigation';
   import { supabase } from '../lib/supabase.js';
 
-  // Initialize Swiper
-  const swiper = new Swiper('.writers-carousel', {
-    modules: [Pagination, Navigation],
-    slidesPerView: 1,
-    spaceBetween: 20,
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    breakpoints: {
-      640: {
-        slidesPerView: 2,
-        spaceBetween: 16,
-      },
-      1024: {
-        slidesPerView: 4,
-        spaceBetween: 20,
-      },
-    },
-    loop: true,
-    autoplay: false,
-  });
+  // Carousel navigation
+  const carouselEl = document.querySelector('.writers-carousel');
+  const prevBtn = document.querySelector('.carousel-prev');
+  const nextBtn = document.querySelector('.carousel-next');
+
+  if (carouselEl && prevBtn && nextBtn) {
+    const cardWidth = carouselEl.querySelector('.writer-card')?.offsetWidth || 280;
+    const gap = 16;
+
+    prevBtn.addEventListener('click', () => {
+      carouselEl.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      carouselEl.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+    });
+  }
 
   // Auth gate logic
   const { data: { session } } = await supabase.auth.getSession();
