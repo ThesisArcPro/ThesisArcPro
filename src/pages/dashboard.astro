@@ -775,6 +775,7 @@ const base = '/ThesisArcPro';
   let allOrders: any[] = [];
   let currentTab = 'in_progress';
   let currentSession: any = null;
+  let myClientId: string | null = null;
 
   // Track the review popup state
   let reviewOrderNumber = '';
@@ -819,6 +820,15 @@ ${String(err?.message || err)}
       const { data: { session } } = await withTimeout(supabase.auth.getSession(), 10000, 'Session check');
       if (!session) { window.location.replace(`${base}/login/`); return; }
       currentSession = session;
+      // Look up this client's own client_id from their profile (for reviews)
+      try {
+        const pr = await fetch(
+          `${SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(session.user.email)}&select=client_id`,
+          { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
+        );
+        const pdata = await pr.json();
+        myClientId = pdata[0]?.client_id || null;
+      } catch (e) { console.warn('Could not load client_id', e); }
       await loadOrders(session);
     } catch (err) {
       showDebugError(err);
@@ -1133,7 +1143,7 @@ ${String(err?.message || err)}
           closeModal();
           reviewOrderNumber = order.order_number || String(order.id);
           reviewClientEmail = currentSession?.user?.email || '';
-          reviewClientId = order.client_id || '';
+          reviewClientId = myClientId || order.client_id || '';
           openReviewModal();
         } else {
           actionMsg.textContent = 'Something went wrong. Please try again or contact support.';
