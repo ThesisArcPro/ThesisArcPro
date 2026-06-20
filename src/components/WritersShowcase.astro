@@ -24,7 +24,6 @@ const base = '/ThesisArcPro';
   padding: 0 0 3.5rem;
 }
 
-/* Gold separator line at top */
 .ws__sep {
   width: 100%;
   height: 3px;
@@ -48,7 +47,6 @@ const base = '/ThesisArcPro';
   margin-bottom: 2.2rem;
 }
 
-/* ── 4-card grid ── */
 .ws__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -64,7 +62,6 @@ const base = '/ThesisArcPro';
   font-size: 0.9rem;
 }
 
-/* ── Writer card ── */
 .ws__card {
   display: block;
   border-radius: var(--border-radius-primary, 16px);
@@ -121,7 +118,6 @@ const base = '/ThesisArcPro';
   color: var(--color-main-light, #6d7483);
 }
 
-/* ── Bottom actions ── */
 .ws__actions {
   text-align: center;
 }
@@ -147,7 +143,6 @@ const base = '/ThesisArcPro';
   color: var(--color-main-light, #6d7483);
 }
 
-/* ── Mobile ── */
 @media (max-width: 900px) {
   .ws__grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -157,8 +152,7 @@ const base = '/ThesisArcPro';
 </style>
 
 <script>
-  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlaHZ3dnVqdWFtZWhvYW5mb21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0NTMyNjcsImV4cCI6MjA2MjAyOTI2N30.sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+  import { supabase } from '../lib/supabase.js';
 
   function esc(s: string) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
@@ -167,26 +161,23 @@ const base = '/ThesisArcPro';
     if (!grid) return;
 
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/writers?is_active=eq.true&order=full_name.asc&limit=4`,
-        { headers: { 'apikey': SUPABASE_KEY } }
-      );
-      const writers = await res.json();
+      const { data: writers, error } = await supabase
+        .from('writers')
+        .select('*')
+        .eq('is_active', true)
+        .order('full_name')
+        .limit(4);
 
-      const statsRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/rpc/writer_stats`,
-        { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY }, body: '{}' }
-      );
-      const stats = await statsRes.json();
+      if (error) throw error;
+
+      const { data: stats } = await supabase.rpc('writer_stats');
       const statsMap: Record<string, any> = {};
       if (Array.isArray(stats)) stats.forEach((s: any) => { statsMap[s.writer_id] = s; });
 
-      if (!writers.length) {
+      if (!writers || !writers.length) {
         grid.innerHTML = '<div class="ws__loading">Our writers are being onboarded — check back soon!</div>';
         return;
       }
-
-      const photoBase = `${SUPABASE_URL}/storage/v1/object/public/writer-photos/`;
 
       grid.innerHTML = writers.slice(0, 4).map((w: any) => {
         const s = statsMap[w.id] || {};
@@ -195,7 +186,7 @@ const base = '/ThesisArcPro';
         const stars = rating ? '★'.repeat(Math.round(Number(rating))) : '';
 
         const photoHtml = w.photo_url
-          ? `<img class="ws__card-photo" src="${photoBase}${encodeURIComponent(w.photo_url)}" alt="${esc(w.full_name || '')}" loading="lazy" />`
+          ? `<img class="ws__card-photo" src="${supabase.storage.from('writer-photos').getPublicUrl(w.photo_url).data.publicUrl}" alt="${esc(w.full_name || '')}" loading="lazy" />`
           : `<div class="ws__card-placeholder">👤</div>`;
 
         return `
