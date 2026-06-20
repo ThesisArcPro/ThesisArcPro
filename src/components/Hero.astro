@@ -3,73 +3,204 @@ const base = '/ThesisArcPro';
 ---
 <section class="hero">
   <div class="container hero__inner">
-    <div class="hero__content">
-      <p class="hero__eyebrow">Trusted by Students Worldwide</p>
-      <h1>Expert Academic Writing & Research Support</h1>
-      <p class="hero__sub">From high school essays to PhD dissertations — we provide expert guidance, writing support, and professional editing at every academic level.</p>
-      <div class="hero__buttons">
-        <a href="#" class="btn-primary auth-gate">Book a Free Consultation</a>
-        <a href="#" class="btn-hero-secondary auth-gate">Get a Free Quote</a>
-      </div>
-      <div class="hero__trust">
-        <div class="trust-item">
+
+    <h1 class="hero__headline">Expert Academic Writing<br/>& Research Support</h1>
+    <p class="hero__sub">From high school essays to PhD dissertations — we provide expert guidance, writing support, and professional editing at every academic level.</p>
+
+    <!-- Value badge (EduBirdie has their "$8/page" strip — this is yours) -->
+    <div class="hero__value-badge">
+      <span class="vb-highlight">From $5/page</span>
+      <span class="vb-sep">·</span>
+      <span class="vb-text">Any deadline or complexity</span>
+      <a href="#" class="vb-cta auth-gate">Get a Free Quote →</a>
+    </div>
+
+    <!-- CTA -->
+    <a href="#" class="hero__cta auth-gate">Place Your Order</a>
+
+    <!-- Trust strip -->
+    <div class="hero__trust">
+      <div class="trust-item">
+        <span class="trust-icon">👩‍🎓</span>
+        <div class="trust-text">
           <span class="trust-number">2,000+</span>
           <span class="trust-label">Students Helped</span>
         </div>
-        <div class="trust-divider"></div>
-        <div class="trust-item">
+      </div>
+      <div class="trust-sep"></div>
+      <div class="trust-item">
+        <span class="trust-icon">✅</span>
+        <div class="trust-text">
           <span class="trust-number">98%</span>
           <span class="trust-label">Satisfaction Rate</span>
         </div>
-        <div class="trust-divider"></div>
-        <div class="trust-item">
+      </div>
+      <div class="trust-sep"></div>
+      <div class="trust-item">
+        <span class="trust-icon">✍️</span>
+        <div class="trust-text">
           <span class="trust-number">50+</span>
           <span class="trust-label">Expert Writers</span>
         </div>
       </div>
     </div>
-    <div class="hero__visual">
-      <img
-        src="/ThesisArcPro/images/hero.svg"
-        alt="Students receiving expert academic writing and dissertation support"
-        width="500"
-        height="400"
-        loading="eager"
-      />
-    </div>
+
+    <!-- Bottom tagline (EduBirdie has "No AI, no shortcuts...") -->
+    <p class="hero__tagline">🛡️ Original, plagiarism-free work — written by real qualified writers, not AI.</p>
+
   </div>
 </section>
 
 <style>
-.hero { background-color: #EEF2FB; padding: 10rem 0 6rem; position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(197,160,89,0.10) 0%, transparent 70%); pointer-events: none; }
-.hero__inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
-.hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.2rem; }
-.hero h1 { color: #1B2A4A; margin-bottom: 1.5rem; }
-.hero__sub { color: #4A5568; font-size: 1.1rem; line-height: 1.8; margin-bottom: 2.5rem; max-width: 520px; }
-.hero__buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
-
-/* Fixed secondary button — was invisible white-on-light; now blue supporting accent */
-.btn-hero-secondary {
-  display: inline-block; background-color: transparent; color: #2563EB;
-  padding: 0.85rem 2rem; border-radius: 4px; font-family: var(--font-body);
-  font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px;
-  border: 2px solid #2563EB; cursor: pointer; transition: all 0.25s ease;
+/* ── Hero: white bg, centered content, matching EduBirdie layout ── */
+.hero {
+  background-color: var(--bg-body, #ffffff);
+  padding: 9rem 0 4rem;
+  text-align: center;
 }
-.btn-hero-secondary:hover { background-color: #2563EB; color: #ffffff; transform: translateY(-2px); }
 
-.hero__trust { display: flex; align-items: center; gap: 1.5rem; }
-.trust-item { display: flex; flex-direction: column; gap: 0.2rem; }
-.trust-number { color: #1B2A4A; font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; line-height: 1; }
-.trust-label { color: #718096; font-size: 0.8rem; letter-spacing: 0.5px; }
-.trust-divider { width: 1px; height: 40px; background-color: #cbd5e1; }
-.hero__visual { display: flex; justify-content: center; align-items: center; position: relative; z-index: 1; }
-.hero__visual img { width: 100%; max-width: 480px; height: auto; filter: drop-shadow(0 16px 32px rgba(27,42,74,0.12)); }
-@media (max-width: 768px) {
-  .hero { padding: 8rem 0 4rem; }
-  .hero__inner { grid-template-columns: 1fr; gap: 3rem; }
-  .hero__visual { display: none; }
+.hero__inner {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Headline ── */
+.hero__headline {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 800;
+  color: var(--color-main, #303b4f);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.hero__sub {
+  color: var(--color-main-light, #6d7483);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 1.8rem;
+  max-width: 560px;
+}
+
+/* ── Value badge (gold strip, like EduBirdie's yellow "$8/page" bar) ── */
+.hero__value-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--color-primary, #C5A059);
+  border-radius: var(--border-radius-button, 8px);
+  padding: 0.65rem 1.2rem;
+  margin-bottom: 1.8rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.vb-highlight {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #303b4f;
+}
+.vb-sep {
+  color: rgba(48,59,79,0.4);
+  font-size: 0.85rem;
+}
+.vb-text {
+  font-size: 0.85rem;
+  color: #303b4f;
+  font-weight: 500;
+}
+.vb-cta {
+  background: #303b4f;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.vb-cta:hover { background: #1a2332; }
+
+/* ── Main CTA button ── */
+.hero__cta {
+  display: inline-block;
+  background: var(--color-secondary, #046fcd);
+  color: #ffffff;
+  padding: 0.9rem 2.5rem;
+  border-radius: var(--border-radius-button, 8px);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  margin-bottom: 2.2rem;
+  box-shadow: 0 4px 14px rgba(4,111,205,0.25);
+}
+.hero__cta:hover {
+  background: #0361b3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(4,111,205,0.35);
+}
+
+/* ── Trust strip ── */
+.hero__trust {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.trust-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.trust-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.trust-number {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  line-height: 1.2;
+}
+.trust-label {
+  font-size: 0.72rem;
+  color: var(--color-main-light, #6d7483);
+}
+.trust-sep {
+  width: 1px;
+  height: 32px;
+  background: var(--color-secondary-lightest, #eef6fb);
+}
+
+/* ── Bottom tagline ── */
+.hero__tagline {
+  font-size: 0.85rem;
+  color: var(--color-main-light, #6d7483);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .hero { padding: 7.5rem 0 3rem; }
+  .hero__headline { font-size: 1.8rem; }
   .hero__trust { gap: 1rem; }
+  .hero__value-badge { flex-direction: column; gap: 0.3rem; padding: 0.8rem 1rem; }
+  .vb-sep { display: none; }
 }
 </style>
 
