@@ -111,7 +111,7 @@ const base = '/ThesisArcPro';
   font-size: 0.8rem;
   margin-bottom: 0.15rem;
 }
-.ws__card-stars { color: #fbbf24; }
+.ws__card-stars { color: #ffd20a; font-size: 0.9rem; }
 .ws__card-score { font-weight: 600; color: var(--color-main, #303b4f); }
 .ws__card-detail {
   font-size: 0.76rem;
@@ -185,8 +185,9 @@ const base = '/ThesisArcPro';
         const completed = s.completed_orders || 0;
         const stars = rating ? '★'.repeat(Math.round(Number(rating))) : '';
 
+        const photoBase = 'https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/';
         const photoHtml = w.photo_url
-          ? `<img class="ws__card-photo" src="${supabase.storage.from('writer-photos').getPublicUrl(w.photo_url).data.publicUrl}" alt="${esc(w.full_name || '')}" loading="lazy" />`
+          ? `<img class="ws__card-photo" src="${photoBase}${w.photo_url}" alt="${esc(w.full_name || '')}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="ws__card-placeholder" style="display:none;">👤</div>`
           : `<div class="ws__card-placeholder">👤</div>`;
 
         return `
