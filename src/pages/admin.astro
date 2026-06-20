@@ -119,41 +119,41 @@ const base = '/ThesisArcPro';
 </BaseLayout>
 
 <style>
-.admin { background: var(--navy); min-height: 100vh; padding: 8rem 0 4rem; }
+.admin { background: #f1f5f9; min-height: 100vh; padding: 8rem 0 4rem; }
 .admin__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-.admin__header h1 { color: var(--white); font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 0.3rem; }
-.admin__header p { color: rgba(255,255,255,0.6); font-size: 0.95rem; }
-.btn-logout { background: none; border: 1.5px solid rgba(255,255,255,0.3); color: white; padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-.btn-logout:hover { background: rgba(255,255,255,0.1); }
+.admin__header h1 { color: #0f172a; font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 0.3rem; }
+.admin__header p { color: #64748b; font-size: 0.95rem; }
+.btn-logout { background: none; border: 1.5px solid #cbd5e1; color: #475569; padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.btn-logout:hover { background: #e2e8f0; }
 
 /* Stat tiles */
 .stat-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
-.stat-tile { background: #141e35; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 1rem 1.2rem; }
-.stat-label { color: rgba(255,255,255,0.45); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.stat-value { color: #f1f5f9; font-size: 1.7rem; font-weight: 800; margin-top: 0.3rem; }
+.stat-tile { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.stat-label { color: #94a3b8; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { color: #0f172a; font-size: 1.7rem; font-weight: 800; margin-top: 0.3rem; }
 .stat-value.stat-new { color: #818cf8; }
 .stat-value.stat-progress { color: #fbbf24; }
 .stat-value.stat-money { color: #4ade80; }
 @media (max-width: 768px) { .stat-tiles { grid-template-columns: repeat(2, 1fr); } }
 
-.controls-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+.controls-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; }
 .admin__tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.tab { background: none; border: none; color: rgba(255,255,255,0.5); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-.tab.active { background: var(--gold); color: var(--navy); }
-.tab:hover:not(.active) { color: white; }
+.tab { background: none; border: none; color: #64748b; padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.tab.active { background: var(--gold); color: #0f172a; }
+.tab:hover:not(.active) { color: #0f172a; background: #e2e8f0; }
 
 .search-wrap { position: relative; width: 260px; max-width: 100%; }
-.search-icon { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: rgba(255,255,255,0.4); }
-.search-input { width: 100%; background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #f1f5f9; border-radius: 6px; padding: 0.5rem 0.8rem 0.5rem 2rem; font-size: 0.85rem; outline: none; transition: 0.2s; }
+.search-icon { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: #94a3b8; }
+.search-input { width: 100%; background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; border-radius: 6px; padding: 0.5rem 0.8rem 0.5rem 2rem; font-size: 0.85rem; outline: none; transition: 0.2s; }
 .search-input:focus { border-color: var(--gold); }
-.search-input::placeholder { color: rgba(255,255,255,0.4); }
+.search-input::placeholder { color: #94a3b8; }
 
-.loading-state { text-align: center; padding: 4rem; color: rgba(255,255,255,0.5); }
+.loading-state { text-align: center; padding: 4rem; color: #64748b; }
 .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.empty-state { text-align: center; padding: 4rem; background: rgba(255,255,255,0.05); border-radius: 16px; }
+.empty-state { text-align: center; padding: 4rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; }
 .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
-.empty-state h3 { color: white; }
+.empty-state h3 { color: #0f172a; }
 
 /* Modal */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 20000; align-items: center; justify-content: center; }
@@ -185,8 +185,8 @@ const base = '/ThesisArcPro';
   .orders-grid { display: flex; flex-direction: column; gap: 0.7rem; }
 
   .order-card {
-    background: #141e35;
-    border: 1px solid rgba(255,255,255,0.08);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 10px;
     padding: 1rem 1.3rem;
     display: flex;
@@ -194,15 +194,16 @@ const base = '/ThesisArcPro';
     align-items: center;
     gap: 1rem;
     transition: all 0.18s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   }
-  .order-card:hover { border-color: rgba(197,160,89,0.55); background: #1a2540; }
+  .order-card:hover { border-color: rgba(197,160,89,0.55); background: #fafafa; }
 
   .order-card__left { flex: 1; min-width: 0; }
-  .order-card__title { color: #f1f5f9; font-weight: 700; font-size: 0.93rem; margin-bottom: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .order-card__email { color: #c5a059; font-size: 0.8rem; margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .order-card__title { color: #0f172a; font-weight: 700; font-size: 0.93rem; margin-bottom: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .order-card__email { color: #b8893a; font-size: 0.8rem; margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .order-card__meta { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
-  .meta-dot { color: rgba(255,255,255,0.2); }
-  .meta-item { color: rgba(255,255,255,0.55); font-size: 0.78rem; }
+  .meta-dot { color: #cbd5e1; }
+  .meta-item { color: #64748b; font-size: 0.78rem; }
 
   .order-card__right { display: flex; align-items: center; gap: 1.4rem; flex-shrink: 0; }
   .order-card__deadline { font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
@@ -210,8 +211,8 @@ const base = '/ThesisArcPro';
   .order-card__deadline.urgent { color: #fb923c; }
   .order-card__deadline.overdue { color: #f87171; }
   .order-card__deadline.none { color: rgba(255,255,255,0.4); }
-  .order-card__amount { color: #f1f5f9; font-weight: 700; font-size: 0.92rem; white-space: nowrap; }
-  .amount-paid { color: rgba(255,255,255,0.4); font-weight: 400; font-size: 0.8rem; }
+  .order-card__amount { color: #0f172a; font-weight: 700; font-size: 0.92rem; white-space: nowrap; }
+  .amount-paid { color: #94a3b8; font-weight: 400; font-size: 0.8rem; }
 
   .status-badge { padding: 0.18rem 0.55rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
   .status-new { background: rgba(99,102,241,0.18); color: #818cf8; }
