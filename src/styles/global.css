@@ -29,22 +29,6 @@
   --section-padding: 5rem 2rem;
 }
 
-/* ── DARK MODE ── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-body:        #0F1117;
-    --bg-section-alt: #161B27;
-    --bg-card:        #1C2333;
-    --card-border:    rgba(197, 160, 89, 0.15);
-    --card-shadow:    rgba(0, 0, 0, 0.3);
-    --heading-color:  #E8E8F0;
-    --body-color:     #A0AABB;
-    --muted-color:    #6B7A90;
-
-    /* Keep navy/gold as-is — only used in header & footer */
-  }
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -173,3 +157,7 @@ img {
 .section-alt {
   background-color: var(--bg-section-alt);
 }
+.client-id-bar { display: flex; align-items: center; gap: 1rem; background: rgba(197,160,89,0.08); border: 1px solid rgba(197,160,89,0.25); border-radius: 10px; padding: 0.8rem 1.2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.client-id-bar__label { color: var(--gold); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.client-id-bar__number { color: white; font-size: 1.3rem; font-weight: 800; letter-spacing: 1px; }
+.client-id-bar__note { color: rgba(255,255,255,0.5); font-size: 0.78rem; }
