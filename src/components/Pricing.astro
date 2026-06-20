@@ -1,0 +1,174 @@
+---
+const base = '/ThesisArcPro';
+---
+<section class="prc">
+  <div class="container">
+    <h2 class="prc__title">Prices and services</h2>
+    <p class="prc__sub">Prices start at <strong>$5/page</strong> and depend on the page count, deadline, and writer's level</p>
+
+    <div class="prc__cards">
+
+      <!-- Included services (free) -->
+      <div class="prc__card">
+        <div class="prc__card-header">
+          <h3>Included services</h3>
+          <p>You'll always get them for free</p>
+        </div>
+        <ul class="prc__list">
+          <li><span>Topic suggestion</span><span class="prc__tag prc__tag--free">Free</span></li>
+          <li><span>Formatting</span><span class="prc__tag prc__tag--free">Free</span></li>
+          <li><span>Title page & reference</span><span class="prc__tag prc__tag--free">Free</span></li>
+          <li><span>Editor quality check</span><span class="prc__tag prc__tag--free">Free</span></li>
+          <li><span>Unlimited revisions</span><span class="prc__tag prc__tag--free">Free</span></li>
+        </ul>
+      </div>
+
+      <!-- Additional services (paid) -->
+      <div class="prc__card">
+        <div class="prc__card-header">
+          <h3>Included services</h3>
+          <p>You can add them for an extra payment</p>
+        </div>
+        <ul class="prc__list">
+          <li><span>Abstract Page</span><span class="prc__tag">$7 each</span></li>
+          <li><span>Plagiarism & AI Report</span><span class="prc__tag prc__tag--free">Free</span></li>
+          <li><span>Printable Sources</span><span class="prc__tag">$4 each</span></li>
+          <li><span>Graphics & Tables</span><span class="prc__tag">$7 each</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Payment methods -->
+    <div class="prc__payments">
+      <span class="prc__payments-label">We accept:</span>
+      <div class="prc__payments-icons">
+        <span class="prc__pay-icon">💳</span>
+        <span class="prc__pay-icon">💳</span>
+        <span class="prc__pay-icon">💳</span>
+        <span class="prc__pay-icon">💳</span>
+        <span class="prc__pay-more">+3 more</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.prc {
+  background: var(--bg-body, #ffffff);
+  padding: 3.5rem 0;
+}
+.prc__title {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+.prc__sub {
+  text-align: center;
+  color: var(--color-main-light, #6d7483);
+  font-size: 0.88rem;
+  margin-bottom: 2rem;
+}
+
+/* ── Two cards side by side ── */
+.prc__cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 720px;
+  margin: 0 auto 2rem;
+}
+
+.prc__card {
+  border: 1px solid #dde3ea;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.prc__card-header {
+  padding: 1.2rem 1.4rem 0.8rem;
+}
+.prc__card-header h3 {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  margin-bottom: 0.15rem;
+}
+.prc__card-header p {
+  font-size: 0.78rem;
+  color: var(--color-main-light, #6d7483);
+}
+
+.prc__list {
+  list-style: none;
+  padding: 0 1.4rem 1.2rem;
+  margin: 0;
+}
+.prc__list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0;
+  font-size: 0.88rem;
+  color: var(--color-main, #303b4f);
+  border-bottom: 1px solid #f1f4f8;
+}
+.prc__list li:last-child {
+  border-bottom: none;
+}
+
+.prc__tag {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  background: var(--color-secondary-lightest, #eef6fb);
+  color: var(--color-main, #303b4f);
+  white-space: nowrap;
+}
+.prc__tag--free {
+  background: #e6f7ee;
+  color: #16a34a;
+}
+
+/* ── Payment strip ── */
+.prc__payments {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.prc__payments-label {
+  font-size: 0.85rem;
+  color: var(--color-main-light, #6d7483);
+}
+.prc__payments-icons {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.prc__pay-icon {
+  width: 42px;
+  height: 28px;
+  background: #f1f4f8;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+.prc__pay-more {
+  font-size: 0.8rem;
+  color: var(--color-main-light, #6d7483);
+}
+
+@media (max-width: 600px) {
+  .prc__cards { grid-template-columns: 1fr; }
+}
+</style>

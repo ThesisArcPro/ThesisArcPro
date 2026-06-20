@@ -1,0 +1,78 @@
+<section class="ben">
+  <div class="container">
+    <h2 class="ben__title">Benefits and guarantees our essay writing service</h2>
+    <div class="ben__grid">
+      <div class="ben__item">
+        <span class="ben__icon">✓</span>
+        <span>Following instructions precisely</span>
+      </div>
+      <div class="ben__item">
+        <span class="ben__icon">✓</span>
+        <span>Guaranteed money-back policy</span>
+      </div>
+      <div class="ben__item">
+        <span class="ben__icon">✓</span>
+        <span>Early, on-time delivery</span>
+      </div>
+      <div class="ben__item">
+        <span class="ben__icon">✓</span>
+        <span>Full protection of your privacy</span>
+      </div>
+      <div class="ben__item">
+        <span class="ben__icon">✓</span>
+        <span>AI- and plagiarism-free results</span>
+      </div>
+      <div class="ben__item">
+        <span class="ben__icon">✓</span>
+        <span>24/7 customer support</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.ben {
+  background: var(--bg-body, #ffffff);
+  padding: 3.5rem 0;
+  border-top: 1px solid #eef2f7;
+}
+.ben__title {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: 700;
+  color: var(--color-main, #303b4f);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.ben__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem 3rem;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.ben__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+  color: var(--color-main, #303b4f);
+}
+.ben__icon {
+  width: 22px;
+  height: 22px;
+  background: var(--color-secondary-lightest, #eef6fb);
+  color: var(--color-secondary, #046fcd);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .ben__grid { grid-template-columns: 1fr; gap: 1rem; }
+}
+</style>
