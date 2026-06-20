@@ -62,15 +62,16 @@ const base = '/ThesisArcPro';
   font-size: 0.9rem;
 }
 
+/* ── Card: photo fills, details overlaid on dark gradient ── */
 .ws__card {
   display: block;
-  border-radius: var(--border-radius-primary, 16px);
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid var(--color-secondary-lightest, #eef6fb);
   background: var(--bg-card, #ffffff);
   text-decoration: none;
   color: inherit;
   transition: box-shadow 0.2s, transform 0.2s;
+  position: relative;
 }
 .ws__card:hover {
   box-shadow: var(--box-shadow-md, 0 4px 12px rgba(0,0,0,0.08));
@@ -79,45 +80,56 @@ const base = '/ThesisArcPro';
 
 .ws__card-photo {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   display: block;
-  background: #e8ecf0;
+  border-radius: 20px;
 }
 .ws__card-placeholder {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 4;
   background: #e8ecf0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.5rem;
   color: #c0c5cc;
+  border-radius: 20px;
 }
 
+/* Dark gradient overlay at bottom of image */
 .ws__card-body {
-  padding: 0.75rem 0.9rem 0.9rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 3rem 0.9rem 0.9rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+  border-radius: 0 0 20px 20px;
 }
 .ws__card-name {
   font-weight: 700;
-  font-size: 0.88rem;
-  color: var(--color-main, #303b4f);
-  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
+  color: #ffffff;
+  margin-bottom: 0.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .ws__card-rating {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  font-size: 0.8rem;
-  margin-bottom: 0.15rem;
+  gap: 0.25rem;
+  font-size: 0.82rem;
 }
-.ws__card-stars { color: #ffd20a; font-size: 0.9rem; }
-.ws__card-score { font-weight: 600; color: var(--color-main, #303b4f); }
+.ws__card-stars { color: #ffd20a; font-size: 0.85rem; }
+.ws__card-score { font-weight: 700; color: #ffd20a; }
 .ws__card-detail {
   font-size: 0.76rem;
-  color: var(--color-main-light, #6d7483);
+  color: rgba(255,255,255,0.8);
 }
 
+/* ── Bottom actions ── */
 .ws__actions {
   text-align: center;
 }
@@ -183,7 +195,6 @@ const base = '/ThesisArcPro';
         const s = statsMap[w.id] || {};
         const rating = s.avg_rating ? Number(s.avg_rating).toFixed(1) : null;
         const completed = s.completed_orders || 0;
-        const stars = rating ? '★'.repeat(Math.round(Number(rating))) : '';
 
         const photoHtml = w.photo_url
           ? `<img class="ws__card-photo" src="${w.photo_url}" alt="${esc(w.full_name || '')}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="ws__card-placeholder" style="display:none;">👤</div>`
@@ -193,13 +204,15 @@ const base = '/ThesisArcPro';
           <a class="ws__card" href="/ThesisArcPro/writers/">
             ${photoHtml}
             <div class="ws__card-body">
-              <div class="ws__card-name">${esc(w.full_name || 'Writer')}</div>
-              ${rating
-                ? `<div class="ws__card-rating"><span class="ws__card-stars">${stars}</span> <span class="ws__card-score">${rating}</span></div>`
-                : `<div class="ws__card-rating" style="color:var(--color-main-light)">New writer</div>`
-              }
+              <div class="ws__card-name">
+                ${esc(w.full_name || 'Writer')}
+                ${rating
+                  ? `<span class="ws__card-rating"><span class="ws__card-stars">★</span> <span class="ws__card-score">${rating}</span></span>`
+                  : ''
+                }
+              </div>
               ${w.education_level ? `<div class="ws__card-detail">${esc(w.education_level)}</div>` : ''}
-              <div class="ws__card-detail">Orders: <strong>${completed}</strong></div>
+              <div class="ws__card-detail">Orders completed: <strong>${completed}</strong></div>
             </div>
           </a>
         `;
