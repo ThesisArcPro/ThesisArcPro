@@ -324,6 +324,59 @@ const base = '/ThesisArcPro';
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  /* Theme toggle */
+  .theme-switcher { display: flex; background: #eef2f7; border-radius: 10px; padding: 3px; gap: 2px; }
+  .tt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.4rem 0.3rem; border: none; border-radius: 8px; background: transparent; cursor: pointer; font-size: 0.72rem; font-weight: 600; color: #94a3b8; transition: all 0.2s; white-space: nowrap; }
+  .tt-btn:hover { background: #e2e8f0; }
+  .tt-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+  /* ══ DARK MODE ══ */
+  body.dark-mode { --main-bg: #0f1117; --panel-bg: #1a1f2e; --border: rgba(255,255,255,0.08); --text: #e2e8f0; --text-muted: #94a3b8; background: #0f1117; color: #e2e8f0; }
+  body.dark-mode .sidebar { background: #161b27; border-right-color: rgba(255,255,255,0.06); }
+  body.dark-mode .nav-item { color: #94a3b8; }
+  body.dark-mode .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  body.dark-mode .nav-item.active { background: rgba(4,111,205,0.15); color: #60a5fa; }
+  body.dark-mode .sidebar-divider { background: rgba(255,255,255,0.06); }
+  body.dark-mode .theme-switcher { background: #1e2536; }
+  body.dark-mode .tt-btn { color: #64748b; }
+  body.dark-mode .tt-btn:hover { background: #2a3244; }
+  body.dark-mode .tt-btn.active { background: #2a3244; color: #e2e8f0; box-shadow: none; }
+  body.dark-mode .main { background: #0f1117; }
+  body.dark-mode .main-header { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .main-header h1 { color: #e2e8f0; }
+  body.dark-mode .btn-new-order-main { background: #1a1f2e; color: #e2e8f0; border-color: rgba(255,255,255,0.1); }
+  body.dark-mode .btn-new-order-main:hover { border-color: #60a5fa; color: #60a5fa; background: #1e2536; }
+  body.dark-mode .tabs-bar { border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .tab { color: #64748b; }
+  body.dark-mode .tab.active { color: #60a5fa; border-bottom-color: #60a5fa; }
+  body.dark-mode .tab:hover:not(.active) { color: #e2e8f0; }
+  body.dark-mode .tab .count { background: #1e2536; color: #64748b; }
+  body.dark-mode .tab.active .count { background: rgba(96,165,250,0.15); color: #60a5fa; }
+  body.dark-mode .sort-select { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
+  body.dark-mode .sort-label { color: #64748b; }
+  body.dark-mode .search-input { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
+  body.dark-mode .search-input:focus { border-color: #60a5fa; background: #1e2536; }
+  body.dark-mode .search-input::placeholder { color: #4a5568; }
+  body.dark-mode .search-icon { color: #4a5568; }
+  body.dark-mode .empty-illustration { background: rgba(255,255,255,0.03); }
+  body.dark-mode .empty-state h3 { color: #e2e8f0; }
+  body.dark-mode .empty-state p { color: #64748b; }
+  body.dark-mode .loading-state { color: #64748b; }
+  body.dark-mode .spinner { border-color: rgba(255,255,255,0.06); border-top-color: #60a5fa; }
+  body.dark-mode .modal-box { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
+  body.dark-mode .modal-close { color: #64748b; }
+  body.dark-mode .modal-close:hover { color: #e2e8f0; }
+  body.dark-mode .review-box { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
+  body.dark-mode .review-box h2 { color: #e2e8f0; }
+  body.dark-mode .review-box p { color: #94a3b8; }
+  body.dark-mode .star { color: #334155; }
+  body.dark-mode .review-textarea { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
+  body.dark-mode .review-textarea::placeholder { color: #4a5568; }
+  body.dark-mode .btn-skip-review { color: #94a3b8; border-color: rgba(255,255,255,0.1); }
+  body.dark-mode .btn-skip-review:hover { color: #e2e8f0; border-color: rgba(255,255,255,0.2); background: #1e2536; }
+  body.dark-mode ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+  body.dark-mode ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 </style>
 
 <style is:global>
@@ -647,6 +700,31 @@ const base = '/ThesisArcPro';
     margin-top: 0.75rem;
     display: none;
   }
+
+  /* ══ DARK MODE: order rows ══ */
+  body.dark-mode .order-row { background: #1a1f2e; border-color: rgba(255,255,255,0.06); box-shadow: none; }
+  body.dark-mode .order-row:hover { background: #1e2536; border-color: rgba(96,165,250,0.3); }
+  body.dark-mode .order-title { color: #e2e8f0; }
+  body.dark-mode .order-meta { color: #64748b; }
+  body.dark-mode .meta-dot { color: rgba(255,255,255,0.15); }
+  body.dark-mode .order-id { color: #4a5568; }
+  body.dark-mode .col-amount { color: #e2e8f0; }
+  body.dark-mode .order-table-head { color: #4a5568; }
+  body.dark-mode .om-title { color: #e2e8f0; }
+  body.dark-mode .om-id { color: #4a5568; }
+  body.dark-mode .om-tab { color: #64748b; }
+  body.dark-mode .om-tab:hover:not(.om-tab--active) { color: #e2e8f0; }
+  body.dark-mode .om-tab--active { color: #60a5fa; border-bottom-color: #60a5fa; }
+  body.dark-mode .om-tabs { border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .om-label { color: #4a5568; }
+  body.dark-mode .om-value { color: #e2e8f0; }
+  body.dark-mode .om-grid { border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .om-desc { color: #94a3b8; }
+  body.dark-mode .om-desc-label { color: #4a5568; }
+  body.dark-mode .om-nofile { background: #161b27; border-color: rgba(255,255,255,0.06); color: #64748b; }
+  body.dark-mode .om-actions { border-top-color: rgba(255,255,255,0.06); }
+  body.dark-mode .revision-textarea { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
+  body.dark-mode .revision-textarea::placeholder { color: #4a5568; }
 </style>
 
 <!-- SIDEBAR -->
@@ -666,6 +744,18 @@ const base = '/ThesisArcPro';
   </nav>
   <div class="sidebar-divider"></div>
   <nav class="sidebar-nav">
+    <div class="sidebar-divider"></div>
+    <div class="theme-switcher">
+      <button class="tt-btn active" data-theme="light" title="Light">
+        <span>☀️</span> Light
+      </button>
+      <button class="tt-btn" data-theme="dark" title="Dark">
+        <span>🌙</span> Dark
+      </button>
+      <button class="tt-btn" data-theme="system" title="System">
+        <span>💻</span> System
+      </button>
+    </div>
     <a class="nav-item" href="#" id="logoutBtn">
       <span class="icon">🚪</span> Logout
     </a>
@@ -1306,5 +1396,37 @@ ${String(err?.message || err)}
   });
 
   init();
+
+  // ── THEME TOGGLE ──
+  const THEME_KEY = 'dashboard-theme';
+
+  function getSystemPref() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function applyTheme(setting: string) {
+    const actual = setting === 'system' ? getSystemPref() : setting;
+    if (actual === 'dark') {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+    document.querySelectorAll('.tt-btn').forEach(btn => {
+      btn.classList.toggle('active', (btn as HTMLElement).dataset.theme === setting);
+    });
+    localStorage.setItem(THEME_KEY, setting);
+  }
+
+  document.querySelectorAll('.tt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      applyTheme((btn as HTMLElement).dataset.theme || 'light');
+    });
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (localStorage.getItem(THEME_KEY) === 'system') applyTheme('system');
+  });
+
+  applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 </script>
 </BaseLayout>
