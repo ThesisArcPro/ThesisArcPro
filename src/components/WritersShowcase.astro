@@ -186,6 +186,13 @@ const base = '/ThesisArcPro';
       const statsMap: Record<string, any> = {};
       if (Array.isArray(stats)) stats.forEach((s: any) => { statsMap[s.writer_id] = s; });
 
+      // Sort by most completed orders first
+      writers.sort((a: any, b: any) => {
+        const aCount = statsMap[a.id]?.completed_orders || 0;
+        const bCount = statsMap[b.id]?.completed_orders || 0;
+        return bCount - aCount;
+      });
+
       if (!writers || !writers.length) {
         grid.innerHTML = '<div class="ws__loading">Our writers are being onboarded — check back soon!</div>';
         return;

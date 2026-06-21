@@ -194,7 +194,14 @@ const base = '/ThesisArcPro';
         if (Array.isArray(stats)) stats.forEach((s: any) => { statsById[String(s.writer_id)] = s; });
       } catch (e) { console.warn('Stats unavailable', e); }
 
-      renderList();
+      // Sort by most completed orders first
+    writers.sort((a: any, b: any) => {
+      const aCount = Number(statsById[String(a.id)]?.completed_orders || 0);
+      const bCount = Number(statsById[String(b.id)]?.completed_orders || 0);
+      return bCount - aCount;
+    });
+
+    renderList();
     } catch (err) {
       console.error(err);
       document.getElementById('loadingState')!.style.display = 'none';
