@@ -110,6 +110,26 @@ const base = '/ThesisArcPro';
         </label>
       </div>
 
+      <!-- Writer Account Section -->
+      <div class="account-section" id="accountSection" style="display:none;">
+        <div class="account-divider"></div>
+        <h3 class="account-heading" id="accountHeading">Writer Login Account</h3>
+        <div class="account-status" id="accountStatus"></div>
+        <div id="accountForm" style="display:none;">
+          <div class="form-group">
+            <label>Writer Email</label>
+            <input type="email" id="writerEmail" placeholder="writer@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="text" id="writerPassword" placeholder="Min 6 characters" />
+            <span class="input-note">You'll give these credentials to the writer so they can log in.</span>
+          </div>
+          <button class="btn-create-account" id="createAccountBtn">🔑 Create Account</button>
+          <div class="account-msg" id="accountMsg" style="display:none;"></div>
+        </div>
+      </div>
+
       <div class="modal-actions">
         <button class="btn-danger" id="deleteWriterBtn" style="display:none;">Delete</button>
         <button class="btn-update" id="saveWriterBtn">💾 Save Writer</button>
@@ -162,6 +182,26 @@ const base = '/ThesisArcPro';
 .btn-update:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn-danger { padding: 1rem 1.2rem; background: none; border: 1.5px solid #ef4444; color: #ef4444; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
 .btn-danger:hover { background: #ef4444; color: white; }
+
+/* Writer account section */
+.account-divider { height: 1px; background: #e2e8f0; margin: 1.2rem 0; }
+.account-heading { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.8rem; }
+.account-status { font-size: 0.85rem; margin-bottom: 0.8rem; }
+.account-status.has-account { color: #16a34a; font-weight: 600; }
+.account-status.no-account { color: #64748b; }
+.btn-create-account {
+  width: 100%; padding: 0.75rem; background: #046fcd; color: white;
+  border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; margin-top: 0.5rem;
+}
+.btn-create-account:hover { background: #0361b3; }
+.btn-create-account:disabled { opacity: 0.6; cursor: not-allowed; }
+.account-msg {
+  font-size: 0.82rem; margin-top: 0.6rem; padding: 0.6rem 0.8rem;
+  border-radius: 8px; font-weight: 600;
+}
+.account-msg.success { background: #ecfdf5; color: #16a34a; }
+.account-msg.error { background: #fef2f2; color: #dc2626; }
 </style>
 
 <style is:global>
@@ -188,6 +228,9 @@ const base = '/ThesisArcPro';
   .writer-pill.inactive { background: rgba(239,68,68,0.16); color: #f87171; }
   .btn-edit-writer { background: #c5a059; color: #0f172a; border: none; padding: 0.45rem 0.9rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
   .btn-edit-writer:hover { background: #f1f5f9; }
+  .btn-create-acct { background: #046fcd; color: white; border: none; padding: 0.45rem 0.9rem; border-radius: 6px; font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; margin-right: 0.4rem; }
+  .btn-create-acct:hover { background: #0361b3; }
+  .writer-card__acct { color: #16a34a; font-size: 0.72rem; font-weight: 600; margin-right: 0.4rem; }
 </style>
 
 <script>
@@ -275,7 +318,13 @@ const base = '/ThesisArcPro';
             <div class="writer-card__bio">${esc(w.bio || '')}</div>
             <div class="writer-card__footer">
               <span class="writer-pill ${w.is_active ? 'active' : 'inactive'}">${w.is_active ? 'Active' : 'Hidden'}</span>
-              <button class="btn-edit-writer" data-id="${esc(w.id)}">✏️ Edit</button>
+              <div>
+                ${w.auth_user_id
+                  ? `<span class="writer-card__acct">✅ Has account</span>`
+                  : ''
+                }
+                <button class="btn-edit-writer" data-id="${esc(w.id)}">✏️ Edit</button>
+              </div>
             </div>
           </div>
         `;
@@ -329,6 +378,34 @@ const base = '/ThesisArcPro';
 
     const delBtn = document.getElementById('deleteWriterBtn');
     if (delBtn) delBtn.style.display = writer ? 'block' : 'none';
+
+    // Account section
+    const accountSection = document.getElementById('accountSection');
+    const accountStatus = document.getElementById('accountStatus');
+    const accountForm = document.getElementById('accountForm');
+    const accountMsg = document.getElementById('accountMsg');
+    const writerEmail = document.getElementById('writerEmail') as HTMLInputElement;
+    const writerPassword = document.getElementById('writerPassword') as HTMLInputElement;
+
+    if (accountSection && accountStatus && accountForm) {
+      if (writer) {
+        accountSection.style.display = 'block';
+        if (writer.auth_user_id) {
+          accountStatus.className = 'account-status has-account';
+          accountStatus.textContent = `✅ Account created · ${writer.email || 'email not stored'}`;
+          accountForm.style.display = 'none';
+        } else {
+          accountStatus.className = 'account-status no-account';
+          accountStatus.textContent = 'No login account yet. Create one below:';
+          accountForm.style.display = 'block';
+          if (writerEmail) writerEmail.value = '';
+          if (writerPassword) writerPassword.value = '';
+        }
+        if (accountMsg) { accountMsg.style.display = 'none'; accountMsg.textContent = ''; }
+      } else {
+        accountSection.style.display = 'none';
+      }
+    }
 
     document.getElementById('writerModal')?.classList.add('active');
   }
@@ -467,7 +544,76 @@ const base = '/ThesisArcPro';
     }
   });
 
-  // Logout not needed here; Back link returns to /admin/
+  // ── CREATE WRITER ACCOUNT ──
+  document.getElementById('createAccountBtn')?.addEventListener('click', async () => {
+    const email = (document.getElementById('writerEmail') as HTMLInputElement).value.trim();
+    const password = (document.getElementById('writerPassword') as HTMLInputElement).value.trim();
+    const btn = document.getElementById('createAccountBtn') as HTMLButtonElement;
+    const msg = document.getElementById('accountMsg') as HTMLElement;
+
+    if (!email || !password) {
+      msg.textContent = 'Please enter both email and password.';
+      msg.className = 'account-msg error';
+      msg.style.display = 'block';
+      return;
+    }
+    if (password.length < 6) {
+      msg.textContent = 'Password must be at least 6 characters.';
+      msg.className = 'account-msg error';
+      msg.style.display = 'block';
+      return;
+    }
+    if (!editingId) return;
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Creating account…';
+    msg.style.display = 'none';
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/create-writer-account`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password,
+          writer_id: Number(editingId),
+          token: 'thesisarcpro_action_2026'
+        })
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Account creation failed');
+
+      msg.textContent = `✅ Account created! Give the writer these credentials:\nEmail: ${email}\nPassword: ${password}`;
+      msg.className = 'account-msg success';
+      msg.style.display = 'block';
+      msg.style.whiteSpace = 'pre-wrap';
+      btn.style.display = 'none';
+
+      // Update local data
+      const idx = writers.findIndex(w => String(w.id) === editingId);
+      if (idx !== -1) {
+        writers[idx].auth_user_id = data.user_id;
+        writers[idx].email = email;
+      }
+
+      const accountStatus = document.getElementById('accountStatus');
+      if (accountStatus) {
+        accountStatus.className = 'account-status has-account';
+        accountStatus.textContent = `✅ Account created · ${email}`;
+      }
+
+      renderWriters();
+
+    } catch (err) {
+      console.error(err);
+      msg.textContent = String(err);
+      msg.className = 'account-msg error';
+      msg.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '🔑 Create Account';
+    }
+  });// Logout not needed here; Back link returns to /admin/
   checkAuth();
 </script>
 </BaseLayout>
