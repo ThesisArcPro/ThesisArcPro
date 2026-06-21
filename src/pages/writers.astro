@@ -47,7 +47,9 @@ const base = '/ThesisArcPro';
 </BaseLayout>
 
 <style>
-.writers-page { background: var(--bg-body, #ffffff); min-height: 100vh; padding: 8rem 0 4rem; }
+.writers-page { background: #f0f2fb; min-height: 100vh; padding: 8rem 0 4rem; position: relative; overflow: hidden; }
+.writers-page::before { content: ''; position: absolute; top: -20%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(4,111,205,0.06) 0%, transparent 70%); pointer-events: none; }
+.writers-page::after { content: ''; position: absolute; bottom: -15%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(197,160,89,0.05) 0%, transparent 70%); pointer-events: none; }
 .writers-hero { text-align: center; max-width: 640px; margin: 0 auto 3rem; }
 .writers-hero h1 { color: var(--color-main, #303b4f); font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.8rem; }
 .writers-hero p { color: var(--color-main-light, #6d7483); font-size: 1.02rem; line-height: 1.6; }
