@@ -21,7 +21,7 @@ const base = '/ThesisArcPro';
   }
 
   body {
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif;
     background: var(--main-bg);
     color: var(--text);
     display: flex;
@@ -30,54 +30,55 @@ const base = '/ThesisArcPro';
   }
 
   .sidebar {
-    width: 220px;
-    background: var(--sidebar-bg);
+    width: 240px;
+    background: #ffffff;
     display: flex;
     flex-direction: column;
-    padding: 1rem 0;
-    border-right: 1px solid var(--border);
+    padding: 1.2rem 0;
+    border-right: 1px solid #eef2f7;
     flex-shrink: 0;
   }
 
   .sidebar-new-order {
-    margin: 0 1rem 1.2rem;
-    background: var(--active-blue);
+    margin: 0 1rem 1.5rem;
+    background: #046fcd;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 0.7rem 1rem;
-    font-size: 0.85rem;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: 0.2s;
+    transition: all 0.2s;
     text-decoration: none;
     justify-content: center;
+    box-shadow: 0 2px 8px rgba(4,111,205,0.25);
   }
 
-  .sidebar-new-order:hover { background: #4f46e5; }
+  .sidebar-new-order:hover { background: #0361b3; transform: translateY(-1px); }
   .sidebar-nav { display: flex; flex-direction: column; gap: 0.2rem; padding: 0 0.5rem; }
 
   .nav-item {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.65rem 0.75rem;
-    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
     cursor: pointer;
-    color: var(--text-muted);
+    color: #64748b;
     font-size: 0.88rem;
     font-weight: 500;
     transition: all 0.2s;
     text-decoration: none;
   }
 
-  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-  .nav-item.active { background: rgba(99,102,241,0.12); color: var(--active-blue); font-weight: 600; }
+  .nav-item:hover { background: #f1f5f9; color: #0f172a; }
+  .nav-item.active { background: #eef6fb; color: #046fcd; font-weight: 600; }
   .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
-  .sidebar-divider { height: 1px; background: var(--border); margin: 0.8rem 0.75rem; }
+  .sidebar-divider { height: 1px; background: #eef2f7; margin: 1rem 0.9rem; }
 
   .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -85,17 +86,18 @@ const base = '/ThesisArcPro';
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 2rem 1rem;
-    border-bottom: 1px solid var(--border);
+    padding: 1.8rem 2rem 1.2rem;
+    border-bottom: 1px solid #eef2f7;
+    background: #ffffff;
   }
 
-  .main-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+  .main-header h1 { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
 
   .btn-new-order-main {
-    background: var(--panel-bg);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    background: #ffffff;
+    color: #303b4f;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
     padding: 0.6rem 1.2rem;
     font-size: 0.85rem;
     font-weight: 600;
@@ -103,11 +105,11 @@ const base = '/ThesisArcPro';
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    transition: 0.2s;
+    transition: all 0.2s;
     text-decoration: none;
   }
 
-  .btn-new-order-main:hover { background: rgba(255,255,255,0.08); border-color: var(--gold); }
+  .btn-new-order-main:hover { border-color: #046fcd; color: #046fcd; background: #f8fafc; }
 
   .tabs-bar {
     display: flex;
@@ -122,35 +124,35 @@ const base = '/ThesisArcPro';
   .tab {
     background: none;
     border: none;
-    color: var(--text-muted);
-    padding: 0.6rem 1rem;
+    color: #94a3b8;
+    padding: 0.7rem 1rem;
     font-size: 0.88rem;
     font-weight: 500;
     cursor: pointer;
-    border-bottom: 2px solid transparent;
+    border-bottom: 2.5px solid transparent;
     transition: all 0.2s;
     position: relative;
     top: 1px;
     white-space: nowrap;
   }
 
-  .tab.active { color: var(--active-blue); border-bottom-color: var(--active-blue); font-weight: 600; }
-  .tab:hover:not(.active) { color: var(--text); }
+  .tab.active { color: #046fcd; border-bottom-color: #046fcd; font-weight: 600; }
+  .tab:hover:not(.active) { color: #303b4f; }
 
   .tab .count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--panel-bg);
+    background: #f1f5f9;
     border-radius: 10px;
     font-size: 0.72rem;
     font-weight: 700;
-    padding: 0.1rem 0.45rem;
+    padding: 0.1rem 0.5rem;
     margin-left: 0.4rem;
-    color: var(--text-muted);
+    color: #94a3b8;
   }
 
-  .tab.active .count { background: rgba(99,102,241,0.2); color: var(--active-blue); }
+  .tab.active .count { background: #eef6fb; color: #046fcd; }
 
   .controls-bar {
     display: flex;
@@ -186,18 +188,18 @@ const base = '/ThesisArcPro';
 
   .search-input {
     width: 100%;
-    background: var(--panel-bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    padding: 0.4rem 0.8rem 0.4rem 2rem;
-    font-size: 0.82rem;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    color: #0f172a;
+    border-radius: 10px;
+    padding: 0.5rem 0.9rem 0.5rem 2.2rem;
+    font-size: 0.85rem;
     outline: none;
     transition: 0.2s;
   }
 
-  .search-input:focus { border-color: var(--active-blue); }
-  .search-input::placeholder { color: var(--text-muted); }
+  .search-input:focus { border-color: #046fcd; background: #ffffff; }
+  .search-input::placeholder { color: #94a3b8; }
   .orders-area { flex: 1; overflow-y: auto; padding: 1.5rem 2rem 2rem; }
 
   .empty-state {
@@ -222,26 +224,27 @@ const base = '/ThesisArcPro';
     font-size: 3rem;
   }
 
-  .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
-  .empty-state p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: #303b4f; margin-bottom: 0.5rem; }
+  .empty-state p { font-size: 0.88rem; color: #64748b; margin-bottom: 1.5rem; line-height: 1.6; }
 
   .btn-empty-order {
-    background: var(--active-blue);
+    background: #046fcd;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
     font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    transition: 0.2s;
+    gap: 0.5rem;
+    transition: all 0.2s;
     text-decoration: none;
+    box-shadow: 0 2px 8px rgba(4,111,205,0.2);
   }
 
-  .btn-empty-order:hover { background: #4f46e5; }
+  .btn-empty-order:hover { background: #0361b3; transform: translateY(-1px); }
 
   .loading-state {
     display: flex;
@@ -255,8 +258,8 @@ const base = '/ThesisArcPro';
 
   .spinner {
     width: 36px; height: 36px;
-    border: 3px solid rgba(255,255,255,0.08);
-    border-top-color: var(--active-blue);
+    border: 3px solid #eef2f7;
+    border-top-color: #046fcd;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
@@ -319,7 +322,8 @@ const base = '/ThesisArcPro';
 
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 </style>
 
 <style is:global>
@@ -399,7 +403,7 @@ const base = '/ThesisArcPro';
   .om-tab {
     background: none;
     border: none;
-    color: rgba(255,255,255,0.45);
+    color: #94a3b8;
     padding: 0.55rem 0.9rem;
     font-size: 0.85rem;
     font-weight: 600;
@@ -410,8 +414,8 @@ const base = '/ThesisArcPro';
     transition: all 0.2s;
   }
 
-  .om-tab:hover:not(.om-tab--active) { color: #0f172a; }
-  .om-tab--active { color: #818cf8; border-bottom-color: #6366f1; }
+  .om-tab:hover:not(.om-tab--active) { color: #303b4f; }
+  .om-tab--active { color: #046fcd; border-bottom-color: #046fcd; }
 
   .om-panel { display: none; }
   .om-panel--active { display: block; }
@@ -626,8 +630,8 @@ const base = '/ThesisArcPro';
 
   .btn-skip-review {
     background: transparent;
-    color: rgba(255,255,255,0.4);
-    border: 1px solid rgba(255,255,255,0.1);
+    color: #64748b;
+    border: 1.5px solid #e2e8f0;
     border-radius: 8px;
     padding: 0.65rem 1.2rem;
     font-size: 0.88rem;
@@ -635,7 +639,7 @@ const base = '/ThesisArcPro';
     cursor: pointer;
     transition: 0.2s;
   }
-  .btn-skip-review:hover { color: #f1f5f9; border-color: rgba(255,255,255,0.25); }
+  .btn-skip-review:hover { color: #303b4f; border-color: #cbd5e1; background: #f8fafc; }
 
   .review-success {
     color: #4ade80;
@@ -825,7 +829,7 @@ ${String(err?.message || err)}
       // Look up this client's own client_id from their profile (for reviews)
       try {
         const pr = await fetch(
-          `${SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(session.user.email)}&select=client_id`,
+          `${SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(session.user.email || '')}&select=client_id`,
           { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
         );
         const pdata = await pr.json();
