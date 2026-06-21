@@ -325,11 +325,45 @@ const base = '/ThesisArcPro';
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-  /* Theme toggle */
-  .theme-switcher { display: flex; background: #eef2f7; border-radius: 10px; padding: 3px; gap: 2px; }
-  .tt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.4rem 0.3rem; border: none; border-radius: 8px; background: transparent; cursor: pointer; font-size: 0.72rem; font-weight: 600; color: #94a3b8; transition: all 0.2s; white-space: nowrap; }
-  .tt-btn:hover { background: #e2e8f0; }
-  .tt-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  /* Sidebar bottom */
+  .sidebar-bottom { margin-top: auto; padding: 0.8rem 1rem; }
+  .theme-icon-btn {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: #1e293b; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .theme-icon-btn:hover { background: #334155; transform: scale(1.05); }
+
+  /* Theme popup */
+  .theme-popup { display: none; position: fixed; inset: 0; z-index: 30000; align-items: center; justify-content: center; }
+  .theme-popup.open { display: flex; }
+  .theme-popup__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+  .theme-popup__card {
+    position: relative; z-index: 1; background: #1e293b;
+    border-radius: 16px; padding: 1.2rem; min-width: 220px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+  .theme-popup__title {
+    color: #e2e8f0; font-size: 0.82rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 0.8rem; padding-left: 0.3rem;
+  }
+  .theme-popup__opt {
+    width: 100%; display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.65rem 0.7rem; border: none; border-radius: 10px;
+    background: transparent; color: #cbd5e1; font-size: 0.9rem;
+    font-weight: 500; cursor: pointer; transition: all 0.15s;
+    text-align: left;
+  }
+  .theme-popup__opt:hover { background: #334155; color: #ffffff; }
+  .theme-popup__opt.active { background: #046fcd; color: #ffffff; }
+  .theme-popup__icon { font-size: 1rem; width: 24px; text-align: center; }
+
+  /* Light mode adjustments for the icon button */
+  body:not(.dark-mode) .theme-icon-btn { background: #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  body:not(.dark-mode) .theme-icon-btn:hover { background: #e2e8f0; }
 
   /* ══ DARK MODE ══ */
   body.dark-mode { --main-bg: #0f1117; --panel-bg: #1a1f2e; --border: rgba(255,255,255,0.08); --text: #e2e8f0; --text-muted: #94a3b8; background: #0f1117; color: #e2e8f0; }
@@ -338,10 +372,8 @@ const base = '/ThesisArcPro';
   body.dark-mode .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
   body.dark-mode .nav-item.active { background: rgba(4,111,205,0.15); color: #60a5fa; }
   body.dark-mode .sidebar-divider { background: rgba(255,255,255,0.06); }
-  body.dark-mode .theme-switcher { background: #1e2536; }
-  body.dark-mode .tt-btn { color: #64748b; }
-  body.dark-mode .tt-btn:hover { background: #2a3244; }
-  body.dark-mode .tt-btn.active { background: #2a3244; color: #e2e8f0; box-shadow: none; }
+  body.dark-mode .theme-icon-btn { background: #2a3244; }
+  body.dark-mode .theme-icon-btn:hover { background: #334155; }
   body.dark-mode .main { background: #0f1117; }
   body.dark-mode .main-header { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
   body.dark-mode .main-header h1 { color: #e2e8f0; }
@@ -744,21 +776,34 @@ const base = '/ThesisArcPro';
   </nav>
   <div class="sidebar-divider"></div>
   <nav class="sidebar-nav">
-    <div class="sidebar-divider"></div>
-    <div class="theme-switcher">
-      <button class="tt-btn active" data-theme="light" title="Light">
-        <span>☀️</span> Light
-      </button>
-      <button class="tt-btn" data-theme="dark" title="Dark">
-        <span>🌙</span> Dark
-      </button>
-      <button class="tt-btn" data-theme="system" title="System">
-        <span>💻</span> System
-      </button>
-    </div>
     <a class="nav-item" href="#" id="logoutBtn">
       <span class="icon">🚪</span> Logout
     </a>
+    <div class="sidebar-bottom">
+      <button class="theme-icon-btn" id="themeIconBtn" title="Theme">
+        <span class="theme-icon-current" id="themeIconCurrent">🌙</span>
+      </button>
+    </div>
+
+    <!-- Theme popup -->
+    <div class="theme-popup" id="themePopup">
+      <div class="theme-popup__overlay" id="themePopupOverlay"></div>
+      <div class="theme-popup__card">
+        <p class="theme-popup__title">Theme</p>
+        <button class="theme-popup__opt" data-theme="dark">
+          <span class="theme-popup__icon">🌙</span>
+          <span>Dark mode</span>
+        </button>
+        <button class="theme-popup__opt" data-theme="light">
+          <span class="theme-popup__icon">☀️</span>
+          <span>Light mode</span>
+        </button>
+        <button class="theme-popup__opt" data-theme="system">
+          <span class="theme-popup__icon">💻</span>
+          <span>System mode</span>
+        </button>
+      </div>
+    </div>
   </nav>
 </aside>
 
@@ -1397,8 +1442,14 @@ ${String(err?.message || err)}
 
   init();
 
-  // ── THEME TOGGLE ──
+  // ── THEME TOGGLE (icon + popup) ──
   const THEME_KEY = 'dashboard-theme';
+  const themeIconBtn = document.getElementById('themeIconBtn');
+  const themePopup = document.getElementById('themePopup');
+  const themePopupOverlay = document.getElementById('themePopupOverlay');
+  const themeIconCurrent = document.getElementById('themeIconCurrent');
+
+  const themeIcons: Record<string, string> = { dark: '🌙', light: '☀️', system: '💻' };
 
   function getSystemPref() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -1411,18 +1462,32 @@ ${String(err?.message || err)}
     } else {
       document.body.classList.remove('dark-mode');
     }
-    document.querySelectorAll('.tt-btn').forEach(btn => {
+    document.querySelectorAll('.theme-popup__opt').forEach(btn => {
       btn.classList.toggle('active', (btn as HTMLElement).dataset.theme === setting);
     });
+    if (themeIconCurrent) themeIconCurrent.textContent = themeIcons[setting] || '☀️';
     localStorage.setItem(THEME_KEY, setting);
   }
 
-  document.querySelectorAll('.tt-btn').forEach(btn => {
+  // Open popup
+  themeIconBtn?.addEventListener('click', () => {
+    themePopup?.classList.add('open');
+  });
+
+  // Close popup
+  themePopupOverlay?.addEventListener('click', () => {
+    themePopup?.classList.remove('open');
+  });
+
+  // Option clicks
+  document.querySelectorAll('.theme-popup__opt').forEach(btn => {
     btn.addEventListener('click', () => {
       applyTheme((btn as HTMLElement).dataset.theme || 'light');
+      themePopup?.classList.remove('open');
     });
   });
 
+  // System preference change
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if (localStorage.getItem(THEME_KEY) === 'system') applyTheme('system');
   });

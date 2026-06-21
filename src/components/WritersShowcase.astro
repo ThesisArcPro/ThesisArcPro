@@ -13,7 +13,7 @@ const base = '/ThesisArcPro';
 
     <div class="ws__actions">
       <a href={`${base}/writers`} class="ws__btn">Browse all writers</a>
-      <p class="ws__note">⚠️ Qualified pros, ready to help</p>
+      <p class="ws__note"> Qualified pros, ready to help</p>
     </div>
   </div>
 </section>
@@ -173,12 +173,10 @@ const base = '/ThesisArcPro';
     if (!grid) return;
 
     try {
-      const { data: writers, error } = await supabase
+      let { data: writers, error } = await supabase
         .from('writers')
         .select('*')
-        .eq('is_active', true)
-        .order('full_name')
-        .limit(4);
+        .eq('is_active', true);
 
       if (error) throw error;
 
@@ -186,12 +184,15 @@ const base = '/ThesisArcPro';
       const statsMap: Record<string, any> = {};
       if (Array.isArray(stats)) stats.forEach((s: any) => { statsMap[s.writer_id] = s; });
 
-      // Sort by most completed orders first
-      writers.sort((a: any, b: any) => {
-        const aCount = statsMap[a.id]?.completed_orders || 0;
-        const bCount = statsMap[b.id]?.completed_orders || 0;
-        return bCount - aCount;
-      });
+      // Sort by most completed orders (highest first)
+      if (writers) {
+        writers.sort((a: any, b: any) => {
+          const aCount = Number(statsMap[a.id]?.completed_orders || 0);
+          const bCount = Number(statsMap[b.id]?.completed_orders || 0);
+          return bCount - aCount;
+        });
+        writers = writers.slice(0, 4);
+      };
 
       if (!writers || !writers.length) {
         grid.innerHTML = '<div class="ws__loading">Our writers are being onboarded — check back soon!</div>';
