@@ -25,7 +25,7 @@ const base = '/ThesisArcPro';
     </a>
     <div class="sidebar-bottom">
       <button class="theme-icon-btn" id="themeIconBtn" title="Theme">
-        <span class="theme-icon-current" id="themeIconCurrent">🌙</span>
+        <span class="theme-icon-current" id="themeIconCurrent">☀️</span>
       </button>
     </div>
 
@@ -58,10 +58,33 @@ const base = '/ThesisArcPro';
     </div>
   </div>
 
+  <!-- Status Tabs with counts -->
   <div class="tabs-bar">
-    <button class="tab active" data-tab="active">Active</button>
-    <button class="tab" data-tab="completed">Completed</button>
-    <button class="tab" data-tab="all">All</button>
+    <div class="tabs">
+      <button class="tab" data-tab="in_progress">In Progress <span class="count" id="countProgress">0</span></button>
+      <button class="tab" data-tab="in_review">In Review <span class="count" id="countReview">0</span></button>
+      <button class="tab" data-tab="revision">In Revision <span class="count" id="countRevision">0</span></button>
+      <button class="tab active" data-tab="active">Active <span class="count" id="countActive">0</span></button>
+      <button class="tab" data-tab="completed">Completed <span class="count" id="countCompleted">0</span></button>
+      <button class="tab" data-tab="cancelled">Cancelled <span class="count" id="countCancelled">0</span></button>
+    </div>
+  </div>
+
+  <!-- Sort & Search controls -->
+  <div class="controls-bar">
+    <div class="sort-wrap">
+      <span class="sort-label">Sort by</span>
+      <select class="sort-select" id="sortSelect">
+        <option value="deadline_asc">Deadline, earliest</option>
+        <option value="deadline_desc" selected>Deadline, latest</option>
+        <option value="created_desc">Newest first</option>
+        <option value="created_asc">Oldest first</option>
+      </select>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="Search" />
+    </div>
   </div>
 
   <div class="orders-area">
@@ -71,16 +94,10 @@ const base = '/ThesisArcPro';
     </div>
     <div class="empty-state" id="emptyState" style="display:none;">
       <div class="empty-icon">📋</div>
-      <h3>No orders assigned yet</h3>
+      <h3>No orders found</h3>
       <p>Orders assigned to you by the admin will appear here.</p>
     </div>
-    <div class="order-table" id="orderTable" style="display:none;">
-      <div class="order-table-head">
-        <div>Topic</div>
-        <div class="order-table-head-right">
-          <span>Time Left</span>
-        </div>
-      </div>
+    <div class="order-list-wrap" id="orderListWrap" style="display:none;">
       <div id="orderList"></div>
     </div>
   </div>
@@ -99,15 +116,23 @@ const base = '/ThesisArcPro';
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --gold: #c5a059;
-    --sidebar-bg: #111827;
-    --rail-bg: #0d1117;
     --main-bg: #f1f5f9;
     --panel-bg: #ffffff;
     --border: #e2e8f0;
     --text: #0f172a;
     --text-muted: #64748b;
-    --active-blue: #6366f1;
+    --blue: #046fcd;
+    --blue-light: #eef6fb;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --amber: #d97706;
+    --amber-bg: #fffbeb;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --purple: #7c3aed;
+    --purple-bg: #f5f3ff;
+    --gray-badge: #64748b;
+    --gray-badge-bg: #f1f5f9;
   }
 
   body {
@@ -119,6 +144,7 @@ const base = '/ThesisArcPro';
     overflow: hidden;
   }
 
+  /* ── SIDEBAR ── */
   .sidebar {
     width: 240px;
     background: #ffffff;
@@ -128,305 +154,34 @@ const base = '/ThesisArcPro';
     border-right: 1px solid #eef2f7;
     flex-shrink: 0;
   }
-
-  .sidebar-new-order {
-    margin: 0 1rem 1.5rem;
-    background: #046fcd;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s;
-    text-decoration: none;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(4,111,205,0.25);
+  .sidebar-brand {
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0 1rem 1rem;
+    color: var(--text);
   }
-
-  .sidebar-new-order:hover { background: #0361b3; transform: translateY(-1px); }
   .sidebar-nav { display: flex; flex-direction: column; gap: 0.2rem; padding: 0 0.5rem; }
-
   .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.7rem 0.9rem;
-    border-radius: 10px;
-    cursor: pointer;
-    color: #64748b;
-    font-size: 0.88rem;
-    font-weight: 500;
-    transition: all 0.2s;
-    text-decoration: none;
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.7rem 0.9rem; border-radius: 10px; cursor: pointer;
+    color: #64748b; font-size: 0.88rem; font-weight: 500;
+    transition: all 0.2s; text-decoration: none;
   }
-
   .nav-item:hover { background: #f1f5f9; color: #0f172a; }
-  .nav-item.active { background: #eef6fb; color: #046fcd; font-weight: 600; }
+  .nav-item.active { background: var(--blue-light); color: var(--blue); font-weight: 600; }
   .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
   .sidebar-divider { height: 1px; background: #eef2f7; margin: 1rem 0.9rem; }
-
-  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
-  .main-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.8rem 2rem 1.2rem;
-    border-bottom: 1px solid #eef2f7;
-    background: #ffffff;
-  }
-
-  .main-header h1 { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
-
-  .btn-new-order-main {
-    background: #ffffff;
-    color: #303b4f;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 0.6rem 1.2rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    transition: all 0.2s;
-    text-decoration: none;
-  }
-
-  .btn-new-order-main:hover { border-color: #046fcd; color: #046fcd; background: #f8fafc; }
-
-  .tabs-bar {
-    display: flex;
-    align-items: center;
-    padding: 0.8rem 2rem 0;
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-  }
-
-  .tabs { display: flex; gap: 0.2rem; }
-
-  .tab {
-    background: none;
-    border: none;
-    color: #94a3b8;
-    padding: 0.7rem 1rem;
-    font-size: 0.88rem;
-    font-weight: 500;
-    cursor: pointer;
-    border-bottom: 2.5px solid transparent;
-    transition: all 0.2s;
-    position: relative;
-    top: 1px;
-    white-space: nowrap;
-  }
-
-  .tab.active { color: #046fcd; border-bottom-color: #046fcd; font-weight: 600; }
-  .tab:hover:not(.active) { color: #303b4f; }
-
-  .tab .count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #f1f5f9;
-    border-radius: 10px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 0.1rem 0.5rem;
-    margin-left: 0.4rem;
-    color: #94a3b8;
-  }
-
-  .tab.active .count { background: #eef6fb; color: #046fcd; }
-
-  .controls-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-  }
-
-  .sort-wrap { display: flex; align-items: center; gap: 0.5rem; }
-  .sort-label { font-size: 0.82rem; color: var(--text-muted); }
-
-  .sort-select {
-    background: var(--panel-bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.82rem;
-    cursor: pointer;
-    outline: none;
-  }
-
-  .search-wrap { position: relative; width: 220px; }
-
-  .search-icon {
-    position: absolute;
-    left: 0.7rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-  }
-
-  .search-input {
-    width: 100%;
-    background: #f8fafc;
-    border: 1.5px solid #e2e8f0;
-    color: #0f172a;
-    border-radius: 10px;
-    padding: 0.5rem 0.9rem 0.5rem 2.2rem;
-    font-size: 0.85rem;
-    outline: none;
-    transition: 0.2s;
-  }
-
-  .search-input:focus { border-color: #046fcd; background: #ffffff; }
-  .search-input::placeholder { color: #94a3b8; }
-  .orders-area { flex: 1; overflow-y: auto; padding: 1.5rem 2rem 2rem; }
-
-  .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    padding: 4rem;
-    text-align: center;
-  }
-
-  .empty-illustration {
-    width: 120px;
-    height: 120px;
-    background: rgba(255,255,255,0.04);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    font-size: 3rem;
-  }
-
-  .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: #303b4f; margin-bottom: 0.5rem; }
-  .empty-state p { font-size: 0.88rem; color: #64748b; margin-bottom: 1.5rem; line-height: 1.6; }
-
-  .btn-empty-order {
-    background: #046fcd;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 0.75rem 1.5rem;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s;
-    text-decoration: none;
-    box-shadow: 0 2px 8px rgba(4,111,205,0.2);
-  }
-
-  .btn-empty-order:hover { background: #0361b3; transform: translateY(-1px); }
-
-  .loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    gap: 1rem;
-    color: var(--text-muted);
-  }
-
-  .spinner {
-    width: 36px; height: 36px;
-    border: 3px solid #eef2f7;
-    border-top-color: #046fcd;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .modal {
-    position: fixed; inset: 0;
-    z-index: 100;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal.open { display: flex; }
-  .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.65); }
-
-  .modal-box {
-    position: relative; z-index: 101;
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 2rem;
-    width: 90%;
-    max-width: 560px;
-    max-height: 82vh;
-    overflow-y: auto;
-  }
-
-  .modal-close {
-    position: absolute; top: 1rem; right: 1rem;
-    background: none; border: none;
-    color: var(--text-muted); font-size: 1.2rem;
-    cursor: pointer; transition: 0.2s;
-    z-index: 2;
-  }
-
-  .modal-close:hover { color: var(--text); }
-
-  /* Review popup overlay */
-  .review-modal {
-    position: fixed; inset: 0;
-    z-index: 200;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-  .review-modal.open { display: flex; }
-  .review-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.75); }
-  .review-box {
-    position: relative; z-index: 201;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 2rem;
-    width: 90%;
-    max-width: 460px;
-    text-align: center;
-  }
-
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-  /* Sidebar bottom */
   .sidebar-bottom { margin-top: auto; padding: 0.8rem 1rem; }
+
   .theme-icon-btn {
     width: 40px; height: 40px; border-radius: 12px;
-    background: #1e293b; border: none; cursor: pointer;
+    background: #f1f5f9; border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.1rem; transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
-  .theme-icon-btn:hover { background: #334155; transform: scale(1.05); }
+  .theme-icon-btn:hover { background: #e2e8f0; transform: scale(1.05); }
 
-  /* Theme popup */
   .theme-popup { display: none; position: fixed; inset: 0; z-index: 30000; align-items: center; justify-content: center; }
   .theme-popup.open { display: flex; }
   .theme-popup__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
@@ -444,44 +199,330 @@ const base = '/ThesisArcPro';
     width: 100%; display: flex; align-items: center; gap: 0.7rem;
     padding: 0.65rem 0.7rem; border: none; border-radius: 10px;
     background: transparent; color: #cbd5e1; font-size: 0.9rem;
-    font-weight: 500; cursor: pointer; transition: all 0.15s;
-    text-align: left;
+    font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: left;
   }
   .theme-popup__opt:hover { background: #334155; color: #ffffff; }
   .theme-popup__opt.active { background: #046fcd; color: #ffffff; }
   .theme-popup__icon { font-size: 1rem; width: 24px; text-align: center; }
 
-  /* Light mode adjustments for the icon button */
-  body:not(.dark-mode) .theme-icon-btn { background: #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-  body:not(.dark-mode) .theme-icon-btn:hover { background: #e2e8f0; }
+  /* ── MAIN ── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-  /* ══ DARK MODE ══ */
-  body.dark-mode { --main-bg: #0f1117; --panel-bg: #1a1f2e; --border: rgba(255,255,255,0.08); --text: #e2e8f0; --text-muted: #94a3b8; background: #0f1117; color: #e2e8f0; }
+  .main-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.8rem 2rem 1.2rem;
+    border-bottom: 1px solid #eef2f7;
+    background: #ffffff;
+  }
+  .main-header h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); font-style: italic; }
+  .main-sub { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+  /* ── TABS ── */
+  .tabs-bar {
+    display: flex; align-items: center;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel-bg);
+    overflow-x: auto;
+  }
+  .tabs { display: flex; gap: 0; }
+  .tab {
+    background: none; border: none;
+    color: #94a3b8; padding: 0.85rem 1.1rem;
+    font-size: 0.85rem; font-weight: 500; cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.2s; position: relative;
+    white-space: nowrap; font-family: inherit;
+  }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+  .tab:hover:not(.active) { color: #303b4f; }
+  .tab .count {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #f1f5f9; border-radius: 10px;
+    font-size: 0.72rem; font-weight: 700;
+    padding: 0.1rem 0.5rem; margin-left: 0.35rem; color: #94a3b8;
+  }
+  .tab.active .count { background: var(--blue-light); color: var(--blue); }
+
+  /* ── CONTROLS BAR ── */
+  .controls-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.8rem 2rem;
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .sort-wrap { display: flex; align-items: center; gap: 0.5rem; }
+  .sort-label { font-size: 0.82rem; color: var(--text-muted); }
+  .sort-select {
+    background: var(--panel-bg); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px;
+    padding: 0.4rem 0.8rem; font-size: 0.82rem;
+    cursor: pointer; outline: none; font-family: inherit;
+  }
+  .search-wrap { position: relative; width: 220px; }
+  .search-icon {
+    position: absolute; left: 0.7rem; top: 50%;
+    transform: translateY(-50%); font-size: 0.78rem;
+    color: var(--text-muted); pointer-events: none;
+  }
+  .search-input {
+    width: 100%; background: #f8fafc;
+    border: 1.5px solid #e2e8f0; color: var(--text);
+    border-radius: 10px; padding: 0.5rem 0.9rem 0.5rem 2.2rem;
+    font-size: 0.85rem; outline: none; transition: 0.2s; font-family: inherit;
+  }
+  .search-input:focus { border-color: var(--blue); background: #ffffff; }
+  .search-input::placeholder { color: #94a3b8; }
+
+  /* ── ORDERS AREA ── */
+  .orders-area { flex: 1; overflow-y: auto; padding: 1rem 2rem 2rem; }
+  .order-list-wrap { display: flex; flex-direction: column; }
+
+  /* ── ORDER CARD ── */
+  .order-card {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .order-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+  }
+
+  /* Left border colors by status */
+  .order-card.border-new { border-left-color: var(--blue); }
+  .order-card.border-in_progress { border-left-color: var(--blue); }
+  .order-card.border-in_review { border-left-color: var(--purple); }
+  .order-card.border-revision { border-left-color: var(--amber); }
+  .order-card.border-completed { border-left-color: var(--green); }
+  .order-card.border-cancelled { border-left-color: #94a3b8; }
+
+  .card-left { flex: 1; min-width: 0; }
+  .card-title {
+    font-size: 0.92rem; font-weight: 600; color: var(--text);
+    margin-bottom: 0.35rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-meta {
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: 0.4rem; font-size: 0.78rem; color: var(--text-muted);
+  }
+  .meta-dot { color: #cbd5e1; }
+
+  /* Status badges */
+  .wr-badge {
+    display: inline-block; padding: 0.15rem 0.55rem;
+    border-radius: 6px; font-size: 0.72rem; font-weight: 600;
+    text-transform: capitalize;
+  }
+  .wr-badge.new { background: var(--blue-light); color: var(--blue); }
+  .wr-badge.in_progress { background: var(--blue-light); color: var(--blue); }
+  .wr-badge.in_review { background: var(--purple-bg); color: var(--purple); }
+  .wr-badge.revision { background: var(--amber-bg); color: var(--amber); }
+  .wr-badge.completed { background: var(--green-bg); color: var(--green); }
+  .wr-badge.cancelled { background: var(--gray-badge-bg); color: var(--gray-badge); }
+
+  .card-right {
+    display: flex; align-items: center; gap: 1rem;
+    flex-shrink: 0; margin-left: 1rem;
+  }
+  .card-deadline {
+    font-size: 0.82rem; font-weight: 500; white-space: nowrap;
+  }
+  .card-deadline.ok { color: var(--green); }
+  .card-deadline.urgent { color: var(--amber); }
+  .card-deadline.overdue { color: var(--red); }
+  .card-deadline.none { color: var(--text-muted); }
+
+  /* ── EMPTY / LOADING ── */
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; height: 100%; padding: 4rem; text-align: center;
+  }
+  .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+  .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: #303b4f; margin-bottom: 0.5rem; }
+  .empty-state p { font-size: 0.88rem; color: #64748b; line-height: 1.6; }
+
+  .loading-state {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; height: 100%; gap: 1rem; color: var(--text-muted);
+  }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid #eef2f7; border-top-color: var(--blue);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── MODAL ── */
+  .modal {
+    position: fixed; inset: 0; z-index: 100;
+    display: none; align-items: center; justify-content: center;
+  }
+  .modal.open { display: flex; }
+  .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); }
+  .modal-box {
+    position: relative; z-index: 101;
+    background: var(--panel-bg); border: 1px solid var(--border);
+    border-radius: 14px; padding: 2rem;
+    width: 90%; max-width: 580px; max-height: 85vh; overflow-y: auto;
+  }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none;
+    color: var(--text-muted); font-size: 1.2rem;
+    cursor: pointer; transition: 0.2s; z-index: 2;
+  }
+  .modal-close:hover { color: var(--text); }
+
+  /* Modal inner: header */
+  .om-header { margin-bottom: 1.2rem; }
+  .om-title { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .om-id { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+  /* Modal tabs */
+  .om-tabs {
+    display: flex; gap: 0; border-bottom: 1px solid var(--border);
+    margin-bottom: 1.2rem;
+  }
+  .om-tab {
+    background: none; border: none;
+    color: #94a3b8; padding: 0.6rem 1rem;
+    font-size: 0.84rem; font-weight: 500; cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .om-tab.om-tab--active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+  .om-tab:hover:not(.om-tab--active) { color: var(--text); }
+
+  /* Modal panels */
+  .om-panel { display: none; }
+  .om-panel.om-panel--active { display: block; }
+
+  .om-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin-bottom: 1.2rem;
+  }
+  .om-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.3px; font-weight: 600; }
+  .om-value { font-size: 0.88rem; color: var(--text); font-weight: 500; }
+
+  .om-desc-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.3px; font-weight: 600; }
+  .om-desc {
+    font-size: 0.85rem; color: var(--text); line-height: 1.7;
+    background: var(--main-bg); border-radius: 8px; padding: 1rem;
+    white-space: pre-wrap; max-height: 300px; overflow-y: auto;
+  }
+
+  /* Files tab */
+  .upload-order-id { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+  .form-group { margin-bottom: 0.8rem; }
+  .form-group label {
+    display: block; font-size: 0.78rem; font-weight: 600;
+    color: var(--text-muted); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .form-group select,
+  .form-group input[type="file"] {
+    width: 100%; background: var(--main-bg);
+    border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 0.5rem 0.7rem; font-size: 0.85rem;
+    color: var(--text); font-family: inherit; outline: none;
+  }
+  .form-group select:focus,
+  .form-group input[type="file"]:focus { border-color: var(--blue); }
+
+  .upload-btn {
+    background: var(--blue); color: #fff; border: none;
+    border-radius: 8px; padding: 0.6rem 1.2rem;
+    font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    transition: 0.2s; font-family: inherit; margin-top: 0.4rem;
+  }
+  .upload-btn:hover { background: #0361b3; }
+  .upload-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .upload-msg { font-size: 0.82rem; margin-top: 0.6rem; padding: 0.5rem 0.7rem; border-radius: 6px; }
+  .upload-msg.success { background: var(--green-bg); color: var(--green); }
+  .upload-msg.error { background: var(--red-bg); color: var(--red); }
+
+  .files-section { margin-top: 1.2rem; }
+  .files-section h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--text); }
+  .files-list { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .file-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--main-bg); border-radius: 8px;
+    padding: 0.55rem 0.75rem; gap: 0.6rem;
+  }
+  .file-info { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+  .file-type-badge {
+    background: var(--blue-light); color: var(--blue);
+    font-size: 0.68rem; font-weight: 600; padding: 0.15rem 0.45rem;
+    border-radius: 5px; white-space: nowrap;
+  }
+  .file-name {
+    font-size: 0.82rem; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .file-delete {
+    background: none; border: none; cursor: pointer;
+    font-size: 0.9rem; transition: 0.2s; flex-shrink: 0;
+    padding: 0.2rem;
+  }
+  .file-delete:hover { transform: scale(1.15); }
+  .no-files { font-size: 0.82rem; color: var(--text-muted); padding: 0.5rem 0; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  /* ══════════════════════════════════════════
+     DARK MODE
+     ══════════════════════════════════════════ */
+  body.dark-mode {
+    --main-bg: #0f1117; --panel-bg: #1a1f2e; --border: rgba(255,255,255,0.08);
+    --text: #e2e8f0; --text-muted: #94a3b8;
+    --blue-light: rgba(4,111,205,0.15); --green-bg: rgba(22,163,74,0.12);
+    --amber-bg: rgba(217,119,6,0.12); --red-bg: rgba(220,38,38,0.12);
+    --purple-bg: rgba(124,58,237,0.12); --gray-badge-bg: rgba(255,255,255,0.06);
+    background: #0f1117; color: #e2e8f0;
+  }
   body.dark-mode .sidebar { background: #161b27; border-right-color: rgba(255,255,255,0.06); }
+  body.dark-mode .sidebar-brand { color: #e2e8f0; }
   body.dark-mode .nav-item { color: #94a3b8; }
   body.dark-mode .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
   body.dark-mode .nav-item.active { background: rgba(4,111,205,0.15); color: #60a5fa; }
   body.dark-mode .sidebar-divider { background: rgba(255,255,255,0.06); }
-  body.dark-mode .theme-icon-btn { background: #2a3244; }
+  body.dark-mode .theme-icon-btn { background: #2a3244; box-shadow: none; }
   body.dark-mode .theme-icon-btn:hover { background: #334155; }
-  body.dark-mode .main { background: #0f1117; }
   body.dark-mode .main-header { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
   body.dark-mode .main-header h1 { color: #e2e8f0; }
-  body.dark-mode .btn-new-order-main { background: #1a1f2e; color: #e2e8f0; border-color: rgba(255,255,255,0.1); }
-  body.dark-mode .btn-new-order-main:hover { border-color: #60a5fa; color: #60a5fa; background: #1e2536; }
-  body.dark-mode .tabs-bar { border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .main-sub { color: #64748b; }
+  body.dark-mode .tabs-bar { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
   body.dark-mode .tab { color: #64748b; }
   body.dark-mode .tab.active { color: #60a5fa; border-bottom-color: #60a5fa; }
   body.dark-mode .tab:hover:not(.active) { color: #e2e8f0; }
   body.dark-mode .tab .count { background: #1e2536; color: #64748b; }
   body.dark-mode .tab.active .count { background: rgba(96,165,250,0.15); color: #60a5fa; }
+  body.dark-mode .controls-bar { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
   body.dark-mode .sort-select { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
   body.dark-mode .sort-label { color: #64748b; }
   body.dark-mode .search-input { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
   body.dark-mode .search-input:focus { border-color: #60a5fa; background: #1e2536; }
   body.dark-mode .search-input::placeholder { color: #4a5568; }
   body.dark-mode .search-icon { color: #4a5568; }
-  body.dark-mode .empty-illustration { background: rgba(255,255,255,0.03); }
+  body.dark-mode .order-card { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
+  body.dark-mode .order-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  body.dark-mode .card-title { color: #e2e8f0; }
+  body.dark-mode .card-meta { color: #64748b; }
+  body.dark-mode .meta-dot { color: #334155; }
   body.dark-mode .empty-state h3 { color: #e2e8f0; }
   body.dark-mode .empty-state p { color: #64748b; }
   body.dark-mode .loading-state { color: #64748b; }
@@ -489,16 +530,34 @@ const base = '/ThesisArcPro';
   body.dark-mode .modal-box { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
   body.dark-mode .modal-close { color: #64748b; }
   body.dark-mode .modal-close:hover { color: #e2e8f0; }
-  body.dark-mode .review-box { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
-  body.dark-mode .review-box h2 { color: #e2e8f0; }
-  body.dark-mode .review-box p { color: #94a3b8; }
-  body.dark-mode .star { color: #334155; }
-  body.dark-mode .review-textarea { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
-  body.dark-mode .review-textarea::placeholder { color: #4a5568; }
-  body.dark-mode .btn-skip-review { color: #94a3b8; border-color: rgba(255,255,255,0.1); }
-  body.dark-mode .btn-skip-review:hover { color: #e2e8f0; border-color: rgba(255,255,255,0.2); background: #1e2536; }
+  body.dark-mode .om-title { color: #e2e8f0; }
+  body.dark-mode .om-tabs { border-bottom-color: rgba(255,255,255,0.08); }
+  body.dark-mode .om-tab { color: #64748b; }
+  body.dark-mode .om-tab.om-tab--active { color: #60a5fa; border-bottom-color: #60a5fa; }
+  body.dark-mode .om-tab:hover:not(.om-tab--active) { color: #e2e8f0; }
+  body.dark-mode .om-value { color: #e2e8f0; }
+  body.dark-mode .om-desc { background: #161b27; color: #e2e8f0; }
+  body.dark-mode .form-group select,
+  body.dark-mode .form-group input[type="file"] { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
+  body.dark-mode .file-row { background: #161b27; }
+  body.dark-mode .file-name { color: #e2e8f0; }
+  body.dark-mode .file-type-badge { background: rgba(96,165,250,0.15); color: #60a5fa; }
   body.dark-mode ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
   body.dark-mode ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main-header { padding: 1.2rem 1rem 0.8rem; }
+    .tabs-bar { padding: 0 1rem; }
+    .controls-bar { padding: 0.6rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    .search-wrap { width: 100%; }
+    .orders-area { padding: 0.8rem 1rem 2rem; }
+    .order-card { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .card-right { margin-left: 0; }
+    .modal-box { width: 95%; padding: 1.4rem; }
+    .om-grid { grid-template-columns: 1fr; }
+  }
 </style>
 
 <script>
@@ -513,6 +572,8 @@ const base = '/ThesisArcPro';
   let writerName = '';
   let currentSession: any = null;
   let currentTab = 'active';
+  let currentSort = 'deadline_desc';
+  let searchQuery = '';
   let activeOrderId: number | null = null;
   let activeOrderNumber = '';
 
@@ -521,13 +582,94 @@ const base = '/ThesisArcPro';
   }
 
   function deadlineInfo(d: string) {
-    if (!d) return { text: 'No deadline', cls: '' };
+    if (!d) return { text: 'No deadline', cls: 'none' };
     const diff = new Date(d).getTime() - Date.now();
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
-    if (diff < 0) return { text: `⚠️ ${Math.abs(days)}d overdue`, cls: 'overdue' };
+    if (diff < 0) return { text: `⚠ ${Math.abs(days)}d overdue`, cls: 'overdue' };
     if (days <= 2) return { text: `⏰ ${days === 0 ? hours + 'h' : days + 'd'} left`, cls: 'urgent' };
-    return { text: `${days}d left`, cls: 'ok' };
+    return { text: `🕐 ${days}d left`, cls: 'ok' };
+  }
+
+  function statusLabel(s: string) {
+    return (s || 'new').replace(/_/g, ' ');
+  }
+
+  function statusClass(s: string) {
+    const normalized = (s || 'new').toLowerCase();
+    if (['new','in_progress','in_review','completed','revision','cancelled'].includes(normalized)) return normalized;
+    return 'new';
+  }
+
+  // ── COUNT HELPERS ──
+  function updateCounts() {
+    const counts: Record<string, number> = {
+      in_progress: 0, in_review: 0, revision: 0, completed: 0, cancelled: 0, active: 0
+    };
+    orders.forEach(o => {
+      const s = (o.order_status || 'new').toLowerCase();
+      if (s === 'completed') counts.completed++;
+      else if (s === 'cancelled') counts.cancelled++;
+      else if (s === 'in_review') { counts.in_review++; counts.active++; }
+      else if (s === 'revision') { counts.revision++; counts.active++; }
+      else { counts.in_progress++; counts.active++; } // new, in_progress, or anything else = active
+    });
+
+    const el = (id: string) => document.getElementById(id);
+    if (el('countProgress')) el('countProgress')!.textContent = String(counts.in_progress);
+    if (el('countReview')) el('countReview')!.textContent = String(counts.in_review);
+    if (el('countRevision')) el('countRevision')!.textContent = String(counts.revision);
+    if (el('countActive')) el('countActive')!.textContent = String(counts.active);
+    if (el('countCompleted')) el('countCompleted')!.textContent = String(counts.completed);
+    if (el('countCancelled')) el('countCancelled')!.textContent = String(counts.cancelled);
+  }
+
+  // ── SORTING ──
+  function sortOrders(arr: any[]) {
+    const sorted = [...arr];
+    switch (currentSort) {
+      case 'deadline_asc':
+        return sorted.sort((a, b) => new Date(a.deadline || '2099-12-31').getTime() - new Date(b.deadline || '2099-12-31').getTime());
+      case 'deadline_desc':
+        return sorted.sort((a, b) => new Date(b.deadline || '2000-01-01').getTime() - new Date(a.deadline || '2000-01-01').getTime());
+      case 'created_desc':
+        return sorted.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
+      case 'created_asc':
+        return sorted.sort((a, b) => new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime());
+      default:
+        return sorted;
+    }
+  }
+
+  // ── FILTER BY TAB ──
+  function filterByTab(arr: any[]) {
+    switch (currentTab) {
+      case 'active':
+        return arr.filter(o => !['completed', 'cancelled'].includes((o.order_status || '').toLowerCase()));
+      case 'in_progress':
+        return arr.filter(o => ['new', 'in_progress'].includes((o.order_status || 'new').toLowerCase()));
+      case 'in_review':
+        return arr.filter(o => (o.order_status || '').toLowerCase() === 'in_review');
+      case 'revision':
+        return arr.filter(o => (o.order_status || '').toLowerCase() === 'revision');
+      case 'completed':
+        return arr.filter(o => (o.order_status || '').toLowerCase() === 'completed');
+      case 'cancelled':
+        return arr.filter(o => (o.order_status || '').toLowerCase() === 'cancelled');
+      default:
+        return arr;
+    }
+  }
+
+  // ── FILTER BY SEARCH ──
+  function filterBySearch(arr: any[]) {
+    if (!searchQuery.trim()) return arr;
+    const q = searchQuery.toLowerCase();
+    return arr.filter(o =>
+      (o.topic || '').toLowerCase().includes(q) ||
+      String(o.order_number || o.id).toLowerCase().includes(q) ||
+      (o.assignment_type || '').toLowerCase().includes(q)
+    );
   }
 
   async function init() {
@@ -550,8 +692,8 @@ const base = '/ThesisArcPro';
     writerName = data[0].full_name;
     const nameEl = document.getElementById('writerName');
     const subEl = document.getElementById('writerSub');
-    if (nameEl) nameEl.textContent = `Welcome, ${writerName}`;
-    if (subEl) subEl.textContent = 'Your assigned orders';
+    if (nameEl) nameEl.textContent = `My Orders`;
+    if (subEl) subEl.textContent = `Welcome back, ${writerName}`;
 
     await loadOrders();
   }
@@ -563,6 +705,7 @@ const base = '/ThesisArcPro';
         { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
       );
       orders = await res.json();
+      updateCounts();
       renderOrders();
     } catch (err) {
       console.error(err);
@@ -572,61 +715,58 @@ const base = '/ThesisArcPro';
   function renderOrders() {
     const loading = document.getElementById('loadingState')!;
     const empty = document.getElementById('emptyState')!;
-    const table = document.getElementById('orderTable')!;
+    const wrap = document.getElementById('orderListWrap')!;
     const list = document.getElementById('orderList')!;
 
     loading.style.display = 'none';
 
-    let filtered = orders;
-    if (currentTab === 'active') {
-      filtered = orders.filter(o => !['completed', 'cancelled'].includes(o.order_status));
-    } else if (currentTab === 'completed') {
-      filtered = orders.filter(o => o.order_status === 'completed');
-    }
+    let filtered = filterByTab(orders);
+    filtered = filterBySearch(filtered);
+    filtered = sortOrders(filtered);
 
     if (!filtered.length) {
-      empty.style.display = 'block';
-      table.style.display = 'none';
+      empty.style.display = 'flex';
+      wrap.style.display = 'none';
       return;
     }
 
     empty.style.display = 'none';
-    table.style.display = 'flex';
+    wrap.style.display = 'flex';
 
     list.innerHTML = filtered.map(o => {
       const dl = deadlineInfo(o.deadline);
-      const statusCls = ['new','in_progress','in_review','completed','revision'].includes(o.order_status) ? o.order_status : 'new';
+      const sc = statusClass(o.order_status);
       return `
-        <div class="order-row" data-id="${o.id}">
-          <div class="col-left">
-            <div class="order-title">${esc(o.topic || '(no topic)')}</div>
-            <div class="order-meta">
-              <span class="wr-badge ${statusCls}">${esc((o.order_status || '').replace(/_/g,' '))}</span>
+        <div class="order-card border-${sc}" data-id="${o.id}">
+          <div class="card-left">
+            <div class="card-title">${esc(o.topic || '(no topic)')}</div>
+            <div class="card-meta">
+              <span class="wr-badge ${sc}">${esc(statusLabel(o.order_status))}</span>
               <span class="meta-dot">·</span>
-              <span>${esc(o.pages || 1)} pages</span>
+              <span>${esc(o.pages || 1)} page${(o.pages || 1) > 1 ? 's' : ''}</span>
               <span class="meta-dot">·</span>
               <span>${esc(o.assignment_type || 'Essay')}</span>
               <span class="meta-dot">·</span>
-              <span class="order-id">ID ${esc(o.order_number || o.id)}</span>
+              <span>ID ${esc(o.order_number || o.id)}</span>
             </div>
           </div>
-          <div class="col-right">
-            <div class="col-deadline ${dl.cls}">${dl.text}</div>
+          <div class="card-right">
+            <span class="card-deadline ${dl.cls}">${dl.text}</span>
           </div>
         </div>
       `;
     }).join('');
 
-    list.querySelectorAll('.order-row').forEach(row => {
-      row.addEventListener('click', () => {
-        const id = Number((row as HTMLElement).dataset.id);
+    list.querySelectorAll('.order-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = Number((card as HTMLElement).dataset.id);
         const order = orders.find(o => o.id === id);
         if (order) openDetail(order);
       });
     });
   }
 
-  // Tabs
+  // ── TABS ──
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -636,7 +776,19 @@ const base = '/ThesisArcPro';
     });
   });
 
-  // ── ORDER DETAIL MODAL (General / Instructions / Files) ──
+  // ── SORT ──
+  document.getElementById('sortSelect')?.addEventListener('change', (e) => {
+    currentSort = (e.target as HTMLSelectElement).value;
+    renderOrders();
+  });
+
+  // ── SEARCH ──
+  document.getElementById('searchInput')?.addEventListener('input', (e) => {
+    searchQuery = (e.target as HTMLInputElement).value;
+    renderOrders();
+  });
+
+  // ── ORDER DETAIL MODAL ──
   function openDetail(order: any) {
     activeOrderId = order.id;
     activeOrderNumber = order.order_number || String(order.id);
@@ -663,7 +815,7 @@ const base = '/ThesisArcPro';
       <!-- GENERAL -->
       <div class="om-panel om-panel--active" data-mpanel="general">
         <div class="om-grid">
-          ${field('Status', esc((order.order_status || '—').replace(/_/g,' ')))}
+          ${field('Status', `<span class="wr-badge ${statusClass(order.order_status)}">${esc(statusLabel(order.order_status))}</span>`)}
           ${field('Pages', esc(order.pages || '—'))}
           ${field('Started', esc(startDate))}
           ${field('Time Left', dl.text)}
@@ -686,7 +838,7 @@ const base = '/ThesisArcPro';
         </div>
       </div>
 
-      <!-- FILES (writer upload, kept as-is) -->
+      <!-- FILES -->
       <div class="om-panel" data-mpanel="files">
         <p class="upload-order-id">Order: ${esc(activeOrderNumber)} — ${esc(order.topic || '')}</p>
 
@@ -734,9 +886,7 @@ const base = '/ThesisArcPro';
       });
     });
 
-    // Upload button (now lives inside the modal's Files tab)
     document.getElementById('uploadBtn')?.addEventListener('click', handleUpload);
-
     document.getElementById('detailModal')!.classList.add('open');
   }
 
@@ -772,7 +922,8 @@ const base = '/ThesisArcPro';
       `).join('');
 
       filesList.querySelectorAll('.file-delete').forEach(btn => {
-        btn.addEventListener('click', async () => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
           const fileId = (btn as HTMLElement).dataset.fileId;
           const filePath = (btn as HTMLElement).dataset.filePath;
           if (!confirm('Delete this file?')) return;
@@ -864,7 +1015,7 @@ const base = '/ThesisArcPro';
     }
   }
 
-  // Logout
+  // ── LOGOUT ──
   document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
     e.preventDefault();
     await supabase.auth.signOut();
