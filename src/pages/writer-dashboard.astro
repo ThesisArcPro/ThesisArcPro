@@ -23,6 +23,30 @@ const base = '/ThesisArcPro';
     <a class="nav-item" href="#" id="logoutBtn">
       <span class="icon">🚪</span> Logout
     </a>
+    <div class="sidebar-bottom">
+      <button class="theme-icon-btn" id="themeIconBtn" title="Theme">
+        <span class="theme-icon-current" id="themeIconCurrent">🌙</span>
+      </button>
+    </div>
+
+    <div class="theme-popup" id="themePopup">
+      <div class="theme-popup__overlay" id="themePopupOverlay"></div>
+      <div class="theme-popup__card">
+        <p class="theme-popup__title">Theme</p>
+        <button class="theme-popup__opt" data-theme="dark">
+          <span class="theme-popup__icon">🌙</span>
+          <span>Dark mode</span>
+        </button>
+        <button class="theme-popup__opt" data-theme="light">
+          <span class="theme-popup__icon">☀️</span>
+          <span>Light mode</span>
+        </button>
+        <button class="theme-popup__opt" data-theme="system">
+          <span class="theme-popup__icon">💻</span>
+          <span>System mode</span>
+        </button>
+      </div>
+    </div>
   </nav>
 </aside>
 
@@ -50,7 +74,16 @@ const base = '/ThesisArcPro';
       <h3>No orders assigned yet</h3>
       <p>Orders assigned to you by the admin will appear here.</p>
     </div>
-    <div class="order-list" id="orderList" style="display:none;"></div>
+    <div class="order-table" id="orderTable" style="display:none;">
+      <div class="order-table-head">
+        <div>Topic</div>
+        <div class="order-table-head-right">
+          <span>Time Left</span>
+          <span>Actions</span>
+        </div>
+      </div>
+      <div id="orderList"></div>
+    </div>
   </div>
 </main>
 
@@ -146,24 +179,36 @@ const base = '/ThesisArcPro';
   .empty-state h3 { color: #303b4f; font-size: 1.1rem; margin-bottom: 0.4rem; }
   .empty-state p { color: #64748b; font-size: 0.88rem; }
 
-  /* Order cards */
-  .order-list { display: flex; flex-direction: column; gap: 0.6rem; }
-  .wr-order {
-    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;
-    padding: 1.1rem 1.3rem; display: flex; justify-content: space-between;
-    align-items: center; gap: 1rem; transition: all 0.15s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  /* Order table */
+  .order-table { display: flex; flex-direction: column; gap: 0.5rem; }
+  .order-table-head {
+    display: flex; justify-content: space-between; padding: 0.4rem 1.2rem;
+    font-size: 0.72rem; font-weight: 700; color: #94a3b8;
+    text-transform: uppercase; letter-spacing: 0.5px;
   }
-  .wr-order:hover { border-color: rgba(4,111,205,0.4); background: #fafcff; }
-  .wr-order__left { flex: 1; min-width: 0; }
-  .wr-order__topic { font-weight: 700; font-size: 0.93rem; color: #0f172a; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .wr-order__meta { display: flex; align-items: center; gap: 0.4rem; font-size: 0.76rem; color: #64748b; flex-wrap: wrap; }
-  .wr-order__meta .dot { color: #cbd5e1; }
-  .wr-order__right { display: flex; align-items: center; gap: 0.8rem; flex-shrink: 0; }
-  .wr-order__deadline { font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
-  .wr-order__deadline.ok { color: #16a34a; }
-  .wr-order__deadline.urgent { color: #f59e0b; }
-  .wr-order__deadline.overdue { color: #dc2626; }
+  .order-table-head-right { display: flex; gap: 3rem; }
+
+  .order-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 1rem 1.2rem; background: #ffffff;
+    border: 1px solid #e2e8f0; border-radius: 10px; transition: all 0.18s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .order-row:hover { background: #fafafa; border-color: rgba(99,102,241,0.45); }
+
+  .col-left { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 0; overflow: hidden; }
+  .order-title { font-size: 0.93rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .order-meta { display: flex; align-items: center; gap: 0.35rem; font-size: 0.76rem; color: #64748b; flex-wrap: wrap; }
+  .meta-dot { color: #cbd5e1; }
+  .order-id { color: #94a3b8; }
+
+  .col-right { display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0; }
+  .col-deadline { font-size: 0.82rem; font-weight: 600; white-space: nowrap; min-width: 90px; text-align: right; }
+  .col-deadline.overdue { color: #dc2626; }
+  .col-deadline.urgent { color: #f59e0b; }
+  .col-deadline.ok { color: #16a34a; }
+  .col-actions { display: flex; gap: 0.6rem; }
+
   .wr-btn { background: #046fcd; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
   .wr-btn:hover { background: #0361b3; }
   .wr-btn--view { background: #f1f5f9; color: #303b4f; border: 1px solid #e2e8f0; }
@@ -176,6 +221,40 @@ const base = '/ThesisArcPro';
   .wr-badge.in_review { background: rgba(59,130,246,0.12); color: #3b82f6; }
   .wr-badge.completed { background: rgba(22,163,74,0.12); color: #16a34a; }
   .wr-badge.revision { background: rgba(168,85,247,0.12); color: #a855f7; }
+
+  /* Theme icon + popup */
+  .sidebar-bottom { margin-top: auto; padding: 0.8rem 1rem; }
+  .theme-icon-btn {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: #1e293b; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .theme-icon-btn:hover { background: #334155; transform: scale(1.05); }
+  .theme-popup { display: none; position: fixed; inset: 0; z-index: 30000; align-items: center; justify-content: center; }
+  .theme-popup.open { display: flex; }
+  .theme-popup__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+  .theme-popup__card {
+    position: relative; z-index: 1; background: #1e293b;
+    border-radius: 16px; padding: 1.2rem; min-width: 220px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+  .theme-popup__title {
+    color: #e2e8f0; font-size: 0.82rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 0.8rem; padding-left: 0.3rem;
+  }
+  .theme-popup__opt {
+    width: 100%; display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.65rem 0.7rem; border: none; border-radius: 10px;
+    background: transparent; color: #cbd5e1; font-size: 0.9rem;
+    font-weight: 500; cursor: pointer; transition: all 0.15s;
+    text-align: left;
+  }
+  .theme-popup__opt:hover { background: #334155; color: #ffffff; }
+  .theme-popup__opt.active { background: #046fcd; color: #ffffff; }
+  .theme-popup__icon { font-size: 1rem; width: 24px; text-align: center; }
 
   /* Modals */
   .modal { position: fixed; inset: 0; z-index: 10000; display: none; align-items: center; justify-content: center; padding: 1rem; }
@@ -298,6 +377,7 @@ const base = '/ThesisArcPro';
   function renderOrders() {
     const loading = document.getElementById('loadingState')!;
     const empty = document.getElementById('emptyState')!;
+    const table = document.getElementById('orderTable')!;
     const list = document.getElementById('orderList')!;
 
     loading.style.display = 'none';
@@ -311,34 +391,36 @@ const base = '/ThesisArcPro';
 
     if (!filtered.length) {
       empty.style.display = 'block';
-      list.style.display = 'none';
+      table.style.display = 'none';
       return;
     }
 
     empty.style.display = 'none';
-    list.style.display = 'flex';
+    table.style.display = 'flex';
 
     list.innerHTML = filtered.map(o => {
       const dl = deadlineInfo(o.deadline);
       const statusCls = ['new','in_progress','in_review','completed','revision'].includes(o.order_status) ? o.order_status : 'new';
       return `
-        <div class="wr-order">
-          <div class="wr-order__left">
-            <div class="wr-order__topic">${esc(o.topic || '(no topic)')}</div>
-            <div class="wr-order__meta">
+        <div class="order-row">
+          <div class="col-left">
+            <div class="order-title">${esc(o.topic || '(no topic)')}</div>
+            <div class="order-meta">
               <span class="wr-badge ${statusCls}">${esc((o.order_status || '').replace(/_/g,' '))}</span>
-              <span class="dot">·</span>
+              <span class="meta-dot">·</span>
               <span>${esc(o.pages || 1)} pages</span>
-              <span class="dot">·</span>
+              <span class="meta-dot">·</span>
               <span>${esc(o.assignment_type || 'Essay')}</span>
-              <span class="dot">·</span>
-              <span>ID ${esc(o.order_number || o.id)}</span>
+              <span class="meta-dot">·</span>
+              <span class="order-id">ID ${esc(o.order_number || o.id)}</span>
             </div>
           </div>
-          <div class="wr-order__right">
-            <div class="wr-order__deadline ${dl.cls}">${dl.text}</div>
-            <button class="wr-btn wr-btn--view" data-id="${o.id}" data-action="view">📋 View</button>
-            <button class="wr-btn" data-id="${o.id}" data-action="upload">📤 Upload</button>
+          <div class="col-right">
+            <div class="col-deadline ${dl.cls}">${dl.text}</div>
+            <div class="col-actions">
+              <button class="wr-btn wr-btn--view" data-id="${o.id}" data-action="view">📋 View</button>
+              <button class="wr-btn" data-id="${o.id}" data-action="upload">📤 Upload</button>
+            </div>
           </div>
         </div>
       `;
@@ -542,6 +624,41 @@ const base = '/ThesisArcPro';
   });
 
   init();
+
+  // ── THEME TOGGLE ──
+  const THEME_KEY = 'dashboard-theme';
+  const themeIconBtn = document.getElementById('themeIconBtn');
+  const themePopup = document.getElementById('themePopup');
+  const themePopupOverlay = document.getElementById('themePopupOverlay');
+  const themeIconCurrent = document.getElementById('themeIconCurrent');
+  const themeIcons: Record<string, string> = { dark: '🌙', light: '☀️', system: '💻' };
+
+  function getSystemPref() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function applyTheme(setting: string) {
+    const actual = setting === 'system' ? getSystemPref() : setting;
+    document.body.classList.toggle('dark-mode', actual === 'dark');
+    document.querySelectorAll('.theme-popup__opt').forEach(btn => {
+      btn.classList.toggle('active', (btn as HTMLElement).dataset.theme === setting);
+    });
+    if (themeIconCurrent) themeIconCurrent.textContent = themeIcons[setting] || '☀️';
+    localStorage.setItem(THEME_KEY, setting);
+  }
+
+  themeIconBtn?.addEventListener('click', () => themePopup?.classList.add('open'));
+  themePopupOverlay?.addEventListener('click', () => themePopup?.classList.remove('open'));
+  document.querySelectorAll('.theme-popup__opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      applyTheme((btn as HTMLElement).dataset.theme || 'light');
+      themePopup?.classList.remove('open');
+    });
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (localStorage.getItem(THEME_KEY) === 'system') applyTheme('system');
+  });
+  applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 </script>
 
 </body>
