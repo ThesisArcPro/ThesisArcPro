@@ -98,7 +98,11 @@ const base = '/ThesisArcPro';
       <p>Orders assigned to you by the admin will appear here.</p>
     </div>
     <div class="order-list-wrap" id="orderListWrap" style="display:none;">
-      <div id="orderList"></div>
+      <div class="order-list-header">
+    <span>TOPIC</span>
+    <span class="order-list-header-right">TIME LEFT</span>
+  </div>
+  <div id="orderList"></div>
     </div>
   </div>
 </main>
@@ -291,7 +295,7 @@ const base = '/ThesisArcPro';
     transition: all 0.15s;
   }
   .order-card:hover {
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
     transform: translateY(-1px);
   }
 
@@ -518,7 +522,11 @@ const base = '/ThesisArcPro';
   body.dark-mode .search-input:focus { border-color: #60a5fa; background: #1e2536; }
   body.dark-mode .search-input::placeholder { color: #4a5568; }
   body.dark-mode .search-icon { color: #4a5568; }
-  body.dark-mode .order-card { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
+  body.dark-mode .order-card {
+  background: #1e2536;
+  border-color: rgba(255,255,255,0.08);
+  border-left-width: 4px;
+}
   body.dark-mode .order-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
   body.dark-mode .card-title { color: #e2e8f0; }
   body.dark-mode .card-meta { color: #64748b; }
@@ -557,6 +565,19 @@ const base = '/ThesisArcPro';
     .card-right { margin-left: 0; }
     .modal-box { width: 95%; padding: 1.4rem; }
     .om-grid { grid-template-columns: 1fr; }
+
+    .order-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.order-list-header-right { margin-right: 0; }
   }
 </style>
 
