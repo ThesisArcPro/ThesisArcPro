@@ -310,8 +310,7 @@ const base = '/ThesisArcPro';
   .review-modal.open { display: flex; }
   .review-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.75); }
   .review-box {
-    position: relative; z-index: 202;
-    pointer-events: auto;
+    position: relative; z-index: 201;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 14px;
@@ -675,11 +674,11 @@ const base = '/ThesisArcPro';
     transition: color 0.15s;
     background: none;
     border: none;
-    document.querySelectorAll('.star').forEach(s => {
-  s.style.position = 'relative';
-  s.style.zIndex = '999';
-  s.style.pointerEvents = 'auto';
-});
+    padding: 0;
+    line-height: 1;
+  }.review-box {
+    position: relative; z-index: 202;
+    pointer-events: auto;
   .star.selected { color: #fbbf24; }
   .star:hover { color: #fbbf24; }
 
