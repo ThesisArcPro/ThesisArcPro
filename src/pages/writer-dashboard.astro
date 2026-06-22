@@ -300,9 +300,76 @@ const base = '/ThesisArcPro';
 
   @media (max-width: 768px) {
     .sidebar { display: none; }
-    .wr-order { flex-direction: column; align-items: flex-start; }
-    .wr-order__right { width: 100%; justify-content: space-between; }
+    .order-row { flex-direction: column; align-items: flex-start; }
+    .col-right { width: 100%; justify-content: space-between; margin-top: 0.5rem; }
   }
+
+  /* ══ DARK MODE ══ */
+  body.dark-mode { background: #0f1117; color: #e2e8f0; }
+  body.dark-mode .sidebar { background: #161b27; border-right-color: rgba(255,255,255,0.06); }
+  body.dark-mode .sidebar-brand { color: #60a5fa; }
+  body.dark-mode .nav-item { color: #94a3b8; }
+  body.dark-mode .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  body.dark-mode .nav-item.active { background: rgba(4,111,205,0.15); color: #60a5fa; }
+  body.dark-mode .sidebar-divider { background: rgba(255,255,255,0.06); }
+
+  body.dark-mode .main { background: #0f1117; }
+  body.dark-mode .main-header { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .main-header h1 { color: #e2e8f0; }
+  body.dark-mode .main-sub { color: #64748b; }
+
+  body.dark-mode .tabs-bar { border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .tab { color: #64748b; }
+  body.dark-mode .tab.active { color: #60a5fa; border-bottom-color: #60a5fa; }
+  body.dark-mode .tab:hover:not(.active) { color: #e2e8f0; }
+
+  body.dark-mode .empty-state h3 { color: #e2e8f0; }
+  body.dark-mode .empty-state p { color: #64748b; }
+  body.dark-mode .loading-state { color: #64748b; }
+  body.dark-mode .spinner { border-color: rgba(255,255,255,0.06); border-top-color: #60a5fa; }
+
+  body.dark-mode .order-table-head { color: #4a5568; }
+  body.dark-mode .order-row { background: #1a1f2e; border-color: rgba(255,255,255,0.06); box-shadow: none; }
+  body.dark-mode .order-row:hover { background: #1e2536; border-color: rgba(96,165,250,0.3); }
+  body.dark-mode .order-title { color: #e2e8f0; }
+  body.dark-mode .order-meta { color: #64748b; }
+  body.dark-mode .meta-dot { color: rgba(255,255,255,0.15); }
+  body.dark-mode .order-id { color: #4a5568; }
+
+  body.dark-mode .wr-btn--view { background: #1a1f2e; color: #e2e8f0; border-color: rgba(255,255,255,0.1); }
+  body.dark-mode .wr-btn--view:hover { background: #1e2536; border-color: #60a5fa; color: #60a5fa; }
+
+  body.dark-mode .wr-badge.new { background: rgba(96,165,250,0.15); color: #60a5fa; }
+  body.dark-mode .wr-badge.in_progress { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  body.dark-mode .wr-badge.in_review { background: rgba(56,138,221,0.18); color: #60a5fa; }
+  body.dark-mode .wr-badge.completed { background: rgba(34,197,94,0.15); color: #4ade80; }
+  body.dark-mode .wr-badge.revision { background: rgba(168,85,247,0.18); color: #c084fc; }
+
+  body.dark-mode .theme-icon-btn { background: #2a3244; }
+  body.dark-mode .theme-icon-btn:hover { background: #334155; }
+
+  body.dark-mode .modal-box { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
+  body.dark-mode .modal-close { color: #64748b; }
+  body.dark-mode .modal-close:hover { color: #e2e8f0; }
+  body.dark-mode .modal-box h2 { color: #e2e8f0; }
+
+  body.dark-mode .upload-order-id { color: #60a5fa; }
+  body.dark-mode .form-group label { color: #cbd5e1; }
+  body.dark-mode .form-group select,
+  body.dark-mode .form-group input { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
+  body.dark-mode .form-group select:focus,
+  body.dark-mode .form-group input:focus { border-color: #60a5fa; background: #1e2536; }
+
+  body.dark-mode .files-section { border-top-color: rgba(255,255,255,0.06); }
+  body.dark-mode .files-section h3 { color: #cbd5e1; }
+  body.dark-mode .file-row { background: #161b27; border-color: rgba(255,255,255,0.06); }
+  body.dark-mode .file-name { color: #cbd5e1; }
+  body.dark-mode .no-files { color: #4a5568; }
+
+  body.dark-mode .detail-label { color: #4a5568; }
+  body.dark-mode .detail-value { color: #e2e8f0; }
+  body.dark-mode .detail-desc { color: #94a3b8; }
+  body.dark-mode .detail-desc-label { color: #4a5568; }
 </style>
 
 <script>
