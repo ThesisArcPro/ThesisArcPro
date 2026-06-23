@@ -279,13 +279,13 @@ body.dark-mode .current-file { background: #0f2a1a; color: #4ade80; }
 .inbox-filter:hover:not(.active) { border-color: #046fcd; color: #046fcd; }
 .inbox-list { flex: 1; overflow-y: auto; }
 .inbox-loading { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem; }
-.inbox-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.1rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f1f5f9; }
+.inbox-item { display: flex; flex-direction: row; align-items: center; gap: 0.75rem; padding: 0.85rem 1.1rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f1f5f9; min-height: 0; }
 .inbox-item:hover { background: #f1f5f9; }
 .inbox-item.active { background: #eef6fb; border-left: 3px solid #046fcd; padding-left: calc(1.1rem - 3px); }
 .inbox-item-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; letter-spacing: 0.03em; }
 .avatar-support { background: #dbeafe; color: #1d4ed8; }
 .avatar-order { background: #dcfce7; color: #15803d; }
-.inbox-item-info { flex: 1; min-width: 0; }
+.inbox-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .inbox-item-name { font-size: 0.84rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .inbox-item-type { font-size: 0.71rem; color: #94a3b8; margin-top: 0.12rem; }
 .inbox-item-time { font-size: 0.68rem; color: #94a3b8; flex-shrink: 0; }
@@ -353,7 +353,9 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
 .inbox-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.8rem 1.2rem; cursor: pointer; transition: 0.15s; border-bottom: 1px solid #f1f5f9; }
 .inbox-item:hover { background: #f8fafc; }
 .inbox-item.active { background: #eef6fb; border-left: 3px solid #046fcd; }
-.inbox-item-icon { width: 34px; height: 34px; border-radius: 50%; background: #eef6ff; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+.inbox-item-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; letter-spacing: 0.03em; }
+.avatar-support { background: #dbeafe; color: #1d4ed8; }
+.avatar-order { background: #dcfce7; color: #15803d; }
 .inbox-item-info { flex: 1; min-width: 0; }
 .inbox-item-name { font-size: 0.84rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .inbox-item-type { font-size: 0.72rem; color: #94a3b8; margin-top: 0.1rem; }
