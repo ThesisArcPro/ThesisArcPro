@@ -701,6 +701,52 @@ const base = '/ThesisArcPro';
   body.dark-mode .file-name { color: #e2e8f0; }
   body.dark-mode .file-type-badge { background: rgba(96,165,250,0.15); color: #60a5fa; }
   body.dark-mode .files-section h3 { color: #e2e8f0; }
+
+  /* ── CHAT: injected via innerHTML, so MUST be global (scoped CSS can't reach it) ── */
+  .chat-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+  .chat-main-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; color: #94a3b8; }
+  .chat-main-empty h3 { font-size: 1rem; font-weight: 600; color: #0f172a; margin-bottom: 0.3rem; }
+  .chat-main-empty p { font-size: 0.85rem; }
+  .chat-thread { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+  .chat-thread-header { padding: 1rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+  .chat-thread-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
+  .chat-thread-sub { font-size: 0.75rem; color: #94a3b8; margin-top: 0.1rem; }
+
+  .chat-list-loading { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem; }
+  .chat-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.2rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #e2e8f0; }
+  .chat-item:hover { background: #f1f5f9; }
+  .chat-item.active { background: #eef6fb; border-left: 3px solid #046fcd; padding-left: calc(1.2rem - 3px); }
+  .chat-item-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; letter-spacing: 0.03em; }
+  .avatar-support { background: #dbeafe; color: #1d4ed8; }
+  .avatar-order { background: #dcfce7; color: #15803d; }
+  .chat-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .chat-item-name { font-size: 0.85rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-item-type { font-size: 0.72rem; color: #94a3b8; margin-top: 0.1rem; }
+  .chat-item-time { font-size: 0.68rem; color: #94a3b8; flex-shrink: 0; }
+
+  .chat-messages { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; background: #f8fafc; }
+  .msg-row { display: flex; flex-direction: column; max-width: 72%; }
+  .msg-row.mine { align-self: flex-end; align-items: flex-end; }
+  .msg-row.theirs { align-self: flex-start; align-items: flex-start; }
+  .msg-sender { font-size: 0.68rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.15rem; }
+  .msg-bubble { padding: 0.6rem 0.95rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.55; word-wrap: break-word; }
+  .msg-row.mine .msg-bubble { background: #046fcd; color: #fff; border-bottom-right-radius: 4px; }
+  .msg-row.theirs .msg-bubble { background: #fff; color: #0f172a; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .msg-time { font-size: 0.62rem; color: #94a3b8; margin-top: 0.15rem; }
+  .msg-row.mine .msg-time { text-align: right; }
+
+  /* Dark mode: chat (global) */
+  body.dark-mode .chat-main { background: #1a1f2e; }
+  body.dark-mode .chat-main-empty { color: #64748b; }
+  body.dark-mode .chat-main-empty h3 { color: #e2e8f0; }
+  body.dark-mode .chat-thread-header { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .chat-thread-title { color: #e2e8f0; }
+  body.dark-mode .chat-item { border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .chat-item:hover { background: rgba(255,255,255,0.03); }
+  body.dark-mode .chat-item.active { background: rgba(4,111,205,0.15); border-left-color: #60a5fa; }
+  body.dark-mode .chat-item-name { color: #e2e8f0; }
+  body.dark-mode .chat-messages { background: #0f1117; }
+  body.dark-mode .msg-row.theirs .msg-bubble { background: #1e2536; color: #e2e8f0; border-color: rgba(255,255,255,0.06); }
 </style>
 
 <!-- SIDEBAR -->
