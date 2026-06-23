@@ -1,9 +1,9 @@
 const CACHE_NAME = 'tap-admin-v1';
 const ASSETS = [
-  '/admin-app/index.html',
-  '/admin-app/style.css',
-  '/admin-app/app.js',
-  '/admin-app/manifest.json'
+  '/ThesisArcPro/admin-app/index.html',
+  '/ThesisArcPro/admin-app/style.css',
+  '/ThesisArcPro/admin-app/app.js',
+  '/ThesisArcPro/admin-app/manifest.json'
 ];
 
 self.addEventListener('install', e => {

@@ -2,7 +2,7 @@
   "name": "ThesisArcPro Admin",
   "short_name": "TAP Admin",
   "description": "ThesisArcPro admin messaging app",
-  "start_url": "/admin-app/index.html",
+  "start_url": "/ThesisArcPro/admin-app/index.html",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#2563eb",
