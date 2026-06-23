@@ -1,7 +1,7 @@
 // ── CONFIG ──
 const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlaHZ3dnVqdWFtZWhvYW5mb21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYzNDYsImV4cCI6MjA5NTkzMjM0Nn0.zT9H0MMpk_H_lD_LVARrspw8aaqOAZ-0I606D8Ho0Ws';
-const ADMIN_PIN = '1234'; // ← CHANGE THIS
+const ADMIN_PIN = '6310'; // ← CHANGE THIS
 
 // ── STATE ──
 let currentFilter = 'all';
