@@ -215,6 +215,7 @@ async function sendMessage() {
 
   const newMsg = {
     conversation_id: currentConv.id,
+    sender_id: currentConv.messages[0]?.sender_id || '00000000-0000-0000-0000-000000000000',
     sender_name: 'Support',
     sender_role: 'support',
     content,
