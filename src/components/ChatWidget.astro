@@ -310,6 +310,20 @@ const agents = [
     if (cwSub) { cwSub.unsubscribe(); cwSub = null; }
   }
 
+  function cwPlayPing() {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.setValueAtTime(660, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
+      osc.start(); osc.stop(ctx.currentTime + 0.35);
+    } catch (e) {}
+  }
   function showScreen(name: string) {
     [homeScreen, messagesScreen, helpScreen, threadScreen].forEach(s => s.classList.remove('active'));
     if (name === 'home') homeScreen.classList.add('active');
@@ -431,6 +445,7 @@ const agents = [
         const ph = c.querySelector('div[style*="text-align:center"]');
         if (ph) c.innerHTML = '';
         const isMine = msg.sender_id === cwUserId;
+        if (!isMine) cwPlayPing();
         const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
         c.insertAdjacentHTML('beforeend', `<div class="cw-msg ${isMine ? 'mine' : 'theirs'}">${!isMine ? `<div class="cw-msg-name">${cwEsc(msg.sender_name || 'Support')}</div>` : ''}<div class="cw-msg-bubble">${cwEsc(msg.content)}</div><div class="cw-msg-time">${time}</div></div>`);
         c.scrollTop = c.scrollHeight;
