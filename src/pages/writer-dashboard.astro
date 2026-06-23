@@ -747,6 +747,32 @@ const base = '/ThesisArcPro';
   body.dark-mode .chat-item-name { color: #e2e8f0; }
   body.dark-mode .chat-messages { background: #0f1117; }
   body.dark-mode .msg-row.theirs .msg-bubble { background: #1e2536; color: #e2e8f0; border-color: rgba(255,255,255,0.06); }
+
+  /* ── WRITER ORDER CHAT (injected via innerHTML → global) ── */
+  .woc-thread { display: flex; flex-direction: column; height: 360px; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+  .woc-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem; background: #f8fafc; }
+  .woc-loading, .woc-empty { text-align: center; color: #94a3b8; font-size: 0.83rem; padding: 1.5rem; margin: auto; }
+  .woc-row { display: flex; flex-direction: column; max-width: 78%; }
+  .woc-row.mine { align-self: flex-end; align-items: flex-end; }
+  .woc-row.theirs { align-self: flex-start; align-items: flex-start; }
+  .woc-name { font-size: 0.66rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.15rem; }
+  .woc-bubble { padding: 0.55rem 0.85rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.5; word-wrap: break-word; }
+  .woc-row.mine .woc-bubble { background: #046fcd; color: #fff; border-bottom-right-radius: 4px; }
+  .woc-row.theirs .woc-bubble { background: #fff; color: #0f172a; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
+  .woc-time { font-size: 0.6rem; color: #94a3b8; margin-top: 0.15rem; }
+  .woc-row.mine .woc-time { text-align: right; }
+  .woc-input-bar { display: flex; gap: 0.5rem; padding: 0.7rem; border-top: 1px solid #e2e8f0; background: #fff; }
+  .woc-input { flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 20px; padding: 0.55rem 0.95rem; font-size: 0.85rem; color: #0f172a; outline: none; font-family: inherit; }
+  .woc-input:focus { border-color: #046fcd; background: #fff; }
+  .woc-send { background: #046fcd; color: #fff; border: none; border-radius: 20px; padding: 0.55rem 1.2rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .woc-send:hover { background: #0361b3; }
+  .woc-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  body.dark-mode .woc-thread { border-color: rgba(255,255,255,0.08); }
+  body.dark-mode .woc-messages { background: #0f1117; }
+  body.dark-mode .woc-row.theirs .woc-bubble { background: #1e2536; color: #e2e8f0; border-color: rgba(255,255,255,0.06); }
+  body.dark-mode .woc-input-bar { background: #161b27; border-top-color: rgba(255,255,255,0.06); }
+  body.dark-mode .woc-input { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
 </style>
 
 <!-- SIDEBAR -->
@@ -1137,6 +1163,7 @@ const base = '/ThesisArcPro';
         <button class="om-tab om-tab--active" data-mtab="general">General</button>
         <button class="om-tab" data-mtab="instructions">Instructions</button>
         <button class="om-tab" data-mtab="files">Files</button>
+        <button class="om-tab" data-mtab="chat">💬 Chat</button>
       </div>
 
       <!-- GENERAL -->
@@ -1200,6 +1227,17 @@ const base = '/ThesisArcPro';
           <div id="filesList" class="files-list"></div>
         </div>
       </div>
+
+      <!-- CHAT -->
+      <div class="om-panel" data-mpanel="chat">
+        <div class="woc-thread">
+          <div class="woc-messages" id="wocMessages"><div class="woc-loading">Loading…</div></div>
+          <div class="woc-input-bar">
+            <input type="text" class="woc-input" id="wocInput" placeholder="Message the client…" />
+            <button class="woc-send" id="wocSend">Send</button>
+          </div>
+        </div>
+      </div>
     `;
 
     // Modal tab switching
@@ -1212,6 +1250,7 @@ const base = '/ThesisArcPro';
         tab.classList.add('om-tab--active');
         content.querySelector(`.om-panel[data-mpanel="${which}"]`)?.classList.add('om-panel--active');
         if (which === 'files') loadOrderFiles();
+        if (which === 'chat') openWriterOrderChat(order);
       });
     });
 
@@ -1340,6 +1379,123 @@ const base = '/ThesisArcPro';
       btn.textContent = '📤 Upload File';
     }
   }
+// ═══ WRITER ORDER CHAT ═══
+  let wocConvId: string | null = null;
+  let wocOrder: any = null;
+  let wocSub: any = null;
+
+  function wocRender(messages: any[]) {
+    const c = document.getElementById('wocMessages');
+    if (!c) return;
+    if (!messages.length) { c.innerHTML = '<div class="woc-empty">No messages yet. Say hello to the client!</div>'; return; }
+    c.innerHTML = messages.map((m: any) => {
+      const mine = m.sender_id === currentSession.user.id;
+      const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+      const who = m.sender_role === 'support' ? 'Support' : (m.sender_name || 'Client');
+      return `<div class="woc-row ${mine ? 'mine' : 'theirs'}">
+        ${!mine ? `<div class="woc-name">${esc(who)}</div>` : ''}
+        <div class="woc-bubble">${esc(m.content)}</div>
+        <div class="woc-time">${time}</div>
+      </div>`;
+    }).join('');
+    c.scrollTop = c.scrollHeight;
+  }
+
+  async function wocFindConversation(orderId: string) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/conversations?type=eq.order&order_id=eq.${orderId}&select=id&limit=1`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
+    );
+    const rows = await res.json();
+    return rows[0]?.id || null;
+  }
+
+  // Make sure the writer is a participant (self-add, always RLS-allowed)
+  async function wocEnsureSelf(convId: string) {
+    try {
+      const existing = await (await fetch(
+        `${SUPABASE_URL}/rest/v1/conversation_participants?conversation_id=eq.${convId}&user_id=eq.${currentSession.user.id}&select=id`,
+        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
+      )).json();
+      if (existing.length) return;
+      await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ conversation_id: convId, user_id: currentSession.user.id, role: 'writer', display_name: writerData?.full_name || 'Writer' })
+      });
+    } catch (e) { console.error('wocEnsureSelf', e); }
+  }
+
+  async function openWriterOrderChat(order: any) {
+    wocOrder = order;
+    wocConvId = null;
+    if (wocSub) { wocSub.unsubscribe(); wocSub = null; }
+    const c = document.getElementById('wocMessages')!;
+    c.innerHTML = '<div class="woc-loading">Loading…</div>';
+    try {
+      wocConvId = await wocFindConversation(String(order.id));
+      if (!wocConvId) { wocRender([]); return; }   // no chat yet; created on first message
+      await wocEnsureSelf(wocConvId);
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${wocConvId}&order=created_at.asc`,
+        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
+      );
+      wocRender(await res.json());
+      wocSubscribe();
+    } catch (err) { console.error(err); c.innerHTML = '<div class="woc-empty">Could not load chat.</div>'; }
+  }
+
+  function wocSubscribe() {
+    if (!wocConvId || wocSub) return;
+    wocSub = supabase.channel(`woc-${wocConvId}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${wocConvId}` },
+        (payload: any) => {
+          const m = payload.new;
+          const c = document.getElementById('wocMessages')!;
+          const ph = c.querySelector('.woc-empty, .woc-loading'); if (ph) c.innerHTML = '';
+          const mine = m.sender_id === currentSession.user.id;
+          const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+          const who = m.sender_role === 'support' ? 'Support' : (m.sender_name || 'Client');
+          c.insertAdjacentHTML('beforeend', `<div class="woc-row ${mine ? 'mine' : 'theirs'}">${!mine ? `<div class="woc-name">${esc(who)}</div>` : ''}<div class="woc-bubble">${esc(m.content)}</div><div class="woc-time">${time}</div></div>`);
+          c.scrollTop = c.scrollHeight;
+        }).subscribe();
+  }
+
+  async function wocSend() {
+    const input = document.getElementById('wocInput') as HTMLInputElement;
+    const text = input.value.trim();
+    if (!text || !wocOrder) return;
+    const btn = document.getElementById('wocSend') as HTMLButtonElement;
+    btn.disabled = true; input.value = '';
+    try {
+      if (!wocConvId) {
+        const title = `Order ${wocOrder.order_number || wocOrder.id}`;
+        const cRes = await fetch(`${SUPABASE_URL}/rest/v1/conversations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}`, 'Prefer': 'return=representation' },
+          body: JSON.stringify({ type: 'order', order_id: Number(wocOrder.id), title })
+        });
+        wocConvId = (await cRes.json())[0]?.id;
+        if (!wocConvId) throw new Error('Could not create conversation');
+        await wocEnsureSelf(wocConvId);
+        wocSubscribe();
+      }
+      await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ conversation_id: wocConvId, sender_id: currentSession.user.id, sender_name: writerData?.full_name || 'Writer', sender_role: 'writer', content: text })
+      });
+      await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${wocConvId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}`, 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ updated_at: new Date().toISOString() })
+      });
+    } catch (err) { console.error(err); alert('Could not send message. Please try again.'); }
+    btn.disabled = false; input.focus();
+  }
+
+  document.addEventListener('click', (e) => { if ((e.target as HTMLElement)?.id === 'wocSend') wocSend(); });
+  document.addEventListener('keydown', (e) => { if ((e.target as HTMLElement)?.id === 'wocInput' && (e as KeyboardEvent).key === 'Enter') { e.preventDefault(); wocSend(); } });
 
   function closeModal() {
     document.getElementById('detailModal')!.classList.remove('open');
