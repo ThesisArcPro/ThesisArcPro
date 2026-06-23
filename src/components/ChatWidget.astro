@@ -264,6 +264,18 @@ const agents = [
   @media (max-width: 480px) {
     .cw-panel { width: calc(100vw - 2rem); right: -0.5rem; bottom: 60px; height: 75vh; }
   }
+
+  /* ── UNREAD BADGE ── */
+  .cw-badge {
+    position: absolute; top: -6px; right: -6px;
+    background: #4455ef; color: #fff;
+    font-size: 0.65rem; font-weight: 700;
+    min-width: 20px; height: 20px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 4px; border: 2px solid #fff;
+    pointer-events: none;
+  }
+  .cw-launcher { position: relative; }
 </style>
 
 <script>
@@ -290,25 +302,8 @@ const agents = [
 
   function cwEsc(v: any) { return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  // Toggle launcher
-  bubble.addEventListener('click', async () => {
-    if (panel.classList.contains('open')) { closePanel(); return; }
-    bubble.classList.add('open');
-    panel.classList.add('open');
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { showLoginPrompt(); return; }
-    cwSession = session;
-    cwUserId = session.user.id;
-    await detectRole();
-    showScreen('home');
-    loadCwConversations();
-  });
-
-  function closePanel() {
-    panel.classList.remove('open');
-    bubble.classList.remove('open');
-    if (cwSub) { cwSub.unsubscribe(); cwSub = null; }
-  }
+  let cwUnreadCount = 0;
+  let cwGlobalSub: any = null;
 
   function cwPlayPing() {
     try {
@@ -324,6 +319,69 @@ const agents = [
       osc.start(); osc.stop(ctx.currentTime + 0.35);
     } catch (e) {}
   }
+
+  function cwSetBadge(count: number) {
+    cwUnreadCount = count;
+    let badge = document.getElementById('cwBadge');
+    if (count > 0) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.id = 'cwBadge';
+        badge.className = 'cw-badge';
+        bubble.appendChild(badge);
+      }
+      badge.textContent = count > 9 ? '9+' : String(count);
+    } else {
+      badge?.remove();
+    }
+  }
+
+  async function cwStartGlobalSub() {
+    if (cwGlobalSub) return;
+    // Subscribe to ALL messages table inserts — filter by sender_id != me on client side
+    cwGlobalSub = supabase
+      .channel('cw-global-notify')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' },
+        (payload: any) => {
+          const msg = payload.new;
+          if (msg.sender_id === cwUserId) return; // ignore own messages
+          // Only notify if the conversation belongs to us
+          const isOurs = cwConversations.some((c: any) => c.id === msg.conversation_id);
+          if (!isOurs) return;
+          // Only ping/badge if panel is closed OR this isn't the active thread
+          const panelOpen = panel.classList.contains('open');
+          const isActiveThread = panelOpen && msg.conversation_id === cwActiveConvoId;
+          if (!isActiveThread) {
+            cwPlayPing();
+            cwSetBadge(cwUnreadCount + 1);
+          }
+        }
+      )
+      .subscribe();
+  }
+
+  // Toggle launcher
+  bubble.addEventListener('click', async () => {
+    if (panel.classList.contains('open')) { closePanel(); return; }
+    bubble.classList.add('open');
+    panel.classList.add('open');
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { showLoginPrompt(); return; }
+    cwSession = session;
+    cwUserId = session.user.id;
+    await detectRole();
+    showScreen('home');
+    await loadCwConversations();
+    cwStartGlobalSub();
+    cwSetBadge(0); // clear badge when user opens the panel
+  });
+
+  function closePanel() {
+    panel.classList.remove('open');
+    bubble.classList.remove('open');
+    if (cwSub) { cwSub.unsubscribe(); cwSub = null; }
+  }
+
   function showScreen(name: string) {
     [homeScreen, messagesScreen, helpScreen, threadScreen].forEach(s => s.classList.remove('active'));
     if (name === 'home') homeScreen.classList.add('active');
