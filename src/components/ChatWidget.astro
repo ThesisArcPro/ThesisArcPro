@@ -1,57 +1,128 @@
 ---
 const base = '/ThesisArcPro';
+
+// 👇 Replace these 3 with your real support-team photo URLs for max polish.
+// (Generated placeholders used as fallback so it always renders.)
+const agents = [
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Maria&backgroundColor=c0e8ff',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=James&backgroundColor=d6c8ff',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Sofia&backgroundColor=ffd5dc',
+];
 ---
 
 <!-- Floating Chat Widget -->
 <div id="chatWidget" class="cw-wrap">
-  <!-- Bubble -->
-  <button class="cw-bubble" id="cwBubble">
-    <span class="cw-bubble-icon" id="cwBubbleIcon">💬</span>
+  <!-- Launcher (pill) -->
+  <button class="cw-launcher" id="cwBubble" aria-label="Chat with support">
+    <span class="cw-launcher-closed">
+      <span class="cw-launcher-ava">
+        <img src={agents[0]} alt="" />
+        <span class="cw-launcher-dot"></span>
+      </span>
+      <span class="cw-launcher-label">Chat with support</span>
+    </span>
+    <span class="cw-launcher-open">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      Close
+    </span>
   </button>
 
   <!-- Panel -->
   <div class="cw-panel" id="cwPanel">
     <!-- Home screen -->
     <div class="cw-screen active" id="cwHome">
-      <div class="cw-home-header">
-        <div class="cw-home-avatars" id="cwAvatars">🛟</div>
-        <button class="cw-panel-close" id="cwCloseHome">✕</button>
+      <div class="cw-header">
+        <div class="cw-header-top">
+          <div class="cw-avatars" id="cwAvatars">
+            {agents.map((a) => <img src={a} alt="agent" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%23cbd5e1%22/><circle cx=%2220%22 cy=%2216%22 r=%227%22 fill=%22%23fff%22/><path d=%22M8 36c0-7 6-11 12-11s12 4 12 11%22 fill=%22%23fff%22/></svg>'" />)}
+          </div>
+        </div>
+        <div class="cw-greeting">
+          <p class="cw-greeting-sub">Hello there!</p>
+          <h2 class="cw-greeting-main">How can we help?</h2>
+        </div>
       </div>
-      <div class="cw-home-greeting">
-        <p class="cw-greeting-sub">Hello there!</p>
-        <h2 class="cw-greeting-main">How can we help?</h2>
-      </div>
-      <div class="cw-home-actions">
-        <button class="cw-action-btn" id="cwStartSupport">
-          <span class="cw-action-icon">✉️</span>
+      <div class="cw-body">
+        <button class="cw-action-card" id="cwStartSupport">
           <span class="cw-action-text">
             <strong>Send us a message</strong>
             <small>We typically reply in under a minute</small>
           </span>
-          <span class="cw-action-arrow">›</span>
+          <span class="cw-action-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
         </button>
+        <div class="cw-home-convos" id="cwConvoList"></div>
       </div>
-      <div class="cw-home-convos" id="cwConvoList"></div>
-      <div class="cw-home-nav">
-        <button class="cw-nav-btn active" data-cwscreen="home">🏠 Home</button>
-        <button class="cw-nav-btn" data-cwscreen="messages">💬 Messages</button>
-      </div>
+      <nav class="cw-nav">
+        <button class="cw-nav-btn active" data-cwscreen="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="cw-nav-btn" data-cwscreen="messages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Messages</span>
+        </button>
+        <button class="cw-nav-btn" data-cwscreen="help">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
+          <span>Help</span>
+        </button>
+      </nav>
     </div>
 
     <!-- Messages list screen -->
     <div class="cw-screen" id="cwMessages">
-      <div class="cw-messages-header">
+      <div class="cw-subhead">
         <button class="cw-back-btn" id="cwBackFromMessages">‹</button>
         <h3>Messages</h3>
-        <button class="cw-panel-close" id="cwCloseMessages">✕</button>
       </div>
       <div class="cw-convo-list" id="cwAllConvos">
         <div class="cw-convo-loading">Loading…</div>
       </div>
-      <div class="cw-home-nav">
-        <button class="cw-nav-btn" data-cwscreen="home">🏠 Home</button>
-        <button class="cw-nav-btn active" data-cwscreen="messages">💬 Messages</button>
+      <nav class="cw-nav">
+        <button class="cw-nav-btn" data-cwscreen="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="cw-nav-btn active" data-cwscreen="messages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Messages</span>
+        </button>
+        <button class="cw-nav-btn" data-cwscreen="help">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
+          <span>Help</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Help screen -->
+    <div class="cw-screen" id="cwHelp">
+      <div class="cw-subhead">
+        <button class="cw-back-btn" id="cwBackFromHelp">‹</button>
+        <h3>Help</h3>
       </div>
+      <div class="cw-help-body">
+        <p class="cw-help-lead">Need a hand? Start a chat and our team will get back to you fast.</p>
+        <button class="cw-action-card" id="cwHelpStart">
+          <span class="cw-action-text"><strong>Contact support</strong><small>Average reply: under a minute</small></span>
+          <span class="cw-action-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+        <a class="cw-help-link" href={`${base}/faq/`}>📚 Browse FAQ</a>
+      </div>
+      <nav class="cw-nav">
+        <button class="cw-nav-btn" data-cwscreen="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="cw-nav-btn" data-cwscreen="messages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Messages</span>
+        </button>
+        <button class="cw-nav-btn active" data-cwscreen="help">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
+          <span>Help</span>
+        </button>
+      </nav>
     </div>
 
     <!-- Chat thread screen -->
@@ -59,12 +130,13 @@ const base = '/ThesisArcPro';
       <div class="cw-thread-header">
         <button class="cw-back-btn" id="cwBackFromThread">‹</button>
         <div class="cw-thread-title" id="cwThreadTitle">Support</div>
-        <button class="cw-panel-close" id="cwCloseThread">✕</button>
       </div>
       <div class="cw-thread-msgs" id="cwThreadMsgs"></div>
       <div class="cw-thread-input">
         <input type="text" class="cw-input" id="cwInput" placeholder="Type a message…" />
-        <button class="cw-send" id="cwSend">➤</button>
+        <button class="cw-send" id="cwSend" aria-label="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -73,142 +145,124 @@ const base = '/ThesisArcPro';
 <style is:global>
   .cw-wrap { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 50000; font-family: 'Poppins','Inter','Segoe UI',sans-serif; }
 
-  .cw-bubble {
-    width: 60px; height: 60px; border-radius: 50%; border: none;
-    background: linear-gradient(135deg, #046fcd, #0361b3); color: #fff;
-    font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 20px rgba(4,111,205,0.4);
-    display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+  /* ── LAUNCHER PILL ── */
+  .cw-launcher {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    height: 48px; padding: 0 1rem 0 0.5rem; border: none; cursor: pointer;
+    background: #fff; color: #0f172a; border-radius: 999px;
+    box-shadow: 0 6px 22px rgba(15,23,42,0.18); transition: all 0.25s ease;
+    font-family: inherit; font-size: 0.9rem; font-weight: 600;
   }
-  .cw-bubble:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(4,111,205,0.5); }
-  .cw-bubble.open { transform: scale(0); pointer-events: none; }
+  .cw-launcher:hover { box-shadow: 0 8px 28px rgba(15,23,42,0.24); transform: translateY(-1px); }
+  .cw-launcher-closed { display: inline-flex; align-items: center; gap: 0.55rem; }
+  .cw-launcher-ava { position: relative; width: 38px; height: 38px; flex-shrink: 0; }
+  .cw-launcher-ava img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
+  .cw-launcher-dot { position: absolute; bottom: 1px; right: 1px; width: 11px; height: 11px; background: #22c55e; border: 2px solid #fff; border-radius: 50%; }
+  .cw-launcher-open { display: none; align-items: center; gap: 0.4rem; }
 
+  .cw-launcher.open { background: #ffcc00; color: #1a1a1a; padding: 0 1.3rem; }
+  .cw-launcher.open .cw-launcher-closed { display: none; }
+  .cw-launcher.open .cw-launcher-open { display: inline-flex; }
+
+  /* ── PANEL ── */
   .cw-panel {
-    position: absolute; bottom: 75px; right: 0;
-    width: 380px; height: 520px;
-    background: #fff; border-radius: 16px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    position: absolute; bottom: 64px; right: 0;
+    width: 380px; height: 560px; background: #fff; border-radius: 18px;
+    box-shadow: 0 12px 48px rgba(15,23,42,0.22);
     display: none; flex-direction: column; overflow: hidden;
+    transform: translateY(12px) scale(0.98); opacity: 0; transition: all 0.22s ease;
   }
-  .cw-panel.open { display: flex; }
+  .cw-panel.open { display: flex; transform: translateY(0) scale(1); opacity: 1; }
 
   .cw-screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
   .cw-screen.active { display: flex; }
 
-  /* ── HOME ── */
-  .cw-home-header {
-    background: linear-gradient(135deg, #046fcd, #0352a0);
-    padding: 1.2rem 1.2rem 0; display: flex; justify-content: space-between; align-items: flex-start;
-  }
-  .cw-home-avatars { font-size: 2rem; }
-  .cw-panel-close { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1.2rem; cursor: pointer; padding: 0.3rem; }
-  .cw-panel-close:hover { color: #fff; }
-  .cw-home-greeting {
-    background: linear-gradient(135deg, #046fcd, #0352a0);
-    padding: 0.8rem 1.2rem 1.5rem; color: #fff;
-  }
-  .cw-greeting-sub { font-size: 0.95rem; opacity: 0.85; margin-bottom: 0.2rem; }
-  .cw-greeting-main { font-size: 1.3rem; font-weight: 700; }
+  /* ── HEADER ── */
+  .cw-header { background: linear-gradient(160deg, #2563eb 0%, #1233a0 100%); padding: 1.3rem 1.4rem 1.6rem; color: #fff; }
+  .cw-header-top { margin-bottom: 1.6rem; }
+  .cw-avatars { display: flex; }
+  .cw-avatars img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.85); margin-left: -10px; background: #cbd5e1; }
+  .cw-avatars img:first-child { margin-left: 0; }
+  .cw-greeting-sub { font-size: 1.4rem; font-weight: 400; color: rgba(255,255,255,0.55); line-height: 1.2; }
+  .cw-greeting-main { font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
 
-  .cw-home-actions { padding: 1rem 1.2rem 0.5rem; }
-  .cw-action-btn {
+  /* ── BODY ── */
+  .cw-body { flex: 1; overflow-y: auto; padding: 1.1rem 1.2rem; background: #f8fafc; }
+  .cw-action-card {
     width: 100%; display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.85rem 1rem; background: #fff; border: 1px solid #e2e8f0;
-    border-radius: 12px; cursor: pointer; transition: 0.2s; text-align: left;
+    padding: 1rem 1.1rem; background: #fff; border: 1px solid #e8edf3;
+    border-radius: 14px; cursor: pointer; transition: 0.18s; text-align: left;
+    box-shadow: 0 2px 10px rgba(15,23,42,0.05);
   }
-  .cw-action-btn:hover { border-color: #046fcd; box-shadow: 0 2px 8px rgba(4,111,205,0.1); }
-  .cw-action-icon { font-size: 1.2rem; }
+  .cw-action-card:hover { box-shadow: 0 4px 16px rgba(37,99,235,0.14); transform: translateY(-1px); }
   .cw-action-text { flex: 1; }
-  .cw-action-text strong { display: block; font-size: 0.88rem; color: #0f172a; font-weight: 600; }
-  .cw-action-text small { font-size: 0.75rem; color: #64748b; }
-  .cw-action-arrow { font-size: 1.3rem; color: #94a3b8; font-weight: 300; }
+  .cw-action-text strong { display: block; font-size: 0.95rem; color: #0f172a; font-weight: 700; }
+  .cw-action-text small { font-size: 0.78rem; color: #64748b; }
+  .cw-action-arrow { color: #0f172a; display: flex; }
 
-  .cw-home-convos { flex: 1; overflow-y: auto; padding: 0.5rem 1.2rem; }
-  .cw-home-convos .cw-convo-item { padding: 0.6rem 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
-  .cw-home-convos .cw-convo-item:hover { background: #f8fafc; margin: 0 -1.2rem; padding: 0.6rem 1.2rem; border-radius: 8px; }
+  .cw-home-convos { margin-top: 1rem; }
 
-  .cw-home-nav {
-    display: flex; border-top: 1px solid #e2e8f0; background: #fff;
-  }
+  /* ── NAV ── */
+  .cw-nav { display: flex; border-top: 1px solid #eef2f6; background: #fff; }
   .cw-nav-btn {
-    flex: 1; padding: 0.7rem; background: none; border: none;
-    font-size: 0.78rem; font-weight: 600; color: #94a3b8; cursor: pointer;
-    transition: 0.2s; font-family: inherit;
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+    padding: 0.65rem 0; background: none; border: none; cursor: pointer;
+    font-size: 0.72rem; font-weight: 600; color: #94a3b8; transition: 0.18s; font-family: inherit;
   }
-  .cw-nav-btn.active { color: #046fcd; }
+  .cw-nav-btn svg { width: 22px; height: 22px; }
+  .cw-nav-btn.active { color: #0f172a; }
   .cw-nav-btn:hover { color: #0f172a; }
 
-  /* ── MESSAGES LIST ── */
-  .cw-messages-header {
-    display: flex; align-items: center; gap: 0.5rem;
-    padding: 0.85rem 1rem; border-bottom: 1px solid #e2e8f0;
-  }
-  .cw-messages-header h3 { flex: 1; font-size: 1rem; font-weight: 700; color: #0f172a; }
-  .cw-back-btn { background: none; border: none; font-size: 1.3rem; color: #64748b; cursor: pointer; padding: 0.2rem 0.4rem; }
+  /* ── SUBHEAD (messages / help) ── */
+  .cw-subhead { display: flex; align-items: center; gap: 0.4rem; padding: 0.9rem 1rem; border-bottom: 1px solid #eef2f6; }
+  .cw-subhead h3 { flex: 1; font-size: 1.05rem; font-weight: 700; color: #0f172a; }
+  .cw-back-btn { background: none; border: none; font-size: 1.5rem; color: #64748b; cursor: pointer; padding: 0 0.3rem; line-height: 1; }
   .cw-back-btn:hover { color: #0f172a; }
-  .cw-convo-list { flex: 1; overflow-y: auto; }
-  .cw-convo-loading { padding: 2rem; text-align: center; color: #64748b; font-size: 0.85rem; }
 
-  .cw-convo-item {
-    display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.75rem 1.2rem; cursor: pointer; transition: 0.15s;
-    border-bottom: 1px solid #f1f5f9;
-  }
+  .cw-convo-list { flex: 1; overflow-y: auto; }
+  .cw-convo-loading { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem; }
+  .cw-convo-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.2rem; cursor: pointer; transition: 0.15s; border-bottom: 1px solid #f1f5f9; }
   .cw-convo-item:hover { background: #f8fafc; }
-  .cw-convo-icon { width: 36px; height: 36px; border-radius: 50%; background: #eef6fb; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+  .cw-convo-icon { width: 38px; height: 38px; border-radius: 50%; background: #eef6ff; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
   .cw-convo-info { flex: 1; min-width: 0; }
-  .cw-convo-name { font-size: 0.85rem; font-weight: 600; color: #0f172a; }
-  .cw-convo-preview { font-size: 0.75rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cw-convo-name { font-size: 0.88rem; font-weight: 600; color: #0f172a; }
   .cw-convo-time { font-size: 0.68rem; color: #94a3b8; flex-shrink: 0; }
 
-  /* ── THREAD ── */
-  .cw-thread-header {
-    display: flex; align-items: center; gap: 0.5rem;
-    padding: 0.85rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff;
-  }
-  .cw-thread-title { flex: 1; font-size: 0.95rem; font-weight: 700; color: #0f172a; }
+  /* ── HELP ── */
+  .cw-help-body { flex: 1; overflow-y: auto; padding: 1.2rem; background: #f8fafc; }
+  .cw-help-lead { font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 1rem; }
+  .cw-help-link { display: block; margin-top: 0.8rem; padding: 0.85rem 1rem; background: #fff; border: 1px solid #e8edf3; border-radius: 12px; font-size: 0.88rem; font-weight: 600; color: #0f172a; text-decoration: none; }
+  .cw-help-link:hover { border-color: #2563eb; }
 
-  .cw-thread-msgs { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  /* ── THREAD ── */
+  .cw-thread-header { display: flex; align-items: center; gap: 0.4rem; padding: 0.9rem 1rem; border-bottom: 1px solid #eef2f6; background: #fff; }
+  .cw-thread-title { flex: 1; font-size: 0.98rem; font-weight: 700; color: #0f172a; }
+  .cw-thread-msgs { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; background: #f8fafc; }
   .cw-msg { display: flex; flex-direction: column; max-width: 80%; }
   .cw-msg.mine { align-self: flex-end; }
   .cw-msg.theirs { align-self: flex-start; }
   .cw-msg-name { font-size: 0.65rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.15rem; }
-  .cw-msg-bubble { padding: 0.5rem 0.8rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.5; word-wrap: break-word; }
-  .cw-msg.mine .cw-msg-bubble { background: #046fcd; color: #fff; border-bottom-right-radius: 4px; }
-  .cw-msg.theirs .cw-msg-bubble { background: #f1f5f9; color: #0f172a; border-bottom-left-radius: 4px; }
+  .cw-msg-bubble { padding: 0.55rem 0.85rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.5; word-wrap: break-word; }
+  .cw-msg.mine .cw-msg-bubble { background: #2563eb; color: #fff; border-bottom-right-radius: 4px; }
+  .cw-msg.theirs .cw-msg-bubble { background: #fff; color: #0f172a; border: 1px solid #eef2f6; border-bottom-left-radius: 4px; }
   .cw-msg-time { font-size: 0.6rem; color: #94a3b8; margin-top: 0.15rem; }
   .cw-msg.mine .cw-msg-time { text-align: right; }
 
-  .cw-thread-input {
-    display: flex; gap: 0.4rem; padding: 0.7rem 1rem;
-    border-top: 1px solid #e2e8f0; background: #fff;
-  }
-  .cw-input {
-    flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px;
-    padding: 0.5rem 0.9rem; font-size: 0.85rem; color: #0f172a; outline: none; font-family: inherit;
-  }
-  .cw-input:focus { border-color: #046fcd; }
+  .cw-thread-input { display: flex; gap: 0.4rem; padding: 0.7rem 0.9rem; border-top: 1px solid #eef2f6; background: #fff; }
+  .cw-input { flex: 1; background: #f1f5f9; border: 1px solid transparent; border-radius: 22px; padding: 0.55rem 1rem; font-size: 0.85rem; color: #0f172a; outline: none; font-family: inherit; }
+  .cw-input:focus { border-color: #2563eb; background: #fff; }
   .cw-input::placeholder { color: #94a3b8; }
-  .cw-send {
-    width: 36px; height: 36px; border-radius: 50%; border: none;
-    background: #046fcd; color: #fff; font-size: 1rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: 0.2s;
-  }
-  .cw-send:hover { background: #0361b3; }
+  .cw-send { width: 40px; height: 40px; border-radius: 50%; border: none; background: #2563eb; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
+  .cw-send:hover { background: #1d4ed8; }
   .cw-send:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* ── LOGIN PROMPT ── */
-  .cw-login-prompt { padding: 2rem 1.5rem; text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .cw-login-prompt { padding: 2rem 1.5rem; text-align: center; }
   .cw-login-prompt p { font-size: 0.9rem; color: #64748b; margin-bottom: 1rem; }
-  .cw-login-btn {
-    background: #046fcd; color: #fff; border: none; border-radius: 10px;
-    padding: 0.65rem 1.5rem; font-size: 0.88rem; font-weight: 600;
-    cursor: pointer; text-decoration: none; display: inline-block; transition: 0.2s;
-  }
-  .cw-login-btn:hover { background: #0361b3; }
+  .cw-login-btn { background: #2563eb; color: #fff; border: none; border-radius: 10px; padding: 0.65rem 1.5rem; font-size: 0.88rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+  .cw-login-btn:hover { background: #1d4ed8; }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 480px) {
-    .cw-panel { width: calc(100vw - 2rem); right: -0.5rem; bottom: 70px; height: 70vh; }
+    .cw-panel { width: calc(100vw - 2rem); right: -0.5rem; bottom: 60px; height: 75vh; }
   }
 </style>
 
@@ -231,19 +285,18 @@ const base = '/ThesisArcPro';
   const panel = document.getElementById('cwPanel')!;
   const homeScreen = document.getElementById('cwHome')!;
   const messagesScreen = document.getElementById('cwMessages')!;
+  const helpScreen = document.getElementById('cwHelp')!;
   const threadScreen = document.getElementById('cwThread')!;
 
   function cwEsc(v: any) { return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  // Toggle panel
+  // Toggle launcher
   bubble.addEventListener('click', async () => {
+    if (panel.classList.contains('open')) { closePanel(); return; }
     bubble.classList.add('open');
     panel.classList.add('open');
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      showLoginPrompt();
-      return;
-    }
+    if (!session) { showLoginPrompt(); return; }
     cwSession = session;
     cwUserId = session.user.id;
     await detectRole();
@@ -257,14 +310,11 @@ const base = '/ThesisArcPro';
     if (cwSub) { cwSub.unsubscribe(); cwSub = null; }
   }
 
-  document.getElementById('cwCloseHome')?.addEventListener('click', closePanel);
-  document.getElementById('cwCloseMessages')?.addEventListener('click', closePanel);
-  document.getElementById('cwCloseThread')?.addEventListener('click', closePanel);
-
   function showScreen(name: string) {
-    [homeScreen, messagesScreen, threadScreen].forEach(s => s.classList.remove('active'));
+    [homeScreen, messagesScreen, helpScreen, threadScreen].forEach(s => s.classList.remove('active'));
     if (name === 'home') homeScreen.classList.add('active');
     else if (name === 'messages') messagesScreen.classList.add('active');
+    else if (name === 'help') helpScreen.classList.add('active');
     else if (name === 'thread') threadScreen.classList.add('active');
   }
 
@@ -272,34 +322,29 @@ const base = '/ThesisArcPro';
   document.querySelectorAll('.cw-nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const screen = (btn as HTMLElement).dataset.cwscreen;
-      document.querySelectorAll('.cw-nav-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
       if (screen === 'messages') { showScreen('messages'); loadCwConversations(); }
+      else if (screen === 'help') showScreen('help');
       else showScreen('home');
     });
   });
 
   document.getElementById('cwBackFromMessages')?.addEventListener('click', () => showScreen('home'));
+  document.getElementById('cwBackFromHelp')?.addEventListener('click', () => showScreen('home'));
   document.getElementById('cwBackFromThread')?.addEventListener('click', () => { showScreen('messages'); cwActiveConvoId = null; if (cwSub) { cwSub.unsubscribe(); cwSub = null; } });
 
   function showLoginPrompt() {
     homeScreen.classList.add('active');
-    const actions = document.querySelector('.cw-home-actions');
-    const convos = document.getElementById('cwConvoList');
-    if (actions) actions.innerHTML = `<div class="cw-login-prompt"><p>Log in to send us a message</p><a href="${base}/login/" class="cw-login-btn">Log In</a></div>`;
-    if (convos) convos.innerHTML = '';
+    const body = homeScreen.querySelector('.cw-body');
+    if (body) body.innerHTML = `<div class="cw-login-prompt"><p>Log in to send us a message</p><a href="${base}/login/" class="cw-login-btn">Log In</a></div>`;
   }
 
   async function detectRole() {
-    // Check if writer
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/writers?auth_user_id=eq.${cwUserId}&select=id,full_name`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
       const data = await res.json();
       if (data.length) { cwUserRole = 'writer'; cwUserName = data[0].full_name; return; }
     } catch (e) {}
-    // Check if admin
     if (cwSession.user.email === 'thesisarcpro069@gmail.com') { cwUserRole = 'admin'; cwUserName = 'Admin'; return; }
-    // Default: client
     cwUserRole = 'client';
     cwUserName = cwSession.user.email?.split('@')[0] || 'Client';
     try {
@@ -311,13 +356,9 @@ const base = '/ThesisArcPro';
 
   async function loadCwConversations() {
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${cwUserId}&select=conversation_id,conversations(id,type,title,updated_at)`,
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } }
-      );
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${cwUserId}&select=conversation_id,conversations(id,type,title,updated_at)`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
       const data = await res.json();
-      cwConversations = data.map((d: any) => d.conversations).filter(Boolean)
-        .sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+      cwConversations = data.map((d: any) => d.conversations).filter(Boolean).sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
       renderCwConvoList();
       renderCwHomeConvos();
     } catch (err) { console.error(err); }
@@ -327,17 +368,15 @@ const base = '/ThesisArcPro';
     const el = document.getElementById('cwConvoList')!;
     if (!cwConversations.length) { el.innerHTML = ''; return; }
     const recent = cwConversations.slice(0, 3);
-    el.innerHTML = `<div style="margin-top:0.5rem;"><p style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">Recent</p>
-      ${recent.map((c: any) => {
+    el.innerHTML = `<p style="font-size:0.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 0.4rem;">Recent</p>` +
+      recent.map((c: any) => {
         const icon = c.type === 'support' ? '🛟' : '📋';
-        return `<div class="cw-convo-item" data-cwcid="${c.id}" style="display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0;cursor:pointer;">
-          <span>${icon}</span><span style="font-size:0.85rem;font-weight:500;color:#0f172a;">${cwEsc(c.title || 'Chat')}</span>
+        return `<div class="cw-convo-item" data-cwcid="${c.id}" style="border-radius:12px;border-bottom:none;background:#fff;margin-bottom:0.4rem;border:1px solid #eef2f6;">
+          <div class="cw-convo-icon">${icon}</div>
+          <div class="cw-convo-info"><div class="cw-convo-name">${cwEsc(c.title || 'Chat')}</div></div>
         </div>`;
-      }).join('')}
-    </div>`;
-    el.querySelectorAll('[data-cwcid]').forEach(item => {
-      item.addEventListener('click', () => openCwThread((item as HTMLElement).dataset.cwcid!));
-    });
+      }).join('');
+    el.querySelectorAll('[data-cwcid]').forEach(item => item.addEventListener('click', () => openCwThread((item as HTMLElement).dataset.cwcid!)));
   }
 
   function renderCwConvoList() {
@@ -346,19 +385,12 @@ const base = '/ThesisArcPro';
     el.innerHTML = cwConversations.map((c: any) => {
       const icon = c.type === 'support' ? '🛟' : '📋';
       const time = c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
-      return `<div class="cw-convo-item" data-cwcid="${c.id}">
-        <div class="cw-convo-icon">${icon}</div>
-        <div class="cw-convo-info"><div class="cw-convo-name">${cwEsc(c.title || 'Chat')}</div></div>
-        <div class="cw-convo-time">${time}</div>
-      </div>`;
+      return `<div class="cw-convo-item" data-cwcid="${c.id}"><div class="cw-convo-icon">${icon}</div><div class="cw-convo-info"><div class="cw-convo-name">${cwEsc(c.title || 'Chat')}</div></div><div class="cw-convo-time">${time}</div></div>`;
     }).join('');
-    el.querySelectorAll('.cw-convo-item').forEach(item => {
-      item.addEventListener('click', () => openCwThread((item as HTMLElement).dataset.cwcid!));
-    });
+    el.querySelectorAll('.cw-convo-item').forEach(item => item.addEventListener('click', () => openCwThread((item as HTMLElement).dataset.cwcid!)));
   }
 
-  // Start support chat
-  document.getElementById('cwStartSupport')?.addEventListener('click', async () => {
+  async function startSupport() {
     if (!cwSession) return;
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/conversations`, {
@@ -366,8 +398,7 @@ const base = '/ThesisArcPro';
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}`, 'Prefer': 'return=representation' },
         body: JSON.stringify({ type: 'support', title: `Support — ${cwUserName}` })
       });
-      const convs = await res.json();
-      const conv = convs[0];
+      const conv = (await res.json())[0];
       if (!conv) throw new Error('Failed');
       await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants`, {
         method: 'POST',
@@ -377,47 +408,33 @@ const base = '/ThesisArcPro';
       await loadCwConversations();
       openCwThread(conv.id);
     } catch (err) { console.error(err); alert('Could not start chat. Please try again.'); }
-  });
+  }
+  document.getElementById('cwStartSupport')?.addEventListener('click', startSupport);
+  document.getElementById('cwHelpStart')?.addEventListener('click', startSupport);
 
   async function openCwThread(conversationId: string) {
     cwActiveConvoId = conversationId;
     const conv = cwConversations.find(c => c.id === conversationId);
     document.getElementById('cwThreadTitle')!.textContent = conv?.title || 'Chat';
     showScreen('thread');
-
     const container = document.getElementById('cwThreadMsgs')!;
     container.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:2rem;font-size:0.85rem;">Loading…</div>';
-
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${conversationId}&order=created_at.asc`,
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } }
-      );
-      const messages = await res.json();
-      renderCwMessages(messages);
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${conversationId}&order=created_at.asc`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
+      renderCwMessages(await res.json());
     } catch (err) { console.error(err); container.innerHTML = '<div style="text-align:center;color:#94a3b8;">Could not load messages</div>'; }
-
-    // Subscribe to new messages
     if (cwSub) { cwSub.unsubscribe(); cwSub = null; }
-    cwSub = supabase
-      .channel(`cw-${conversationId}`)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` },
-        (payload: any) => {
-          const msg = payload.new;
-          const container = document.getElementById('cwThreadMsgs')!;
-          const placeholder = container.querySelector('div[style*="text-align:center"]');
-          if (placeholder) container.innerHTML = '';
-          const isMine = msg.sender_id === cwUserId;
-          const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
-          container.insertAdjacentHTML('beforeend', `<div class="cw-msg ${isMine ? 'mine' : 'theirs'}">
-            ${!isMine ? `<div class="cw-msg-name">${cwEsc(msg.sender_name || 'Support')}</div>` : ''}
-            <div class="cw-msg-bubble">${cwEsc(msg.content)}</div>
-            <div class="cw-msg-time">${time}</div>
-          </div>`);
-          container.scrollTop = container.scrollHeight;
-        }
-      )
-      .subscribe();
+    cwSub = supabase.channel(`cw-${conversationId}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` }, (payload: any) => {
+        const msg = payload.new;
+        const c = document.getElementById('cwThreadMsgs')!;
+        const ph = c.querySelector('div[style*="text-align:center"]');
+        if (ph) c.innerHTML = '';
+        const isMine = msg.sender_id === cwUserId;
+        const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+        c.insertAdjacentHTML('beforeend', `<div class="cw-msg ${isMine ? 'mine' : 'theirs'}">${!isMine ? `<div class="cw-msg-name">${cwEsc(msg.sender_name || 'Support')}</div>` : ''}<div class="cw-msg-bubble">${cwEsc(msg.content)}</div><div class="cw-msg-time">${time}</div></div>`);
+        c.scrollTop = c.scrollHeight;
+      }).subscribe();
   }
 
   function renderCwMessages(messages: any[]) {
@@ -426,16 +443,11 @@ const base = '/ThesisArcPro';
     container.innerHTML = messages.map((m: any) => {
       const isMine = m.sender_id === cwUserId;
       const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
-      return `<div class="cw-msg ${isMine ? 'mine' : 'theirs'}">
-        ${!isMine ? `<div class="cw-msg-name">${cwEsc(m.sender_name || 'Support')}</div>` : ''}
-        <div class="cw-msg-bubble">${cwEsc(m.content)}</div>
-        <div class="cw-msg-time">${time}</div>
-      </div>`;
+      return `<div class="cw-msg ${isMine ? 'mine' : 'theirs'}">${!isMine ? `<div class="cw-msg-name">${cwEsc(m.sender_name || 'Support')}</div>` : ''}<div class="cw-msg-bubble">${cwEsc(m.content)}</div><div class="cw-msg-time">${time}</div></div>`;
     }).join('');
     container.scrollTop = container.scrollHeight;
   }
 
-  // Send
   document.getElementById('cwSend')?.addEventListener('click', cwSendMessage);
   document.getElementById('cwInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); cwSendMessage(); } });
 
@@ -446,16 +458,8 @@ const base = '/ThesisArcPro';
     const btn = document.getElementById('cwSend') as HTMLButtonElement;
     btn.disabled = true; input.value = '';
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` },
-        body: JSON.stringify({ conversation_id: cwActiveConvoId, sender_id: cwUserId, sender_name: cwUserName, sender_role: cwUserRole, content })
-      });
-      await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}`, 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ updated_at: new Date().toISOString() })
-      });
+      await fetch(`${SUPABASE_URL}/rest/v1/messages`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` }, body: JSON.stringify({ conversation_id: cwActiveConvoId, sender_id: cwUserId, sender_name: cwUserName, sender_role: cwUserRole, content }) });
+      await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}`, 'Prefer': 'return=minimal' }, body: JSON.stringify({ updated_at: new Date().toISOString() }) });
     } catch (err) { console.error(err); }
     btn.disabled = false; input.focus();
   }
