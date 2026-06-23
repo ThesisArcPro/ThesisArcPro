@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>TAP Admin</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── LOGIN SCREEN ── -->
+  <div id="login-screen">
+    <div class="login-logo">Thesis<span>ArcPro</span></div>
+    <p class="login-subtitle">Admin Access</p>
+
+    <div class="pin-display">
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+    </div>
+
+    <p id="pin-error" class="pin-error"></p>
+
+    <div class="pin-pad">
+      <button class="pin-btn" data-val="1">1</button>
+      <button class="pin-btn" data-val="2">2</button>
+      <button class="pin-btn" data-val="3">3</button>
+      <button class="pin-btn" data-val="4">4</button>
+      <button class="pin-btn" data-val="5">5</button>
+      <button class="pin-btn" data-val="6">6</button>
+      <button class="pin-btn" data-val="7">7</button>
+      <button class="pin-btn" data-val="8">8</button>
+      <button class="pin-btn" data-val="9">9</button>
+      <button class="pin-btn del" data-val="del">⌫</button>
+      <button class="pin-btn" data-val="0">0</button>
+      <button class="pin-btn" data-val="del" style="visibility:hidden"></button>
+    </div>
+  </div>
+
+  <!-- ── MAIN APP ── -->
+  <div id="app-screen">
+
+    <!-- Header -->
+    <div class="app-header">
+      <h1>📨 Inbox</h1>
+      <div class="header-actions">
+        <span id="notif-badge" class="notif-badge">0</span>
+        <button id="logout-btn" class="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="client">Clients</button>
+      <button class="filter-btn" data-filter="writer">Writers</button>
+      <button class="filter-btn" data-filter="support">Support</button>
+    </div>
+
+    <!-- Conversation List -->
+    <div id="conv-list"></div>
+
+    <!-- Chat View -->
+    <div id="chat-view">
+      <div class="chat-header">
+        <button id="back-btn" class="back-btn">←</button>
+        <div class="chat-header-info">
+          <div id="chat-header-name" class="chat-header-name"></div>
+          <div id="chat-header-role" class="chat-header-role"></div>
+        </div>
+      </div>
+
+      <div id="chat-messages" class="chat-messages"></div>
+
+      <div class="reply-bar">
+        <input
+          id="reply-input"
+          class="reply-input"
+          type="text"
+          placeholder="Type a reply..."
+          autocomplete="off"
+        />
+        <button id="send-btn" class="send-btn">➤</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
