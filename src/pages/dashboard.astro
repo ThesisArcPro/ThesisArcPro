@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ChatWidget from '../components/ChatWidget.astro';
 const base = '/ThesisArcPro';
 ---
 
@@ -1425,15 +1426,11 @@ ${String(err?.message || err)}
 
   document.getElementById('searchInput')!.addEventListener('input', renderOrders);
 
-  // Open Tidio chat when "Chats" is clicked
+  // Open Chat widget when "Chats" is clicked
   document.getElementById('chatsLink')!.addEventListener('click', (e) => {
     e.preventDefault();
-    const tidio = (window as any).tidioChatApi;
-    if (tidio && typeof tidio.open === 'function') {
-      tidio.open();
-    } else {
-      alert('Chat is still loading, please try again in a moment.');
-    }
+    const bubble = document.getElementById('cwBubble');
+    if (bubble) bubble.click();
   });
 
   document.getElementById('logoutBtn')!.addEventListener('click', async (e) => {

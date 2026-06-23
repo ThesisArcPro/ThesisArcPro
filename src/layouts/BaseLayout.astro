@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import ChatWidget from '../components/ChatWidget.astro';
 const { 
   title = 'ThesisArcPro', 
   description = 'Expert academic writing and research support for high school, college, Masters and PhD students. Essays, dissertations, research papers, editing and more.',
@@ -73,8 +74,7 @@ const fullTitle = title.includes('ThesisArcPro') ? title : `${title} | ThesisArc
   </head>
   <body>
     <slot />
-    <!-- Start of Tidio Chat -->
-    <script src="//code.tidio.co/ohb8zh8jkjjbz5mlsc2xx61lxgmdmjiz.js" async></script>
-    <!-- End of Tidio Chat -->
+    <!-- Chat Widget -->
+    <ChatWidget />
   </body>
 </html>
