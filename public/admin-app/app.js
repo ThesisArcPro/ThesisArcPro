@@ -1,19 +1,19 @@
 // ── CONFIG ──
 const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlaHZ3dnVqdWFtZWhvYW5mb21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYzNDYsImV4cCI6MjA5NTkzMjM0Nn0.zT9H0MMpk_H_lD_LVARrspw8aaqOAZ-0I606D8Ho0Ws';
-const ADMIN_PIN = '6310'; // ← CHANGE THIS to your preferred PIN
+const ADMIN_PIN = '1234'; // ← CHANGE THIS
 
 // ── STATE ──
 let currentFilter = 'all';
 let currentConv = null;
 let conversations = {};
-let realtimeChannel = null;
 
 // ── HEADERS ──
 const headers = {
   'apikey': SUPABASE_KEY,
   'Authorization': `Bearer ${SUPABASE_KEY}`,
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
 };
 
 // ── DOM REFS ──
@@ -25,7 +25,6 @@ const chatMessages = document.getElementById('chat-messages');
 const chatHeaderName = document.getElementById('chat-header-name');
 const chatHeaderRole = document.getElementById('chat-header-role');
 const replyInput = document.getElementById('reply-input');
-const notifBadge = document.getElementById('notif-badge');
 const pinError = document.getElementById('pin-error');
 
 // ── PIN LOGIN ──
@@ -68,16 +67,18 @@ document.querySelectorAll('.pin-btn').forEach(btn => {
 
 // ── INIT APP ──
 async function initApp() {
-  registerSW();
   await loadConversations();
-  subscribeRealtime();
-}
-
-// ── SERVICE WORKER ──
-function registerSW() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/admin-app/sw.js').catch(console.error);
-  }
+  // Poll every 15 seconds
+  setInterval(async () => {
+    await loadConversations();
+    if (currentConv) {
+      const updated = conversations[currentConv.id];
+      if (updated) {
+        currentConv = updated;
+        renderMessages();
+      }
+    }
+  }, 15000);
 }
 
 // ── LOAD CONVERSATIONS ──
@@ -87,10 +88,18 @@ async function loadConversations() {
 
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/messages?select=*&order=created_at.desc`,
+      `${SUPABASE_URL}/rest/v1/messages?select=id,conversation_id,sender_id,sender_name,sender_role,content,created_at&order=created_at.desc&limit=200`,
       { headers }
     );
+
+    if (!res.ok) {
+      const err = await res.text();
+      convList.innerHTML = `<div class="empty-msg">Error: ${res.status} — ${err}</div>`;
+      return;
+    }
+
     const messages = await res.json();
+    console.log('Messages loaded:', messages.length, messages);
 
     if (!Array.isArray(messages) || messages.length === 0) {
       convList.innerHTML = `<div class="empty-msg">No messages yet.</div>`;
@@ -116,14 +125,15 @@ async function loadConversations() {
 
     renderConvList();
   } catch (err) {
-    convList.innerHTML = `<div class="empty-msg">Failed to load. Check connection.</div>`;
-    console.error(err);
+    convList.innerHTML = `<div class="empty-msg">Failed to load. Check connection.<br>${err.message}</div>`;
+    console.error('Load error:', err);
   }
 }
 
 // ── RENDER CONVERSATION LIST ──
 function renderConvList() {
-  const filtered = Object.values(conversations).filter(c => {
+  const all = Object.values(conversations);
+  const filtered = all.filter(c => {
     if (currentFilter === 'all') return true;
     return c.sender_role === currentFilter;
   });
@@ -150,7 +160,6 @@ function renderConvList() {
         </div>
         <div class="conv-meta">
           <div class="conv-time">${time}</div>
-          <div class="unread-dot"></div>
         </div>
       </div>
     `;
@@ -213,17 +222,22 @@ async function sendMessage() {
   };
 
   try {
-    await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
       method: 'POST',
       headers,
       body: JSON.stringify(newMsg)
     });
 
+    if (!res.ok) {
+      console.error('Send failed:', await res.text());
+      return;
+    }
+
     currentConv.messages.push(newMsg);
     currentConv.last_message = content;
     renderMessages();
   } catch (err) {
-    console.error('Send failed:', err);
+    console.error('Send error:', err);
   }
 }
 
@@ -250,7 +264,6 @@ document.getElementById('logout-btn').addEventListener('click', () => {
   loginScreen.style.display = 'flex';
   pinEntry = '';
   updatePinDisplay();
-  if (realtimeChannel) realtimeChannel.unsubscribe();
 });
 
 // ── FILTERS ──
@@ -262,25 +275,6 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     renderConvList();
   });
 });
-
-// ── REALTIME (Supabase) ──
-function subscribeRealtime() {
-  const evtSource = new EventSource(
-    `${SUPABASE_URL}/realtime/v1/sse?apikey=${SUPABASE_KEY}&vsn=1.0.0`
-  );
-
-  // Poll every 15 seconds as reliable fallback
-  setInterval(async () => {
-    await loadConversations();
-    if (currentConv) {
-      const updated = conversations[currentConv.id];
-      if (updated) {
-        currentConv = updated;
-        renderMessages();
-      }
-    }
-  }, 15000);
-}
 
 // ── FORMAT TIME ──
 function formatTime(iso) {
