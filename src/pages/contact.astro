@@ -5,80 +5,20 @@ import Footer from '../components/Footer.astro';
 const base = '/ThesisArcPro';
 ---
 
-<BaseLayout 
-  title="Place Order" 
+<BaseLayout
+  title="Place Order"
   description="Place your order with ThesisArcPro — get an instant price quote for expert academic writing support."
   url="https://thesisarcpro.github.io/ThesisArcPro/contact">
   <Header />
 
-  <div class="floating-left">
-    <button class="float-btn float-btn--help" id="helpBtn" title="Help & Live Chat">
-      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 1C6.48 1 2 5.48 2 11c0 1.88.52 3.64 1.43 5.14L2 22l5.86-1.43C9.36 21.48 11.12 22 13 22c5.52 0 9-4.48 9-10S17.52 1 12 1zm0 2c3.87 0 7 3.13 7 7s-3.13 7-7 7c-1.55 0-2.98-.5-4.13-1.34L5 17l1.34-1.87C5.5 13.98 5 12.55 5 11c0-3.87 3.13-7 7-7zm-1 3v5h2V6h-2zm0 6v2h2v-2h-2z"/></svg>
-      <span>Help</span>
-    </button>
-  </div>
-
-  <div class="chat-popup" id="chatPopup">
-    <div class="chat-popup__header">
-      <div class="chat-popup__avatars">
-        <div class="avatar avatar--1">T</div>
-        <div class="avatar avatar--2">A</div>
-        <div class="avatar avatar--3">P</div>
-      </div>
-      <button class="chat-popup__close" id="chatClose">✕</button>
-      <h2>Hey there! 👋</h2>
-      <p>How can we help?</p>
-      <span class="chat-online">● We're online now</span>
-    </div>
-    <div class="chat-popup__body">
-      <div class="chat-actions">
-        <a href="https://wa.me/16624002088" target="_blank" class="chat-action-btn chat-action-btn--whatsapp">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          <div>
-            <span class="chat-action-btn__title">Chat on WhatsApp</span>
-            <span class="chat-action-btn__sub">Instant response</span>
-          </div>
-          <svg class="chat-action-btn__arrow" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
-        </a>
-        <a href="https://mail.google.com/mail/?view=cm&to=thesisarcpro069@gmail.com&su=ThesisArcPro%20Enquiry" target="_blank" class="chat-action-btn chat-action-btn--email">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-          <div>
-            <span class="chat-action-btn__title">Send us an Email</span>
-            <span class="chat-action-btn__sub">thesisarcpro069@gmail.com</span>
-          </div>
-          <svg class="chat-action-btn__arrow" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
-        </a>
-      </div>
-    </div>
-    <div class="chat-popup__footer">
-      <div class="chat-tabs">
-        <button class="chat-tab chat-tab--active">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-          Home
-        </button>
-        <button class="chat-tab" id="messagesTab">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-          Messages
-        </button>
-        <button class="chat-tab">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
-          Help
-        </button>
-      </div>
-    </div>
-  </div>
-  <div class="chat-overlay" id="chatOverlay"></div>
-
-  <!-- Payment Modal -->
+  <!-- Payment Modal (unchanged) -->
   <div class="modal-overlay" id="paymentModal">
     <div class="modal-card">
       <button class="modal-close" id="paymentModalClose">✕</button>
       <div class="modal-icon">💰</div>
       <h2>Complete Payment</h2>
       <div id="paymentDetails" class="payment-details"></div>
-      <div class="payment-policy">
-        <p id="policyText"></p>
-      </div>
+      <div class="payment-policy"><p id="policyText"></p></div>
       <a href="https://www.paypal.com/ncp/payment/X4GBU659AGXGQ" target="_blank" class="paypal-link-btn" id="paypalBtn">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19c-.988 0-1.829.722-1.974 1.699l-1.12 7.106-.313 1.983h3.293l.742-4.713.048-.306c.145-.977.986-1.699 1.974-1.699h1.245c3.863 0 6.637-1.57 7.49-6.114.333-1.726.163-3.168-.734-4.312z"/></svg>
         Pay with PayPal or Card
@@ -89,143 +29,201 @@ const base = '/ThesisArcPro';
         <input type="text" id="txnId" placeholder="e.g. 7GH123456789" />
         <span class="txn-note">Find it in your PayPal confirmation email</span>
       </div>
-      <button class="btn-confirm-payment" id="confirmPaymentBtn" disabled>
-        ✅ I Have Paid — Submit My Order
-      </button>
+      <button class="btn-confirm-payment" id="confirmPaymentBtn" disabled>✅ I Have Paid — Submit My Order</button>
     </div>
   </div>
 
   <main>
-    <section class="page-hero">
-      <div class="container page-hero__inner">
-        <div class="page-hero__content">
-          <p class="page-hero__eyebrow">Get Started</p>
-          <h1>Place Your Order</h1>
-          <p class="page-hero__sub">Fill in your details below and get an instant price quote. We will match you with the perfect expert within 30 minutes.</p>
+    <section class="wiz-section">
+      <div class="container wiz-shell">
+
+        <!-- Progress bar -->
+        <div class="wiz-progress">
+          <div class="wiz-progress__bar" id="wizBar"></div>
         </div>
-        <div class="page-hero__illustration">
-          <img
-            src="/ThesisArcPro/images/contact.svg"
-            alt="Place your academic writing order and get expert help instantly"
-            width="400"
-            height="300"
-            loading="eager"
-          />
-        </div>
-      </div>
-    </section>
 
-    <section class="order-section">
-      <div class="container order__inner">
+        <div class="wiz-grid">
+          <!-- LEFT: steps -->
+          <div class="wiz-main">
 
-        <div class="order__form-wrap">
-          <div class="user-greeting" id="userGreeting" style="display:none;">
-            <span id="greetingText"></span>
-            <button id="logoutBtn" class="logout-btn">Log Out</button>
-          </div>
-
-          <!-- Success message (hidden until order submitted) -->
-          <div class="order-success" id="orderSuccess" style="display:none;">
-            <div class="order-success__icon">🎉</div>
-            <h2>Order Received!</h2>
-            <p>Your order has been submitted successfully. We will match you with an expert within 30 minutes.</p>
-            <div class="order-success__ticket">
-              <span class="order-success__ticket-label">Your Ticket Number</span>
-              <span class="order-success__ticket-id" id="successTicketId">T-0000</span>
-            </div>
-            <a href="" id="successDashboardLink" class="order-success__btn">Go to My Dashboard →</a>
-          </div>
-
-          <div id="formContainer">
-          <h2>Order Details</h2>
-          <p>Complete the form below to get your instant quote.</p>
-
-          <form class="order-form" id="orderForm">
-
-            <div class="form-group" id="emailGroup" style="display:none;">
-              <label for="email">Email Address *</label>
-              <input type="email" id="email" name="email" placeholder="your@email.com" required readonly />
+            <!-- success (after submit) -->
+            <div class="order-success" id="orderSuccess" style="display:none;">
+              <div class="order-success__icon">🎉</div>
+              <h2>Order Received!</h2>
+              <p>Your order has been submitted successfully. We will match you with an expert within 30 minutes.</p>
+              <div class="order-success__ticket">
+                <span class="order-success__ticket-label">Your Ticket Number</span>
+                <span class="order-success__ticket-id" id="successTicketId">T-0000</span>
+              </div>
+              <a href="" id="successDashboardLink" class="order-success__btn">Go to My Dashboard →</a>
             </div>
 
-            <div class="form-group">
-              <label for="topic">Topic / Title *</label>
-              <input type="text" id="topic" name="topic" placeholder="Enter your assignment topic or title" required />
-            </div>
+            <div id="wizFlow">
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="type">Assignment Type *</label>
-                <input type="text" id="type" name="type" list="type-list" placeholder="Select or type..." required />
+              <!-- STEP 1: SERVICE -->
+              <div class="wiz-step active" data-step="1">
+                <h2 class="wiz-h2">Select your service</h2>
+                <p class="wiz-sub">Knowing your goal helps us match you with the best expert for the job.</p>
+                <div class="svc-list" id="svcList">
+                  <button type="button" class="svc-card" data-service="Writing" data-base="12">
+                    <span class="svc-ico">✍️</span>
+                    <span class="svc-body"><span class="svc-name">Writing <span class="svc-tag">from $12/page</span></span><span class="svc-desc">Get an essay or paper written from scratch by a professional writer.</span></span>
+                    <span class="svc-pick">Select</span>
+                  </button>
+                  <button type="button" class="svc-card" data-service="Rewriting" data-base="9">
+                    <span class="svc-ico">🔁</span>
+                    <span class="svc-body"><span class="svc-name">Rewriting <span class="svc-tag">from $9/page</span></span><span class="svc-desc">Have existing work rewritten to improve quality and originality.</span></span>
+                    <span class="svc-pick">Select</span>
+                  </button>
+                  <button type="button" class="svc-card" data-service="Editing" data-base="8">
+                    <span class="svc-ico">📝</span>
+                    <span class="svc-body"><span class="svc-name">Editing <span class="svc-tag">from $8/page</span></span><span class="svc-desc">Get your paper edited for clarity, structure, and flow.</span></span>
+                    <span class="svc-pick">Select</span>
+                  </button>
+                  <button type="button" class="svc-card" data-service="Proofreading" data-base="7">
+                    <span class="svc-ico">🔍</span>
+                    <span class="svc-body"><span class="svc-name">Proofreading <span class="svc-tag">from $7/page</span></span><span class="svc-desc">Catch grammar, spelling, and punctuation mistakes.</span></span>
+                    <span class="svc-pick">Select</span>
+                  </button>
+                  <button type="button" class="svc-card" data-service="Review my work" data-base="10">
+                    <span class="svc-ico">✅</span>
+                    <span class="svc-body"><span class="svc-name">Review my work <span class="svc-tag">from $10/page</span></span><span class="svc-desc">Have an expert review your work and give detailed feedback.</span></span>
+                    <span class="svc-pick">Select</span>
+                  </button>
+                </div>
+                <div class="wiz-nav">
+                  <span></span>
+                  <button type="button" class="wiz-next" id="next1" disabled>Next</button>
+                </div>
+              </div>
+
+              <!-- STEP 2: DETAILS -->
+              <div class="wiz-step" data-step="2">
+                <h2 class="wiz-h2">Provide your order details</h2>
+                <p class="wiz-sub">These details help your expert understand exactly what you need.</p>
+
+                <label class="wiz-label">Topic / Title *</label>
+                <input type="text" id="topic" class="wiz-input" placeholder="Enter your assignment topic or title" />
+
+                <label class="wiz-label">Type of paper *</label>
+                <div class="chip-row" id="typeChips">
+                  <button type="button" class="chip" data-val="Essay">Essay</button>
+                  <button type="button" class="chip" data-val="Research Paper">Research paper</button>
+                  <button type="button" class="chip" data-val="Discussion Post">Discussion post</button>
+                  <button type="button" class="chip" data-val="Assignment">Assignment</button>
+                </div>
+                <input type="text" id="type" class="wiz-input" list="type-list" placeholder="Essay (Any Type)" />
                 <datalist id="type-list">
-                  <option>Essay</option>
-                  <option>Research Paper</option>
-                  <option>Discussion Post</option>
-                  <option>Report</option>
-                  <option>Take Home Exam</option>
-                  <option>Dissertation / Thesis</option>
-                  <option>Research Proposal</option>
-                  <option>Literature Review</option>
-                  <option>Case Study</option>
-                  <option>Other</option>
+                  <option>Essay</option><option>Research Paper</option><option>Discussion Post</option>
+                  <option>Report</option><option>Take Home Exam</option><option>Dissertation / Thesis</option>
+                  <option>Research Proposal</option><option>Literature Review</option><option>Case Study</option><option>Other</option>
                 </datalist>
-              </div>
-              <div class="form-group">
-                <label for="subject">Subject *</label>
-                <input type="text" id="subject" name="subject" list="subject-list" placeholder="Select or type..." required />
+
+                <label class="wiz-label">Subject *</label>
+                <div class="chip-row" id="subjectChips">
+                  <button type="button" class="chip" data-val="English & Literature">English</button>
+                  <button type="button" class="chip" data-val="Psychology">Psychology</button>
+                  <button type="button" class="chip" data-val="Nursing & Healthcare">Nursing</button>
+                  <button type="button" class="chip" data-val="Business Management">Business</button>
+                  <button type="button" class="chip" data-val="History">History</button>
+                </div>
+                <input type="text" id="subject" class="wiz-input" list="subject-list" placeholder="Other" />
                 <datalist id="subject-list">
-                  <option>Nursing & Healthcare</option>
-                  <option>Business Management</option>
-                  <option>English & Literature</option>
-                  <option>Mathematics</option>
-                  <option>Psychology</option>
-                  <option>Law</option>
-                  <option>Education</option>
-                  <option>History</option>
-                  <option>Science</option>
-                  <option>Sociology</option>
-                  <option>IT & Computer Science</option>
-                  <option>Finance & Accounting</option>
-                  <option>Other</option>
+                  <option>Nursing & Healthcare</option><option>Business Management</option><option>English & Literature</option>
+                  <option>Mathematics</option><option>Psychology</option><option>Law</option><option>Education</option>
+                  <option>History</option><option>Science</option><option>Sociology</option>
+                  <option>IT & Computer Science</option><option>Finance & Accounting</option><option>Other</option>
                 </datalist>
-              </div>
-            </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="service">Service *</label>
-                <input type="text" id="service" name="service" list="service-list" placeholder="Select or type..." required />
-                <datalist id="service-list">
-                  <option>Writing</option>
-                  <option>Rewriting</option>
-                  <option>Editing & Proofreading</option>
-                  <option>Review My Work</option>
-                  <option>Calculations / Problems</option>
-                  <option>Other</option>
-                </datalist>
-              </div>
-              <div class="form-group">
-                <label for="language">Language *</label>
-                <select id="language" name="language" required>
+                <label class="wiz-label">Language *</label>
+                <select id="language" class="wiz-input">
                   <option value="" disabled selected>Select language</option>
-                  <option>English (US)</option>
-                  <option>English (UK)</option>
+                  <option>English (US)</option><option>English (UK)</option>
                 </select>
-              </div>
-            </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="level">Education Level *</label>
-                <select id="level" name="level" required>
-                  <option value="" disabled selected>Select level</option>
-                  <option value="HighSchool" data-rate="12">High School ($12/pg)</option>
-                  <option value="College" data-rate="13">College ($13/pg)</option>
-                  <option value="Masters" data-rate="14">Masters ($14/pg)</option>
-                  <option value="PhD" data-rate="15">PhD / Doctorate ($15/pg)</option>
-                </select>
+                <div class="wiz-nav">
+                  <button type="button" class="wiz-back" data-back>← Back</button>
+                  <button type="button" class="wiz-next" id="next2">Next</button>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="deadline">Deadline *</label>
+
+              <!-- STEP 3: INSTRUCTIONS -->
+              <div class="wiz-step" data-step="3">
+                <h2 class="wiz-h2">Give your instructions</h2>
+                <p class="wiz-sub">Specify your needs so our experts deliver flawless work.</p>
+
+                <label class="wiz-label">Instructions *</label>
+                <textarea id="instructions" class="wiz-input" rows="5" placeholder="Mention your topic, main idea, and requirements like formatting style, references, structure, examples or notes from your professor."></textarea>
+
+                <label class="wiz-label">Attach files (optional)</label>
+                <div class="file-upload">
+                  <input type="file" id="files" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg" />
+                  <p>📎 Drag & drop files here or click to browse</p>
+                  <span>Accepted: PDF, DOC, DOCX, TXT, PNG, JPG</span>
+                </div>
+
+                <label class="wiz-label">Page count *</label>
+                <div class="pages-input">
+                  <button type="button" id="minusBtn">−</button>
+                  <input type="number" id="pages" value="1" min="1" max="500" />
+                  <button type="button" id="plusBtn">+</button>
+                </div>
+                <p class="pages-note"><span id="pagesWordNote">1 double-spaced page is 275 words.</span></p>
+
+                <label class="wiz-label">Citation & sources (optional)</label>
+                <div class="two-col">
+                  <select id="citation" class="wiz-input">
+                    <option value="" disabled selected>Citation style</option>
+                    <option>APA 7</option><option>MLA 9</option><option>Chicago</option><option>Harvard</option>
+                    <option>APA 6</option><option>Turabian</option><option>IEEE</option><option>Vancouver</option>
+                    <option>Other</option><option>Not Required</option>
+                  </select>
+                  <input type="number" id="sources" class="wiz-input" min="0" max="999" placeholder="Sources required (e.g. 5)" />
+                </div>
+
+                <div class="addons">
+                  <h3>Add-ons</h3>
+                  <div class="addons__grid">
+                    <div class="addon-item">
+                      <div class="addon-item__info"><span class="addon-item__name">📊 Graphics & Tables</span><span class="addon-item__price">$5 each</span></div>
+                      <div class="addon-qty"><button type="button" data-addon="graphics" data-d="-1">−</button><span id="graphics-qty">0</span><button type="button" data-addon="graphics" data-d="1">+</button></div>
+                    </div>
+                    <div class="addon-item">
+                      <div class="addon-item__info"><span class="addon-item__name">📚 Printable Sources</span><span class="addon-item__price">$4 each</span></div>
+                      <div class="addon-qty"><button type="button" data-addon="sources" data-d="-1">−</button><span id="sources-qty">0</span><button type="button" data-addon="sources" data-d="1">+</button></div>
+                    </div>
+                    <div class="addon-item addon-item--free">
+                      <div class="addon-item__info"><span class="addon-item__name">🛡️ Plagiarism & AI Report</span><span class="addon-item__price free">FREE</span></div>
+                      <div class="addon-qty addon-qty--free"><span>✔ Included</span></div>
+                    </div>
+                    <div class="addon-item">
+                      <div class="addon-item__info"><span class="addon-item__name">📝 Abstract Page</span><span class="addon-item__price">$7 each</span></div>
+                      <div class="addon-qty"><button type="button" data-addon="abstract" data-d="-1">−</button><span id="abstract-qty">0</span><button type="button" data-addon="abstract" data-d="1">+</button></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="wiz-nav">
+                  <button type="button" class="wiz-back" data-back>← Back</button>
+                  <button type="button" class="wiz-next" id="next3">Next</button>
+                </div>
+              </div>
+
+              <!-- STEP 4: DEADLINE + LEVEL -->
+              <div class="wiz-step" data-step="4">
+                <h2 class="wiz-h2">Specify your deadline</h2>
+                <p class="wiz-sub">When do you need your order ready? The deadline and level affect the price.</p>
+
+                <label class="wiz-label">Education level *</label>
+                <select id="level" class="wiz-input">
+                  <option value="" disabled selected>Select level</option>
+                  <option value="HighSchool" data-step-add="0">High School</option>
+                  <option value="College" data-step-add="1">College</option>
+                  <option value="Masters" data-step-add="2">Masters</option>
+                  <option value="PhD" data-step-add="3">PhD / Doctorate</option>
+                </select>
+
+                <label class="wiz-label">Deadline *</label>
                 <div class="quick-deadlines">
                   <button type="button" class="quick-btn" data-hours="3">3hrs</button>
                   <button type="button" class="quick-btn" data-hours="6">6hrs</button>
@@ -235,171 +233,75 @@ const base = '/ThesisArcPro';
                   <button type="button" class="quick-btn" data-hours="48">2 days</button>
                   <button type="button" class="quick-btn" data-hours="120">5 days</button>
                 </div>
-                <input type="datetime-local" id="deadline" name="deadline" />
-              </div>
-            </div>
+                <input type="datetime-local" id="deadline" class="wiz-input" />
+                <div class="urgency-display" id="urgencyDisplay" style="display:none;"><span class="urgency-badge" id="urgencyBadge"></span></div>
 
-            <div class="urgency-display" id="urgencyDisplay" style="display:none;">
-              <span class="urgency-badge" id="urgencyBadge"></span>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="pages">Number of Pages *</label>
-                <div class="pages-input">
-                  <button type="button" id="minusBtn">−</button>
-                  <input type="number" id="pages" name="pages" value="1" min="1" max="500" />
-                  <button type="button" id="plusBtn">+</button>
-                </div>
-                <span class="pages-note">1 page = 275 words</span>
-              </div>
-              <div class="form-group">
-                <label>Word Count</label>
-                <div class="wordcount-display" id="wordCount">275 words</div>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="citation">Citation Style</label>
-                <select id="citation" name="citation">
-                  <option value="" disabled selected>Select style</option>
-                  <option>APA 7</option>
-                  <option>MLA 9</option>
-                  <option>Chicago</option>
-                  <option>Harvard</option>
-                  <option>APA 6</option>
-                  <option>Turabian</option>
-                  <option>IEEE</option>
-                  <option>Vancouver</option>
-                  <option>Other</option>
-                  <option>Not Required</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="sources">Sources Required</label>
-                <input type="number" id="sources" name="sources" min="0" max="999" placeholder="e.g. 5" />
-              </div>
-            </div>
-            <div class="addons">
-              <h3>Add-ons</h3>
-              <div class="addons__grid">
-                <div class="addon-item">
-                  <div class="addon-item__info">
-                    <span class="addon-item__name">📊 Graphics & Tables</span>
-                    <span class="addon-item__price">$5 each</span>
-                  </div>
-                  <div class="addon-qty">
-                    <button type="button" onclick="changeAddon('graphics', -1)">−</button>
-                    <span id="graphics-qty">0</span>
-                    <button type="button" onclick="changeAddon('graphics', 1)">+</button>
-                  </div>
-                </div>
-                <div class="addon-item">
-                  <div class="addon-item__info">
-                    <span class="addon-item__name">📚 Printable Sources</span>
-                    <span class="addon-item__price">$4 each</span>
-                  </div>
-                  <div class="addon-qty">
-                    <button type="button" onclick="changeAddon('sources', -1)">−</button>
-                    <span id="sources-qty">0</span>
-                    <button type="button" onclick="changeAddon('sources', 1)">+</button>
-                  </div>
-                </div>
-                <div class="addon-item addon-item--free">
-                  <div class="addon-item__info">
-                    <span class="addon-item__name">🛡️ Plagiarism & AI Report</span>
-                    <span class="addon-item__price free">FREE</span>
-                  </div>
-                  <div class="addon-qty addon-qty--free">
-                    <span>✔ Included</span>
-                  </div>
-                </div>
-                <div class="addon-item">
-                  <div class="addon-item__info">
-                    <span class="addon-item__name">📝 Abstract Page</span>
-                    <span class="addon-item__price">$7 each</span>
-                  </div>
-                  <div class="addon-qty">
-                    <button type="button" onclick="changeAddon('abstract', -1)">−</button>
-                    <span id="abstract-qty">0</span>
-                    <button type="button" onclick="changeAddon('abstract', 1)">+</button>
-                  </div>
+                <div class="wiz-nav">
+                  <button type="button" class="wiz-back" data-back>← Back</button>
+                  <button type="button" class="wiz-next" id="next4">Next</button>
                 </div>
               </div>
-            </div>
 
-            <div class="form-group">
-              <label for="instructions">Instructions / Description *</label>
-              <textarea id="instructions" name="instructions" rows="5" placeholder="Describe your assignment in detail — include any specific requirements, rubric, or guidelines..." required></textarea>
-            </div>
+              <!-- STEP 5: AUTH -->
+              <div class="wiz-step" data-step="5">
+                <h2 class="wiz-h2" id="authTitle">Create your account</h2>
+                <p class="wiz-sub" id="authSwitchLine">Already have an account? <a href="#" id="toLogin">Log in</a></p>
 
-            <div class="form-group">
-              <label for="files">Attach Files (optional)</label>
-              <div class="file-upload">
-                <input type="file" id="files" name="files" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg" />
-                <p>📎 Drag & drop files here or click to browse</p>
-                <span>Accepted: PDF, DOC, DOCX, TXT, PNG, JPG</span>
+                <div id="loggedInBox" style="display:none;">
+                  <div class="user-greeting"><span id="greetingText"></span><button id="logoutBtn" class="logout-btn">Log Out</button></div>
+                  <p class="wiz-sub">You're signed in. Review your order on the right, then place it below.</p>
+                </div>
+
+                <div id="authBox">
+                  <label class="wiz-label">Email address *</label>
+                  <input type="email" id="authEmail" class="wiz-input" placeholder="your@email.com" />
+                  <label class="wiz-label">Password *</label>
+                  <input type="password" id="authPassword" class="wiz-input" placeholder="Your password (min 6 chars)" />
+                  <div id="authNameWrap">
+                    <label class="wiz-label">Full name *</label>
+                    <input type="text" id="authName" class="wiz-input" placeholder="Your full name" />
+                  </div>
+                  <button type="button" class="wiz-auth-btn" id="authBtn">Create an account</button>
+                  <div class="auth-msg" id="authMsg"></div>
+                  <p class="auth-terms">By continuing you agree to our Terms and Privacy Policy.</p>
+                </div>
+
+                <div class="wiz-nav">
+                  <button type="button" class="wiz-back" data-back>← Back</button>
+                  <button type="button" class="wiz-next" id="createOrderBtn" disabled>🛒 Create Order</button>
+                </div>
+                <button type="button" class="btn-submit-order" id="submitOrderBtn" style="display:none;">✅ Submit Order</button>
               </div>
-            </div>
 
-            <!-- Create Order Button -->
-            <button type="button" class="btn-primary form-submit" id="createOrderBtn">
-              🛒 Create Order
-            </button>
-
-            <!-- Submit Order Button — hidden until payment confirmed -->
-            <button type="button" class="btn-submit-order" id="submitOrderBtn" style="display:none;">
-              ✅ Submit Order
-            </button>
-
-          </form>
+            </div><!-- /wizFlow -->
           </div>
 
+          <!-- RIGHT: live summary -->
+          <aside class="wiz-aside">
+            <div class="summary-card">
+              <div class="summary-price">
+                <div class="summary-price__amt" id="calcTotal">$0.00</div>
+                <div class="summary-price__lbl">Estimated total</div>
+              </div>
+              <div class="summary-rows" id="summaryRows">
+                <div class="sum-row"><span>Service</span><span id="sumService">—</span></div>
+                <div class="sum-row"><span>Level</span><span id="sumLevel">—</span></div>
+                <div class="sum-row"><span>Base price</span><span id="sumBase">—</span></div>
+                <div class="sum-row"><span>Pages</span><span id="sumPages">x 1</span></div>
+                <div class="sum-row" id="sumUrgencyRow" style="display:none;"><span id="sumUrgencyLabel">Urgency</span><span id="sumUrgency">+$0.00</span></div>
+                <div class="sum-row" id="sumAddonsRow" style="display:none;"><span>Add-ons</span><span id="sumAddons">+$0.00</span></div>
+                <div class="sum-div"></div>
+                <div class="sum-row sum-row--total"><span>Total</span><span id="sumTotal">$0.00</span></div>
+              </div>
+              <div class="summary-feats">
+                <div>✔ Free plagiarism & AI report</div>
+                <div>✔ Free unlimited revisions</div>
+                <div>✔ On-time delivery guaranteed</div>
+                <div>✔ Money-back guarantee</div>
+              </div>
+            </div>
+          </aside>
         </div>
-
-        <div class="order__calculator">
-          <div class="calculator-card">
-            <h3>💰 Your Price</h3>
-            <div class="calc-display">
-              <div class="calc-total" id="calcTotal">$12.00</div>
-              <div class="calc-label">Estimated Total</div>
-            </div>
-            <div class="calc-breakdown">
-              <div class="breakdown-item">
-                <span>Base price</span>
-                <span id="basePriceDisplay">$12.00/pg</span>
-              </div>
-              <div class="breakdown-item">
-                <span>Pages</span>
-                <span id="pagesDisplay">x 1</span>
-              </div>
-              <div class="breakdown-item" id="urgencyRow" style="display:none;">
-                <span id="urgencyLabel">Urgency</span>
-                <span id="urgencyAmount">+$0.00</span>
-              </div>
-              <div class="breakdown-item" id="addonsRow" style="display:none;">
-                <span>Add-ons</span>
-                <span id="addonsAmount">+$0.00</span>
-              </div>
-              <div class="breakdown-divider"></div>
-              <div class="breakdown-item breakdown-item--total">
-                <span>Total</span>
-                <span id="totalDisplay">$12.00</span>
-              </div>
-            </div>
-            <div class="calc-features">
-              <div class="calc-feature">✔ Free plagiarism & AI report</div>
-              <div class="calc-feature">✔ Free unlimited revisions</div>
-              <div class="calc-feature">✔ On time delivery guaranteed</div>
-              <div class="calc-feature">✔ Money back guarantee</div>
-            </div>
-            <div class="calc-note">
-              💬 Need a custom quote? <a href="https://wa.me/16624002088" target="_blank">Chat with us</a>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
   </main>
@@ -408,43 +310,120 @@ const base = '/ThesisArcPro';
 </BaseLayout>
 
 <style>
-.floating-left { position: fixed; bottom: 2rem; left: 2rem; z-index: 9999; }
-.float-btn--help { display: flex; align-items: center; gap: 0.5rem; background-color: var(--navy); color: var(--white); border: none; border-radius: 50px; padding: 0 1.3rem; height: 48px; font-weight: 700; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: all 0.3s ease; }
-.float-btn--help svg { flex-shrink: 0; }
-.float-btn--help:hover { background-color: var(--gold); color: var(--navy); transform: translateY(-2px); }
-.chat-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 10000; }
-.chat-overlay.active { display: block; }
-.chat-popup { position: fixed; bottom: 6rem; left: 2rem; width: 320px; background: var(--white); border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.18); z-index: 10001; overflow: hidden; transform: translateY(16px); opacity: 0; pointer-events: none; transition: all 0.25s ease; }
-.chat-popup.active { transform: translateY(0); opacity: 1; pointer-events: all; }
-.chat-popup__header { background: #1a73e8; padding: 1.5rem 1.5rem 1.3rem; position: relative; }
-.chat-popup__avatars { display: flex; margin-bottom: 1rem; }
-.avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; color: white; margin-left: -8px; }
-.avatar:first-child { margin-left: 0; }
-.avatar--1 { background: #e74c3c; }
-.avatar--2 { background: #8e44ad; }
-.avatar--3 { background: #f39c12; }
-.chat-popup__close { position: absolute; top: 0.9rem; right: 0.9rem; background: rgba(255,255,255,0.2); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
-.chat-popup__header h2 { color: white; font-size: 1.25rem; margin: 0 0 0.25rem; }
-.chat-popup__header p { color: rgba(255,255,255,0.85); font-size: 0.92rem; margin: 0 0 0.5rem; }
-.chat-online { font-size: 0.76rem; color: #a8f0c6; font-weight: 500; }
-.chat-popup__body { padding: 1.2rem; }
-.chat-actions { display: flex; flex-direction: column; gap: 0.6rem; }
-.chat-action-btn { display: flex; align-items: center; gap: 0.8rem; padding: 0.85rem 1rem; border-radius: 10px; text-decoration: none; transition: all 0.2s ease; }
-.chat-action-btn > div { flex: 1; }
-.chat-action-btn__title { display: block; font-weight: 700; font-size: 0.88rem; }
-.chat-action-btn__sub { display: block; font-size: 0.76rem; opacity: 0.7; margin-top: 0.1rem; }
-.chat-action-btn__arrow { opacity: 0.4; flex-shrink: 0; }
-.chat-action-btn--whatsapp { background: #e8faf0; color: #1a7a3c; border: 1px solid rgba(37,211,102,0.15); }
-.chat-action-btn--whatsapp:hover { background: #25D366; color: white; }
-.chat-action-btn--email { background: rgba(197,160,89,0.08); color: var(--navy); border: 1px solid rgba(197,160,89,0.2); }
-.chat-action-btn--email:hover { background: var(--gold); color: var(--navy); }
-.chat-popup__footer { border-top: 1px solid rgba(0,0,0,0.07); padding: 0.4rem 0; }
-.chat-tabs { display: flex; justify-content: space-around; }
-.chat-tab { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; background: none; border: none; cursor: pointer; padding: 0.5rem 0.8rem; border-radius: 8px; font-size: 0.7rem; color: var(--text-light); transition: color 0.2s ease; }
-.chat-tab--active { color: #1a73e8; }
-.chat-tab:hover { color: var(--navy); }
+.wiz-section { background: var(--off-white); padding: 8rem 0 4rem; min-height: 80vh; }
+.wiz-shell { max-width: 1080px; }
+.wiz-progress { height: 4px; background: rgba(0,0,0,0.08); border-radius: 4px; margin-bottom: 2.5rem; overflow: hidden; }
+.wiz-progress__bar { height: 100%; width: 20%; background: var(--gold); transition: width 0.3s ease; }
+.wiz-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2.5rem; align-items: start; }
 
-/* Modal */
+.wiz-step { display: none; }
+.wiz-step.active { display: block; animation: wizfade 0.25s ease; }
+@keyframes wizfade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.wiz-h2 { color: var(--navy); font-size: 1.5rem; margin-bottom: 0.4rem; }
+.wiz-sub { color: var(--text-mid); font-size: 0.92rem; margin-bottom: 1.6rem; }
+.wiz-sub a { color: var(--gold); font-weight: 600; text-decoration: none; }
+.wiz-label { display: block; color: var(--navy); font-size: 0.88rem; font-weight: 600; margin: 1.1rem 0 0.4rem; }
+.wiz-input { width: 100%; padding: 0.85rem 1rem; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 8px; font-family: var(--font-body); font-size: 0.95rem; color: var(--text-dark); background: var(--white); outline: none; transition: border-color 0.2s ease; }
+.wiz-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(197,160,89,0.1); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+/* service cards */
+.svc-list { display: flex; flex-direction: column; gap: 0.8rem; }
+.svc-card { display: flex; align-items: center; gap: 1rem; width: 100%; text-align: left; background: var(--white); border: 1.5px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 1.1rem 1.2rem; cursor: pointer; transition: all 0.18s ease; }
+.svc-card:hover { border-color: var(--gold); }
+.svc-card.selected { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(197,160,89,0.12); }
+.svc-ico { font-size: 1.6rem; flex-shrink: 0; }
+.svc-body { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; }
+.svc-name { color: var(--navy); font-weight: 700; font-size: 0.98rem; }
+.svc-tag { background: rgba(197,160,89,0.18); color: #8a6d2f; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 20px; margin-left: 0.3rem; }
+.svc-desc { color: var(--text-mid); font-size: 0.84rem; }
+.svc-pick { background: var(--navy); color: var(--white); font-size: 0.82rem; font-weight: 600; padding: 0.5rem 1.1rem; border-radius: 8px; flex-shrink: 0; }
+.svc-card.selected .svc-pick { background: var(--gold); color: var(--navy); }
+.svc-card.selected .svc-pick::after { content: 'ed'; }
+
+/* chips */
+.chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+.chip { background: var(--off-white); border: 1.5px solid var(--border); color: var(--navy); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+.chip:hover, .chip.active { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+
+.quick-deadlines { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.6rem; }
+.quick-btn { background: var(--off-white); border: 1.5px solid var(--border); color: var(--navy); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.quick-btn:hover, .quick-btn.active { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+
+.pages-input { display: inline-flex; align-items: center; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 8px; overflow: hidden; background: var(--white); }
+.pages-input button { background: var(--navy); color: var(--white); border: none; padding: 0.7rem 1.1rem; font-size: 1.2rem; cursor: pointer; }
+.pages-input button:hover { background: var(--gold); color: var(--navy); }
+.pages-input input { border: none !important; text-align: center; width: 80px; font-weight: 700; box-shadow: none !important; }
+.pages-note { color: var(--text-light); font-size: 0.82rem; margin-top: 0.4rem; }
+
+.urgency-display { background: rgba(197,160,89,0.1); border: 1px solid var(--gold); border-radius: 8px; padding: 0.7rem 1rem; margin-top: 0.8rem; }
+.urgency-badge { color: var(--navy); font-weight: 600; font-size: 0.88rem; }
+
+.file-upload { border: 2px dashed var(--gold); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; position: relative; }
+.file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.file-upload p { color: var(--navy); font-weight: 600; }
+.file-upload span { color: var(--text-light); font-size: 0.8rem; }
+
+.addons { background: var(--white); border: 1.5px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 1.3rem; margin-top: 1.2rem; }
+.addons h3 { color: var(--navy); font-size: 1rem; margin-bottom: 1rem; }
+.addons__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+.addon-item { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0.9rem; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 8px; background: var(--off-white); gap: 0.5rem; }
+.addon-item__info { display: flex; flex-direction: column; gap: 0.15rem; }
+.addon-item__name { color: var(--text-dark); font-size: 0.8rem; font-weight: 500; }
+.addon-item__price { color: var(--gold); font-size: 0.76rem; font-weight: 700; }
+.addon-item__price.free { color: #2d6a4f; }
+.addon-qty { display: flex; align-items: center; gap: 0.4rem; }
+.addon-qty button { background: var(--navy); color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; }
+.addon-qty button:hover { background: var(--gold); color: var(--navy); }
+.addon-qty span { font-weight: 700; color: var(--navy); min-width: 14px; text-align: center; }
+.addon-qty--free span { color: #2d6a4f; font-weight: 600; font-size: 0.82rem; }
+
+/* nav */
+.wiz-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 2rem; }
+.wiz-back { background: none; border: none; color: var(--text-mid); font-weight: 600; cursor: pointer; font-size: 0.92rem; }
+.wiz-back:hover { color: var(--navy); }
+.wiz-next { background: var(--gold); color: var(--navy); border: none; border-radius: 8px; padding: 0.85rem 2rem; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease; }
+.wiz-next:hover:not(:disabled) { filter: brightness(1.05); }
+.wiz-next:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* auth */
+.wiz-auth-btn { width: 100%; background: var(--gold); color: var(--navy); border: none; border-radius: 8px; padding: 0.9rem; font-weight: 700; font-size: 0.98rem; cursor: pointer; margin-top: 1.2rem; }
+.wiz-auth-btn:hover { filter: brightness(1.05); }
+.auth-msg { font-size: 0.85rem; margin-top: 0.7rem; padding: 0.5rem 0.7rem; border-radius: 6px; display: none; }
+.auth-msg.error { background: rgba(239,68,68,0.1); color: #c0392b; display: block; }
+.auth-msg.success { background: rgba(34,197,94,0.12); color: #2d6a4f; display: block; }
+.auth-terms { font-size: 0.74rem; color: var(--text-light); margin-top: 0.7rem; text-align: center; }
+.user-greeting { display: flex; align-items: center; justify-content: space-between; background: rgba(197,160,89,0.1); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 1rem; }
+.user-greeting span { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
+.logout-btn { background: none; border: 1px solid var(--navy); color: var(--navy); padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer; }
+.logout-btn:hover { background: var(--navy); color: var(--white); }
+.btn-submit-order { width: 100%; padding: 1.05rem; font-size: 1.05rem; border: none; cursor: pointer; border-radius: 8px; font-weight: 700; background: #2d6a4f; color: white; margin-top: 1rem; }
+.btn-submit-order:hover { background: #1e4d38; }
+
+/* summary */
+.wiz-aside { position: sticky; top: 6rem; }
+.summary-card { background: var(--navy); border-radius: 16px; padding: 1.8rem; color: var(--white); }
+.summary-price { text-align: center; margin-bottom: 1.4rem; }
+.summary-price__amt { font-size: 2.6rem; font-weight: 800; color: var(--gold); line-height: 1; }
+.summary-price__lbl { color: rgba(255,255,255,0.6); font-size: 0.82rem; margin-top: 0.3rem; }
+.summary-rows { display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 1.3rem; }
+.sum-row { display: flex; justify-content: space-between; color: rgba(255,255,255,0.8); font-size: 0.86rem; }
+.sum-row--total { color: var(--white); font-weight: 700; font-size: 1rem; }
+.sum-div { height: 1px; background: rgba(255,255,255,0.15); margin: 0.3rem 0; }
+.summary-feats { display: flex; flex-direction: column; gap: 0.4rem; }
+.summary-feats div { color: rgba(255,255,255,0.75); font-size: 0.82rem; }
+
+/* success + payment modal (reused styles) */
+.order-success { background: var(--white); border: 1.5px solid rgba(45,106,79,0.3); border-radius: 16px; padding: 3rem 2rem; text-align: center; }
+.order-success__icon { font-size: 3.5rem; margin-bottom: 1rem; }
+.order-success h2 { color: var(--navy); margin-bottom: 0.8rem; }
+.order-success p { color: var(--text-mid); margin-bottom: 1.8rem; }
+.order-success__ticket { background: var(--off-white); border-radius: 12px; padding: 1.3rem; margin-bottom: 1.8rem; }
+.order-success__ticket-label { display: block; color: var(--text-mid); font-size: 0.85rem; margin-bottom: 0.4rem; }
+.order-success__ticket-id { display: block; color: var(--gold); font-size: 2.4rem; font-weight: 800; }
+.order-success__btn { display: inline-block; background: var(--navy); color: var(--white); padding: 0.9rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 700; }
+.order-success__btn:hover { background: var(--gold); color: var(--navy); }
+
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 20000; align-items: center; justify-content: center; }
 .modal-overlay.active { display: flex; }
 .modal-card { background: var(--white); border-radius: 16px; padding: 2.5rem; max-width: 460px; width: 90%; position: relative; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
@@ -454,109 +433,24 @@ const base = '/ThesisArcPro';
 .payment-details { background: var(--off-white); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
 .payment-policy { margin-bottom: 1.5rem; }
 .payment-policy p { color: var(--text-mid); font-size: 0.9rem; }
-.paypal-link-btn { display: flex; align-items: center; justify-content: center; gap: 0.7rem; background: #FFC439; color: #003087; font-weight: 700; font-size: 1.05rem; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; transition: all 0.2s ease; margin-bottom: 0.8rem; }
+.paypal-link-btn { display: flex; align-items: center; justify-content: center; gap: 0.7rem; background: #FFC439; color: #003087; font-weight: 700; font-size: 1.05rem; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; margin-bottom: 0.8rem; }
 .paypal-link-btn:hover { background: #f0b429; }
 .paypal-note { color: var(--text-light); font-size: 0.78rem; margin-bottom: 1.5rem; }
-.btn-confirm-payment { width: 100%; padding: 1rem; background: #2d6a4f; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.3s ease; }
-.btn-confirm-payment:hover { background: #1e4d38; }
-
-/* User greeting */
-.user-greeting { display: flex; align-items: center; justify-content: space-between; background: rgba(197,160,89,0.1); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 1.5rem; }
-.user-greeting span { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
-.logout-btn { background: none; border: 1px solid var(--navy); color: var(--navy); padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; }
-.logout-btn:hover { background: var(--navy); color: var(--white); }
-
-/* Order success message */
-.order-success { background: var(--white); border: 1.5px solid rgba(45,106,79,0.3); border-radius: 16px; padding: 3rem 2rem; text-align: center; }
-.order-success__icon { font-size: 3.5rem; margin-bottom: 1rem; }
-.order-success h2 { color: var(--navy); margin-bottom: 0.8rem; }
-.order-success p { color: var(--text-mid); margin-bottom: 1.8rem; max-width: 420px; margin-left: auto; margin-right: auto; }
-.order-success__ticket { background: var(--off-white); border-radius: 12px; padding: 1.3rem; margin-bottom: 1.8rem; }
-.order-success__ticket-label { display: block; color: var(--text-mid); font-size: 0.85rem; margin-bottom: 0.4rem; }
-.order-success__ticket-id { display: block; color: var(--gold); font-size: 2.4rem; font-weight: 800; }
-.order-success__btn { display: inline-block; background: var(--navy); color: var(--white); padding: 0.9rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 700; transition: background 0.2s ease; }
-.order-success__btn:hover { background: var(--gold); color: var(--navy); }
-
-.page-hero { background-color: var(--navy); padding: 10rem 0 5rem; }
-.page-hero__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
-.page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
-.page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
-.page-hero__sub { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; }
-.page-hero__illustration { display: flex; justify-content: center; align-items: center; }
-.page-hero__illustration img { width: 100%; max-width: 380px; height: auto; }
-.order-section { padding: var(--section-padding); background-color: var(--off-white); }
-.order__inner { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3rem; align-items: start; }
-.order__form-wrap h2 { color: var(--navy); margin-bottom: 0.5rem; }
-.order__form-wrap > p { color: var(--text-mid); margin-bottom: 2rem; }
-.order-form { display: flex; flex-direction: column; gap: 1.2rem; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-.form-group label { color: var(--navy); font-size: 0.9rem; font-weight: 600; }
-.form-group input, .form-group select, .form-group textarea { padding: 0.85rem 1rem; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; font-family: var(--font-body); font-size: 0.95rem; color: var(--text-dark); background-color: var(--white); transition: border-color 0.3s ease; outline: none; width: 100%; }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(197,160,89,0.1); }
-.form-group input[readonly] { background-color: var(--off-white); cursor: not-allowed; }
-.form-group textarea { resize: vertical; min-height: 120px; }
-.urgency-display { background: rgba(197,160,89,0.1); border: 1px solid var(--gold); border-radius: 8px; padding: 0.8rem 1rem; }
-.urgency-badge { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
-.pages-input { display: flex; align-items: center; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; overflow: hidden; background: var(--white); }
-.pages-input button { background: var(--navy); color: var(--white); border: none; padding: 0.85rem 1.2rem; font-size: 1.2rem; cursor: pointer; transition: background 0.3s ease; }
-.pages-input button:hover { background: var(--gold); color: var(--navy); }
-.pages-input input { border: none !important; text-align: center; flex: 1; font-weight: 700; box-shadow: none !important; }
-.pages-note { color: var(--text-light); font-size: 0.8rem; }
-.wordcount-display { padding: 0.85rem 1rem; border: 1.5px solid var(--border); border-radius: 6px; background: var(--white); color: var(--navy); font-weight: 700; display: flex; align-items: center; }
-.addons { background: var(--white); border: 1.5px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 1.5rem; }
-.addons h3 { color: var(--navy); font-size: 1rem; margin-bottom: 1rem; }
-.addons__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-.addon-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 8px; background: var(--off-white); gap: 0.5rem; }
-.addon-item--free { opacity: 0.85; }
-.addon-item__info { display: flex; flex-direction: column; gap: 0.2rem; }
-.addon-item__name { color: var(--text-dark); font-size: 0.82rem; font-weight: 500; }
-.addon-item__price { color: var(--gold); font-size: 0.78rem; font-weight: 700; }
-.addon-item__price.free { color: #2d6a4f; }
-.addon-qty { display: flex; align-items: center; gap: 0.5rem; }
-.addon-qty button { background: var(--navy); color: white; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; }
-.addon-qty button:hover { background: var(--gold); color: var(--navy); }
-.addon-qty span { font-weight: 700; color: var(--navy); min-width: 16px; text-align: center; }
-.addon-qty--free span { color: #2d6a4f; font-weight: 600; font-size: 0.85rem; }
-.file-upload { border: 2px dashed var(--gold); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; position: relative; transition: background 0.2s ease; }
-.file-upload:hover { background: rgba(197,160,89,0.05); }
-.file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.file-upload p { color: var(--navy); font-weight: 600; margin-bottom: 0.3rem; }
-.file-upload span { color: var(--text-light); font-size: 0.82rem; }
-.form-submit { width: 100%; padding: 1.1rem; font-size: 1.1rem; border: none; cursor: pointer; border-radius: 8px; font-weight: 700; }
-.btn-submit-order { width: 100%; padding: 1.1rem; font-size: 1.1rem; border: none; cursor: pointer; border-radius: 8px; font-weight: 700; background-color: #2d6a4f; color: white; transition: background 0.3s ease; }
-.btn-submit-order:hover { background-color: #1e4d38; }
-.calculator-card { background: var(--navy); border-radius: 16px; padding: 2rem; position: sticky; top: 6rem; color: var(--white); }
-.calculator-card h3 { color: var(--gold); font-size: 1.1rem; margin-bottom: 1.5rem; }
-.calc-display { text-align: center; margin-bottom: 1.5rem; }
-.calc-total { font-size: 3rem; font-weight: 800; color: var(--gold); line-height: 1; }
-.calc-label { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.3rem; }
-.calc-breakdown { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem; }
-.breakdown-item { display: flex; justify-content: space-between; color: rgba(255,255,255,0.8); font-size: 0.88rem; }
-.breakdown-item--total { color: var(--white); font-weight: 700; font-size: 1rem; }
-.breakdown-divider { height: 1px; background: rgba(255,255,255,0.15); margin: 0.3rem 0; }
-.calc-features { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
-.calc-feature { color: rgba(255,255,255,0.75); font-size: 0.83rem; }
-.calc-note { color: rgba(255,255,255,0.6); font-size: 0.82rem; text-align: center; }
-.calc-note a { color: var(--gold); text-decoration: none; }
-.calc-note a:hover { text-decoration: underline; }
-@media (max-width: 768px) {
-  .order__inner { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-  .addons__grid { grid-template-columns: 1fr; }
-  .page-hero__inner { grid-template-columns: 1fr; }
-  .page-hero__illustration { display: none; }
-  .calculator-card { position: static; }
-}
-.quick-deadlines { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
-.quick-btn { background: var(--off-white); border: 1.5px solid var(--border); color: var(--navy); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-.quick-btn:hover, .quick-btn.active { background: var(--gold); border-color: var(--gold); color: var(--navy); }
 .txn-group { margin-bottom: 1rem; text-align: left; }
 .txn-group label { display: block; font-weight: 600; color: var(--navy); font-size: 0.9rem; margin-bottom: 0.4rem; }
 .txn-group input { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 6px; font-size: 0.95rem; outline: none; }
 .txn-group input:focus { border-color: var(--gold); }
 .txn-note { font-size: 0.76rem; color: var(--text-light); }
+.btn-confirm-payment { width: 100%; padding: 1rem; background: #2d6a4f; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.btn-confirm-payment:hover { background: #1e4d38; }
 .btn-confirm-payment:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 820px) {
+  .wiz-grid { grid-template-columns: 1fr; }
+  .wiz-aside { position: static; order: -1; }
+  .two-col { grid-template-columns: 1fr; }
+  .addons__grid { grid-template-columns: 1fr; }
+}
 </style>
 
 <script>
@@ -567,383 +461,328 @@ const base = '/ThesisArcPro';
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
   const base = '/ThesisArcPro';
 
-  let currentTotal = 12;
+  const TOTAL_STEPS = 5;
+  let step = 1;
   let currentSession: any = null;
+  let currentTotal = 0;
+  let authMode: 'signup' | 'login' = 'signup';
 
-  // Check auth
-  async function checkAuth() {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        window.location.replace(`${base}/login/`);
-        return;
-      }
-      currentSession = session;
-      const emailInput = document.getElementById('email') as HTMLInputElement;
-      if (emailInput) emailInput.value = session.user.email || '';
-
-      // Greet by name (from profile), fall back to email if no name
-      let displayName = session.user.email || '';
-      try {
-        const profRes = await fetch(
-          `${SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}&select=full_name`,
-          { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
-        );
-        const profData = await profRes.json();
-        if (profData[0]?.full_name) displayName = profData[0].full_name;
-      } catch {}
-
-      const greeting = document.getElementById('userGreeting');
-      const greetingText = document.getElementById('greetingText');
-      if (greeting) greeting.style.display = 'flex';
-      if (greetingText) greetingText.textContent = `👋 Welcome, ${displayName}`;
-    } catch {
-      window.location.replace(`${base}/login/`);
-    }
-  }
-
-  checkAuth();
-
-  // Logout
-  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
-    await supabase.auth.signOut();
-    window.location.replace(`${base}/login/`);
-  });
-
-  // Price calculator
-  const levelSelect = document.getElementById('level') as HTMLSelectElement;
-  const pagesInput = document.getElementById('pages') as HTMLInputElement;
-  const deadlineInput = document.getElementById('deadline') as HTMLInputElement;
-
+  // ── state ──
+  const state = { service: '', serviceBase: 0 };
   const addons: Record<string, number> = { graphics: 0, sources: 0, abstract: 0 };
   const addonPrices: Record<string, number> = { graphics: 5, sources: 4, abstract: 7 };
 
-  function changeAddon(type: string, delta: number) {
-    addons[type] = Math.max(0, (addons[type] || 0) + delta);
-    const el = document.getElementById(`${type}-qty`);
-    if (el) el.textContent = String(addons[type]);
-    calculatePrice();
+  const $ = (id: string) => document.getElementById(id);
+  const val = (id: string) => ($(id) as HTMLInputElement)?.value || '';
+
+  // ── step navigation ──
+  function showStep(n: number) {
+    step = Math.min(Math.max(n, 1), TOTAL_STEPS);
+    document.querySelectorAll('.wiz-step').forEach(s => s.classList.remove('active'));
+    document.querySelector(`.wiz-step[data-step="${step}"]`)?.classList.add('active');
+    const bar = $('wizBar'); if (bar) bar.style.width = `${(step / TOTAL_STEPS) * 100}%`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (step === 5) refreshAuthUI();
   }
+  document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => showStep(step - 1)));
 
-  function calculatePrice() {
-    const selectedOption = levelSelect?.options[levelSelect.selectedIndex];
-    const rate = parseFloat(selectedOption?.getAttribute('data-rate') || '12');
-    const pages = parseInt(pagesInput?.value || '1');
-    const words = pages * 275;
-
-    const wordCountEl = document.getElementById('wordCount');
-    const pagesDisplayEl = document.getElementById('pagesDisplay');
-    const basePriceDisplayEl = document.getElementById('basePriceDisplay');
-    if (wordCountEl) wordCountEl.textContent = `${words.toLocaleString()} words`;
-    if (pagesDisplayEl) pagesDisplayEl.textContent = `x ${pages}`;
-    if (basePriceDisplayEl) basePriceDisplayEl.textContent = `$${rate.toFixed(2)}/pg`;
-
-    let urgencySurcharge = 0;
-    let urgencyText = '';
-    if (deadlineInput?.value) {
-      const hoursLeft = (new Date(deadlineInput.value).getTime() - new Date().getTime()) / 3600000;
-      if (hoursLeft < 6) { urgencySurcharge = rate * 0.5; urgencyText = '🔴 RUSH (under 6h): +50%'; }
-      else if (hoursLeft < 12) { urgencySurcharge = rate * 0.3; urgencyText = '🟠 Urgent (6-12h): +30%'; }
-      else if (hoursLeft < 24) { urgencySurcharge = rate * 0.2; urgencyText = '🟡 Same day (12-24h): +20%'; }
-      else if (hoursLeft < 48) { urgencySurcharge = rate * 0.1; urgencyText = '🟢 Standard (1-2 days): +10%'; }
-    }
-
-    const urgencyBadgeEl = document.getElementById('urgencyBadge');
-    const urgencyDisplayEl = document.getElementById('urgencyDisplay');
-    if (urgencyBadgeEl) urgencyBadgeEl.textContent = urgencyText;
-    if (urgencyDisplayEl) urgencyDisplayEl.style.display = urgencyText ? 'block' : 'none';
-
-    const baseTotal = rate * pages;
-    const urgencyTotal = urgencySurcharge * pages;
-    let addonsTotal = 0;
-    for (const [key, qty] of Object.entries(addons)) {
-      addonsTotal += (addonPrices[key] || 0) * qty;
-    }
-    const total = baseTotal + urgencyTotal + addonsTotal;
-    currentTotal = total;
-
-    const urgencyRowEl = document.getElementById('urgencyRow');
-    const urgencyLabelEl = document.getElementById('urgencyLabel');
-    const urgencyAmountEl = document.getElementById('urgencyAmount');
-    const addonsRowEl = document.getElementById('addonsRow');
-    const addonsAmountEl = document.getElementById('addonsAmount');
-    const calcTotalEl = document.getElementById('calcTotal');
-    const totalDisplayEl = document.getElementById('totalDisplay');
-
-    if (urgencyRowEl) urgencyRowEl.style.display = urgencyTotal > 0 ? 'flex' : 'none';
-    if (urgencyLabelEl) urgencyLabelEl.textContent = urgencyText.split(':')[0] || 'Urgency';
-    if (urgencyAmountEl) urgencyAmountEl.textContent = `+$${urgencyTotal.toFixed(2)}`;
-    if (addonsRowEl) addonsRowEl.style.display = addonsTotal > 0 ? 'flex' : 'none';
-    if (addonsAmountEl) addonsAmountEl.textContent = `+$${addonsTotal.toFixed(2)}`;
-    if (calcTotalEl) calcTotalEl.textContent = `$${total.toFixed(2)}`;
-    if (totalDisplayEl) totalDisplayEl.textContent = `$${total.toFixed(2)}`;
-  }
-
-  levelSelect?.addEventListener('change', calculatePrice);
-  pagesInput?.addEventListener('input', calculatePrice);
-  deadlineInput?.addEventListener('change', calculatePrice);
-
-  document.getElementById('minusBtn')?.addEventListener('click', () => {
-    const val = parseInt(pagesInput.value);
-    if (val > 1) { pagesInput.value = String(val - 1); calculatePrice(); }
+  // ── STEP 1: service ──
+  document.querySelectorAll('.svc-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.svc-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      state.service = (card as HTMLElement).dataset.service || '';
+      state.serviceBase = parseFloat((card as HTMLElement).dataset.base || '0');
+      ($('next1') as HTMLButtonElement).disabled = false;
+      calc();
+    });
   });
-  document.getElementById('plusBtn')?.addEventListener('click', () => {
-    const val = parseInt(pagesInput.value);
-    if (val < 500) { pagesInput.value = String(val + 1); calculatePrice(); }
+  $('next1')?.addEventListener('click', () => { if (state.service) showStep(2); });
+
+  // ── STEP 2: details ──
+  function wireChips(rowId: string, inputId: string) {
+    document.querySelectorAll(`#${rowId} .chip`).forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll(`#${rowId} .chip`).forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        ($(inputId) as HTMLInputElement).value = (chip as HTMLElement).dataset.val || '';
+        calc();
+      });
+    });
+  }
+  wireChips('typeChips', 'type');
+  wireChips('subjectChips', 'subject');
+  $('next2')?.addEventListener('click', () => {
+    if (!val('topic').trim()) { alert('Please enter a topic/title.'); return; }
+    if (!val('type').trim()) { alert('Please choose a type of paper.'); return; }
+    if (!val('subject').trim()) { alert('Please choose a subject.'); return; }
+    if (!val('language').trim()) { alert('Please select a language.'); return; }
+    showStep(3);
   });
 
-  // Quick deadline buttons
+  // ── STEP 3: instructions + pages + addons ──
+  const pagesInput = $('pages') as HTMLInputElement;
+  $('minusBtn')?.addEventListener('click', () => { const v = parseInt(pagesInput.value); if (v > 1) { pagesInput.value = String(v - 1); calc(); } });
+  $('plusBtn')?.addEventListener('click', () => { const v = parseInt(pagesInput.value); if (v < 500) { pagesInput.value = String(v + 1); calc(); } });
+  pagesInput?.addEventListener('input', calc);
+
+  document.querySelectorAll('.addon-qty button[data-addon]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = (btn as HTMLElement).dataset.addon!;
+      const d = parseInt((btn as HTMLElement).dataset.d || '0');
+      addons[type] = Math.max(0, (addons[type] || 0) + d);
+      const el = $(`${type}-qty`); if (el) el.textContent = String(addons[type]);
+      calc();
+    });
+  });
+  $('next3')?.addEventListener('click', () => {
+    if (!val('instructions').trim()) { alert('Please enter your instructions.'); return; }
+    showStep(4);
+  });
+
+  // ── STEP 4: deadline + level ──
+  const levelSelect = $('level') as HTMLSelectElement;
+  const deadlineInput = $('deadline') as HTMLInputElement;
+  levelSelect?.addEventListener('change', calc);
+  deadlineInput?.addEventListener('change', calc);
   document.querySelectorAll('.quick-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const hours = parseInt((btn as HTMLElement).dataset.hours || '0');
-      const date = new Date();
-      date.setHours(date.getHours() + hours);
-      const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-        .toISOString().slice(0, 16);
-      deadlineInput.value = local;
+      const date = new Date(); date.setHours(date.getHours() + hours);
+      deadlineInput.value = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
       document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      calculatePrice();
+      calc();
     });
   });
-
-  // Transaction ID enables confirm button
-  document.getElementById('txnId')?.addEventListener('input', (e) => {
-    const val = (e.target as HTMLInputElement).value.trim();
-    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
-    btn.disabled = val.length < 5;
+  $('next4')?.addEventListener('click', () => {
+    if (!val('level').trim()) { alert('Please select an education level.'); return; }
+    if (!val('deadline').trim()) { alert('Please choose a deadline.'); return; }
+    showStep(5);
   });
 
-  // Create Order button — validate then show payment modal
-  document.getElementById('createOrderBtn')?.addEventListener('click', () => {
-    const requiredFields = ['topic', 'type', 'subject', 'service', 'language', 'level', 'deadline', 'instructions'];
-    for (let i = 0; i < requiredFields.length; i++) {
-      const field = requiredFields[i];
-      const el = document.getElementById(field) as HTMLInputElement;
-      if (!el?.value?.trim()) {
-        el?.focus();
-        alert(`Please fill in the "${field.charAt(0).toUpperCase() + field.slice(1)}" field before proceeding.`);
-        return;
-      }
+  // ── PRICING: base = serviceBase + levelStep ($1 per level), urgency % on per-page, addons flat ──
+  function levelAdd(): number {
+    const opt = levelSelect?.options[levelSelect.selectedIndex];
+    return parseInt(opt?.getAttribute('data-step-add') || '0');
+  }
+  function levelLabel(): string {
+    const opt = levelSelect?.options[levelSelect.selectedIndex];
+    return opt && opt.value ? opt.textContent || '—' : '—';
+  }
+
+  function calc() {
+    const pages = parseInt(pagesInput?.value || '1');
+    const rate = state.serviceBase ? state.serviceBase + levelAdd() : 0;
+    const words = pages * 275;
+
+    const noteEl = $('pagesWordNote');
+    if (noteEl) noteEl.textContent = `${pages} double-spaced page${pages > 1 ? 's are' : ' is'} ${words.toLocaleString()} words.`;
+
+    // urgency
+    let urgencyPerPage = 0, urgencyText = '';
+    if (deadlineInput?.value) {
+      const h = (new Date(deadlineInput.value).getTime() - Date.now()) / 3600000;
+      if (h < 6) { urgencyPerPage = rate * 0.5; urgencyText = '🔴 RUSH (under 6h): +50%'; }
+      else if (h < 12) { urgencyPerPage = rate * 0.3; urgencyText = '🟠 Urgent (6-12h): +30%'; }
+      else if (h < 24) { urgencyPerPage = rate * 0.2; urgencyText = '🟡 Same day (12-24h): +20%'; }
+      else if (h < 48) { urgencyPerPage = rate * 0.1; urgencyText = '🟢 Standard (1-2 days): +10%'; }
     }
+    const badge = $('urgencyBadge'); const disp = $('urgencyDisplay');
+    if (badge) badge.textContent = urgencyText;
+    if (disp) (disp as HTMLElement).style.display = urgencyText ? 'block' : 'none';
+
+    const baseTotal = rate * pages;
+    const urgencyTotal = urgencyPerPage * pages;
+    let addonsTotal = 0;
+    for (const [k, q] of Object.entries(addons)) addonsTotal += (addonPrices[k] || 0) * q;
+    const total = baseTotal + urgencyTotal + addonsTotal;
+    currentTotal = total;
+
+    // summary panel
+    const set = (id: string, v: string) => { const e = $(id); if (e) e.textContent = v; };
+    set('sumService', state.service || '—');
+    set('sumLevel', levelLabel());
+    set('sumBase', rate ? `$${rate.toFixed(2)}/pg` : '—');
+    set('sumPages', `x ${pages}`);
+    set('calcTotal', `$${total.toFixed(2)}`);
+    set('sumTotal', `$${total.toFixed(2)}`);
+    const uRow = $('sumUrgencyRow'); if (uRow) (uRow as HTMLElement).style.display = urgencyTotal > 0 ? 'flex' : 'none';
+    set('sumUrgencyLabel', urgencyText.split(':')[0] || 'Urgency');
+    set('sumUrgency', `+$${urgencyTotal.toFixed(2)}`);
+    const aRow = $('sumAddonsRow'); if (aRow) (aRow as HTMLElement).style.display = addonsTotal > 0 ? 'flex' : 'none';
+    set('sumAddons', `+$${addonsTotal.toFixed(2)}`);
+  }
+
+  // ── STEP 5: auth (uses existing supabase email/password) ──
+  async function refreshAuthUI() {
+    const { data: { session } } = await supabase.auth.getSession();
+    currentSession = session;
+    const loggedInBox = $('loggedInBox')!; const authBox = $('authBox')!;
+    const createBtn = $('createOrderBtn') as HTMLButtonElement;
+    if (session) {
+      loggedInBox.style.display = 'block';
+      authBox.style.display = 'none';
+      createBtn.disabled = false;
+      let name = session.user.email || '';
+      try {
+        const r = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}&select=full_name`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}` } });
+        const d = await r.json(); if (d[0]?.full_name) name = d[0].full_name;
+      } catch {}
+      const g = $('greetingText'); if (g) g.textContent = `👋 Welcome, ${name}`;
+    } else {
+      loggedInBox.style.display = 'none';
+      authBox.style.display = 'block';
+      createBtn.disabled = true;
+    }
+  }
+
+  $('toLogin')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    authMode = authMode === 'signup' ? 'login' : 'signup';
+    ($('authTitle') as HTMLElement).textContent = authMode === 'signup' ? 'Create your account' : 'Log in';
+    ($('authBtn') as HTMLElement).textContent = authMode === 'signup' ? 'Create an account' : 'Log in';
+    ($('authNameWrap') as HTMLElement).style.display = authMode === 'signup' ? 'block' : 'none';
+    ($('authSwitchLine') as HTMLElement).innerHTML = authMode === 'signup'
+      ? 'Already have an account? <a href="#" id="toLogin">Log in</a>'
+      : 'Need an account? <a href="#" id="toLogin">Sign up</a>';
+    // rebind because innerHTML replaced the link
+    $('toLogin')?.addEventListener('click', (ev) => { ev.preventDefault(); ($('authBtn') as HTMLButtonElement).click(); });
+  });
+
+  $('authBtn')?.addEventListener('click', async () => {
+    const email = val('authEmail').trim();
+    const pw = val('authPassword');
+    const name = val('authName').trim();
+    const msg = $('authMsg')!;
+    msg.className = 'auth-msg'; msg.style.display = 'none';
+    if (!email || !pw) { msg.textContent = 'Please enter email and password.'; msg.className = 'auth-msg error'; return; }
+    if (authMode === 'signup' && !name) { msg.textContent = 'Please enter your full name.'; msg.className = 'auth-msg error'; return; }
+    const btn = $('authBtn') as HTMLButtonElement; btn.disabled = true; btn.textContent = 'Please wait…';
+    try {
+      if (authMode === 'signup') {
+        const { data, error } = await supabase.auth.signUp({ email, password: pw });
+        if (error) throw error;
+        // store name in profiles if a session exists immediately (no email-confirm)
+        if (data.session) {
+          try {
+            await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${data.session.access_token}`, Prefer: 'resolution=merge-duplicates' },
+              body: JSON.stringify({ id: data.user?.id, email, full_name: name })
+            });
+          } catch {}
+          msg.textContent = '✅ Account created!'; msg.className = 'auth-msg success';
+        } else {
+          msg.textContent = '📧 Check your email to confirm, then come back and log in.'; msg.className = 'auth-msg success';
+        }
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+        if (error) throw error;
+        msg.textContent = '✅ Logged in!'; msg.className = 'auth-msg success';
+      }
+      await refreshAuthUI();
+    } catch (err: any) {
+      msg.textContent = err?.message || 'Authentication failed.'; msg.className = 'auth-msg error';
+    }
+    btn.disabled = false; btn.textContent = authMode === 'signup' ? 'Create an account' : 'Log in';
+  });
+
+  $('logoutBtn')?.addEventListener('click', async () => { await supabase.auth.signOut(); refreshAuthUI(); });
+
+  // ── CREATE ORDER → payment modal (same logic as before) ──
+  $('createOrderBtn')?.addEventListener('click', () => {
+    if (!currentSession) { alert('Please log in or create an account first.'); return; }
     const total = currentTotal;
     const isDeposit = total >= 30;
     const amountToPay = isDeposit ? total * 0.5 : total;
+    const pd = $('paymentDetails');
+    if (pd) pd.innerHTML = `
+      <p style="font-size:1rem;color:var(--text-mid);margin:0 0 0.5rem;">Order Total</p>
+      <p style="font-size:1.8rem;color:var(--navy);font-weight:800;margin:0 0 0.3rem;">$${total.toFixed(2)}</p>
+      <p style="font-size:1rem;color:var(--text-mid);margin:0 0 0.3rem;">Pay Now</p>
+      <p style="font-size:2rem;color:var(--gold);font-weight:800;margin:0;">$${amountToPay.toFixed(2)}</p>`;
+    const pt = $('policyText');
+    if (pt) pt.textContent = isDeposit ? `50% deposit required now. Remaining $${(total*0.5).toFixed(2)} due on delivery.` : `Full payment required for orders under $30.`;
+    $('paymentModal')?.classList.add('active');
+  });
+  $('paymentModalClose')?.addEventListener('click', () => $('paymentModal')?.classList.remove('active'));
 
-    const paymentDetails = document.getElementById('paymentDetails');
-    const policyText = document.getElementById('policyText');
-
-    if (paymentDetails) {
-      paymentDetails.innerHTML = `
-        <p style="font-size:1rem; color:var(--text-mid); margin:0 0 0.5rem;">Order Total</p>
-        <p style="font-size:1.8rem; color:var(--navy); font-weight:800; margin:0 0 0.3rem;">$${total.toFixed(2)}</p>
-        <p style="font-size:1rem; color:var(--text-mid); margin:0 0 0.3rem;">Pay Now</p>
-        <p style="font-size:2rem; color:var(--gold); font-weight:800; margin:0;">$${amountToPay.toFixed(2)}</p>
-      `;
-    }
-
-    if (policyText) {
-      policyText.textContent = isDeposit
-        ? `50% deposit required now. Remaining $${(total * 0.5).toFixed(2)} due on delivery.`
-        : `Full payment required for orders under $30.`;
-    }
-
-    document.getElementById('paymentModal')?.classList.add('active');
+  $('txnId')?.addEventListener('input', (e) => {
+    const v = (e.target as HTMLInputElement).value.trim();
+    ($('confirmPaymentBtn') as HTMLButtonElement).disabled = v.length < 5;
   });
 
-  // Close payment modal
-  document.getElementById('paymentModalClose')?.addEventListener('click', () => {
-    document.getElementById('paymentModal')?.classList.remove('active');
-  });
-
-  // Confirm payment — verify transaction ID then show Submit Order button
-  document.getElementById('confirmPaymentBtn')?.addEventListener('click', async () => {
-    const txnId = (document.getElementById('txnId') as HTMLInputElement).value.trim();
-    const btn = document.getElementById('confirmPaymentBtn') as HTMLButtonElement;
-
-    // Validate format instantly on frontend
-    const isValidFormat = /^[A-Z0-9]{8,20}$/i.test(txnId);
-    if (!isValidFormat) {
-      alert('❌ Invalid Transaction ID. PayPal IDs are 8-20 characters (letters and numbers only).');
-      return;
-    }
-
-    btn.textContent = '⏳ Checking...';
-    btn.disabled = true;
-
-    // Check if already used in Supabase
+  $('confirmPaymentBtn')?.addEventListener('click', async () => {
+    const txnId = val('txnId').trim();
+    const btn = $('confirmPaymentBtn') as HTMLButtonElement;
+    if (!/^[A-Z0-9]{8,20}$/i.test(txnId)) { alert('❌ Invalid Transaction ID. PayPal IDs are 8-20 characters.'); return; }
+    btn.textContent = '⏳ Checking...'; btn.disabled = true;
     try {
-      const checkRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`,
-        {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${currentSession?.access_token}`
-          }
-        }
-      );
-      const checkData = await checkRes.json();
-
-      if (checkData.length > 0) {
-        alert('❌ This Transaction ID has already been used.');
-        btn.textContent = '✅ I Have Paid — Submit My Order';
-        btn.disabled = false;
-        return;
-      }
-
-      // All good — show submit button
-      document.getElementById('paymentModal')?.classList.remove('active');
-      document.getElementById('createOrderBtn')!.style.display = 'none';
-      const submitBtn = document.getElementById('submitOrderBtn')!;
-      submitBtn.style.display = 'block';
-      submitBtn.setAttribute('data-txn', txnId);
-
-    } catch (err) {
-      alert('❌ Verification failed. Please try again.');
-      btn.textContent = '✅ I Have Paid — Submit My Order';
-      btn.disabled = false;
-    }
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession?.access_token}` } });
+      const d = await r.json();
+      if (d.length > 0) { alert('❌ This Transaction ID has already been used.'); btn.textContent = '✅ I Have Paid — Submit My Order'; btn.disabled = false; return; }
+      $('paymentModal')?.classList.remove('active');
+      ($('createOrderBtn') as HTMLElement).style.display = 'none';
+      const sb = $('submitOrderBtn')!; sb.style.display = 'block'; sb.setAttribute('data-txn', txnId);
+    } catch { alert('❌ Verification failed. Please try again.'); btn.textContent = '✅ I Have Paid — Submit My Order'; btn.disabled = false; }
   });
 
-  // Submit Order — save to Google Sheets + Supabase
-  document.getElementById('submitOrderBtn')?.addEventListener('click', async () => {
-    const btn = document.getElementById('submitOrderBtn') as HTMLButtonElement;
-    btn.textContent = '⏳ Submitting your order...';
-    btn.disabled = true;
+  // ── SUBMIT ORDER (same save logic, new field sources) ──
+  $('submitOrderBtn')?.addEventListener('click', async () => {
+    const btn = $('submitOrderBtn') as HTMLButtonElement;
+    btn.textContent = '⏳ Submitting your order...'; btn.disabled = true;
 
     const total = currentTotal;
     const isDeposit = total >= 30;
     const amountPaid = isDeposit ? total * 0.5 : total;
+    const email = currentSession.user.email || '';
+    const topic = val('topic'), type = val('type'), subject = val('subject');
+    const service = state.service, language = val('language'), level = val('level');
+    const pages = val('pages'), deadline = val('deadline'), instructions = val('instructions');
 
-    // Collect form data
-    const email = (document.getElementById('email') as HTMLInputElement).value;
-    const topic = (document.getElementById('topic') as HTMLInputElement).value;
-    const type = (document.getElementById('type') as HTMLSelectElement).value;
-    const subject = (document.getElementById('subject') as HTMLSelectElement).value;
-    const service = (document.getElementById('service') as HTMLSelectElement).value;
-    const language = (document.getElementById('language') as HTMLSelectElement).value;
-    const level = (document.getElementById('level') as HTMLSelectElement).value;
-    const pages = (document.getElementById('pages') as HTMLInputElement).value;
-    const deadline = (document.getElementById('deadline') as HTMLInputElement).value;
-    const instructions = (document.getElementById('instructions') as HTMLTextAreaElement).value;
-
-    // Build addons string
-    const addonsList = [];
+    const addonsList: string[] = [];
     if (addons.graphics > 0) addonsList.push(`Graphics x${addons.graphics}`);
     if (addons.sources > 0) addonsList.push(`Sources x${addons.sources}`);
     if (addons.abstract > 0) addonsList.push(`Abstract x${addons.abstract}`);
     addonsList.push('Plagiarism & AI Report (FREE)');
-    const addonsStr = addonsList.join(', ');
 
     const orderData = {
-      clientEmail: email,
-      topic,
-      assignmentType: type,
-      subject,
-      service,
-      language,
-      level,
-      pages,
-      deadline,
-      addons: addonsStr,
-      totalPrice: `$${total.toFixed(2)}`,
-      amountPaid: `$${amountPaid.toFixed(2)}`,
-      paymentStatus: isDeposit ? '50% Deposit Paid' : 'Paid in Full',
-      instructions
+      clientEmail: email, topic, assignmentType: type, subject, service, language, level, pages, deadline,
+      addons: addonsList.join(', '), totalPrice: `$${total.toFixed(2)}`, amountPaid: `$${amountPaid.toFixed(2)}`,
+      paymentStatus: isDeposit ? '50% Deposit Paid' : 'Paid in Full', instructions
     };
 
     try {
-      // Get a guaranteed-unique ticket number from the database sequence
       const ticketRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/next_ticket`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${currentSession.access_token}`
-        },
-        body: '{}'
+        method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` }, body: '{}'
       });
-      const ticketId = (await ticketRes.json());
+      const ticketId = await ticketRes.json();
 
-      // Save to Google Sheets
-      await fetch(APPS_SCRIPT_URL, {
+      await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...orderData, ticketId }) });
+
+      await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...orderData, ticketId })
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({
+          order_number: ticketId, client_email: email, topic, assignment_type: type, subject, service, language,
+          education_level: level, pages: parseInt(pages), deadline, total_amount: total, amount_paid: amountPaid,
+          payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full', order_status: 'new', instructions,
+          transaction_id: $('submitOrderBtn')?.getAttribute('data-txn') || ''
+        })
       });
 
-      // Save to Supabase
-      if (currentSession) {
-        await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${currentSession.access_token}`
-          },
-          body: JSON.stringify({
-            order_number: ticketId,
-            client_email: email,
-            topic,
-            assignment_type: type,
-            subject,
-            service,
-            language,
-            education_level: level,
-            pages: parseInt(pages),
-            deadline,
-            total_amount: total,
-            amount_paid: amountPaid,
-            payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full',
-            order_status: 'new',
-            instructions,
-            transaction_id: document.getElementById('submitOrderBtn')?.getAttribute('data-txn') || ''
-          })
-        });
-      }
-
-      // Show success message with ticket number instead of redirecting straight away
-      const successTicketId = document.getElementById('successTicketId');
-      const successDashboardLink = document.getElementById('successDashboardLink') as HTMLAnchorElement;
-      const formContainer = document.getElementById('formContainer');
-      const orderSuccess = document.getElementById('orderSuccess');
-      if (successTicketId) successTicketId.textContent = ticketId;
-      if (successDashboardLink) successDashboardLink.href = `${base}/dashboard/`;
-      if (formContainer) formContainer.style.display = 'none';
-      if (orderSuccess) orderSuccess.style.display = 'block';
+      const st = $('successTicketId'); if (st) st.textContent = ticketId;
+      const dl = $('successDashboardLink') as HTMLAnchorElement; if (dl) dl.href = `${base}/dashboard/`;
+      ($('wizFlow') as HTMLElement).style.display = 'none';
+      ($('orderSuccess') as HTMLElement).style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    } catch (err) {
-      btn.textContent = '❌ Error — please try again';
-      btn.disabled = false;
+    } catch {
+      btn.textContent = '❌ Error — please try again'; btn.disabled = false;
     }
   });
 
-  // Chat popup
-  const helpBtn = document.getElementById('helpBtn');
-  const chatPopup = document.getElementById('chatPopup');
-  const chatClose = document.getElementById('chatClose');
-  const chatOverlay = document.getElementById('chatOverlay');
-  helpBtn?.addEventListener('click', () => { chatPopup?.classList.add('active'); chatOverlay?.classList.add('active'); });
-  chatClose?.addEventListener('click', () => { chatPopup?.classList.remove('active'); chatOverlay?.classList.remove('active'); });
-  chatOverlay?.addEventListener('click', () => { chatPopup?.classList.remove('active'); chatOverlay?.classList.remove('active'); });
-
-  const chatTabs = document.querySelectorAll('.chat-tab');
-  chatTabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => {
-      chatTabs.forEach(t => t.classList.remove('chat-tab--active'));
-      tab.classList.add('chat-tab--active');
-      if (index === 1) {
-        chatPopup?.classList.remove('active');
-        chatOverlay?.classList.remove('active');
-        setTimeout(() => {
-          if (typeof (window as any).tidioChatApi !== 'undefined') { (window as any).tidioChatApi.open(); }
-        }, 300);
-      }
-    });
-  });
-
-  calculatePrice();
-  (window as any).changeAddon = changeAddon;
+  // init
+  calc();
+  refreshAuthUI();
 </script>
