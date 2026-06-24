@@ -276,14 +276,36 @@ const base = '/ThesisArcPro';
             </div><!-- /wizFlow -->
           </div>
 
-          <!-- RIGHT: live summary -->
+          <!-- RIGHT: order info (steps 1-4) / price (step 5) -->
           <aside class="wiz-aside">
-            <div class="summary-card">
+
+            <!-- ORDER INFO summary (shown during steps, price hidden) -->
+            <div class="summary-card summary-card--info" id="infoCard">
+              <div class="info-head">Order info</div>
+              <div class="info-rows" id="infoRows">
+                <div class="info-row" data-jump="1"><div><div class="info-lbl">Service</div><div class="info-val" id="iservice">—</div></div><span class="info-edit">Edit</span></div>
+                <div class="info-row" data-jump="2"><div><div class="info-lbl">Type of paper</div><div class="info-val" id="itype">—</div></div><span class="info-edit">Edit</span></div>
+                <div class="info-row" data-jump="2"><div><div class="info-lbl">Subject</div><div class="info-val" id="isubject">—</div></div><span class="info-edit">Edit</span></div>
+                <div class="info-row" data-jump="3"><div><div class="info-lbl">Page count</div><div class="info-val" id="ipages">—</div></div><span class="info-edit">Edit</span></div>
+                <div class="info-row" data-jump="3"><div><div class="info-lbl">Instructions</div><div class="info-val" id="iinstructions">—</div></div><span class="info-edit">Edit</span></div>
+                <div class="info-row" data-jump="4"><div><div class="info-lbl">Deadline</div><div class="info-val" id="ideadline">—</div></div><span class="info-edit">Edit</span></div>
+              </div>
+              <div class="info-benefits">
+                <div class="info-benefits__title">Additional benefits with this order</div>
+                <div>✔ Free plagiarism & AI report</div>
+                <div>✔ Free unlimited revisions</div>
+                <div>✔ On-time delivery guaranteed</div>
+                <div>✔ Money-back guarantee</div>
+              </div>
+            </div>
+
+            <!-- PRICE card (revealed only at step 5) -->
+            <div class="summary-card summary-card--price" id="priceCard" style="display:none;">
               <div class="summary-price">
                 <div class="summary-price__amt" id="calcTotal">$0.00</div>
                 <div class="summary-price__lbl">Estimated total</div>
               </div>
-              <div class="summary-rows" id="summaryRows">
+              <div class="summary-rows">
                 <div class="sum-row"><span>Service</span><span id="sumService">—</span></div>
                 <div class="sum-row"><span>Level</span><span id="sumLevel">—</span></div>
                 <div class="sum-row"><span>Base price</span><span id="sumBase">—</span></div>
@@ -402,6 +424,17 @@ const base = '/ThesisArcPro';
 
 /* summary */
 .wiz-aside { position: sticky; top: 6rem; }
+.summary-card--info { background: var(--white); border: 1px solid rgba(0,0,0,0.08); border-radius: 16px; padding: 1.5rem; }
+.info-head { color: var(--navy); font-weight: 700; font-size: 1rem; padding-bottom: 0.9rem; border-bottom: 1px solid rgba(0,0,0,0.08); margin-bottom: 0.5rem; }
+.info-rows { display: flex; flex-direction: column; }
+.info-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.8rem; padding: 0.85rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.info-lbl { color: var(--navy); font-weight: 700; font-size: 0.88rem; }
+.info-val { color: var(--text-mid); font-size: 0.82rem; margin-top: 0.2rem; word-break: break-word; max-width: 200px; }
+.info-edit { color: var(--gold); font-weight: 600; font-size: 0.8rem; cursor: pointer; flex-shrink: 0; }
+.info-edit:hover { text-decoration: underline; }
+.info-benefits { margin-top: 1rem; }
+.info-benefits__title { color: var(--navy); font-weight: 700; font-size: 0.88rem; margin-bottom: 0.5rem; }
+.info-benefits div:not(.info-benefits__title) { color: #2d6a4f; font-size: 0.82rem; margin-bottom: 0.25rem; }
 .summary-card { background: var(--navy); border-radius: 16px; padding: 1.8rem; color: var(--white); }
 .summary-price { text-align: center; margin-bottom: 1.4rem; }
 .summary-price__amt { font-size: 2.6rem; font-weight: 800; color: var(--gold); line-height: 1; }
@@ -481,9 +514,32 @@ const base = '/ThesisArcPro';
     document.querySelectorAll('.wiz-step').forEach(s => s.classList.remove('active'));
     document.querySelector(`.wiz-step[data-step="${step}"]`)?.classList.add('active');
     const bar = $('wizBar'); if (bar) bar.style.width = `${(step / TOTAL_STEPS) * 100}%`;
+    // price hidden until the final step; order-info shown during steps 1-4
+    const infoCard = $('infoCard'); const priceCard = $('priceCard');
+    if (infoCard) (infoCard as HTMLElement).style.display = step === 5 ? 'none' : 'block';
+    if (priceCard) (priceCard as HTMLElement).style.display = step === 5 ? 'block' : 'none';
+    refreshInfo();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (step === 5) refreshAuthUI();
   }
+
+  function refreshInfo() {
+    const pages = parseInt(($('pages') as HTMLInputElement)?.value || '1');
+    const set = (id: string, v: string) => { const e = $(id); if (e) e.textContent = v; };
+    set('iservice', state.service || '—');
+    set('itype', val('type') || '—');
+    set('isubject', val('subject') || '—');
+    set('ipages', `${pages} double-spaced page${pages > 1 ? 's' : ''}`);
+    const instr = val('instructions').trim();
+    set('iinstructions', instr ? (instr.length > 60 ? instr.slice(0, 60) + '…' : instr) : '—');
+    const dl = val('deadline');
+    set('ideadline', dl ? new Date(dl).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric', year: 'numeric' }) : '—');
+  }
+
+  // Edit links jump back to the relevant step
+  document.querySelectorAll('.info-row[data-jump]').forEach(row => {
+    row.addEventListener('click', () => showStep(parseInt((row as HTMLElement).dataset.jump || '1')));
+  });
   document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => showStep(step - 1)));
 
   // ── STEP 1: service ──
@@ -612,6 +668,7 @@ const base = '/ThesisArcPro';
     set('sumUrgency', `+$${urgencyTotal.toFixed(2)}`);
     const aRow = $('sumAddonsRow'); if (aRow) (aRow as HTMLElement).style.display = addonsTotal > 0 ? 'flex' : 'none';
     set('sumAddons', `+$${addonsTotal.toFixed(2)}`);
+    refreshInfo();
   }
 
   // ── STEP 5: auth (uses existing supabase email/password) ──
