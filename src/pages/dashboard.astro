@@ -788,6 +788,16 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   body.dark-mode .oc-input { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
   body.dark-mode .oc-send:hover { background: #0361b3; }
 
+  .cf-row { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.8rem 1rem; margin-bottom: 0.5rem; }
+  .cf-info { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+  .cf-type { font-size: 0.7rem; font-weight: 700; color: #046fcd; text-transform: uppercase; }
+  .cf-name { font-size: 0.85rem; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cf-dl { background: #046fcd; color: #fff; border: none; border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .cf-dl:hover { background: #0361b3; }
+  .cf-dl:disabled { opacity: 0.6; cursor: not-allowed; }
+  body.dark-mode .cf-row { background: #161b27; border-color: rgba(255,255,255,0.06); }
+  body.dark-mode .cf-name { color: #e2e8f0; }
+
   /* unread dot on order rows */
   .order-row { position: relative; }
   .unread-dot { width: 9px; height: 9px; border-radius: 50%; background: #ef4444; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(239,68,68,0.18); }
@@ -1246,11 +1256,7 @@ ${String(err?.message || err)}
 
       <!-- FILES -->
       <div class="om-panel" data-mpanel="files">
-        ${order.file_url
-          ? `<button class="om-download" id="downloadBtn" data-path="${esc(order.file_url)}">📥 Download completed work</button>
-             <div class="om-dl-note" id="dlNote"></div>`
-          : `<div class="om-nofile">Your file will appear here once the work is delivered.</div>`
-        }
+        <div id="clientFilesList"><div class="om-nofile">Loading files…</div></div>
       </div>
 
       <!-- CHAT -->
@@ -1376,6 +1382,7 @@ ${String(err?.message || err)}
         tab.classList.add('om-tab--active');
         content.querySelector(`.om-panel[data-mpanel="${which}"]`)?.classList.add('om-panel--active');
         if (which === 'chat') openOrderChat(order);
+        if (which === 'files') loadClientFiles(order.id);
       });
     });
 
@@ -1561,6 +1568,41 @@ ${String(err?.message || err)}
 
   document.addEventListener('click', (e) => { if ((e.target as HTMLElement)?.id === 'ocSend') ocSend(); });
   document.addEventListener('keydown', (e) => { if ((e.target as HTMLElement)?.id === 'ocInput' && (e as KeyboardEvent).key === 'Enter') { e.preventDefault(); ocSend(); } });
+  async function loadClientFiles(orderId: string) {
+    const box = document.getElementById('clientFilesList');
+    if (!box) return;
+    box.innerHTML = '<div class="om-nofile">Loading files…</div>';
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/order_files?order_id=eq.${orderId}&order=created_at.desc`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session?.access_token}` } }
+      );
+      const files = await res.json();
+      if (!Array.isArray(files) || !files.length) {
+        box.innerHTML = '<div class="om-nofile">Your files will appear here once the writer delivers them.</div>';
+        return;
+      }
+      box.innerHTML = files.map((f: any) => `
+        <div class="cf-row">
+          <div class="cf-info"><span class="cf-type">${esc(f.file_type || 'File')}</span><span class="cf-name">${esc(f.file_name || 'file')}</span></div>
+          <button class="cf-dl" data-path="${esc(f.file_path)}">📥 Download</button>
+        </div>`).join('');
+      box.querySelectorAll('.cf-dl').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const path = (btn as HTMLElement).dataset.path || '';
+          (btn as HTMLButtonElement).disabled = true; btn.textContent = '⏳ Preparing…';
+          try {
+            const { data, error } = await supabase.storage.from('completed-files').createSignedUrl(path, 120);
+            if (error || !data?.signedUrl) throw error || new Error('No URL');
+            window.open(data.signedUrl, '_blank');
+          } catch { alert('Could not prepare the download. Please try again.'); }
+          (btn as HTMLButtonElement).disabled = false; btn.textContent = '📥 Download';
+        });
+      });
+    } catch (err) { console.error(err); box.innerHTML = '<div class="om-nofile">Could not load files.</div>'; }
+  }
+  
   function closeModal() {
     document.getElementById('detailModal')!.classList.remove('open');
   }
