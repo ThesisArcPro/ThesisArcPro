@@ -326,6 +326,19 @@ const base = '/ThesisArcPro';
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+  /* Client ID badge in sidebar */
+  .client-id-box {
+    margin: 0.5rem 1rem 0;
+    background: rgba(197,160,89,0.08);
+    border: 1px solid rgba(197,160,89,0.25);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+  }
+  .client-id-box__label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gold); margin-bottom: 0.3rem; }
+  .client-id-box__number { font-size: 1.3rem; font-weight: 800; color: var(--text); letter-spacing: 1px; }
+  .client-id-box__copy { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem; line-height: 1.4; }
+  .client-id-box__privacy { margin-top: 0.6rem; font-size: 0.68rem; color: var(--gold); display: flex; align-items: flex-start; gap: 0.3rem; line-height: 1.4; }
+
   /* Sidebar bottom */
   .sidebar-bottom { margin-top: auto; padding: 0.8rem 1rem; }
   .theme-icon-btn {
@@ -821,6 +834,16 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     </a>
   </nav>
   <div class="sidebar-divider"></div>
+
+  <!-- Client ID -->
+  <div class="client-id-box">
+    <div class="client-id-box__label">🔒 Your Client ID</div>
+    <div class="client-id-box__number" id="clientIdDisplay">—</div>
+    <div class="client-id-box__copy">Use this ID for all order references & reviews — no personal info needed.</div>
+    <div class="client-id-box__privacy">🛡️ Your identity stays private. We never share your details.</div>
+  </div>
+
+  <div class="sidebar-divider"></div>
   <nav class="sidebar-nav">
     <a class="nav-item" href="#" id="logoutBtn">
       <span class="icon">🚪</span> Logout
@@ -1015,6 +1038,8 @@ ${String(err?.message || err)}
         );
         const pdata = await pr.json();
         myClientId = pdata[0]?.client_id || null;
+        const clientIdEl = document.getElementById('clientIdDisplay');
+        if (clientIdEl && myClientId) clientIdEl.textContent = '#' + myClientId;
       } catch (e) { console.warn('Could not load client_id', e); }
       await loadOrders(session);
     } catch (err) {
