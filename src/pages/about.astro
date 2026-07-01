@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-const base = '/ThesisArcPro';
+const base = '';
 ---
 
 <BaseLayout 
@@ -222,7 +222,7 @@ const base = '/ThesisArcPro';
 
 <script>
   import { supabase } from '../lib/supabase.js';
-  const base = '/ThesisArcPro';
+  const base = '';
   
   const { data: { session } } = await supabase.auth.getSession();
   const btns = document.querySelectorAll('.auth-gate-page');
