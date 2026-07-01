@@ -7,7 +7,7 @@ import Footer from '../components/Footer.astro';
 <BaseLayout 
   title="Sign Up" 
   description="Create your ThesisArcPro account to place orders and track your academic writing projects."
-  url="https://thesisarcpro.github.io/ThesisArcPro/signup">
+  url="https://thesisarcpro.github.io/signup">
   <Header />
 
   <main>
@@ -55,7 +55,7 @@ import Footer from '../components/Footer.astro';
           </form>
 
           <div class="auth-footer">
-            <p>Already have an account? <a href="/ThesisArcPro/login/">Login here</a></p>
+            <p>Already have an account? <a href="/login/">Login here</a></p>
           </div>
         </div>
 
@@ -190,7 +190,7 @@ import Footer from '../components/Footer.astro';
       submitBtn.textContent = 'Account Created!';
 
       setTimeout(() => {
-        window.location.href = '/ThesisArcPro/login/';
+        window.location.href = '/login/';
       }, 3000);
 
     } catch (error: any) {

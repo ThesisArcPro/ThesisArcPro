@@ -99,9 +99,9 @@ const base = '/ThesisArcPro';
   const { data: { session } } = await supabase.auth.getSession();
   document.querySelectorAll('.sl .auth-gate').forEach(link => {
     if (session) {
-      link.setAttribute('href', '/ThesisArcPro/contact/');
+      link.setAttribute('href', '/contact/');
     } else {
-      link.setAttribute('href', '/ThesisArcPro/login/');
+      link.setAttribute('href', '/login/');
     }
   });
 </script>

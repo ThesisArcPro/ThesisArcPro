@@ -225,16 +225,16 @@ const base = '/ThesisArcPro';
   if (session) {
     loginBtn!.style.display = 'none';
     logoutBtn!.style.display = 'block';
-    getStartedBtn!.setAttribute('href', '/ThesisArcPro/contact/');
+    getStartedBtn!.setAttribute('href', '/contact/');
   } else {
     loginBtn!.style.display = 'block';
     logoutBtn!.style.display = 'none';
-    getStartedBtn!.setAttribute('href', '/ThesisArcPro/contact/');
+    getStartedBtn!.setAttribute('href', '/contact/');
   }
 
   logoutBtn?.addEventListener('click', async () => {
     await supabase.auth.signOut();
-    window.location.href = '/ThesisArcPro/login/';
+    window.location.href = '/login/';
   });
 </script>
 

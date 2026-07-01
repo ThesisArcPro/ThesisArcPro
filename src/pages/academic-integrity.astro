@@ -169,6 +169,6 @@ const base = '/ThesisArcPro';
   const { data: { session } } = await supabase.auth.getSession();
   const btns = document.querySelectorAll('.auth-gate-integrity');
   btns.forEach(btn => {
-    btn.setAttribute('href', '/ThesisArcPro/contact/');
+    btn.setAttribute('href', '/contact/');
   });
 </script>
