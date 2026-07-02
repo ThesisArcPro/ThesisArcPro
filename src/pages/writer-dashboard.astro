@@ -791,11 +791,25 @@ const base = '';
     <a class="nav-item active" href="#" data-view="orders">
       <span class="icon">📁</span> My Orders
     </a>
+    <a class="nav-item" href="#" data-view="available">
+      <span class="icon">🆕</span> Available Orders
+    </a>
+    <a class="nav-item" href="#" data-view="proposals">
+      <span class="icon">📨</span> My Proposals
+    </a>
     <a class="nav-item" href="#" data-view="profile">
       <span class="icon">👤</span> My Profile
     </a>
     <a class="nav-item" href="#" data-view="chat">
       <span class="icon">💬</span> Chat
+    </a>
+    <a class="nav-item" href="#" data-view="balance">
+      <span class="icon">💰</span> Balance
+      <span id="balanceNavAmt" style="margin-left:auto;font-size:0.78rem;font-weight:700;color:#16a34a;">$0.00</span>
+    </a>
+    <a class="nav-item" href="#" data-view="notifications" style="position:relative;">
+      <span class="icon">🔔</span> Notifications
+      <span id="notifBadge" style="display:none;margin-left:auto;background:#ef4444;color:#fff;font-size:0.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;align-items:center;justify-content:center;">0</span>
     </a>
   </nav>
   <div class="sidebar-divider"></div>
@@ -896,6 +910,50 @@ const base = '';
   </div>
 </div><!-- /viewOrders -->
 
+  <div class="view-panel" id="viewAvailable">
+    <div class="controls-bar">
+      <div class="sort-wrap"><span class="sort-label">Open orders you can bid on</span></div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" placeholder="Search" id="availSearchInput" />
+      </div>
+    </div>
+    <div class="orders-area">
+      <div class="loading-state" id="availLoadingState"><div class="spinner"></div><p>Loading available orders…</p></div>
+      <div class="empty-state" id="availEmptyState" style="display:none;">
+        <div class="empty-illustration">🆕</div>
+        <h3>No open orders right now</h3>
+        <p>New orders open for bidding will appear here.</p>
+      </div>
+      <div class="order-table" id="availTable" style="display:none;">
+        <div class="order-table-head"><div>Topic</div><div class="order-table-head-right"><span>Deadline</span></div></div>
+        <div id="availList"></div>
+      </div>
+    </div>
+  </div><!-- /viewAvailable -->
+
+  <div class="view-panel" id="viewProposals">
+    <div class="tabs-bar">
+      <div class="tabs">
+        <button class="tab active" data-ptab2="pending">Pending <span class="count" id="pcount_pending">0</span></button>
+        <button class="tab" data-ptab2="accepted">Accepted <span class="count" id="pcount_accepted">0</span></button>
+        <button class="tab" data-ptab2="rejected">Rejected <span class="count" id="pcount_rejected">0</span></button>
+      </div>
+    </div>
+    <div class="orders-area">
+      <div class="loading-state" id="propLoadingState"><div class="spinner"></div><p>Loading your proposals…</p></div>
+      <div class="empty-state" id="propEmptyState" style="display:none;">
+        <div class="empty-illustration">📨</div>
+        <h3>No proposals here</h3>
+        <p>Bids you place will show up in this list.</p>
+      </div>
+      <div class="order-table" id="propTable" style="display:none;">
+        <div class="order-table-head"><div>Topic</div><div class="order-table-head-right"><span>Your bid</span></div></div>
+        <div id="propList"></div>
+      </div>
+    </div>
+  </div><!-- /viewProposals -->
+
   <div class="view-panel" id="viewProfile">
     <div class="tabs-bar">
       <div class="tabs">
@@ -958,6 +1016,32 @@ const base = '';
     </div>
   </div>
 
+  <div class="view-panel" id="viewBalance">
+    <div class="profile-area">
+      <div class="profile-card">
+        <div class="stats-grid" style="grid-template-columns:1fr;">
+          <div class="stat-card">
+            <div class="stat-value gold" id="balanceAmt">$0.00</div>
+            <div class="stat-label">Available Balance (from completed orders)</div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;">Completed Order Payouts</h3>
+        <div id="balanceList"><p style="color:var(--text-muted);font-size:0.85rem;">Loading…</p></div>
+      </div>
+    </div>
+  </div><!-- /viewBalance -->
+
+  <div class="view-panel" id="viewNotifications">
+    <div class="profile-area">
+      <div class="profile-card">
+        <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;">Accepted Bids</h3>
+        <div id="notifList"><p style="color:var(--text-muted);font-size:0.85rem;">Loading…</p></div>
+      </div>
+    </div>
+  </div><!-- /viewNotifications -->
+
 </main>
 
 <!-- ORDER DETAIL MODAL -->
@@ -985,6 +1069,9 @@ const base = '';
   let writerReviews: any[] = [];
   let activeOrderId: number | null = null;
   let activeOrderNumber = '';
+  let availableOrders: any[] = [];
+  let myBids: any[] = [];
+  let currentProposalTab = 'pending';
 
   function esc(v: any) {
     return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -1031,6 +1118,246 @@ const base = '';
 
     await loadOrders();
     await loadWriterReviews();
+    await loadAvailableOrders();
+    await loadMyBids();
+    await refreshNotifBadge();
+  }
+
+  // ═══ AVAILABLE ORDERS (bidding) ═══
+  async function loadAvailableOrders() {
+    const loading = document.getElementById('availLoadingState');
+    const empty = document.getElementById('availEmptyState');
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/open_orders_for_writer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ p_writer_id: writerId })
+      });
+      availableOrders = await res.json();
+      renderAvailableOrders();
+    } catch (err) {
+      console.error(err);
+      if (loading) (loading as HTMLElement).style.display = 'none';
+      if (empty) (empty as HTMLElement).style.display = 'flex';
+    }
+  }
+
+  function renderAvailableOrders() {
+    const loading = document.getElementById('availLoadingState')!;
+    const empty = document.getElementById('availEmptyState')!;
+    const table = document.getElementById('availTable')!;
+    const list = document.getElementById('availList')!;
+    const search = (document.getElementById('availSearchInput') as HTMLInputElement)?.value.toLowerCase() || '';
+
+    loading.style.display = 'none';
+
+    let filtered = availableOrders;
+    if (search) {
+      filtered = filtered.filter((o: any) => (o.topic || '').toLowerCase().includes(search) || (o.subject || '').toLowerCase().includes(search));
+    }
+
+    if (!filtered.length) {
+      empty.style.display = 'flex';
+      table.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    table.style.display = 'flex';
+
+    list.innerHTML = filtered.map((o: any) => {
+      const dl = deadlineInfo(o.deadline);
+      return `
+        <div class="order-row" data-id="${esc(o.id)}">
+          <div class="col-left">
+            <div class="order-title">${esc(o.topic || '(no topic)')}</div>
+            <div class="order-meta">
+              <span>${esc(o.pages||1)} page${(o.pages||1)>1?'s':''}</span>
+              <span class="meta-dot">·</span>
+              <span>${esc(o.assignment_type||'Essay')}</span>
+              <span class="meta-dot">·</span>
+              <span>${esc(o.subject||'—')}</span>
+              <span class="meta-dot">·</span>
+              <span class="order-id">Budget $${Number(o.total_amount||0).toFixed(2)}</span>
+            </div>
+          </div>
+          <div class="col-right"><div class="col-deadline ${dl.cls}">${dl.text}</div></div>
+        </div>`;
+    }).join('');
+
+    list.querySelectorAll('.order-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const id = (row as HTMLElement).dataset.id;
+        const order = availableOrders.find((o: any) => String(o.id) === id);
+        if (order) showBidModal(order);
+      });
+    });
+  }
+
+  document.getElementById('availSearchInput')?.addEventListener('input', renderAvailableOrders);
+
+  function showBidModal(order: any) {
+    document.getElementById('modalContent')!.innerHTML = `
+      <div class="om-header">
+        <div class="om-title">${esc(order.topic || '(no topic)')}</div>
+        <div class="om-id">${esc(order.assignment_type||'Essay')} · ${esc(order.pages||1)} pages · Client budget $${Number(order.total_amount||0).toFixed(2)}</div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <div class="om-desc-label">Instructions</div>
+        <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
+      </div>
+      <div class="form-group"><label>Your bid price ($)</label><input type="number" id="bidPrice" min="1" step="0.01" placeholder="e.g. 45.00" style="width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.5rem 0.7rem;font-size:0.85rem;" /></div>
+      <div class="form-group"><label>Estimated delivery</label><input type="datetime-local" id="bidDelivery" style="width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.5rem 0.7rem;font-size:0.85rem;" /></div>
+      <div class="form-group"><label>Note to client (optional)</label><textarea id="bidNote" rows="3" style="width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.5rem 0.7rem;font-size:0.85rem;font-family:inherit;"></textarea></div>
+      <button class="upload-btn" id="submitBidBtn">📨 Submit Bid</button>
+      <div class="upload-msg" id="bidMsg" style="display:none;"></div>
+    `;
+    document.getElementById('submitBidBtn')?.addEventListener('click', () => submitBid(order.id));
+    document.getElementById('detailModal')!.classList.add('open');
+  }
+
+  async function submitBid(orderId: number) {
+    const price = parseFloat((document.getElementById('bidPrice') as HTMLInputElement).value);
+    const delivery = (document.getElementById('bidDelivery') as HTMLInputElement).value;
+    const note = (document.getElementById('bidNote') as HTMLTextAreaElement).value.trim();
+    const msg = document.getElementById('bidMsg')!;
+    const btn = document.getElementById('submitBidBtn') as HTMLButtonElement;
+
+    if (!price || price <= 0) { msg.textContent = 'Please enter a valid bid price.'; msg.className = 'upload-msg error'; msg.style.display = 'block'; return; }
+
+    btn.disabled = true; btn.textContent = '⏳ Submitting…';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/place_bid`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ p_order_id: orderId, p_writer_id: writerId, p_bid_price: price, p_estimated_delivery: delivery || null, p_note: note || null })
+      });
+      if (!res.ok) throw new Error((await res.json())?.message || 'Failed to place bid');
+      msg.textContent = '✅ Bid submitted!'; msg.className = 'upload-msg success'; msg.style.display = 'block';
+      await loadAvailableOrders();
+      await loadMyBids();
+      setTimeout(() => closeModal(), 1200);
+    } catch (err: any) {
+      msg.textContent = err?.message || 'Could not submit bid.'; msg.className = 'upload-msg error'; msg.style.display = 'block';
+      btn.disabled = false; btn.textContent = '📨 Submit Bid';
+    }
+  }
+
+  // ═══ MY PROPOSALS (bids placed) ═══
+  async function loadMyBids() {
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/bids?writer_id=eq.${writerId}&select=id,order_id,bid_price,status,created_at,orders(order_number,topic,deadline)&order=created_at.desc`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+      );
+      myBids = await res.json();
+      updateProposalCounts();
+      renderProposals();
+    } catch (err) { console.error(err); }
+  }
+
+  function updateProposalCounts() {
+    const countFor = (s: string) => myBids.filter((b: any) => b.status === s).length;
+    const set = (id: string, v: number) => { const el = document.getElementById(id); if (el) el.textContent = String(v); };
+    set('pcount_pending', countFor('pending'));
+    set('pcount_accepted', countFor('accepted'));
+    set('pcount_rejected', countFor('rejected'));
+  }
+
+  function renderProposals() {
+    const loading = document.getElementById('propLoadingState')!;
+    const empty = document.getElementById('propEmptyState')!;
+    const table = document.getElementById('propTable')!;
+    const list = document.getElementById('propList')!;
+    loading.style.display = 'none';
+
+    const filtered = myBids.filter((b: any) => b.status === currentProposalTab);
+    if (!filtered.length) { empty.style.display = 'flex'; table.style.display = 'none'; return; }
+    empty.style.display = 'none'; table.style.display = 'flex';
+
+    list.innerHTML = filtered.map((b: any) => {
+      const o = b.orders || {};
+      const dl = deadlineInfo(o.deadline);
+      return `
+        <div class="order-row" style="cursor:default;">
+          <div class="col-left">
+            <div class="order-title">${esc(o.topic || '(no topic)')}</div>
+            <div class="order-meta">
+              <span class="status-badge ${statusClass(b.status)}">${esc(b.status)}</span>
+              <span class="meta-dot">·</span>
+              <span class="order-id">Order ${esc(o.order_number || b.order_id)}</span>
+            </div>
+          </div>
+          <div class="col-right"><div class="col-deadline ${dl.cls}">$${Number(b.bid_price).toFixed(2)}</div></div>
+        </div>`;
+    }).join('');
+  }
+
+  document.querySelectorAll('[data-ptab2]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('[data-ptab2]').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentProposalTab = (tab as HTMLElement).dataset.ptab2 || 'pending';
+      renderProposals();
+    });
+  });
+
+  // ═══ BALANCE ═══
+  async function loadBalance() {
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?writer_id=eq.${writerId}&order_status=eq.completed&select=order_number,topic,amount_paid,status_updated_at&order=status_updated_at.desc`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+      );
+      const completed = await res.json();
+      const total = completed.reduce((sum: number, o: any) => sum + Number(o.amount_paid || 0), 0);
+      const amtEl = document.getElementById('balanceAmt'); if (amtEl) amtEl.textContent = `$${total.toFixed(2)}`;
+      const navEl = document.getElementById('balanceNavAmt'); if (navEl) navEl.textContent = `$${total.toFixed(2)}`;
+      const listEl = document.getElementById('balanceList');
+      if (listEl) {
+        listEl.innerHTML = completed.length ? completed.map((o: any) => `
+          <div class="file-row">
+            <div class="file-info"><span class="file-type-badge">Paid</span><div class="file-name">${esc(o.topic || o.order_number)}</div></div>
+            <span style="font-weight:700;color:#16a34a;">$${Number(o.amount_paid||0).toFixed(2)}</span>
+          </div>`).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">No completed orders yet.</p>';
+      }
+    } catch (err) { console.error(err); }
+  }
+
+  // ═══ NOTIFICATIONS ═══
+  async function refreshNotifBadge() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/writer_notifications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ p_writer_id: writerId })
+      });
+      const notifs = await res.json();
+      const badge = document.getElementById('notifBadge');
+      if (badge) {
+        if (notifs.length > 0) { badge.textContent = String(notifs.length); (badge as HTMLElement).style.display = 'inline-flex'; }
+        else (badge as HTMLElement).style.display = 'none';
+      }
+      return notifs;
+    } catch (err) { console.error(err); return []; }
+  }
+
+  async function loadNotifications() {
+    const notifs = await refreshNotifBadge();
+    const listEl = document.getElementById('notifList');
+    if (!listEl) return;
+    listEl.innerHTML = notifs.length ? notifs.map((n: any) => `
+      <div class="file-row">
+        <div class="file-info"><span class="file-type-badge">Accepted</span><div class="file-name">${esc(n.topic || n.order_number)} — bid $${Number(n.bid_price).toFixed(2)}</div></div>
+      </div>`).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">No new notifications.</p>';
+
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/rpc/mark_notifications_seen`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ p_writer_id: writerId })
+      });
+      await refreshNotifBadge();
+    } catch (err) { console.error(err); }
   }
 
   async function loadWriterReviews() {
@@ -1581,6 +1908,16 @@ const base = '';
         document.getElementById('viewOrders')!.classList.add('active');
         title.textContent = 'My Orders';
         sub.textContent = `Welcome back, ${writerData?.full_name || ''}`;
+      } else if (view === 'available') {
+        document.getElementById('viewAvailable')!.classList.add('active');
+        title.textContent = 'Available Orders';
+        sub.textContent = 'Browse open orders and place your bid';
+        loadAvailableOrders();
+      } else if (view === 'proposals') {
+        document.getElementById('viewProposals')!.classList.add('active');
+        title.textContent = 'My Proposals';
+        sub.textContent = 'Bids you have placed';
+        loadMyBids();
       } else if (view === 'profile') {
         document.getElementById('viewProfile')!.classList.add('active');
         title.textContent = 'My Profile';
@@ -1590,6 +1927,16 @@ const base = '';
         document.getElementById('viewChat')!.classList.add('active');
         title.textContent = 'Chat';
         sub.textContent = 'Messages and support';
+      } else if (view === 'balance') {
+        document.getElementById('viewBalance')!.classList.add('active');
+        title.textContent = 'Balance';
+        sub.textContent = 'Your earnings from completed orders';
+        loadBalance();
+      } else if (view === 'notifications') {
+        document.getElementById('viewNotifications')!.classList.add('active');
+        title.textContent = 'Notifications';
+        sub.textContent = 'Accepted bids and updates';
+        loadNotifications();
       }
     });
   });
