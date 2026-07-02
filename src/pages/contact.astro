@@ -824,7 +824,7 @@ const base = '';
         body: JSON.stringify({
           order_number: ticketId, client_email: email, topic, assignment_type: type, subject, service, language,
           education_level: level, pages: parseInt(pages), deadline, total_amount: total, amount_paid: amountPaid,
-          payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full', order_status: 'new', instructions,
+          payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full', order_status: 'open_for_bids', instructions,
           transaction_id: $('submitOrderBtn')?.getAttribute('data-txn') || ''
         })
       });
