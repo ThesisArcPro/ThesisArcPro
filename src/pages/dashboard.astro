@@ -951,8 +951,8 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     </div>
   </div>
 
-  <div id="chatsPanelWrap" style="display:none;flex:1;overflow:hidden;">
-  <div style="display:flex;height:100%;">
+  <div id="chatsPanelWrap" style="display:none;flex:1;overflow:hidden;height:100%;">
+  <div style="display:flex;height:100%;width:100%;">
 
     <!-- Conversation list -->
     <div id="convList" style="width:300px;border-right:1px solid #eef2f7;display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;">
@@ -964,7 +964,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
 
     <!-- Message thread -->
     <div id="convThread" style="flex:1;display:flex;flex-direction:column;min-width:0;">
-      <div id="threadHeader" style="padding:0.9rem 1.2rem;border-bottom:1px solid #eef2f7;display:flex;align-items:center;gap:0.8rem;background:#fff;">
+      <div id="threadHeader" style="padding:0.9rem 1.2rem;border-bottom:1px solid #eef2f7;display:none;align-items:center;gap:0.8rem;background:#fff;">
         <div style="width:36px;height:36px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1rem;">💬</div>
         <div>
           <div id="threadTitle" style="font-size:0.95rem;font-weight:700;color:#0f172a;">Select a conversation</div>
@@ -974,7 +974,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
       <div id="threadMessages" style="flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.6rem;background:#f8fafc;">
         <div style="text-align:center;color:#94a3b8;font-size:0.85rem;margin:auto;">Select a conversation to start chatting</div>
       </div>
-      <div id="threadInputBar" style="display:flex;gap:0.5rem;padding:0.8rem 1rem;border-top:1px solid #eef2f7;background:#fff;">
+      <div id="threadInputBar" style="display:none;gap:0.5rem;padding:0.8rem 1rem;border-top:1px solid #eef2f7;background:#fff;">
         <input id="threadInput" type="text" placeholder="Type a message..." style="flex:1;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:20px;padding:0.6rem 1rem;font-size:0.85rem;color:#0f172a;outline:none;font-family:inherit;" />
         <button id="threadSend" style="background:#046fcd;color:#fff;border:none;border-radius:20px;padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:inherit;">Send</button>
       </div>
@@ -1136,6 +1136,8 @@ async function loadChatsPanel() {
 async function openCpThread(convId: string, title: string, status: string) {
   cpConvId = convId;
   if (cpSub) { cpSub.unsubscribe(); cpSub = null; }
+  document.getElementById('threadHeader')!.style.display = 'flex';
+  document.getElementById('threadInputBar')!.style.display = 'flex';
   document.getElementById('threadTitle')!.textContent = title;
   document.getElementById('threadSub')!.textContent = status;
   const msgs = document.getElementById('threadMessages')!;
