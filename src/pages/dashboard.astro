@@ -1259,7 +1259,7 @@ document.getElementById('threadInput')!.addEventListener('keydown', (e) => { if 
         10000,
         'Orders fetch'
       );
-      const json = await res.json();
+      const json = await res.json() as { orders: any[]; error?: string };
       if (!res.ok) throw new Error(json.error || `Orders request failed (${res.status})`);
       allOrders = json.orders;
       updateCounts();
@@ -1852,10 +1852,10 @@ document.getElementById('threadInput')!.addEventListener('keydown', (e) => { if 
   e.preventDefault();
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('chatsLink')!.classList.add('active');
-  document.querySelector('.main-header')!.style.display = 'none';
-  document.querySelector('.tabs-bar')!.style.display = 'none';
-  document.querySelector('.controls-bar')!.style.display = 'none';
-  document.querySelector('.orders-area')!.style.display = 'none';
+  (document.querySelector('.main-header') as HTMLElement).style.display = 'none';
+  (document.querySelector('.tabs-bar') as HTMLElement).style.display = 'none';
+  (document.querySelector('.controls-bar') as HTMLElement).style.display = 'none';
+  (document.querySelector('.orders-area') as HTMLElement).style.display = 'none';
   document.getElementById('chatsPanelWrap')!.style.display = 'flex';
   loadChatsPanel();
 });
@@ -1864,10 +1864,11 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('myOrdersLink')!.classList.add('active');
   document.getElementById('chatsPanelWrap')!.style.display = 'none';
-  document.querySelector('.main-header')!.style.display = 'flex';
-  document.querySelector('.tabs-bar')!.style.display = 'flex';
-  document.querySelector('.controls-bar')!.style.display = 'flex';
-  document.querySelector('.orders-area')!.style.display = 'flex';
+  (document.querySelector('.main-header') as HTMLElement).style.display = 'flex';
+  (document.querySelector('.tabs-bar') as HTMLElement).style.display = 'flex';
+  (document.querySelector('.controls-bar') as HTMLElement).style.display = 'flex';
+  (document.querySelector('.orders-area') as HTMLElement).style.display = 'flex';
+
 });
 
 
