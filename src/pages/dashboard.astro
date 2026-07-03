@@ -417,6 +417,14 @@ const base = '';
   body.dark-mode .review-box h2 { color: #e2e8f0; }
   body.dark-mode .review-box p { color: #94a3b8; }
   body.dark-mode .star { color: #334155 !important; }
+  body.dark-mode #chatsPanelWrap { background: #0f1117; }
+body.dark-mode #convList { border-right-color: rgba(255,255,255,0.06); background: #161b27; }
+body.dark-mode .cp-conv-item { border-bottom-color: rgba(255,255,255,0.04) !important; }
+body.dark-mode #threadHeader { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
+body.dark-mode #threadTitle { color: #e2e8f0; }
+body.dark-mode #threadMessages { background: #0f1117; }
+body.dark-mode #threadInputBar { background: #161b27; border-top-color: rgba(255,255,255,0.06); }
+body.dark-mode #threadInput { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
 body.dark-mode .star.selected { color: #fbbf24 !important; }
 body.dark-mode .star:hover { color: #fbbf24 !important; }
   body.dark-mode .review-textarea { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
@@ -821,9 +829,9 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
 <aside class="sidebar">
   <a href={`${base}/contact/`} class="sidebar-new-order">＋ New order</a>
   <nav class="sidebar-nav">
-    <a class="nav-item active" href="#">
-      <span class="icon">📁</span> My Orders
-    </a>
+    <a class="nav-item active" href="#" id="myOrdersLink">
+  <span class="icon">📁</span> My Orders
+</a>
     <a class="nav-item" href={`${base}/writers/`} id="writersLink"
        onclick="window.location.assign('/writers/'); return false;">
       <span class="icon">👥</span> Writers
@@ -942,6 +950,38 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
       <div id="ordersList"></div>
     </div>
   </div>
+
+  <div id="chatsPanelWrap" style="display:none;flex:1;overflow:hidden;">
+  <div style="display:flex;height:100%;">
+
+    <!-- Conversation list -->
+    <div id="convList" style="width:300px;border-right:1px solid #eef2f7;display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;">
+      <div style="padding:1rem 1.2rem;font-size:1.1rem;font-weight:700;color:#0f172a;border-bottom:1px solid #eef2f7;">Chats</div>
+      <div id="convListItems" style="flex:1;overflow-y:auto;">
+        <div style="padding:2rem;text-align:center;color:#94a3b8;font-size:0.85rem;">Loading conversations…</div>
+      </div>
+    </div>
+
+    <!-- Message thread -->
+    <div id="convThread" style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div id="threadHeader" style="padding:0.9rem 1.2rem;border-bottom:1px solid #eef2f7;display:flex;align-items:center;gap:0.8rem;background:#fff;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1rem;">💬</div>
+        <div>
+          <div id="threadTitle" style="font-size:0.95rem;font-weight:700;color:#0f172a;">Select a conversation</div>
+          <div id="threadSub" style="font-size:0.75rem;color:#94a3b8;"></div>
+        </div>
+      </div>
+      <div id="threadMessages" style="flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.6rem;background:#f8fafc;">
+        <div style="text-align:center;color:#94a3b8;font-size:0.85rem;margin:auto;">Select a conversation to start chatting</div>
+      </div>
+      <div id="threadInputBar" style="display:flex;gap:0.5rem;padding:0.8rem 1rem;border-top:1px solid #eef2f7;background:#fff;">
+        <input id="threadInput" type="text" placeholder="Type a message..." style="flex:1;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:20px;padding:0.6rem 1rem;font-size:0.85rem;color:#0f172a;outline:none;font-family:inherit;" />
+        <button id="threadSend" style="background:#046fcd;color:#fff;border:none;border-radius:20px;padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:inherit;">Send</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 </main>
 
 <!-- ORDER DETAIL MODAL -->
@@ -1024,6 +1064,155 @@ ${String(err?.message || err)}
   window.addEventListener('unhandledrejection', (e) => showDebugError((e as PromiseRejectionEvent).reason));
   // ── END DEBUG HELPERS ──
 
+  // ═══ CHATS PANEL ═══
+let cpConvId: string | null = null;
+let cpSub: any = null;
+
+async function loadChatsPanel() {
+  const box = document.getElementById('convListItems')!;
+  box.innerHTML = '<div style="padding:2rem;text-align:center;color:#94a3b8;font-size:0.85rem;">Loading…</div>';
+  try {
+    const pRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${currentSession.user.id}&select=conversation_id,conversations(id,title,order_id,updated_at,orders(topic,order_status))`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
+    );
+    const parts = await pRes.json();
+    if (!parts.length) {
+      box.innerHTML = '<div style="padding:2rem;text-align:center;color:#94a3b8;font-size:0.85rem;">No conversations yet.</div>';
+      return;
+    }
+    const convs = parts.map((p: any) => p.conversations).filter(Boolean);
+    convs.sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+    box.innerHTML = convs.map((c: any) => {
+      const status = c.orders?.order_status || 'open';
+      const statusLabel = status.replace(/_/g, ' ');
+      const statusColor = status === 'in_review' ? '#3b82f6' : status === 'completed' ? '#22c55e' : '#f59e0b';
+      const title = c.orders?.topic || c.title || 'Conversation';
+      const time = c.updated_at ? new Date(c.updated_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+      return `
+        <div class="cp-conv-item" data-cid="${esc(c.id)}" data-title="${esc(title)}" data-status="${esc(statusLabel)}" style="padding:0.85rem 1.1rem;border-bottom:1px solid #f1f5f9;cursor:pointer;transition:background 0.15s;">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+            <span style="font-size:0.72rem;font-weight:700;color:${statusColor};">${esc(statusLabel)}</span>
+            <span style="flex:1;font-size:0.85rem;color:#303b4f;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(title)}</span>
+            <span style="font-size:0.72rem;color:#94a3b8;flex-shrink:0;">${time}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:0.7rem;flex-shrink:0;">👤</div>
+            <span class="cp-preview-${esc(c.id)}" style="font-size:0.78rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Loading…</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Load last message previews
+    for (const c of convs) {
+      const mRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${c.id}&order=created_at.desc&limit=1`,
+        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
+      );
+      const msgs = await mRes.json();
+      const previewEl = box.querySelector(`.cp-preview-${c.id}`);
+      if (previewEl) {
+        const m = msgs[0];
+        previewEl.textContent = m ? `You: ${m.content.slice(0, 40)}…` : 'No messages yet';
+      }
+    }
+
+    box.querySelectorAll('.cp-conv-item').forEach(item => {
+      item.addEventListener('mouseenter', () => (item as HTMLElement).style.background = '#f8fafc');
+      item.addEventListener('mouseleave', () => (item as HTMLElement).style.background = '');
+      item.addEventListener('click', () => {
+        box.querySelectorAll('.cp-conv-item').forEach(i => (i as HTMLElement).style.background = '');
+        (item as HTMLElement).style.background = '#eef6fb';
+        const cid = (item as HTMLElement).dataset.cid!;
+        const title = (item as HTMLElement).dataset.title!;
+        const status = (item as HTMLElement).dataset.status!;
+        openCpThread(cid, title, status);
+      });
+    });
+
+  } catch (err) { console.error(err); box.innerHTML = '<div style="padding:2rem;text-align:center;color:#f87171;font-size:0.85rem;">Could not load conversations.</div>'; }
+}
+
+async function openCpThread(convId: string, title: string, status: string) {
+  cpConvId = convId;
+  if (cpSub) { cpSub.unsubscribe(); cpSub = null; }
+  document.getElementById('threadTitle')!.textContent = title;
+  document.getElementById('threadSub')!.textContent = status;
+  const msgs = document.getElementById('threadMessages')!;
+  msgs.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:0.85rem;margin:auto;">Loading…</div>';
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${convId}&order=created_at.asc`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
+    );
+    const data = await res.json();
+    renderCpMessages(data);
+    cpSub = supabase.channel(`cp-${convId}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${convId}` },
+        (payload: any) => appendCpMessage(payload.new))
+      .subscribe();
+  } catch (err) { msgs.innerHTML = '<div style="text-align:center;color:#f87171;font-size:0.85rem;margin:auto;">Could not load messages.</div>'; }
+}
+
+function renderCpMessages(messages: any[]) {
+  const c = document.getElementById('threadMessages')!;
+  if (!messages.length) { c.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:0.85rem;margin:auto;">No messages yet. Say hello!</div>'; return; }
+  // Group by date
+  let lastDate = '';
+  c.innerHTML = messages.map((m: any) => {
+    const mine = m.sender_id === currentSession.user.id;
+    const time = new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    const dateLabel = new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    let dayHtml = '';
+    if (dateLabel !== lastDate) { lastDate = dateLabel; dayHtml = `<div style="text-align:center;font-size:0.72rem;color:#94a3b8;margin:0.5rem 0;">${dateLabel}</div>`; }
+    return `${dayHtml}<div style="display:flex;flex-direction:column;max-width:72%;align-self:${mine ? 'flex-end' : 'flex-start'};align-items:${mine ? 'flex-end' : 'flex-start'};">
+      ${!mine ? `<div style="font-size:0.66rem;font-weight:600;color:#94a3b8;margin-bottom:0.15rem;">${esc(m.sender_name || 'Writer')}</div>` : `<div style="font-size:0.66rem;font-weight:600;color:#046fcd;margin-bottom:0.15rem;">You</div>`}
+      <div style="padding:0.55rem 0.85rem;border-radius:14px;font-size:0.85rem;line-height:1.5;word-wrap:break-word;background:${mine ? '#046fcd' : '#fff'};color:${mine ? '#fff' : '#0f172a'};border:${mine ? 'none' : '1px solid #e2e8f0'};border-bottom-${mine ? 'right' : 'left'}-radius:4px;">${esc(m.content)}</div>
+      <div style="font-size:0.6rem;color:#94a3b8;margin-top:0.15rem;">${time}</div>
+    </div>`;
+  }).join('');
+  c.scrollTop = c.scrollHeight;
+}
+
+function appendCpMessage(m: any) {
+  const c = document.getElementById('threadMessages')!;
+  const ph = c.querySelector('div[style*="margin:auto"]'); if (ph) c.innerHTML = '';
+  const mine = m.sender_id === currentSession.user.id;
+  const time = new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  c.insertAdjacentHTML('beforeend', `<div style="display:flex;flex-direction:column;max-width:72%;align-self:${mine ? 'flex-end' : 'flex-start'};align-items:${mine ? 'flex-end' : 'flex-start'};">
+    ${!mine ? `<div style="font-size:0.66rem;font-weight:600;color:#94a3b8;margin-bottom:0.15rem;">${esc(m.sender_name || 'Writer')}</div>` : `<div style="font-size:0.66rem;font-weight:600;color:#046fcd;margin-bottom:0.15rem;">You</div>`}
+    <div style="padding:0.55rem 0.85rem;border-radius:14px;font-size:0.85rem;line-height:1.5;word-wrap:break-word;background:${mine ? '#046fcd' : '#fff'};color:${mine ? '#fff' : '#0f172a'};border:${mine ? 'none' : '1px solid #e2e8f0'};border-bottom-${mine ? 'right' : 'left'}-radius:4px;">${esc(m.content)}</div>
+    <div style="font-size:0.6rem;color:#94a3b8;margin-top:0.15rem;">${time}</div>
+  </div>`);
+  c.scrollTop = c.scrollHeight;
+}
+
+async function cpSendMessage() {
+  if (!cpConvId) return;
+  const input = document.getElementById('threadInput') as HTMLInputElement;
+  const text = input.value.trim();
+  if (!text) return;
+  const btn = document.getElementById('threadSend') as HTMLButtonElement;
+  btn.disabled = true; input.value = '';
+  const clientName = currentSession.user.email?.split('@')[0] || 'Client';
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` },
+      body: JSON.stringify({ conversation_id: cpConvId, sender_id: currentSession.user.id, sender_name: clientName, sender_role: 'client', content: text })
+    });
+    await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cpConvId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}`, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ updated_at: new Date().toISOString() })
+    });
+  } catch (err) { console.error(err); alert('Could not send message. Please try again.'); }
+  btn.disabled = false; input.focus();
+}
+
+document.getElementById('threadSend')!.addEventListener('click', cpSendMessage);
+document.getElementById('threadInput')!.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); cpSendMessage(); } });
+  
   async function init() {
     try {
       setStatus('Checking your login…');
@@ -1648,10 +1837,27 @@ ${String(err?.message || err)}
 
   // Open Chat widget when "Chats" is clicked
   document.getElementById('chatsLink')!.addEventListener('click', (e) => {
-    e.preventDefault();
-    const bubble = document.getElementById('cwBubble');
-    if (bubble) bubble.click();
-  });
+  e.preventDefault();
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('chatsLink')!.classList.add('active');
+  document.querySelector('.main-header')!.style.display = 'none';
+  document.querySelector('.tabs-bar')!.style.display = 'none';
+  document.querySelector('.controls-bar')!.style.display = 'none';
+  document.querySelector('.orders-area')!.style.display = 'none';
+  document.getElementById('chatsPanelWrap')!.style.display = 'flex';
+  loadChatsPanel();
+});
+document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('myOrdersLink')!.classList.add('active');
+  document.getElementById('chatsPanelWrap')!.style.display = 'none';
+  document.querySelector('.main-header')!.style.display = 'flex';
+  document.querySelector('.tabs-bar')!.style.display = 'flex';
+  document.querySelector('.controls-bar')!.style.display = 'flex';
+  document.querySelector('.orders-area')!.style.display = 'flex';
+});
+
 
   document.getElementById('logoutBtn')!.addEventListener('click', async (e) => {
     e.preventDefault();
