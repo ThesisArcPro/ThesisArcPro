@@ -253,14 +253,6 @@ const base = '';
     flex-shrink: 0;
     height: 100%;
   }
-  .modal-right {
-    width: 300px;
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    background: #f8fafc;
-  }
   body.dark-mode .modal-right { background: #0f1117; border-left-color: rgba(255,255,255,0.06); }
 
   .modal-close {
@@ -1081,7 +1073,7 @@ const base = '';
   import { supabase } from '../lib/supabase.js';
   import { io } from 'socket.io-client';
 
-  const BIDDING_SERVER = 'http://https://thesisarcpro.onrender.com';
+  const BIDDING_SERVER = 'https://thesisarcpro.onrender.com';
   const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
 
   socket.on('connect', () => console.log('Connected to bidding server:', socket.id));
@@ -1328,7 +1320,6 @@ const base = '';
 
     document.getElementById('submitBidBtn')?.addEventListener('click', () => submitBid(order.id));
     document.getElementById('detailModal')!.classList.add('open');
-    openWriterOrderChat(order);
   }
 
   async function submitBid(orderId: number) {
@@ -1726,7 +1717,6 @@ const base = '';
         content.querySelector(`.om-panel[data-mpanel="${which}"]`)?.classList.add('om-panel--active');
         if (which === 'general') { loadOrderFiles(); }
         if (which === 'files') loadClientFiles(order.id);
-        if (which === 'chat') openWriterOrderChat(order);
       });
     });
 
@@ -1769,6 +1759,8 @@ const base = '';
     });
 
     document.getElementById('detailModal')!.classList.add('open');
+    openWriterOrderChat(order);
+    loadOrderFiles();
   }
 
   // ── FILES: load + delete ──
