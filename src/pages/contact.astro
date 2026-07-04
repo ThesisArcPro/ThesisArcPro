@@ -488,6 +488,8 @@ const base = '';
 
 <script>
   import { supabase } from '../lib/supabase.js';
+  import { io } from 'socket.io-client';
+  const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVL-dECKrdcEyyJObsP9KCQnRJ_TnmTT7qB6rvx-89cSmDbGIUKzviUAX83wPkYtZWzg/exec';
   const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
@@ -832,6 +834,18 @@ const base = '';
       const st = $('successTicketId'); if (st) st.textContent = ticketId;
       const dl = $('successDashboardLink') as HTMLAnchorElement; if (dl) dl.href = `${base}/dashboard/`;
       ($('wizFlow') as HTMLElement).style.display = 'none';
+      // Broadcast new order to all online writers in real time
+      socket.emit('order:new', {
+        id: ticketId,
+        order_number: ticketId,
+        topic,
+        assignment_type: type,
+        subject,
+        pages: parseInt(pages),
+        deadline,
+        total_amount: total,
+        order_status: 'open_for_bids'
+      });
       ($('orderSuccess') as HTMLElement).style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch {
