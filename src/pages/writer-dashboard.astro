@@ -1081,7 +1081,7 @@ const base = '';
   import { supabase } from '../lib/supabase.js';
   import { io } from 'socket.io-client';
 
-  const BIDDING_SERVER = 'http://localhost:3001';
+  const BIDDING_SERVER = 'http://https://thesisarcpro.onrender.com';
   const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
 
   socket.on('connect', () => console.log('Connected to bidding server:', socket.id));
