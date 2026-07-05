@@ -3096,12 +3096,11 @@ async function wizSubmitOrder() {
         body: JSON.stringify({ writer_id: parseInt(hireWriterId), transaction_id: txnId, amount_paid: amountPaid, payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full' })
       });
       socket.emit('bid:accept', { bidId: hireBidId, orderId: hireOrderId, writerId: hireWriterId });
-      const idx = allOrders.findIndex((o: any) => String(o.id) === hireOrderId);
-      if (idx !== -1) { allOrders[idx].order_status = 'in_progress'; allOrders[idx].writer_id = hireWriterId; allOrders[idx].amount_paid = amountPaid; }
-      updateCounts(); renderOrders();
       localStorage.removeItem('wizPendingOrderId');
       document.getElementById('hirePaymentModal')!.classList.remove('open');
       closeModal();
+      closeOrderModal();
+      await loadOrders(currentSession);
       alert('✅ Writer hired! Your order is now in progress.');
     } catch (err) {
       console.error(err);
