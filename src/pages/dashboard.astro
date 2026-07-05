@@ -1868,7 +1868,8 @@ async function wizSubmitOrder() {
     const success = document.getElementById('wizSuccess'); if (success) success.style.display = 'block';
     const ticket = document.getElementById('wizSuccessTicket'); if (ticket) ticket.textContent = ticketId;
  
-  } catch {
+  } catch (err: any) {
+    console.error('wizSubmitOrder error:', err);
     if (createBtn) { createBtn.disabled = false; createBtn.textContent = '🚀 Post Order'; }
     alert('❌ Something went wrong. Please try again.');
   }
