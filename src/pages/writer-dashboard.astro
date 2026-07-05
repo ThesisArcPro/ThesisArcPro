@@ -1145,9 +1145,8 @@ const base = '';
  
     socket.emit('writer:online', String(writerId));
  
-    socket.on('order:available', (order: any) => {
-      availableOrders.unshift(order);
-      renderAvailableOrders();
+    socket.on('order:available', async () => {
+      await loadAvailableOrders();
       const badge = document.getElementById('availBadge');
       if (badge) {
         const current = parseInt(badge.textContent || '0') || 0;
