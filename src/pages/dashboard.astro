@@ -1314,6 +1314,18 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   </div>
 </div>
 
+<!-- WRITER PROFILE MODAL -->
+<div class="modal" id="writerProfileModal">
+  <div class="modal-overlay" id="writerProfileOverlay"></div>
+  <div class="modal-box" style="max-width:580px;max-height:88vh;overflow-y:auto;padding:1.8rem;">
+    <button class="modal-close" id="writerProfileClose">✕</button>
+    <h2 style="font-size:1.1rem;font-weight:800;color:#0f172a;margin-bottom:1.2rem;">Writer's Profile</h2>
+    <div id="writerProfileContent">
+      <div style="text-align:center;color:#94a3b8;padding:2rem;">Loading...</div>
+    </div>
+  </div>
+</div>
+
 <div class="review-modal" id="reviewModal">
   <div class="review-overlay" id="reviewOverlay"></div>
   <div class="review-box">
@@ -1777,19 +1789,54 @@ document.getElementById('wizCreateOrderBtn')?.addEventListener('click', async ()
   await wizSubmitOrder();
 });
  
+async function fetchWriterProfile(writerId: string): Promise<any> {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/writers?id=eq.${writerId}&select=id,full_name,photo_url,bio,specialties,credentials,highlights,sample_url,sample_name,years_experience,education_level,rating,orders_completed`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+    );
+    const data = await res.json();
+    return data[0] || null;
+  } catch { return null; }
+}
+
 function wizRenderBidCard(bid: any, orderId: string) {
   const time = bid.created_at ? new Date(bid.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
-  return `<div data-wbid="${esc(bid.id)}" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:0.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
-    <div style="min-width:0;">
-      <div style="font-size:0.85rem;font-weight:700;color:#0f172a;">Writer #${esc(bid.writer_id)}</div>
-      ${bid.note ? `<div style="font-size:0.78rem;color:#64748b;margin-top:0.15rem;word-break:break-word;">${esc(bid.note)}</div>` : ''}
-      <div style="font-size:0.7rem;color:#94a3b8;margin-top:0.12rem;">${time}</div>
+  const w = bid.writer || {};
+  const name = w.full_name || `Writer #${bid.writer_id}`;
+  const photo = w.photo_url || '';
+  const rating = w.rating ? Number(w.rating).toFixed(1) : '5.0';
+  const completed = w.orders_completed || 0;
+  const specialties = w.specialties ? w.specialties.split(',').slice(0, 3).map((s: string) => s.trim()).join(' · ') : '';
+  const initials = name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
+
+  return `<div data-wbid="${esc(bid.id)}" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.2rem;margin-bottom:0.6rem;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+      <div style="display:flex;align-items:center;gap:0.75rem;min-width:0;flex:1;">
+        <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0f172a;font-size:0.88rem;">
+          ${photo ? `<img src="${esc(photo)}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='${initials}'" />` : initials}
+        </div>
+        <div style="min-width:0;">
+          <div style="font-size:0.9rem;font-weight:700;color:#0f172a;">${esc(name)}</div>
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.15rem;">
+            <span style="color:#fbbf24;font-size:0.78rem;">⭐ ${rating}</span>
+            <span style="color:#94a3b8;font-size:0.72rem;">·</span>
+            <span style="color:#64748b;font-size:0.72rem;">${completed} orders completed</span>
+          </div>
+          ${specialties ? `<div style="font-size:0.72rem;color:#64748b;margin-top:0.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;">${esc(specialties)}</div>` : ''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;flex-shrink:0;">
+        <div style="font-size:1.1rem;font-weight:800;color:#046fcd;">$${Number(bid.bid_price).toFixed(2)}</div>
+        ${bid.status !== 'accepted'
+          ? `<button class="wiz-hire-btn" data-bid-id="${esc(bid.id)}" data-writer-id="${esc(bid.writer_id)}" data-bid-price="${esc(bid.bid_price)}" data-order-id="${esc(orderId)}" style="background:#046fcd;color:#fff;border:none;border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;">Hire Writer</button>`
+          : `<span style="color:#4ade80;font-size:0.82rem;font-weight:600;">✅ Hired</span>`}
+      </div>
     </div>
-    <div style="display:flex;align-items:center;gap:0.6rem;flex-shrink:0;">
-      <div style="font-size:1rem;font-weight:800;color:#046fcd;">$${Number(bid.bid_price).toFixed(2)}</div>
-      ${bid.status !== 'accepted'
-        ? `<button class="wiz-hire-btn" data-bid-id="${esc(bid.id)}" data-writer-id="${esc(bid.writer_id)}" data-bid-price="${esc(bid.bid_price)}" data-order-id="${esc(orderId)}" style="background:#046fcd;color:#fff;border:none;border-radius:8px;padding:0.45rem 0.9rem;font-size:0.8rem;font-weight:600;cursor:pointer;">Hire Writer</button>`
-        : `<span style="color:#4ade80;font-size:0.8rem;font-weight:600;">✅ Hired</span>`}
+    ${bid.note ? `<div style="margin-top:0.75rem;padding:0.65rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.8rem;color:#475569;line-height:1.5;border-left:3px solid #046fcd;">${esc(bid.note)}</div>` : ''}
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.6rem;">
+      <button class="wiz-view-profile-btn" data-writer-id="${esc(bid.writer_id)}" style="background:none;border:none;color:#046fcd;font-size:0.78rem;font-weight:600;cursor:pointer;padding:0;">View profile →</button>
+      <span style="font-size:0.68rem;color:#94a3b8;">${time}</span>
     </div>
   </div>`;
 }
@@ -1803,6 +1850,52 @@ function attachWizHireBtns(container: Element, orderId: string) {
       openHirePaymentModal(bidId, writerId, bidPrice, orderId);
     });
   });
+  container.querySelectorAll('.wiz-view-profile-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const writerId = (btn as HTMLElement).dataset.writerId!;
+      await openWriterProfileModal(writerId);
+    });
+  });
+}
+
+async function enrichBidsWithWriters(bids: any[]): Promise<any[]> {
+  const writerIds = [...new Set(bids.map(b => b.writer_id))];
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/writers?id=in.(${writerIds.join(',')})&select=id,full_name,photo_url,bio,specialties,credentials,highlights,sample_url,sample_name,years_experience,education_level,rating,orders_completed`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+  );
+  const writers = await res.json();
+  return bids.map(b => ({ ...b, writer: writers.find((w: any) => w.id === b.writer_id) || {} }));
+}
+
+async function openWriterProfileModal(writerId: string) {
+  document.getElementById('writerProfileModal')!.classList.add('open');
+  const content = document.getElementById('writerProfileContent')!;
+  content.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:2rem;">Loading...</div>';
+  const w = await fetchWriterProfile(writerId);
+  if (!w) { content.innerHTML = '<div style="text-align:center;color:#f87171;padding:2rem;">Could not load profile.</div>'; return; }
+  const initials = (w.full_name || '').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
+  const highlights = w.highlights ? w.highlights.split(',').map((h: string) => `<span style="display:inline-block;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:20px;padding:0.25rem 0.7rem;font-size:0.75rem;color:#0f172a;margin:0.2rem;">${esc(h.trim())}</span>`).join('') : '';
+  content.innerHTML = `
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid #e2e8f0;">
+      <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:#0f172a;">
+        ${w.photo_url ? `<img src="${esc(w.photo_url)}" style="width:100%;height:100%;object-fit:cover;" />` : initials}
+      </div>
+      <div>
+        <div style="font-size:1rem;font-weight:800;color:#0f172a;">${esc(w.full_name || '—')}</div>
+        <div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem;">${esc(w.education_level || '')} ${w.years_experience ? `· ${w.years_experience} yrs experience` : ''}</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.3rem;">
+          <span style="color:#fbbf24;font-size:0.82rem;">⭐ ${w.rating ? Number(w.rating).toFixed(1) : '5.0'}</span>
+          <span style="color:#64748b;font-size:0.78rem;">${w.orders_completed || 0} orders completed</span>
+        </div>
+      </div>
+    </div>
+    ${w.bio ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">About</div><p style="font-size:0.85rem;color:#475569;line-height:1.7;">${esc(w.bio)}</p></div>` : ''}
+    ${highlights ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Highlights</div><div>${highlights}</div></div>` : ''}
+    ${w.specialties ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Specialties</div><p style="font-size:0.85rem;color:#475569;">${esc(w.specialties)}</p></div>` : ''}
+    ${w.credentials ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Credentials</div><p style="font-size:0.85rem;color:#475569;">${esc(w.credentials)}</p></div>` : ''}
+    ${w.sample_url && w.sample_name ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Sample</div><div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem 1rem;"><span style="font-size:0.82rem;color:#0f172a;">📄 ${esc(w.sample_name)}</span><a href="${esc(w.sample_url)}" target="_blank" style="background:#046fcd;color:#fff;border:none;border-radius:6px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:600;text-decoration:none;">View</a></div></div>` : ''}
+  `;
 }
 
 async function wizSubmitOrder() {
@@ -1882,7 +1975,8 @@ async function wizSubmitOrder() {
           if (waiting) waiting.style.display = 'none';
           const box = document.getElementById('wizLiveBids');
           if (box) {
-            box.innerHTML = existingBids.map((b: any) => wizRenderBidCard(b, newOrderDbId)).join('');
+            const enriched = await enrichBidsWithWriters(existingBids);
+            box.innerHTML = enriched.map((b: any) => wizRenderBidCard(b, newOrderDbId)).join('');
             attachWizHireBtns(box, newOrderDbId);
           }
         }
@@ -2574,6 +2668,13 @@ async function wizSubmitOrder() {
     if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; btn.textContent = '✅ I Have Paid — Hire Writer'; }
     document.getElementById('hirePaymentModal')!.classList.add('open');
   }
+
+  document.getElementById('writerProfileClose')!.addEventListener('click', () => {
+    document.getElementById('writerProfileModal')!.classList.remove('open');
+  });
+  document.getElementById('writerProfileOverlay')!.addEventListener('click', () => {
+    document.getElementById('writerProfileModal')!.classList.remove('open');
+  });
 
   document.getElementById('hirePaymentClose')!.addEventListener('click', () => {
     document.getElementById('hirePaymentModal')!.classList.remove('open');
