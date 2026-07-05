@@ -837,7 +837,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-  <a href={`${base}/contact/`} class="sidebar-new-order">＋ New order</a>
+  <button class="sidebar-new-order" id="sidebarNewOrderBtn">＋ New order</button>
   <nav class="sidebar-nav">
     <a class="nav-item active" href="#" id="myOrdersLink">
   <span class="icon">📁</span> My Orders
@@ -898,7 +898,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
 <main class="main">
   <div class="main-header">
     <h1>My Orders</h1>
-    <a href={`${base}/contact/`} class="btn-new-order-main">New order ＋</a>
+    <button class="btn-new-order-main" id="headerNewOrderBtn">New order ＋</button>
   </div>
 
   <div class="tabs-bar">
@@ -949,7 +949,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
       <div class="empty-illustration">📄</div>
       <h3 id="emptyHeading">You have no active orders</h3>
       <p>Place your first order and track it right here.</p>
-      <a href={`${base}/contact/`} class="btn-empty-order">New order ＋</a>
+      <button class="btn-empty-order" id="emptyNewOrderBtn">New order ＋</button>
     </div>
 
     <div class="order-table" id="orderTable" style="display:none;">
@@ -1006,7 +1006,290 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   </div>
 </div>
 
-<!-- REVIEW POPUP -->
+<!-- ORDER FORM MODAL -->
+<div class="modal" id="orderFormModal">
+  <div class="modal-overlay" id="orderFormModalOverlay"></div>
+  <div class="modal-box" style="max-width:920px;width:96%;max-height:90vh;padding:0;overflow:hidden;display:flex;flex-direction:column;position:relative;">
+    <button class="modal-close" id="orderFormModalClose" style="top:1rem;right:1rem;z-index:210;">✕</button>
+ 
+    <!-- Payment overlay (inside modal) -->
+    <div id="wizPaymentModal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:16px;padding:2.5rem;max-width:460px;width:90%;position:relative;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.35);">
+        <button id="wizPaymentClose" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.2rem;cursor:pointer;color:#64748b;">✕</button>
+        <div style="font-size:3rem;margin-bottom:1rem;">💰</div>
+        <h2 style="color:#0f172a;margin-bottom:1rem;font-size:1.4rem;">Complete Payment</h2>
+        <div id="wizPaymentDetails" style="background:#f8fafc;border-radius:8px;padding:1rem;margin-bottom:0.8rem;"></div>
+        <p id="wizPolicyText" style="color:#64748b;font-size:0.88rem;margin-bottom:1.3rem;"></p>
+        <a href="https://www.paypal.com/ncp/payment/X4GBU659AGXGQ" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:0.7rem;background:#FFC439;color:#003087;font-weight:700;font-size:1rem;padding:0.9rem 2rem;border-radius:8px;text-decoration:none;margin-bottom:0.6rem;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19c-.988 0-1.829.722-1.974 1.699l-1.12 7.106-.313 1.983h3.293l.742-4.713.048-.306c.145-.977.986-1.699 1.974-1.699h1.245c3.863 0 6.637-1.57 7.49-6.114.333-1.726.163-3.168-.734-4.312z"/></svg>
+          Pay with PayPal or Card
+        </a>
+        <p style="color:#94a3b8;font-size:0.76rem;margin-bottom:1.3rem;">🔒 Secured by PayPal — Accepts Visa, Mastercard & PayPal</p>
+        <div style="margin-bottom:1rem;text-align:left;">
+          <label style="display:block;font-weight:600;color:#0f172a;font-size:0.88rem;margin-bottom:0.35rem;">Enter PayPal Transaction ID *</label>
+          <input type="text" id="wizTxnId" placeholder="e.g. 7GH123456789" style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e2e8f0;border-radius:6px;font-size:0.92rem;outline:none;" />
+          <span style="font-size:0.74rem;color:#94a3b8;">Find it in your PayPal confirmation email</span>
+        </div>
+        <button id="wizConfirmPaymentBtn" disabled style="width:100%;padding:0.95rem;background:#2d6a4f;color:white;border:none;border-radius:8px;font-size:0.95rem;font-weight:700;cursor:pointer;opacity:0.5;">✅ I Have Paid — Submit My Order</button>
+      </div>
+    </div>
+ 
+    <!-- Progress bar -->
+    <div style="padding:1.2rem 2rem 0.8rem;border-bottom:1px solid #eef2f7;flex-shrink:0;">
+      <div style="height:4px;background:rgba(0,0,0,0.07);border-radius:4px;overflow:hidden;">
+        <div id="wizModalBar" style="height:100%;width:25%;background:#c5a059;transition:width 0.3s ease;"></div>
+      </div>
+    </div>
+ 
+    <!-- Grid: steps left, summary right -->
+    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;flex:1;overflow:hidden;padding:1.8rem 2rem 2rem;">
+ 
+      <!-- LEFT: wizard steps -->
+      <div style="overflow-y:auto;padding-right:0.5rem;">
+ 
+        <!-- Success state -->
+        <div id="wizSuccess" style="display:none;text-align:center;padding:2.5rem 1rem;">
+          <div style="font-size:3.5rem;margin-bottom:1rem;">🎉</div>
+          <h2 style="color:#0f172a;font-size:1.4rem;margin-bottom:0.8rem;">Order Received!</h2>
+          <p style="color:#64748b;font-size:0.9rem;margin-bottom:1.8rem;line-height:1.6;">Your order is now live for writers to bid on. Check your dashboard for proposals.</p>
+          <div style="background:#f8fafc;border-radius:12px;padding:1.2rem;margin-bottom:1.8rem;">
+            <div style="color:#64748b;font-size:0.82rem;margin-bottom:0.35rem;">Your Ticket Number</div>
+            <div id="wizSuccessTicket" style="color:#c5a059;font-size:2.4rem;font-weight:800;">T-0000</div>
+          </div>
+          <button id="wizSuccessClose" style="background:#0f172a;color:#fff;padding:0.9rem 2rem;border-radius:8px;border:none;font-weight:700;cursor:pointer;font-size:0.92rem;">View My Orders →</button>
+        </div>
+ 
+        <div id="wizStepsFlow">
+ 
+          <!-- STEP 1: SERVICE -->
+          <div class="wiz-modal-step active" data-wstep="1">
+            <h2 style="color:#0f172a;font-size:1.25rem;font-weight:800;margin-bottom:0.35rem;">Select your service</h2>
+            <p style="color:#64748b;font-size:0.86rem;margin-bottom:1.3rem;">Choose the type of help you need.</p>
+            <div style="display:flex;flex-direction:column;gap:0.65rem;">
+              <button type="button" class="wiz-svc-card" data-service="Writing" data-base="12">
+                <span style="font-size:1.4rem;flex-shrink:0;">✍️</span>
+                <span style="flex:1;text-align:left;"><span style="display:block;font-weight:700;color:#0f172a;font-size:0.9rem;">Writing <span style="background:rgba(197,160,89,0.18);color:#8a6d2f;font-size:0.68rem;font-weight:700;padding:0.1rem 0.45rem;border-radius:20px;margin-left:0.3rem;">from $12/page</span></span><span style="font-size:0.78rem;color:#64748b;">Paper written from scratch by an expert.</span></span>
+                <span class="wiz-svc-pick">Select</span>
+              </button>
+              <button type="button" class="wiz-svc-card" data-service="Rewriting" data-base="9">
+                <span style="font-size:1.4rem;flex-shrink:0;">🔁</span>
+                <span style="flex:1;text-align:left;"><span style="display:block;font-weight:700;color:#0f172a;font-size:0.9rem;">Rewriting <span style="background:rgba(197,160,89,0.18);color:#8a6d2f;font-size:0.68rem;font-weight:700;padding:0.1rem 0.45rem;border-radius:20px;margin-left:0.3rem;">from $9/page</span></span><span style="font-size:0.78rem;color:#64748b;">Existing work rewritten for quality.</span></span>
+                <span class="wiz-svc-pick">Select</span>
+              </button>
+              <button type="button" class="wiz-svc-card" data-service="Editing" data-base="8">
+                <span style="font-size:1.4rem;flex-shrink:0;">📝</span>
+                <span style="flex:1;text-align:left;"><span style="display:block;font-weight:700;color:#0f172a;font-size:0.9rem;">Editing <span style="background:rgba(197,160,89,0.18);color:#8a6d2f;font-size:0.68rem;font-weight:700;padding:0.1rem 0.45rem;border-radius:20px;margin-left:0.3rem;">from $8/page</span></span><span style="font-size:0.78rem;color:#64748b;">Paper edited for clarity, structure and flow.</span></span>
+                <span class="wiz-svc-pick">Select</span>
+              </button>
+              <button type="button" class="wiz-svc-card" data-service="Proofreading" data-base="7">
+                <span style="font-size:1.4rem;flex-shrink:0;">🔍</span>
+                <span style="flex:1;text-align:left;"><span style="display:block;font-weight:700;color:#0f172a;font-size:0.9rem;">Proofreading <span style="background:rgba(197,160,89,0.18);color:#8a6d2f;font-size:0.68rem;font-weight:700;padding:0.1rem 0.45rem;border-radius:20px;margin-left:0.3rem;">from $7/page</span></span><span style="font-size:0.78rem;color:#64748b;">Grammar, spelling and punctuation fixes.</span></span>
+                <span class="wiz-svc-pick">Select</span>
+              </button>
+              <button type="button" class="wiz-svc-card" data-service="Review my work" data-base="10">
+                <span style="font-size:1.4rem;flex-shrink:0;">✅</span>
+                <span style="flex:1;text-align:left;"><span style="display:block;font-weight:700;color:#0f172a;font-size:0.9rem;">Review my work <span style="background:rgba(197,160,89,0.18);color:#8a6d2f;font-size:0.68rem;font-weight:700;padding:0.1rem 0.45rem;border-radius:20px;margin-left:0.3rem;">from $10/page</span></span><span style="font-size:0.78rem;color:#64748b;">Expert review and detailed feedback.</span></span>
+                <span class="wiz-svc-pick">Select</span>
+              </button>
+            </div>
+            <div style="display:flex;justify-content:flex-end;margin-top:1.4rem;">
+              <button type="button" id="wizNext1" disabled style="background:#c5a059;color:#0f172a;border:none;border-radius:8px;padding:0.75rem 2rem;font-weight:700;font-size:0.9rem;cursor:pointer;opacity:0.45;">Next</button>
+            </div>
+          </div>
+ 
+          <!-- STEP 2: DETAILS -->
+          <div class="wiz-modal-step" data-wstep="2">
+            <h2 style="color:#0f172a;font-size:1.25rem;font-weight:800;margin-bottom:0.35rem;">Order details</h2>
+            <p style="color:#64748b;font-size:0.86rem;margin-bottom:1.3rem;">Help your expert understand exactly what you need.</p>
+ 
+            <label style="display:block;color:#0f172a;font-size:0.83rem;font-weight:600;margin:0 0 0.35rem;">Topic / Title *</label>
+            <input type="text" id="wizTopic" style="width:100%;padding:0.78rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;font-size:0.9rem;color:#0f172a;background:#fff;outline:none;box-sizing:border-box;" placeholder="Enter your assignment topic or title" />
+ 
+            <label style="display:block;color:#0f172a;font-size:0.83rem;font-weight:600;margin:0.85rem 0 0.35rem;">Type of paper *</label>
+            <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.45rem;" id="wizTypeChips">
+              <button type="button" class="wiz-chip" data-val="Essay">Essay</button>
+              <button type="button" class="wiz-chip" data-val="Research Paper">Research paper</button>
+              <button type="button" class="wiz-chip" data-val="Discussion Post">Discussion post</button>
+              <button type="button" class="wiz-chip" data-val="Assignment">Assignment</button>
+            </div>
+            <input type="text" id="wizType" list="wiz-type-list" style="width:100%;padding:0.78rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;font-size:0.9rem;color:#0f172a;background:#fff;outline:none;box-sizing:border-box;" placeholder="Essay (Any Type)" />
+            <datalist id="wiz-type-list"><option>Essay</option><option>Research Paper</option><option>Discussion Post</option><option>Report</option><option>Take Home Exam</option><option>Dissertation / Thesis</option><option>Research Proposal</option><option>Literature Review</option><option>Case Study</option><option>Other</option></datalist>
+ 
+            <label style="display:block;color:#0f172a;font-size:0.83rem;font-weight:600;margin:0.85rem 0 0.35rem;">Subject *</label>
+            <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.45rem;" id="wizSubjectChips">
+              <button type="button" class="wiz-chip" data-val="English & Literature">English</button>
+              <button type="button" class="wiz-chip" data-val="Psychology">Psychology</button>
+              <button type="button" class="wiz-chip" data-val="Nursing & Healthcare">Nursing</button>
+              <button type="button" class="wiz-chip" data-val="Business Management">Business</button>
+              <button type="button" class="wiz-chip" data-val="History">History</button>
+            </div>
+            <input type="text" id="wizSubject" list="wiz-subject-list" style="width:100%;padding:0.78rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;font-size:0.9rem;color:#0f172a;background:#fff;outline:none;box-sizing:border-box;" placeholder="Other" />
+            <datalist id="wiz-subject-list"><option>Nursing & Healthcare</option><option>Business Management</option><option>English & Literature</option><option>Mathematics</option><option>Psychology</option><option>Law</option><option>Education</option><option>History</option><option>Science</option><option>Sociology</option><option>IT & Computer Science</option><option>Finance & Accounting</option><option>Other</option></datalist>
+ 
+            <label style="display:block;color:#0f172a;font-size:0.83rem;font-weight:600;margin:0.85rem 0 0.35rem;">Language *</label>
+            <select id="wizLanguage" style="width:100%;padding:0.78rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;font-size:0.9rem;color:#0f172a;background:#fff;outline:none;box-sizing:border-box;">
+              <option value="" disabled selected>Select language</option>
+              <option>English (US)</option><option>English (UK)</option>
+            </select>
+ 
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1.4rem;">
+              <button type="button" class="wiz-back-btn" data-wback>← Back</button>
+              <button type="button" id="wizNext2" style="background:#c5a059;color:#0f172a;border:none;border-radius:8px;padding:0.75rem 2rem;font-weight:700;font-size:0.9rem;cursor:pointer;">Next</button>
+            </div>
+          </div>
+ 
+          <!-- STEP 3: INSTRUCTIONS -->
+          <div class="wiz-modal-step" data-wstep="3">
+            <h2 style="color:#0f172a;font-size:1.25rem;font-weight:800;margin-bottom:0.35rem;">Instructions</h2>
+            <p style="color:#64748b;font-size:0.86rem;margin-bottom:1.3rem;">The more detail you give, the better the result.</p>
+ 
+            <label style="display:block;color:#0f172a;font-size:0.83rem;font-weight:600;margin:0 0 0.35rem;">Instructions *</label>
+            <textarea id="wizInstructions" rows="4" style="width:100%;padding:0.78rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;font-size:0.9rem;color:#0f172a;background:#fff;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;" placeholder="Mention your topic, main idea, formatting style, references, structure, professor notes…"></textarea>
+ 
+            <label style="display:block;color:#0f172a;font-size:0.83rem;font-weight:600;margin:0.85rem 0 0.35rem;">Page count *</label>
+            <div style="display:inline-flex;align-items:center;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;overflow:hidden;background:#fff;">
+              <button type="button" id="wizMinus" style="background:#0f172a;color:#fff;border:none;padding:0.6rem 1rem;font-size:1.1rem;cursor:pointer;line-height:1;">−</button>
+              <input type="number" id="wizPages" value="1" min="1" max="500" style="border:none;text-align:center;width:68px;font-weight:700;font-size:0.92rem;color:#0f172a;padding:0;" />
+              <button type="button" id="wizPlus" style="background:#0f172a;color:#fff;border:none;padding:0.6rem 1rem;font-size:1.1rem;cursor:pointer;line-height:1;">+</button>
+            </div>
+            <p id="wizPagesNote" style="color:#94a3b8;font-size:0.78rem;margin-top:0.3rem;">1 double-spaced page is 275 words.</p>
+ 
+            <label style="display:block;color:#0f172a;font-size:0.83rem;font-weight:600;margin:0.85rem 0 0.35rem;">Citation & sources (optional)</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
+              <select id="wizCitation" style="width:100%;padding:0.78rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;font-size:0.85rem;color:#0f172a;background:#fff;outline:none;">
+                <option value="" disabled selected>Citation style</option>
+                <option>APA 7</option><option>MLA 9</option><option>Chicago</option><option>Harvard</option><option>APA 6</option><option>Turabian</option><option>IEEE</option><option>Vancouver</option><option>Other</option><option>Not Required</option>
+              </select>
+              <input type="number" id="wizSources" min="0" max="999" style="width:100%;padding:0.78rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;font-size:0.85rem;color:#0f172a;background:#fff;outline:none;box-sizing:border-box;" placeholder="Sources required" />
+            </div>
+ 
+            <div style="background:#fff;border:1.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:1.1rem;margin-top:1rem;">
+              <h3 style="color:#0f172a;font-size:0.88rem;font-weight:700;margin-bottom:0.75rem;">Add-ons</h3>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.55rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0.75rem;border:1.5px solid rgba(0,0,0,0.07);border-radius:8px;background:#f8fafc;">
+                  <div><div style="font-size:0.76rem;font-weight:600;color:#0f172a;">📊 Graphics & Tables</div><div style="font-size:0.7rem;color:#c5a059;font-weight:700;">$5 each</div></div>
+                  <div style="display:flex;align-items:center;gap:0.3rem;">
+                    <button type="button" data-waddon="graphics" data-d="-1" style="background:#0f172a;color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.9rem;line-height:1;display:flex;align-items:center;justify-content:center;">−</button>
+                    <span id="wiz-graphics-qty" style="font-weight:700;color:#0f172a;min-width:14px;text-align:center;font-size:0.88rem;">0</span>
+                    <button type="button" data-waddon="graphics" data-d="1" style="background:#0f172a;color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.9rem;line-height:1;display:flex;align-items:center;justify-content:center;">+</button>
+                  </div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0.75rem;border:1.5px solid rgba(0,0,0,0.07);border-radius:8px;background:#f8fafc;">
+                  <div><div style="font-size:0.76rem;font-weight:600;color:#0f172a;">📚 Printable Sources</div><div style="font-size:0.7rem;color:#c5a059;font-weight:700;">$4 each</div></div>
+                  <div style="display:flex;align-items:center;gap:0.3rem;">
+                    <button type="button" data-waddon="psources" data-d="-1" style="background:#0f172a;color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.9rem;line-height:1;display:flex;align-items:center;justify-content:center;">−</button>
+                    <span id="wiz-psources-qty" style="font-weight:700;color:#0f172a;min-width:14px;text-align:center;font-size:0.88rem;">0</span>
+                    <button type="button" data-waddon="psources" data-d="1" style="background:#0f172a;color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.9rem;line-height:1;display:flex;align-items:center;justify-content:center;">+</button>
+                  </div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0.75rem;border:1.5px solid rgba(0,0,0,0.07);border-radius:8px;background:#f8fafc;">
+                  <div><div style="font-size:0.76rem;font-weight:600;color:#0f172a;">🛡️ Plagiarism & AI Report</div><div style="font-size:0.7rem;color:#2d6a4f;font-weight:700;">FREE</div></div>
+                  <span style="color:#2d6a4f;font-weight:600;font-size:0.76rem;">✔ Included</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0.75rem;border:1.5px solid rgba(0,0,0,0.07);border-radius:8px;background:#f8fafc;">
+                  <div><div style="font-size:0.76rem;font-weight:600;color:#0f172a;">📝 Abstract Page</div><div style="font-size:0.7rem;color:#c5a059;font-weight:700;">$7 each</div></div>
+                  <div style="display:flex;align-items:center;gap:0.3rem;">
+                    <button type="button" data-waddon="abstract" data-d="-1" style="background:#0f172a;color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.9rem;line-height:1;display:flex;align-items:center;justify-content:center;">−</button>
+                    <span id="wiz-abstract-qty" style="font-weight:700;color:#0f172a;min-width:14px;text-align:center;font-size:0.88rem;">0</span>
+                    <button type="button" data-waddon="abstract" data-d="1" style="background:#0f172a;color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.9rem;line-height:1;display:flex;align-items:center;justify-content:center;">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+ 
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1.4rem;">
+              <button type="button" class="wiz-back-btn" data-wback>← Back</button>
+              <button type="button" id="wizNext3" style="background:#c5a059;color:#0f172a;border:none;border-radius:8px;padding:0.75rem 2rem;font-weight:700;font-size:0.9rem;cursor:pointer;">Next</button>
+            </div>
+          </div>
+ 
+          <!-- STEP 4: DEADLINE + LEVEL -->
+          <div class="wiz-modal-step" data-wstep="4">
+            <h2 style="color:#0f172a;font-size:1.25rem;font-weight:800;margin-bottom:0.35rem;">Deadline & level</h2>
+            <p style="color:#64748b;font-size:0.86rem;margin-bottom:1.3rem;">These affect the final price of your order.</p>
+ 
+            <label style="display:block;color:#0f172a;font-size:0.83rem;font-weight:600;margin:0 0 0.35rem;">Education level *</label>
+            <select id="wizLevel" style="width:100%;padding:0.78rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;font-size:0.9rem;color:#0f172a;background:#fff;outline:none;box-sizing:border-box;">
+              <option value="" disabled selected>Select level</option>
+              <option value="HighSchool" data-step-add="0">High School</option>
+              <option value="College" data-step-add="1">College</option>
+              <option value="Masters" data-step-add="2">Masters</option>
+              <option value="PhD" data-step-add="3">PhD / Doctorate</option>
+            </select>
+ 
+            <label style="display:block;color:#0f172a;font-size:0.83rem;font-weight:600;margin:0.85rem 0 0.35rem;">Deadline *</label>
+            <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.55rem;">
+              <button type="button" class="wiz-quick-btn" data-hours="3">3hrs</button>
+              <button type="button" class="wiz-quick-btn" data-hours="6">6hrs</button>
+              <button type="button" class="wiz-quick-btn" data-hours="9">9hrs</button>
+              <button type="button" class="wiz-quick-btn" data-hours="12">12hrs</button>
+              <button type="button" class="wiz-quick-btn" data-hours="24">1 day</button>
+              <button type="button" class="wiz-quick-btn" data-hours="48">2 days</button>
+              <button type="button" class="wiz-quick-btn" data-hours="120">5 days</button>
+            </div>
+            <input type="datetime-local" id="wizDeadline" style="width:100%;padding:0.78rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;font-size:0.9rem;color:#0f172a;background:#fff;outline:none;box-sizing:border-box;" />
+            <div id="wizUrgencyDisplay" style="display:none;background:rgba(197,160,89,0.1);border:1px solid #c5a059;border-radius:8px;padding:0.6rem 1rem;margin-top:0.65rem;">
+              <span id="wizUrgencyBadge" style="color:#0f172a;font-weight:600;font-size:0.83rem;"></span>
+            </div>
+ 
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1.4rem;">
+              <button type="button" class="wiz-back-btn" data-wback>← Back</button>
+              <button type="button" id="wizCreateOrderBtn" style="background:#c5a059;color:#0f172a;border:none;border-radius:8px;padding:0.75rem 2rem;font-weight:700;font-size:0.9rem;cursor:pointer;">🛒 Create Order</button>
+            </div>
+          </div>
+ 
+        </div><!-- /wizStepsFlow -->
+      </div>
+ 
+      <!-- RIGHT: order summary -->
+      <div style="overflow-y:auto;">
+        <!-- Info card (steps 1–3) -->
+        <div id="wizInfoCard" style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:1.3rem;">
+          <div style="color:#0f172a;font-weight:700;font-size:0.92rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(0,0,0,0.07);margin-bottom:0.2rem;">Order info</div>
+          <div style="display:flex;flex-direction:column;">
+            <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Service</div><div id="wizISvc" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
+            <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Type of paper</div><div id="wizIType" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
+            <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Subject</div><div id="wizISubject" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
+            <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Page count</div><div id="wizIPages" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
+            <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Instructions</div><div id="wizIInstr" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
+            <div style="padding:0.7rem 0;"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Deadline</div><div id="wizIDeadline" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
+          </div>
+          <div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid rgba(0,0,0,0.07);">
+            <div style="color:#0f172a;font-weight:700;font-size:0.78rem;margin-bottom:0.45rem;">Included with every order</div>
+            <div style="color:#2d6a4f;font-size:0.74rem;margin-bottom:0.18rem;">✔ Free plagiarism & AI report</div>
+            <div style="color:#2d6a4f;font-size:0.74rem;margin-bottom:0.18rem;">✔ Free unlimited revisions</div>
+            <div style="color:#2d6a4f;font-size:0.74rem;margin-bottom:0.18rem;">✔ On-time delivery guaranteed</div>
+            <div style="color:#2d6a4f;font-size:0.74rem;">✔ Money-back guarantee</div>
+          </div>
+        </div>
+ 
+        <!-- Price card (step 4) -->
+        <div id="wizPriceCard" style="display:none;background:#0f172a;border-radius:16px;padding:1.5rem;color:#fff;">
+          <div style="text-align:center;margin-bottom:1.1rem;">
+            <div id="wizCalcTotal" style="font-size:2.3rem;font-weight:800;color:#c5a059;line-height:1;">$0.00</div>
+            <div style="color:rgba(255,255,255,0.55);font-size:0.75rem;margin-top:0.3rem;">Estimated total</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.48rem;margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span>Service</span><span id="wizSumService">—</span></div>
+            <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span>Level</span><span id="wizSumLevel">—</span></div>
+            <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span>Base price</span><span id="wizSumBase">—</span></div>
+            <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span>Pages</span><span id="wizSumPages">x 1</span></div>
+            <div id="wizSumUrgencyRow" style="display:none;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span id="wizSumUrgencyLabel">Urgency</span><span id="wizSumUrgency">+$0.00</span></div>
+            <div id="wizSumAddonsRow" style="display:none;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span>Add-ons</span><span id="wizSumAddons">+$0.00</span></div>
+            <div style="height:1px;background:rgba(255,255,255,0.1);margin:0.2rem 0;"></div>
+            <div style="display:flex;justify-content:space-between;color:#fff;font-weight:700;font-size:0.92rem;"><span>Total</span><span id="wizSumTotal">$0.00</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.32rem;">
+            <div style="color:rgba(255,255,255,0.65);font-size:0.74rem;">✔ Free plagiarism & AI report</div>
+            <div style="color:rgba(255,255,255,0.65);font-size:0.74rem;">✔ Free unlimited revisions</div>
+            <div style="color:rgba(255,255,255,0.65);font-size:0.74rem;">✔ On-time delivery guaranteed</div>
+            <div style="color:rgba(255,255,255,0.65);font-size:0.74rem;">✔ Money-back guarantee</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="review-modal" id="reviewModal">
   <div class="review-overlay" id="reviewOverlay"></div>
   <div class="review-box">
@@ -1234,6 +1517,341 @@ async function cpSendMessage() {
 
 document.getElementById('threadSend')!.addEventListener('click', cpSendMessage);
 document.getElementById('threadInput')!.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); cpSendMessage(); } });
+// ═══════════════════════════════════════════
+// ORDER FORM MODAL — WIZARD LOGIC
+// ═══════════════════════════════════════════
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVL-dECKrdcEyyJObsP9KCQnRJ_TnmTT7qB6rvx-89cSmDbGIUKzviUAX83wPkYtZWzg/exec';
+ 
+const wizState = { service: '', serviceBase: 0 };
+const wizAddons: Record<string, number> = { graphics: 0, psources: 0, abstract: 0 };
+const wizAddonPrices: Record<string, number> = { graphics: 5, psources: 4, abstract: 7 };
+let wizStep = 1;
+let wizTotal = 0;
+const TOTAL_WIZ_STEPS = 4;
+ 
+function openOrderModal() {
+  resetWizard();
+  document.getElementById('orderFormModal')!.classList.add('open');
+}
+ 
+function closeOrderModal() {
+  document.getElementById('orderFormModal')!.classList.remove('open');
+}
+ 
+function resetWizard() {
+  wizStep = 1;
+  wizState.service = ''; wizState.serviceBase = 0;
+  Object.keys(wizAddons).forEach(k => wizAddons[k] = 0);
+  ['graphics','psources','abstract'].forEach(k => {
+    const el = document.getElementById(`wiz-${k}-qty`); if (el) el.textContent = '0';
+  });
+  (['wizTopic','wizType','wizSubject','wizInstructions','wizSources'] as string[]).forEach(id => {
+    const el = document.getElementById(id) as HTMLInputElement; if (el) el.value = '';
+  });
+  (['wizLanguage','wizCitation','wizLevel','wizDeadline'] as string[]).forEach(id => {
+    const el = document.getElementById(id) as HTMLSelectElement | HTMLInputElement; if (el) el.value = '';
+  });
+  const pages = document.getElementById('wizPages') as HTMLInputElement; if (pages) pages.value = '1';
+  document.querySelectorAll('.wiz-svc-card').forEach(c => c.classList.remove('wiz-svc-selected'));
+  const next1 = document.getElementById('wizNext1') as HTMLButtonElement;
+  if (next1) { next1.disabled = true; next1.style.opacity = '0.45'; }
+  document.querySelectorAll('.wiz-chip').forEach(c => c.classList.remove('wiz-chip-active'));
+  document.querySelectorAll('.wiz-quick-btn').forEach(b => b.classList.remove('wiz-quick-active'));
+  const success = document.getElementById('wizSuccess'); if (success) success.style.display = 'none';
+  const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'block';
+  const txnInput = document.getElementById('wizTxnId') as HTMLInputElement; if (txnInput) txnInput.value = '';
+  const confirmBtn = document.getElementById('wizConfirmPaymentBtn') as HTMLButtonElement;
+  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.style.opacity = '0.5'; confirmBtn.textContent = '✅ I Have Paid — Submit My Order'; }
+  showWizStep(1);
+}
+ 
+function showWizStep(n: number) {
+  wizStep = n;
+  document.querySelectorAll('.wiz-modal-step').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.wiz-modal-step[data-wstep="${n}"]`)?.classList.add('active');
+  const bar = document.getElementById('wizModalBar');
+  if (bar) bar.style.width = `${(n / TOTAL_WIZ_STEPS) * 100}%`;
+  const info = document.getElementById('wizInfoCard');
+  const price = document.getElementById('wizPriceCard');
+  if (info) info.style.display = n < 4 ? 'block' : 'none';
+  if (price) price.style.display = n === 4 ? 'block' : 'none';
+  wizRefreshInfo();
+  if (n === 4) wizCalc();
+}
+ 
+function wizRefreshInfo() {
+  const pages = parseInt((document.getElementById('wizPages') as HTMLInputElement)?.value || '1');
+  const set = (id: string, v: string) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  set('wizISvc', wizState.service || '—');
+  set('wizIType', (document.getElementById('wizType') as HTMLInputElement)?.value || '—');
+  set('wizISubject', (document.getElementById('wizSubject') as HTMLInputElement)?.value || '—');
+  set('wizIPages', `${pages} double-spaced page${pages > 1 ? 's' : ''}`);
+  const instr = ((document.getElementById('wizInstructions') as HTMLTextAreaElement)?.value || '').trim();
+  set('wizIInstr', instr ? (instr.length > 50 ? instr.slice(0, 50) + '…' : instr) : '—');
+  const dl = (document.getElementById('wizDeadline') as HTMLInputElement)?.value;
+  set('wizIDeadline', dl ? new Date(dl).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }) : '—');
+}
+ 
+function wizLevelAdd(): number {
+  const sel = document.getElementById('wizLevel') as HTMLSelectElement;
+  return parseInt(sel?.options[sel.selectedIndex]?.getAttribute('data-step-add') || '0');
+}
+function wizLevelLabel(): string {
+  const sel = document.getElementById('wizLevel') as HTMLSelectElement;
+  const opt = sel?.options[sel.selectedIndex];
+  return opt && opt.value ? opt.textContent || '—' : '—';
+}
+ 
+function wizCalc() {
+  const pages = parseInt((document.getElementById('wizPages') as HTMLInputElement)?.value || '1');
+  const rate = wizState.serviceBase ? wizState.serviceBase + wizLevelAdd() : 0;
+  const note = document.getElementById('wizPagesNote');
+  if (note) note.textContent = `${pages} double-spaced page${pages > 1 ? 's are' : ' is'} ${(pages * 275).toLocaleString()} words.`;
+ 
+  let urgencyPerPage = 0, urgencyText = '';
+  const dlInput = document.getElementById('wizDeadline') as HTMLInputElement;
+  if (dlInput?.value) {
+    const h = (new Date(dlInput.value).getTime() - Date.now()) / 3600000;
+    if (h < 6) { urgencyPerPage = rate * 0.5; urgencyText = '🔴 RUSH (under 6h): +50%'; }
+    else if (h < 12) { urgencyPerPage = rate * 0.3; urgencyText = '🟠 Urgent (6-12h): +30%'; }
+    else if (h < 24) { urgencyPerPage = rate * 0.2; urgencyText = '🟡 Same day (12-24h): +20%'; }
+    else if (h < 48) { urgencyPerPage = rate * 0.1; urgencyText = '🟢 Standard (1-2 days): +10%'; }
+  }
+  const badge = document.getElementById('wizUrgencyBadge');
+  const disp = document.getElementById('wizUrgencyDisplay');
+  if (badge) badge.textContent = urgencyText;
+  if (disp) disp.style.display = urgencyText ? 'block' : 'none';
+ 
+  const baseTotal = rate * pages;
+  const urgencyTotal = urgencyPerPage * pages;
+  let addonsTotal = 0;
+  for (const [k, q] of Object.entries(wizAddons)) addonsTotal += (wizAddonPrices[k] || 0) * q;
+  wizTotal = baseTotal + urgencyTotal + addonsTotal;
+ 
+  const set = (id: string, v: string) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  set('wizSumService', wizState.service || '—');
+  set('wizSumLevel', wizLevelLabel());
+  set('wizSumBase', rate ? `$${rate.toFixed(2)}/pg` : '—');
+  set('wizSumPages', `x ${pages}`);
+  set('wizCalcTotal', `$${wizTotal.toFixed(2)}`);
+  set('wizSumTotal', `$${wizTotal.toFixed(2)}`);
+  const uRow = document.getElementById('wizSumUrgencyRow');
+  if (uRow) uRow.style.display = urgencyTotal > 0 ? 'flex' : 'none';
+  set('wizSumUrgencyLabel', urgencyText.split(':')[0] || 'Urgency');
+  set('wizSumUrgency', `+$${urgencyTotal.toFixed(2)}`);
+  const aRow = document.getElementById('wizSumAddonsRow');
+  if (aRow) aRow.style.display = addonsTotal > 0 ? 'flex' : 'none';
+  set('wizSumAddons', `+$${addonsTotal.toFixed(2)}`);
+  wizRefreshInfo();
+}
+ 
+// ── Open/close modal ──
+['sidebarNewOrderBtn','headerNewOrderBtn','emptyNewOrderBtn'].forEach(id => {
+  document.getElementById(id)?.addEventListener('click', openOrderModal);
+});
+document.getElementById('orderFormModalClose')?.addEventListener('click', closeOrderModal);
+document.getElementById('orderFormModalOverlay')?.addEventListener('click', closeOrderModal);
+document.getElementById('wizSuccessClose')?.addEventListener('click', () => {
+  closeOrderModal();
+  if (currentSession) loadOrders(currentSession);
+});
+ 
+// ── Step 1: service cards ──
+document.querySelectorAll('.wiz-svc-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.wiz-svc-card').forEach(c => c.classList.remove('wiz-svc-selected'));
+    card.classList.add('wiz-svc-selected');
+    wizState.service = (card as HTMLElement).dataset.service || '';
+    wizState.serviceBase = parseFloat((card as HTMLElement).dataset.base || '0');
+    const btn = document.getElementById('wizNext1') as HTMLButtonElement;
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+    wizCalc();
+  });
+});
+document.getElementById('wizNext1')?.addEventListener('click', () => { if (wizState.service) showWizStep(2); });
+ 
+// ── Step 2: chips + Next ──
+function wireWizChips(rowId: string, inputId: string) {
+  document.querySelectorAll(`#${rowId} .wiz-chip`).forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll(`#${rowId} .wiz-chip`).forEach(c => c.classList.remove('wiz-chip-active'));
+      chip.classList.add('wiz-chip-active');
+      (document.getElementById(inputId) as HTMLInputElement).value = (chip as HTMLElement).dataset.val || '';
+      wizRefreshInfo();
+    });
+  });
+}
+wireWizChips('wizTypeChips', 'wizType');
+wireWizChips('wizSubjectChips', 'wizSubject');
+ 
+document.getElementById('wizNext2')?.addEventListener('click', () => {
+  const topic = (document.getElementById('wizTopic') as HTMLInputElement)?.value.trim();
+  const type = (document.getElementById('wizType') as HTMLInputElement)?.value.trim();
+  const subject = (document.getElementById('wizSubject') as HTMLInputElement)?.value.trim();
+  const language = (document.getElementById('wizLanguage') as HTMLInputElement)?.value.trim();
+  if (!topic) { alert('Please enter a topic/title.'); return; }
+  if (!type) { alert('Please choose a type of paper.'); return; }
+  if (!subject) { alert('Please choose a subject.'); return; }
+  if (!language) { alert('Please select a language.'); return; }
+  showWizStep(3);
+});
+ 
+// ── Step 3: pages + addons + Next ──
+document.getElementById('wizMinus')?.addEventListener('click', () => {
+  const inp = document.getElementById('wizPages') as HTMLInputElement;
+  const v = parseInt(inp.value); if (v > 1) { inp.value = String(v - 1); wizCalc(); }
+});
+document.getElementById('wizPlus')?.addEventListener('click', () => {
+  const inp = document.getElementById('wizPages') as HTMLInputElement;
+  const v = parseInt(inp.value); if (v < 500) { inp.value = String(v + 1); wizCalc(); }
+});
+document.getElementById('wizPages')?.addEventListener('input', wizCalc);
+ 
+document.querySelectorAll('[data-waddon]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = (btn as HTMLElement).dataset.waddon!;
+    const d = parseInt((btn as HTMLElement).dataset.d || '0');
+    wizAddons[type] = Math.max(0, (wizAddons[type] || 0) + d);
+    const el = document.getElementById(`wiz-${type}-qty`); if (el) el.textContent = String(wizAddons[type]);
+    wizCalc();
+  });
+});
+ 
+document.getElementById('wizNext3')?.addEventListener('click', () => {
+  const instr = (document.getElementById('wizInstructions') as HTMLTextAreaElement)?.value.trim();
+  if (!instr) { alert('Please enter your instructions.'); return; }
+  showWizStep(4);
+});
+ 
+// ── Step 4: deadline quick buttons ──
+document.querySelectorAll('.wiz-quick-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const hours = parseInt((btn as HTMLElement).dataset.hours || '0');
+    const date = new Date(); date.setHours(date.getHours() + hours);
+    const inp = document.getElementById('wizDeadline') as HTMLInputElement;
+    inp.value = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    document.querySelectorAll('.wiz-quick-btn').forEach(b => b.classList.remove('wiz-quick-active'));
+    btn.classList.add('wiz-quick-active');
+    wizCalc();
+  });
+});
+document.getElementById('wizLevel')?.addEventListener('change', wizCalc);
+document.getElementById('wizDeadline')?.addEventListener('change', wizCalc);
+ 
+// ── Back buttons ──
+document.querySelectorAll('[data-wback]').forEach(btn => {
+  btn.addEventListener('click', () => showWizStep(wizStep - 1));
+});
+ 
+// ── Create Order → payment modal ──
+document.getElementById('wizCreateOrderBtn')?.addEventListener('click', () => {
+  const level = (document.getElementById('wizLevel') as HTMLSelectElement)?.value;
+  const deadline = (document.getElementById('wizDeadline') as HTMLInputElement)?.value;
+  if (!level) { alert('Please select an education level.'); return; }
+  if (!deadline) { alert('Please choose a deadline.'); return; }
+  const total = wizTotal;
+  const isDeposit = total >= 30;
+  const amountToPay = isDeposit ? total * 0.5 : total;
+  const pd = document.getElementById('wizPaymentDetails');
+  if (pd) pd.innerHTML = `
+    <p style="font-size:0.95rem;color:#64748b;margin:0 0 0.4rem;">Order Total</p>
+    <p style="font-size:1.7rem;color:#0f172a;font-weight:800;margin:0 0 0.3rem;">$${total.toFixed(2)}</p>
+    <p style="font-size:0.95rem;color:#64748b;margin:0 0 0.3rem;">Pay Now</p>
+    <p style="font-size:1.9rem;color:#c5a059;font-weight:800;margin:0;">$${amountToPay.toFixed(2)}</p>`;
+  const pt = document.getElementById('wizPolicyText');
+  if (pt) pt.textContent = isDeposit
+    ? `50% deposit required now. Remaining $${(total * 0.5).toFixed(2)} due on delivery.`
+    : 'Full payment required for orders under $30.';
+  const pm = document.getElementById('wizPaymentModal');
+  if (pm) pm.style.display = 'flex';
+});
+ 
+document.getElementById('wizPaymentClose')?.addEventListener('click', () => {
+  const pm = document.getElementById('wizPaymentModal'); if (pm) pm.style.display = 'none';
+});
+ 
+document.getElementById('wizTxnId')?.addEventListener('input', (e) => {
+  const v = (e.target as HTMLInputElement).value.trim();
+  const btn = document.getElementById('wizConfirmPaymentBtn') as HTMLButtonElement;
+  if (btn) { btn.disabled = v.length < 5; btn.style.opacity = v.length >= 5 ? '1' : '0.5'; }
+});
+ 
+document.getElementById('wizConfirmPaymentBtn')?.addEventListener('click', async () => {
+  const txnId = (document.getElementById('wizTxnId') as HTMLInputElement)?.value.trim();
+  const btn = document.getElementById('wizConfirmPaymentBtn') as HTMLButtonElement;
+  if (!/^[A-Z0-9]{8,20}$/i.test(txnId)) { alert('❌ Invalid Transaction ID format.'); return; }
+  btn.textContent = '⏳ Checking...'; btn.disabled = true;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession?.access_token}` }
+    });
+    const d = await r.json();
+    if (d.length > 0) { alert('❌ This Transaction ID has already been used.'); btn.textContent = '✅ I Have Paid — Submit My Order'; btn.disabled = false; return; }
+    const pm = document.getElementById('wizPaymentModal'); if (pm) pm.style.display = 'none';
+    await wizSubmitOrder(txnId);
+  } catch {
+    alert('❌ Verification failed. Please try again.');
+    btn.textContent = '✅ I Have Paid — Submit My Order'; btn.disabled = false;
+  }
+});
+ 
+async function wizSubmitOrder(txnId: string) {
+  const createBtn = document.getElementById('wizCreateOrderBtn') as HTMLButtonElement;
+  if (createBtn) { createBtn.disabled = true; createBtn.textContent = '⏳ Submitting…'; }
+ 
+  const total = wizTotal;
+  const isDeposit = total >= 30;
+  const amountPaid = isDeposit ? total * 0.5 : total;
+  const email = currentSession.user.email || '';
+  const topic = (document.getElementById('wizTopic') as HTMLInputElement)?.value || '';
+  const type = (document.getElementById('wizType') as HTMLInputElement)?.value || '';
+  const subject = (document.getElementById('wizSubject') as HTMLInputElement)?.value || '';
+  const language = (document.getElementById('wizLanguage') as HTMLInputElement)?.value || '';
+  const level = (document.getElementById('wizLevel') as HTMLSelectElement)?.value || '';
+  const pages = parseInt((document.getElementById('wizPages') as HTMLInputElement)?.value || '1');
+  const deadline = (document.getElementById('wizDeadline') as HTMLInputElement)?.value || '';
+  const instructions = (document.getElementById('wizInstructions') as HTMLTextAreaElement)?.value || '';
+ 
+  const addonsList: string[] = [];
+  if (wizAddons.graphics > 0) addonsList.push(`Graphics x${wizAddons.graphics}`);
+  if (wizAddons.psources > 0) addonsList.push(`Sources x${wizAddons.psources}`);
+  if (wizAddons.abstract > 0) addonsList.push(`Abstract x${wizAddons.abstract}`);
+  addonsList.push('Plagiarism & AI Report (FREE)');
+ 
+  try {
+    const ticketRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/next_ticket`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+      body: '{}'
+    });
+    const ticketId = await ticketRes.json();
+ 
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientEmail: email, topic, assignmentType: type, subject, service: wizState.service, language, level, pages, deadline, addons: addonsList.join(', '), totalPrice: `$${total.toFixed(2)}`, amountPaid: `$${amountPaid.toFixed(2)}`, paymentStatus: isDeposit ? '50% Deposit Paid' : 'Paid in Full', instructions, ticketId })
+    });
+ 
+    await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+      body: JSON.stringify({ order_number: ticketId, client_email: email, topic, assignment_type: type, subject, service: wizState.service, language, education_level: level, pages, deadline, total_amount: total, amount_paid: amountPaid, payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full', order_status: 'open_for_bids', instructions, transaction_id: txnId })
+    });
+ 
+    socket.emit('order:new', { id: ticketId, order_number: ticketId, topic, assignment_type: type, subject, pages, deadline, total_amount: total, order_status: 'open_for_bids' });
+ 
+    const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'none';
+    const success = document.getElementById('wizSuccess'); if (success) success.style.display = 'block';
+    const ticket = document.getElementById('wizSuccessTicket'); if (ticket) ticket.textContent = ticketId;
+ 
+  } catch {
+    if (createBtn) { createBtn.disabled = false; createBtn.textContent = '🛒 Create Order'; }
+    alert('❌ Something went wrong. Please try again.');
+  }
+}
+// ═══════════════════════════════════════════
+// END ORDER FORM MODAL
+// ═══════════════════════════════════════════
   
   async function init() {
     try {
