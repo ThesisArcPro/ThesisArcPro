@@ -809,6 +809,7 @@ const base = '';
     </a>
     <a class="nav-item" href="#" data-view="available">
       <span class="icon">🆕</span> Available Orders
+      <span id="availBadge" style="display:none;margin-left:auto;background:#ef4444;color:#fff;font-size:0.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;align-items:center;justify-content:center;">0</span>
     </a>
     <a class="nav-item" href="#" data-view="proposals">
       <span class="icon">📨</span> My Proposals
@@ -1052,7 +1053,10 @@ const base = '';
   <div class="view-panel" id="viewNotifications">
     <div class="profile-area">
       <div class="profile-card">
-        <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;">Accepted Bids</h3>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+          <h3 style="font-size:0.9rem;font-weight:700;">Notifications</h3>
+          <button id="markAllReadBtn" style="background:var(--main-bg);border:1px solid var(--border);color:var(--text-muted);border-radius:8px;padding:0.35rem 0.85rem;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:inherit;">Mark all as read ✓</button>
+        </div>
         <div id="notifList"><p style="color:var(--text-muted);font-size:0.85rem;">Loading…</p></div>
       </div>
     </div>
@@ -1145,9 +1149,47 @@ const base = '';
     });
 
     socket.on('bid:accepted', (data: any) => {
-      alert(`🎉 Your bid was accepted for order ${data.orderId}!`);
       loadOrders();
+      loadMyBids();
+      const badge = document.getElementById('notifBadge');
+      if (badge) { badge.textContent = '!'; (badge as HTMLElement).style.display = 'inline-flex'; }
     });
+
+    // Real-time: order assigned to writer
+    supabase.channel(`writer-orders-${writerId}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'orders',
+        filter: `writer_id=eq.${writerId}`
+      }, async () => {
+        await loadOrders();
+        await loadMyBids();
+        await refreshNotifBadge();
+      })
+      .subscribe();
+
+    // Real-time: new available orders
+    let newAvailCount = 0;
+    supabase.channel('new-available-orders')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'orders'
+      }, (payload: any) => {
+        if (payload.new?.order_status === 'open_for_bids') {
+          newAvailCount++;
+          const badge = document.getElementById('availBadge');
+          if (badge) { badge.textContent = String(newAvailCount); badge.style.display = 'inline-flex'; }
+        }
+      })
+      .subscribe();
+
+    document.querySelector('.nav-item[data-view="available"]')?.addEventListener('click', () => {
+      newAvailCount = 0;
+      const badge = document.getElementById('availBadge');
+      if (badge) badge.style.display = 'none';
+    }, { capture: true });
     const nameEl = document.getElementById('writerName');
     const subEl = document.getElementById('writerSub');
     if (nameEl) nameEl.textContent = 'My Orders';
@@ -1437,6 +1479,18 @@ const base = '';
   });
 
   // ═══ BALANCE ═══
+  document.getElementById('markAllReadBtn')?.addEventListener('click', async () => {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/rpc/mark_notifications_seen`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ p_writer_id: writerId })
+      });
+      await refreshNotifBadge();
+      await loadNotifications();
+    } catch(e) { console.error(e); }
+  });
+
   async function loadBalance() {
     try {
       const res = await fetch(
@@ -1476,13 +1530,31 @@ const base = '';
     } catch (err) { console.error(err); return []; }
   }
 
+  function timeAgo(dateStr: string) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    if (mins < 60) return `${mins} minute${mins !== 1 ? 's' : ''} ago`;
+    if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    return `${days} day${days !== 1 ? 's' : ''} ago`;
+  }
+
   async function loadNotifications() {
     const notifs = await refreshNotifBadge();
     const listEl = document.getElementById('notifList');
     if (!listEl) return;
     listEl.innerHTML = notifs.length ? notifs.map((n: any) => `
-      <div class="file-row">
-        <div class="file-info"><span class="file-type-badge">Accepted</span><div class="file-name">${esc(n.topic || n.order_number)} — bid $${Number(n.bid_price).toFixed(2)}</div></div>
+      <div style="display:flex;align-items:flex-start;gap:1rem;padding:1rem;background:var(--main-bg);border-radius:10px;margin-bottom:0.5rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(4,111,205,0.12);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🔔</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.85rem;color:var(--text);line-height:1.5;">
+            Proposal Accepted! Your order proposal of <strong>$${Number(n.bid_price).toFixed(2)}</strong> for order 
+            <span style="color:#046fcd;font-weight:600;cursor:pointer;" onclick="document.querySelector('.nav-item[data-view=\\'orders\\']').click()">${esc(n.order_number)} — ${esc(n.topic || '')}</span> 
+            has been accepted by the customer. Good hunting! 🎉
+          </div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">${n.created_at ? timeAgo(n.created_at) : ''}</div>
+        </div>
       </div>`).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">No new notifications.</p>';
 
     try {
