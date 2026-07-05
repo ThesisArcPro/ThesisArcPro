@@ -1,7 +1,7 @@
 ---
 const base = '';
 ---
-
+ 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -10,10 +10,10 @@ const base = '';
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-
+ 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
+ 
   :root {
     --gold: #c5a059;
     --sidebar-bg: #111827;
@@ -25,7 +25,7 @@ const base = '';
     --text-muted: #64748b;
     --active-blue: #6366f1;
   }
-
+ 
   body {
     font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif;
     background: var(--main-bg);
@@ -34,7 +34,7 @@ const base = '';
     height: 100vh;
     overflow: hidden;
   }
-
+ 
   .sidebar {
     width: 240px;
     background: #ffffff;
@@ -44,9 +44,9 @@ const base = '';
     border-right: 1px solid #eef2f7;
     flex-shrink: 0;
   }
-
+ 
   .sidebar-nav { display: flex; flex-direction: column; gap: 0.2rem; padding: 0 0.5rem; }
-
+ 
   .nav-item {
     display: flex;
     align-items: center;
@@ -60,14 +60,14 @@ const base = '';
     transition: all 0.2s;
     text-decoration: none;
   }
-
+ 
   .nav-item:hover { background: #f1f5f9; color: #0f172a; }
   .nav-item.active { background: #eef6fb; color: #046fcd; font-weight: 600; }
   .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
   .sidebar-divider { height: 1px; background: #eef2f7; margin: 1rem 0.9rem; }
-
+ 
   .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
+ 
   .main-header {
     display: flex;
     align-items: center;
@@ -76,10 +76,10 @@ const base = '';
     border-bottom: 1px solid #eef2f7;
     background: #ffffff;
   }
-
+ 
   .main-header h1 { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
   .main-sub { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem; }
-
+ 
   .tabs-bar {
     display: flex;
     align-items: center;
@@ -87,9 +87,9 @@ const base = '';
     border-bottom: 1px solid var(--border);
     overflow-x: auto;
   }
-
+ 
   .tabs { display: flex; gap: 0.2rem; }
-
+ 
   .tab {
     background: none;
     border: none;
@@ -104,10 +104,10 @@ const base = '';
     top: 1px;
     white-space: nowrap;
   }
-
+ 
   .tab.active { color: #046fcd; border-bottom-color: #046fcd; font-weight: 600; }
   .tab:hover:not(.active) { color: #303b4f; }
-
+ 
   .tab .count {
     display: inline-flex;
     align-items: center;
@@ -120,19 +120,19 @@ const base = '';
     margin-left: 0.4rem;
     color: #94a3b8;
   }
-
+ 
   .tab.active .count { background: #eef6fb; color: #046fcd; }
-
+ 
   .controls-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 2rem;
   }
-
+ 
   .sort-wrap { display: flex; align-items: center; gap: 0.5rem; }
   .sort-label { font-size: 0.82rem; color: var(--text-muted); }
-
+ 
   .sort-select {
     background: var(--panel-bg);
     border: 1px solid var(--border);
@@ -143,9 +143,9 @@ const base = '';
     cursor: pointer;
     outline: none;
   }
-
+ 
   .search-wrap { position: relative; width: 220px; }
-
+ 
   .search-icon {
     position: absolute;
     left: 0.7rem;
@@ -154,7 +154,7 @@ const base = '';
     color: var(--text-muted);
     font-size: 0.85rem;
   }
-
+ 
   .search-input {
     width: 100%;
     background: #f8fafc;
@@ -166,11 +166,11 @@ const base = '';
     outline: none;
     transition: 0.2s;
   }
-
+ 
   .search-input:focus { border-color: #046fcd; background: #ffffff; }
   .search-input::placeholder { color: #94a3b8; }
   .orders-area { flex: 1; overflow-y: auto; padding: 1.5rem 2rem 2rem; }
-
+ 
   .empty-state {
     display: flex;
     flex-direction: column;
@@ -180,7 +180,7 @@ const base = '';
     padding: 4rem;
     text-align: center;
   }
-
+ 
   .empty-illustration {
     width: 120px;
     height: 120px;
@@ -192,10 +192,10 @@ const base = '';
     margin-bottom: 1.5rem;
     font-size: 3rem;
   }
-
+ 
   .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: #303b4f; margin-bottom: 0.5rem; }
   .empty-state p { font-size: 0.88rem; color: #64748b; margin-bottom: 1.5rem; line-height: 1.6; }
-
+ 
   .loading-state {
     display: flex;
     flex-direction: column;
@@ -205,7 +205,7 @@ const base = '';
     gap: 1rem;
     color: var(--text-muted);
   }
-
+ 
   .spinner {
     width: 36px; height: 36px;
     border: 3px solid #eef2f7;
@@ -213,9 +213,9 @@ const base = '';
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
-
+ 
   @keyframes spin { to { transform: rotate(360deg); } }
-
+ 
   .modal {
     position: fixed; inset: 0;
     z-index: 100;
@@ -223,10 +223,10 @@ const base = '';
     align-items: center;
     justify-content: center;
   }
-
+ 
   .modal.open { display: flex; }
   .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.65); }
-
+ 
   .modal-box {
     position: relative; z-index: 101;
     background: #ffffff;
@@ -254,13 +254,13 @@ const base = '';
     height: 100%;
   }
   body.dark-mode .modal-right { background: #0f1117; border-left-color: rgba(255,255,255,0.15); }
-
+ 
   @media (max-width: 720px) {
     .modal-box { width: 96%; height: 92vh; flex-direction: column; }
     .modal-left { flex: 1 1 50%; height: auto; padding: 1.2rem; }
     .modal-right { width: 100%; flex: 1 1 50%; border-left: none; border-top: 1px solid var(--border); height: auto; }
   }
-
+ 
   .modal-close {
     position: absolute; top: 0.75rem; right: 0.75rem;
     background: rgba(0,0,0,0.2); border: none;
@@ -268,14 +268,14 @@ const base = '';
     border-radius: 50%; cursor: pointer; transition: 0.2s;
     z-index: 110; display: flex; align-items: center; justify-content: center;
   }
-
+ 
   .modal-close:hover { color: var(--text); }
-
+ 
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
+ 
   /* Sidebar bottom */
   .sidebar-bottom { margin-top: auto; padding: 0.8rem 1rem; }
   .theme-icon-btn {
@@ -286,7 +286,7 @@ const base = '';
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
   .theme-icon-btn:hover { background: #334155; transform: scale(1.05); }
-
+ 
   /* Theme popup */
   .theme-popup { display: none; position: fixed; inset: 0; z-index: 30000; align-items: center; justify-content: center; }
   .theme-popup.open { display: flex; }
@@ -311,11 +311,11 @@ const base = '';
   .theme-popup__opt:hover { background: #334155; color: #ffffff; }
   .theme-popup__opt.active { background: #046fcd; color: #ffffff; }
   .theme-popup__icon { font-size: 1rem; width: 24px; text-align: center; }
-
+ 
   /* Light mode adjustments for the icon button */
   body:not(.dark-mode) .theme-icon-btn { background: #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
   body:not(.dark-mode) .theme-icon-btn:hover { background: #e2e8f0; }
-
+ 
   /* ══ DARK MODE ══ */
   body.dark-mode { --main-bg: #0f1117; --panel-bg: #1a1f2e; --border: rgba(255,255,255,0.08); --text: #e2e8f0; --text-muted: #94a3b8; background: #0f1117; color: #e2e8f0; }
   body.dark-mode .sidebar { background: #161b27; border-right-color: rgba(255,255,255,0.06); }
@@ -350,11 +350,11 @@ const base = '';
   body.dark-mode .modal-close:hover { color: #e2e8f0; }
   body.dark-mode ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
   body.dark-mode ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
-
+ 
   /* ── VIEW SWITCHER ── */
   .view-panel { display: none; flex-direction: column; flex: 1; overflow: hidden; }
   .view-panel.active { display: flex; }
-
+ 
   /* ── PROFILE ── */
   .profile-area { flex: 1; overflow-y: auto; padding: 2rem; }
   .profile-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; margin-bottom: 1.5rem; }
@@ -413,7 +413,7 @@ const base = '';
   .rules-content li { margin-bottom: 0.3rem; }
   .btn-logout-profile { background: transparent; color: #dc2626; border: 1.5px solid #fecaca; border-radius: 10px; padding: 0.7rem 1.5rem; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: inherit; margin-top: 1rem; }
   .btn-logout-profile:hover { background: #fef2f2; border-color: #dc2626; }
-
+ 
   /* Dark: profile */
   body.dark-mode .profile-card { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
   body.dark-mode .profile-avatar { background: #2a3244; }
@@ -436,50 +436,50 @@ const base = '';
   body.dark-mode .setting-form input:focus { border-color: #60a5fa; }
   body.dark-mode .btn-logout-profile { color: #f87171; border-color: rgba(248,113,113,0.3); }
   body.dark-mode .btn-logout-profile:hover { background: rgba(239,68,68,0.08); border-color: #f87171; }
-
+ 
   /* ── CHAT (Polished like Admin Inbox) ── */
   .chat-layout { display: flex; flex: 1; overflow: hidden; }
   .chat-sidebar { width: 320px; border-right: 1px solid var(--border); display: flex; flex-direction: column; background: var(--panel-bg); flex-shrink: 0; }
   .chat-sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); }
   .chat-sidebar-header h3 { font-size: 1rem; font-weight: 700; color: var(--text); }
-
+ 
   .btn-new-chat { width: 32px; height: 32px; border-radius: 8px; background: #046fcd; color: #fff; border: none; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
   .btn-new-chat:hover { background: #0361b3; }
-
+ 
   .chat-search-wrap { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); }
   .chat-search { width: 100%; background: var(--main-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.7rem; font-size: 0.82rem; color: var(--text); outline: none; font-family: inherit; }
   .chat-search:focus { border-color: #046fcd; }
   .chat-search::placeholder { color: var(--text-muted); }
-
+ 
   .chat-list { flex: 1; overflow-y: auto; }
   .chat-list-loading { padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
-
+ 
   /* Chat Items - Clean & Modern */
   .chat-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.2rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid var(--border); }
   .chat-item:hover { background: var(--main-bg); }
   .chat-item.active { background: #eef6fb; border-left: 3px solid #046fcd; padding-left: calc(1.2rem - 3px); }
-
+ 
   .chat-item-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; }
   .avatar-support { background: #dbeafe; color: #1d4ed8; }
   .avatar-order { background: #dcfce7; color: #15803d; }
-
+ 
   .chat-item-info { flex: 1; min-width: 0; }
   .chat-item-name { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .chat-item-type { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.1rem; }
   .chat-item-time { font-size: 0.68rem; color: var(--text-muted); flex-shrink: 0; }
-
+ 
   .chat-messages { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; background: #f8fafc; }
   .msg-row { display: flex; flex-direction: column; max-width: 72%; }
   .msg-row.mine { align-self: flex-end; align-items: flex-end; }
   .msg-row.theirs { align-self: flex-start; align-items: flex-start; }
-
+ 
   .msg-sender { font-size: 0.68rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.15rem; }
   .msg-bubble { padding: 0.6rem 0.95rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.55; word-wrap: break-word; }
   .msg-row.mine .msg-bubble { background: #046fcd; color: #fff; border-bottom-right-radius: 4px; }
   .msg-row.theirs .msg-bubble { background: #fff; color: var(--text); border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
   .msg-time { font-size: 0.62rem; color: var(--text-muted); margin-top: 0.15rem; }
   .msg-row.mine .msg-time { text-align: right; }
-
+ 
   .chat-input-bar { display: flex; gap: 0.5rem; padding: 0.85rem 1.5rem; border-top: 1px solid var(--border); background: var(--panel-bg); }
   .chat-input { flex: 1; background: var(--main-bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: var(--text); outline: none; font-family: inherit; }
   .chat-input:focus { border-color: #046fcd; }
@@ -489,7 +489,7 @@ const base = '';
   .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .new-chat-opt { display: flex; align-items: center; gap: 0.6rem; width: 100%; padding: 0.85rem 1rem; background: var(--main-bg); border: 1px solid var(--border); border-radius: 10px; font-size: 0.88rem; font-weight: 600; color: var(--text); cursor: pointer; transition: 0.2s; font-family: inherit; text-align: left; }
   .new-chat-opt:hover { border-color: #046fcd; color: #046fcd; }
-
+ 
   /* Dark: chat */
   body.dark-mode .chat-sidebar { background: #161b27; border-right-color: rgba(255,255,255,0.06); }
   body.dark-mode .chat-sidebar-header { border-bottom-color: rgba(255,255,255,0.06); }
@@ -510,7 +510,7 @@ const base = '';
   body.dark-mode .new-chat-opt { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
   body.dark-mode .new-chat-opt:hover { border-color: #60a5fa; color: #60a5fa; }
   body.dark-mode #chatOrderSelect { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
-
+ 
   .review-action { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid #e2e8f0; }
   .btn-review { width: 100%; background: #046fcd; color: #fff; border: none; border-radius: 8px; padding: 0.8rem 1.2rem; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: 0.2s; font-family: inherit; }
   .btn-review:hover { background: #0361b3; }
@@ -520,10 +520,10 @@ const base = '';
   .review-msg.error { background: rgba(239,68,68,0.12); color: #dc2626; display: block; }
   body.dark-mode .review-action { border-top-color: rgba(255,255,255,0.06); }
 </style>
-
+ 
 <style is:global>
   .order-table { display: flex; flex-direction: column; gap: 0.5rem; }
-
+ 
   .order-table-head {
     display: flex;
     justify-content: space-between;
@@ -534,9 +534,9 @@ const base = '';
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-
+ 
   .order-table-head-right { display: flex; gap: 3rem; }
-
+ 
   .order-row {
     display: flex;
     align-items: center;
@@ -550,21 +550,21 @@ const base = '';
     transition: all 0.18s;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04);
   }
-
+ 
   .order-row:hover { background: #fafafa; border-color: rgba(99,102,241,0.45); }
-
+ 
   .col-left { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 0; overflow: hidden; }
   .order-title { font-size: 0.93rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .order-meta { display: flex; align-items: center; gap: 0.35rem; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; }
   .meta-dot { color: #cbd5e1; }
   .order-id { color: #94a3b8; }
-
+ 
   .col-right { display: flex; align-items: center; gap: 2.5rem; flex-shrink: 0; }
   .col-deadline { font-size: 0.82rem; color: #64748b; white-space: nowrap; min-width: 90px; text-align: right; }
   .col-deadline.overdue { color: #f87171; }
   .col-deadline.urgent { color: #fb923c; }
   .col-deadline.ok { color: #34d399; }
-
+ 
   .status-badge {
     display: inline-block;
     padding: 0.18rem 0.55rem;
@@ -574,26 +574,26 @@ const base = '';
     background: rgba(251,191,36,0.12);
     color: #fbbf24;
   }
-
+ 
   .status-badge.new { background: rgba(99,102,241,0.15); color: #818cf8; }
   .status-badge.in_progress { background: rgba(251,191,36,0.15); color: #fbbf24; }
   .status-badge.in_review { background: rgba(56,138,221,0.18); color: #60a5fa; }
   .status-badge.completed { background: rgba(34,197,94,0.12); color: #4ade80; }
   .status-badge.revision { background: rgba(168,85,247,0.18); color: #c084fc; }
   .status-badge.cancelled { background: rgba(239,68,68,0.16); color: #f87171; }
-
+ 
   /* ── ORDER DETAIL MODAL ── */
   .om-header { margin-bottom: 1.2rem; padding-right: 2rem; }
   .om-title { font-size: 1.15rem; font-weight: 800; color: #0f172a; line-height: 1.3; }
   .om-id { font-size: 0.75rem; color: #94a3b8; margin-top: 0.3rem; }
-
+ 
   .om-tabs {
     display: flex;
     gap: 0.3rem;
     border-bottom: 1px solid rgba(255,255,255,0.08);
     margin-bottom: 1.3rem;
   }
-
+ 
   .om-tab {
     background: none;
     border: none;
@@ -607,13 +607,13 @@ const base = '';
     top: 1px;
     transition: all 0.2s;
   }
-
+ 
   .om-tab:hover:not(.om-tab--active) { color: #303b4f; }
   .om-tab--active { color: #046fcd; border-bottom-color: #046fcd; }
-
+ 
   .om-panel { display: none; }
   .om-panel--active { display: block; }
-
+ 
   .om-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -623,7 +623,7 @@ const base = '';
     border-bottom: 1px solid rgba(255,255,255,0.07);
   }
   .om-grid:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
+ 
   .om-label {
     font-size: 0.66rem;
     color: #94a3b8;
@@ -632,7 +632,7 @@ const base = '';
     letter-spacing: 0.5px;
   }
   .om-value { font-weight: 600; font-size: 0.88rem; color: #0f172a; text-transform: capitalize; }
-
+ 
   .om-desc-label {
     font-size: 0.66rem;
     color: #94a3b8;
@@ -649,10 +649,10 @@ const base = '';
     padding-right: 0.5rem;
     white-space: pre-wrap;
   }
-
+ 
   /* ── WRITER FILE UPLOAD ── */
   .upload-order-id { font-size: 0.82rem; color: #94a3b8; margin-bottom: 1rem; }
-
+ 
   .form-group { margin-bottom: 0.8rem; }
   .form-group label {
     display: block; font-size: 0.66rem; font-weight: 700;
@@ -667,7 +667,7 @@ const base = '';
     color: #0f172a; font-family: inherit; outline: none;
   }
   .form-group select:focus { border-color: #046fcd; }
-
+ 
   .upload-btn {
     background: #046fcd; color: #fff; border: none;
     border-radius: 8px; padding: 0.6rem 1.2rem;
@@ -676,15 +676,15 @@ const base = '';
   }
   .upload-btn:hover { background: #0361b3; }
   .upload-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
+ 
   .upload-msg { font-size: 0.82rem; margin-top: 0.6rem; padding: 0.5rem 0.7rem; border-radius: 6px; }
   .upload-msg.success { background: rgba(34,197,94,0.12); color: #4ade80; }
   .upload-msg.error { background: rgba(239,68,68,0.12); color: #f87171; }
-
+ 
   .files-section { margin-top: 1.2rem; }
   .files-section h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.6rem; color: #0f172a; }
   .files-list { display: flex; flex-direction: column; gap: 0.4rem; }
-
+ 
   .file-row {
     display: flex; align-items: center; justify-content: space-between;
     background: #f8fafc; border: 1px solid #e2e8f0;
@@ -706,7 +706,7 @@ const base = '';
   }
   .file-delete:hover { transform: scale(1.15); }
   .no-files { font-size: 0.82rem; color: #64748b; padding: 0.5rem 0; }
-
+ 
   /* ══ DARK MODE: order rows ══ */
   body.dark-mode .order-row { background: #1a1f2e; border-color: rgba(255,255,255,0.06); box-shadow: none; }
   body.dark-mode .order-row:hover { background: #1e2536; border-color: rgba(96,165,250,0.3); }
@@ -732,7 +732,7 @@ const base = '';
   body.dark-mode .file-name { color: #e2e8f0; }
   body.dark-mode .file-type-badge { background: rgba(96,165,250,0.15); color: #60a5fa; }
   body.dark-mode .files-section h3 { color: #e2e8f0; }
-
+ 
   /* ── CHAT: injected via innerHTML, so MUST be global (scoped CSS can't reach it) ── */
   .chat-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
   .chat-main-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; color: #94a3b8; }
@@ -742,7 +742,7 @@ const base = '';
   .chat-thread-header { padding: 1rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
   .chat-thread-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
   .chat-thread-sub { font-size: 0.75rem; color: #94a3b8; margin-top: 0.1rem; }
-
+ 
   .chat-list-loading { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem; }
   .chat-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.2rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #e2e8f0; }
   .chat-item:hover { background: #f1f5f9; }
@@ -754,7 +754,7 @@ const base = '';
   .chat-item-name { font-size: 0.85rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .chat-item-type { font-size: 0.72rem; color: #94a3b8; margin-top: 0.1rem; }
   .chat-item-time { font-size: 0.68rem; color: #94a3b8; flex-shrink: 0; }
-
+ 
   .chat-messages { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; background: #f8fafc; }
   .msg-row { display: flex; flex-direction: column; max-width: 72%; }
   .msg-row.mine { align-self: flex-end; align-items: flex-end; }
@@ -765,7 +765,7 @@ const base = '';
   .msg-row.theirs .msg-bubble { background: #fff; color: #0f172a; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
   .msg-time { font-size: 0.62rem; color: #94a3b8; margin-top: 0.15rem; }
   .msg-row.mine .msg-time { text-align: right; }
-
+ 
   /* Dark mode: chat (global) */
   body.dark-mode .chat-main { background: #1a1f2e; }
   body.dark-mode .chat-main-empty { color: #64748b; }
@@ -778,16 +778,16 @@ const base = '';
   body.dark-mode .chat-item-name { color: #e2e8f0; }
   body.dark-mode .chat-messages { background: #0f1117; }
   body.dark-mode .msg-row.theirs .msg-bubble { background: #1e2536; color: #e2e8f0; border-color: rgba(255,255,255,0.06); }
-
+ 
   /* ── WRITER ORDER CHAT (injected via innerHTML → global) ── */
   .woc-thread { display: flex; flex-direction: column; height: 360px; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
   .woc-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem; background: #f8fafc; }
   .woc-loading, .woc-empty { text-align: center; color: #94a3b8; font-size: 0.83rem; padding: 1.5rem; margin: auto; }
-  .woc-row { display: flex; flex-direction: column; max-width: 78%; }
+  .woc-row { display: flex; flex-direction: column; max-width: 80%; }
   .woc-row.mine { align-self: flex-end; align-items: flex-end; }
   .woc-row.theirs { align-self: flex-start; align-items: flex-start; }
   .woc-name { font-size: 0.66rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.15rem; }
-  .woc-bubble { padding: 0.55rem 0.85rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.5; word-wrap: break-word; }
+  .woc-bubble { padding: 0.65rem 0.95rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.55; word-wrap: break-word; }
   .woc-row.mine .woc-bubble { background: #046fcd; color: #fff; border-bottom-right-radius: 4px; }
   .woc-row.theirs .woc-bubble { background: #fff; color: #0f172a; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
   .woc-time { font-size: 0.6rem; color: #94a3b8; margin-top: 0.15rem; }
@@ -798,14 +798,14 @@ const base = '';
   .woc-send { background: #046fcd; color: #fff; border: none; border-radius: 20px; padding: 0.55rem 1.2rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: inherit; }
   .woc-send:hover { background: #0361b3; }
   .woc-send:disabled { opacity: 0.5; cursor: not-allowed; }
-
+ 
   body.dark-mode .woc-thread { border-color: rgba(255,255,255,0.08); }
   body.dark-mode .woc-messages { background: #0f1117; }
   body.dark-mode .woc-row.theirs .woc-bubble { background: #1e2536; color: #e2e8f0; border-color: rgba(255,255,255,0.06); }
   body.dark-mode .woc-input-bar { background: #161b27; border-top-color: rgba(255,255,255,0.06); }
   body.dark-mode .woc-input { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
 </style>
-
+ 
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <nav class="sidebar-nav" style="padding-top: 0.5rem;">
@@ -842,7 +842,7 @@ const base = '';
         <span class="theme-icon-current" id="themeIconCurrent">🌙</span>
       </button>
     </div>
-
+ 
     <div class="theme-popup" id="themePopup">
       <div class="theme-popup__overlay" id="themePopupOverlay"></div>
       <div class="theme-popup__card">
@@ -863,7 +863,7 @@ const base = '';
     </div>
   </nav>
 </aside>
-
+ 
 <!-- MAIN -->
 <main class="main">
   <div class="main-header">
@@ -872,7 +872,7 @@ const base = '';
       <p class="main-sub" id="writerSub">Loading…</p>
     </div>
   </div>
-
+ 
   <div class="view-panel active" id="viewOrders">
   <div class="tabs-bar">
     <div class="tabs">
@@ -893,7 +893,7 @@ const base = '';
       </button>
     </div>
   </div>
-
+ 
   <div class="controls-bar">
     <div class="sort-wrap">
       <span class="sort-label">Sort by</span>
@@ -908,19 +908,19 @@ const base = '';
       <input class="search-input" type="text" placeholder="Search" id="searchInput" />
     </div>
   </div>
-
+ 
   <div class="orders-area">
     <div class="loading-state" id="loadingState">
       <div class="spinner"></div>
       <p>Loading your assigned orders…</p>
     </div>
-
+ 
     <div class="empty-state" id="emptyState" style="display:none;">
       <div class="empty-illustration">📄</div>
       <h3 id="emptyHeading">No orders assigned yet</h3>
       <p>Orders assigned to you by the admin will appear here.</p>
     </div>
-
+ 
     <div class="order-table" id="orderTable" style="display:none;">
       <div class="order-table-head">
         <div>Topic</div>
@@ -932,7 +932,7 @@ const base = '';
     </div>
   </div>
 </div><!-- /viewOrders -->
-
+ 
   <div class="view-panel" id="viewAvailable">
     <div class="controls-bar">
       <div class="sort-wrap"><span class="sort-label">Open orders you can bid on</span></div>
@@ -954,7 +954,7 @@ const base = '';
       </div>
     </div>
   </div><!-- /viewAvailable -->
-
+ 
   <div class="view-panel" id="viewProposals">
     <div class="tabs-bar">
       <div class="tabs">
@@ -974,7 +974,7 @@ const base = '';
       </div>
     </div>
   </div><!-- /viewProposals -->
-
+ 
   <div class="view-panel" id="viewProfile">
     <div class="tabs-bar">
       <div class="tabs">
@@ -986,7 +986,7 @@ const base = '';
     </div>
     <div class="profile-area" id="profileContent"></div>
   </div>
-
+ 
   <div class="view-panel" id="viewChat">
     <div class="chat-layout">
       <div class="chat-sidebar">
@@ -1017,7 +1017,7 @@ const base = '';
         </div>
       </div>
     </div>
-
+ 
     <!-- New Chat Modal -->
     <div class="modal" id="newChatModal">
       <div class="modal-overlay" id="newChatOverlay"></div>
@@ -1036,7 +1036,7 @@ const base = '';
       </div>
     </div>
   </div>
-
+ 
   <div class="view-panel" id="viewBalance">
     <div class="profile-area">
       <div class="profile-card">
@@ -1053,7 +1053,7 @@ const base = '';
       </div>
     </div>
   </div><!-- /viewBalance -->
-
+ 
   <div class="view-panel" id="viewNotifications">
     <div class="profile-area">
       <div class="profile-card">
@@ -1065,9 +1065,9 @@ const base = '';
       </div>
     </div>
   </div><!-- /viewNotifications -->
-
+ 
 </main>
-
+ 
 <!-- ORDER DETAIL MODAL -->
 <div class="modal" id="detailModal">
   <div class="modal-overlay" id="modalOverlay"></div>
@@ -1076,21 +1076,21 @@ const base = '';
     <div id="modalContent" style="display:flex;flex:1;min-width:0;overflow:hidden;"></div>
   </div>
 </div>
-
+ 
 <script>
   import { supabase } from '../lib/supabase.js';
   import { io } from 'socket.io-client';
-
+ 
   const BIDDING_SERVER = 'https://thesisarcpro.onrender.com';
   const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
-
+ 
   socket.on('connect', () => console.log('Connected to bidding server:', socket.id));
   socket.on('disconnect', () => console.log('Disconnected from bidding server'));
-
+ 
   const base = '';
   const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
-
+ 
   let allOrders: any[] = [];
   let currentTab = 'in_progress';
   let currentProfileTab = 'overview';
@@ -1103,11 +1103,11 @@ const base = '';
   let availableOrders: any[] = [];
   let myBids: any[] = [];
   let currentProposalTab = 'pending';
-
+ 
   function esc(v: any) {
     return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
-
+ 
   function deadlineInfo(deadline: string) {
     if (!deadline) return { text: 'No deadline', cls: '' };
     const diff = new Date(deadline).getTime() - Date.now();
@@ -1118,17 +1118,17 @@ const base = '';
     if (days <= 2) return { text: `⏰ ${days}d left`, cls: 'urgent' };
     return { text: `⏰ ${days}d left`, cls: 'ok' };
   }
-
+ 
   function statusClass(status: string) {
     const known = ['new','in_progress','in_review','completed','revision','cancelled'];
     return known.includes(status) ? status : 'new';
   }
-
+ 
   async function init() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { window.location.replace(`${base}/writer-login/`); return; }
     currentSession = session;
-
+ 
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/writers?auth_user_id=eq.${session.user.id}&select=*`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
@@ -1139,12 +1139,12 @@ const base = '';
       window.location.replace(`${base}/writer-login/`);
       return;
     }
-
+ 
     writerData = data[0];
     writerId = writerData.id;
-
+ 
     socket.emit('writer:online', String(writerId));
-
+ 
     socket.on('order:available', (order: any) => {
       availableOrders.unshift(order);
       renderAvailableOrders();
@@ -1155,14 +1155,14 @@ const base = '';
         (badge as HTMLElement).style.display = 'inline-flex';
       }
     });
-
+ 
     socket.on('bid:accepted', (data: any) => {
       loadOrders();
       loadMyBids();
       const badge = document.getElementById('notifBadge');
       if (badge) { badge.textContent = '!'; (badge as HTMLElement).style.display = 'inline-flex'; }
     });
-
+ 
     // Real-time: order assigned to writer
     supabase.channel(`writer-orders-${writerId}`)
       .on('postgres_changes', {
@@ -1176,7 +1176,7 @@ const base = '';
         await refreshNotifBadge();
       })
       .subscribe();
-
+ 
     // Real-time: new available orders
     let newAvailCount = 0;
     supabase.channel('new-available-orders')
@@ -1192,7 +1192,7 @@ const base = '';
         }
       })
       .subscribe();
-
+ 
     document.querySelector('.nav-item[data-view="available"]')?.addEventListener('click', () => {
       newAvailCount = 0;
       const badge = document.getElementById('availBadge');
@@ -1202,14 +1202,14 @@ const base = '';
     const subEl = document.getElementById('writerSub');
     if (nameEl) nameEl.textContent = 'My Orders';
     if (subEl) subEl.textContent = `Welcome back, ${writerData.full_name}`;
-
+ 
     await loadOrders();
     await loadWriterReviews();
     await loadAvailableOrders();
     await loadMyBids();
     await refreshNotifBadge();
   }
-
+ 
   // ═══ AVAILABLE ORDERS (bidding) ═══
   async function loadAvailableOrders() {
     const loading = document.getElementById('availLoadingState');
@@ -1228,21 +1228,21 @@ const base = '';
       if (empty) (empty as HTMLElement).style.display = 'flex';
     }
   }
-
+ 
   function renderAvailableOrders() {
     const loading = document.getElementById('availLoadingState')!;
     const empty = document.getElementById('availEmptyState')!;
     const table = document.getElementById('availTable')!;
     const list = document.getElementById('availList')!;
     const search = (document.getElementById('availSearchInput') as HTMLInputElement)?.value.toLowerCase() || '';
-
+ 
     loading.style.display = 'none';
-
+ 
     let filtered = availableOrders;
     if (search) {
       filtered = filtered.filter((o: any) => (o.topic || '').toLowerCase().includes(search) || (o.subject || '').toLowerCase().includes(search));
     }
-
+ 
     if (!filtered.length) {
       empty.style.display = 'flex';
       table.style.display = 'none';
@@ -1250,7 +1250,7 @@ const base = '';
     }
     empty.style.display = 'none';
     table.style.display = 'flex';
-
+ 
     list.innerHTML = filtered.map((o: any) => {
       const dl = deadlineInfo(o.deadline);
       const budget = Number(o.total_amount||0).toFixed(2);
@@ -1274,7 +1274,7 @@ const base = '';
           </div>
         </div>`;
     }).join('');
-
+ 
     list.querySelectorAll('.order-row').forEach(row => {
       row.addEventListener('click', () => {
         const id = (row as HTMLElement).dataset.id;
@@ -1283,15 +1283,15 @@ const base = '';
       });
     });
   }
-
+ 
   document.getElementById('availSearchInput')?.addEventListener('input', renderAvailableOrders);
-
+ 
   function showBidModal(order: any) {
     const dl = deadlineInfo(order.deadline);
     const dueDate = order.deadline ? new Date(order.deadline).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
     const budget = Number(order.total_amount||0).toFixed(2);
     const myShare = (Number(order.total_amount||0) * 0.8).toFixed(2);
-
+ 
     document.getElementById('modalContent')!.innerHTML = `
       <div class="modal-left">
       <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
@@ -1300,7 +1300,7 @@ const base = '';
       </div>
       <div class="om-title">${esc(order.topic || '(no topic)')}</div>
       <div class="om-id" style="margin-bottom:1rem;">ID ${esc(order.order_number || order.id)}</div>
-
+ 
       <div style="display:flex;gap:1rem;background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1.2rem;flex-wrap:wrap;">
         <div style="text-align:center;flex:1;">
           <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Min. price</div>
@@ -1315,12 +1315,12 @@ const base = '';
           <div style="font-size:1rem;font-weight:700;color:var(--text);">${esc(order.pages||1)}</div>
         </div>
       </div>
-
+ 
       <div class="om-tabs">
         <button class="om-tab om-tab--active" data-mtab="instructions">Instructions</button>
         <button class="om-tab" data-mtab="proposal">Make Proposal</button>
       </div>
-
+ 
       <div class="om-panel om-panel--active" data-mpanel="instructions">
         <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem 1rem;">
           <div class="om-grid">
@@ -1338,7 +1338,7 @@ const base = '';
         </div>
         <button class="upload-btn" style="width:calc(100% - 1rem);margin:1.2rem 0.5rem 0;" id="goToProposalBtn">📨 Make Proposal</button>
       </div>
-
+ 
       <div class="om-panel" data-mpanel="proposal">
         <div style="margin:0 0.5rem;">
           <div class="form-group" style="margin-bottom:1rem;">
@@ -1355,29 +1355,8 @@ const base = '';
         </div>
       </div>
       </div>
-
-      <div class="modal-right">
-        <div style="padding:0.75rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#94a3b8;">👤</div>
-          <div>
-            <div style="font-size:0.78rem;font-weight:600;color:var(--text);">${esc(order.client_email?.split('@')[0] || 'Client')}</div>
-            <div style="font-size:0.65rem;color:#64748b;" id="bidChatSub">Place a proposal to start a conversation</div>
-          </div>
-        </div>
-        <div id="bidChatLocked" style="flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;text-align:center;">
-          <div>
-            <div style="font-size:2rem;margin-bottom:0.5rem;">📨</div>
-            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;">Place a proposal to start a conversation with the client.</p>
-          </div>
-        </div>
-        <div id="bidChatMessages" style="display:none;flex:1;overflow-y:auto;padding:0.75rem;flex-direction:column;gap:0.5rem;background:var(--main-bg);"></div>
-        <div id="bidChatInputBar" style="display:none;padding:0.6rem;border-top:1px solid var(--border);gap:0.4rem;background:var(--panel-bg);">
-          <input type="text" id="bidChatInput" placeholder="Type a message…" style="flex:1;background:var(--main-bg);border:1px solid var(--border);border-radius:16px;padding:0.4rem 0.7rem;font-size:0.78rem;color:var(--text);outline:none;font-family:inherit;" />
-          <button id="bidChatSend" style="background:#046fcd;color:#fff;border:none;border-radius:16px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:600;cursor:pointer;">Send</button>
-        </div>
-      </div>
     `;
-
+ 
     document.getElementById('modalContent')!.querySelectorAll('.om-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const which = (tab as HTMLElement).dataset.mtab;
@@ -1387,32 +1366,31 @@ const base = '';
         document.querySelector(`#modalContent .om-panel[data-mpanel="${which}"]`)?.classList.add('om-panel--active');
       });
     });
-
+ 
     document.getElementById('goToProposalBtn')?.addEventListener('click', () => {
       document.querySelectorAll('#modalContent .om-tab').forEach(t => t.classList.remove('om-tab--active'));
       document.querySelectorAll('#modalContent .om-panel').forEach(p => p.classList.remove('om-panel--active'));
       document.querySelector('#modalContent .om-tab[data-mtab="proposal"]')?.classList.add('om-tab--active');
       document.querySelector('#modalContent .om-panel[data-mpanel="proposal"]')?.classList.add('om-panel--active');
     });
-
+ 
     document.getElementById('submitBidBtn')?.addEventListener('click', () => submitBid(order.id, order));
-    document.getElementById('bidChatSend')?.addEventListener('click', bidChatSendMsg);
-    document.getElementById('bidChatInput')?.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); bidChatSendMsg(); } });
     document.getElementById('detailModal')!.classList.add('open');
   }
-
+ 
   let bidChatConvId: string | null = null;
   let bidChatSubRT: any = null;
-
+  let bidChatLastDate = '';
+ 
   async function submitBid(orderId: number, order: any) {
     const price = parseFloat((document.getElementById('bidPrice') as HTMLInputElement).value);
     const note = (document.getElementById('bidNote') as HTMLTextAreaElement).value.trim();
     const msg = document.getElementById('bidMsg')!;
     const btn = document.getElementById('submitBidBtn') as HTMLButtonElement;
-
+ 
     if (!price || price <= 0) { msg.textContent = 'Please enter a valid bid price.'; msg.className = 'upload-msg error'; msg.style.display = 'block'; return; }
     if (!note) { msg.textContent = 'Please write a proposal message.'; msg.className = 'upload-msg error'; msg.style.display = 'block'; return; }
-
+ 
     btn.disabled = true; btn.textContent = '⏳ Submitting…';
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/place_bid`, {
@@ -1421,7 +1399,7 @@ const base = '';
         body: JSON.stringify({ p_order_id: orderId, p_writer_id: writerId, p_bid_price: price, p_estimated_delivery: null, p_note: note })
       });
       if (!res.ok) throw new Error((await res.json())?.message || 'Failed to place bid');
-
+ 
       // Emit bid to client via Socket.io
       socket.emit('bid:submit', {
         orderId: String(orderId),
@@ -1430,27 +1408,50 @@ const base = '';
         amount: price,
         message: note
       });
-
+ 
       msg.textContent = '✅ Proposal submitted!'; msg.className = 'upload-msg success'; msg.style.display = 'block';
+      btn.style.display = 'none';
+      const priceInput = document.getElementById('bidPrice') as HTMLInputElement; if (priceInput) priceInput.disabled = true;
+      const noteInput = document.getElementById('bidNote') as HTMLTextAreaElement; if (noteInput) noteInput.disabled = true;
       await loadAvailableOrders();
       await loadMyBids();
-
-      // Unlock the chat panel and seed it with this proposal message
+ 
+      // Reveal the chat panel now that a proposal has been placed
       await bidChatStart(orderId, order, note);
-
+ 
     } catch (err: any) {
       msg.textContent = err?.message || 'Could not submit proposal.'; msg.className = 'upload-msg error'; msg.style.display = 'block';
       btn.disabled = false; btn.textContent = '📨 Submit Proposal';
     }
   }
-
+ 
   async function bidChatStart(orderId: number, order: any, note: string) {
-    const sub = document.getElementById('bidChatSub');
-    const locked = document.getElementById('bidChatLocked');
+    const modalContent = document.getElementById('modalContent')!;
+    if (!modalContent.querySelector('.modal-right')) {
+      modalContent.insertAdjacentHTML('beforeend', `
+        <div class="modal-right">
+          <div style="padding:0.75rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;">
+            <div style="width:28px;height:28px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#0f172a;flex-shrink:0;">${esc((order.client_email?.[0] || 'C').toUpperCase())}</div>
+            <div>
+              <div style="font-size:0.78rem;font-weight:600;color:var(--text);">${esc(order.client_email?.split('@')[0] || 'Client')}</div>
+              <div style="font-size:0.65rem;color:#4ade80;" id="bidChatSub">Waiting for client reply</div>
+            </div>
+          </div>
+          <div id="bidChatMessages" style="flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.7rem;background:var(--main-bg);"></div>
+          <div id="bidChatInputBar" style="padding:0.6rem;border-top:1px solid var(--border);display:flex;gap:0.4rem;background:var(--panel-bg);">
+            <input type="text" id="bidChatInput" placeholder="Type a message…" style="flex:1;background:var(--main-bg);border:1px solid var(--border);border-radius:16px;padding:0.4rem 0.7rem;font-size:0.78rem;color:var(--text);outline:none;font-family:inherit;" />
+            <button id="bidChatSend" style="background:#046fcd;color:#fff;border:none;border-radius:16px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:600;cursor:pointer;">Send</button>
+          </div>
+        </div>
+      `);
+      document.getElementById('bidChatSend')?.addEventListener('click', bidChatSendMsg);
+      document.getElementById('bidChatInput')?.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); bidChatSendMsg(); } });
+    }
+ 
     const messagesBox = document.getElementById('bidChatMessages');
-    const inputBar = document.getElementById('bidChatInputBar');
-    if (!messagesBox || !locked || !inputBar) return;
-
+    if (!messagesBox) return;
+    bidChatLastDate = '';
+ 
     try {
       let convId = await wocFindConversation(String(orderId));
       if (!convId) {
@@ -1464,7 +1465,7 @@ const base = '';
       }
       if (!convId) throw new Error('Could not create conversation');
       await wocEnsureSelf(convId);
-
+ 
       const existingRes = await fetch(
         `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${convId}&select=id&limit=1`,
         { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
@@ -1477,39 +1478,56 @@ const base = '';
           body: JSON.stringify({ conversation_id: convId, sender_id: currentSession.user.id, sender_name: writerData?.full_name || 'Writer', sender_role: 'writer', content: note })
         });
       }
-
+ 
       bidChatConvId = convId;
-      locked.style.display = 'none';
-      messagesBox.style.display = 'flex';
-      inputBar.style.display = 'flex';
-      if (sub) sub.textContent = 'Waiting for client reply';
-
+ 
       const mRes = await fetch(
         `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${convId}&order=created_at.asc`,
         { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
       );
       bidChatRender(await mRes.json());
-
+ 
       if (bidChatSubRT) { bidChatSubRT.unsubscribe(); bidChatSubRT = null; }
       bidChatSubRT = supabase.channel(`bidchat-${convId}`)
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${convId}` },
           (payload: any) => bidChatAppend(payload.new)).subscribe();
-
+ 
     } catch (e) { console.error('bidChatStart error', e); }
   }
-
+ 
+  function bidChatDateLabel(dateStr: string) {
+    const d = new Date(dateStr);
+    const today = new Date();
+    if (d.toDateString() === today.toDateString()) return 'Today';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
   function bidChatRender(messages: any[]) {
     const c = document.getElementById('bidChatMessages');
     if (!c) return;
     if (!messages.length) { c.innerHTML = '<div class="woc-empty">No messages yet.</div>'; return; }
-    c.innerHTML = messages.map((m: any) => bidChatBubble(m)).join('');
+    bidChatLastDate = '';
+    c.innerHTML = messages.map((m: any) => {
+      const dateLabel = m.created_at ? bidChatDateLabel(m.created_at) : '';
+      let divider = '';
+      if (dateLabel && dateLabel !== bidChatLastDate) {
+        bidChatLastDate = dateLabel;
+        divider = `<div style="text-align:center;font-size:0.7rem;color:#94a3b8;margin:0.4rem 0;">${dateLabel}</div>`;
+      }
+      return divider + bidChatBubble(m);
+    }).join('');
     c.scrollTop = c.scrollHeight;
   }
   function bidChatAppend(m: any) {
     const c = document.getElementById('bidChatMessages');
     if (!c) return;
     const ph = c.querySelector('.woc-empty'); if (ph) c.innerHTML = '';
-    c.insertAdjacentHTML('beforeend', bidChatBubble(m));
+    const dateLabel = m.created_at ? bidChatDateLabel(m.created_at) : '';
+    let divider = '';
+    if (dateLabel && dateLabel !== bidChatLastDate) {
+      bidChatLastDate = dateLabel;
+      divider = `<div style="text-align:center;font-size:0.7rem;color:#94a3b8;margin:0.4rem 0;">${dateLabel}</div>`;
+    }
+    c.insertAdjacentHTML('beforeend', divider + bidChatBubble(m));
     c.scrollTop = c.scrollHeight;
   }
   function bidChatBubble(m: any) {
@@ -1519,10 +1537,10 @@ const base = '';
     return `<div class="woc-row ${mine ? 'mine' : 'theirs'}">
       ${!mine ? `<div class="woc-name">${esc(who)}</div>` : ''}
       <div class="woc-bubble">${esc(m.content)}</div>
-      <div class="woc-time">${time}</div>
+      <div class="woc-time">${time}${mine ? ' <span style="color:#60a5fa;">✓</span>' : ''}</div>
     </div>`;
   }
-
+ 
   async function bidChatSendMsg() {
     const input = document.getElementById('bidChatInput') as HTMLInputElement;
     if (!input || !bidChatConvId) return;
@@ -1542,7 +1560,7 @@ const base = '';
       });
     } catch (e) { console.error(e); }
   }
-
+ 
   // ═══ MY PROPOSALS (bids placed) ═══
   async function loadMyBids() {
     try {
@@ -1584,13 +1602,13 @@ const base = '';
     const table = document.getElementById('propTable')!;
     const list = document.getElementById('propList')!;
     loading.style.display = 'none';
-
+ 
     const countEl = document.getElementById('pcount_pending');
     if (countEl) countEl.textContent = String(myBids.length);
-
+ 
     if (!myBids.length) { empty.style.display = 'flex'; table.style.display = 'none'; return; }
     empty.style.display = 'none'; table.style.display = 'flex';
-
+ 
     list.innerHTML = myBids.map((b: any) => {
       const o = b.orders || {};
       const dl = deadlineInfo(o.deadline);
@@ -1613,7 +1631,7 @@ const base = '';
           </div>
         </div>`;
     }).join('');
-
+ 
     list.querySelectorAll('.order-row').forEach(row => {
       row.addEventListener('click', () => {
         const orderId = (row as HTMLElement).dataset.orderId;
@@ -1622,7 +1640,7 @@ const base = '';
       });
     });
   }
-
+ 
   document.querySelectorAll('[data-ptab2]').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('[data-ptab2]').forEach(t => t.classList.remove('active'));
@@ -1631,7 +1649,7 @@ const base = '';
       renderProposals();
     });
   });
-
+ 
   // ═══ BALANCE ═══
   document.getElementById('markAllReadBtn')?.addEventListener('click', async () => {
     try {
@@ -1644,7 +1662,7 @@ const base = '';
       await loadNotifications();
     } catch(e) { console.error(e); }
   });
-
+ 
   async function loadBalance() {
     try {
       const res = await fetch(
@@ -1665,7 +1683,7 @@ const base = '';
       }
     } catch (err) { console.error(err); }
   }
-
+ 
   // ═══ NOTIFICATIONS ═══
   async function refreshNotifBadge() {
     try {
@@ -1682,7 +1700,7 @@ const base = '';
       return accepted;
     } catch (err) { console.error(err); return []; }
   }
-
+ 
   function timeAgo(dateStr: string) {
     const diff = Date.now() - new Date(dateStr).getTime();
     const mins = Math.floor(diff / 60000);
@@ -1692,7 +1710,7 @@ const base = '';
     if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
     return `${days} day${days !== 1 ? 's' : ''} ago`;
   }
-
+ 
   async function loadNotifications() {
     const listEl = document.getElementById('notifList');
     if (!listEl) return;
@@ -1717,7 +1735,7 @@ const base = '';
             <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">${b.created_at ? timeAgo(b.created_at) : ''}</div>
           </div>
         </div>`).join('');
-
+ 
       // Make clickable
       listEl.querySelectorAll('.notif-row').forEach(row => {
         row.addEventListener('click', async () => {
@@ -1746,7 +1764,7 @@ const base = '';
     } catch(e) { console.error(e); listEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Could not load notifications.</p>'; }
     await refreshNotifBadge();
   }
-
+ 
   async function loadWriterReviews() {
     try {
       const orderNumbers = allOrders.map(o => o.order_number).filter(Boolean);
@@ -1759,7 +1777,7 @@ const base = '';
       writerReviews = await res.json();
     } catch (err) { console.error(err); writerReviews = []; }
   }
-
+ 
   async function loadOrders() {
     try {
       const res = await fetch(
@@ -1773,14 +1791,14 @@ const base = '';
       console.error(err);
     }
   }
-
+ 
   function updateCounts() {
     const countFor = (tab: string) => allOrders.filter((o: any) => {
       const s = o.order_status;
       if (tab === 'in_progress') return s === 'in_progress' || s === 'new';
       return s === tab;
     }).length;
-
+ 
     const set = (id: string, val: number) => {
       const el = document.getElementById(id);
       if (el) el.textContent = String(val);
@@ -1791,22 +1809,22 @@ const base = '';
     set('count_completed', countFor('completed'));
     set('count_cancelled', countFor('cancelled'));
   }
-
+ 
   function renderOrders() {
     const loading = document.getElementById('loadingState')!;
     const empty = document.getElementById('emptyState')!;
     const table = document.getElementById('orderTable')!;
     const list = document.getElementById('ordersList')!;
     const search = (document.getElementById('searchInput') as HTMLInputElement).value.toLowerCase();
-
+ 
     loading.style.display = 'none';
-
+ 
     let filtered = allOrders.filter((o: any) =>
       currentTab === 'in_progress'
         ? (o.order_status === 'in_progress' || o.order_status === 'new')
         : o.order_status === currentTab
     );
-
+ 
     if (search) {
       filtered = filtered.filter((o: any) =>
         (o.topic || '').toLowerCase().includes(search) ||
@@ -1814,7 +1832,7 @@ const base = '';
         String(o.order_number || o.id).toLowerCase().includes(search)
       );
     }
-
+ 
     if (!filtered.length) {
       empty.style.display = 'flex';
       table.style.display = 'none';
@@ -1822,13 +1840,13 @@ const base = '';
       if (emptyHeading) emptyHeading.textContent = 'No orders in this view';
       return;
     }
-
+ 
     empty.style.display = 'none';
     table.style.display = 'flex';
     list.style.display = 'flex';
     list.style.flexDirection = 'column';
     list.style.gap = '0.5rem';
-
+ 
     list.innerHTML = filtered.map((o: any) => {
       const dl = deadlineInfo(o.deadline);
       return `
@@ -1851,7 +1869,7 @@ const base = '';
         </div>
       `;
     }).join('');
-
+ 
     list.querySelectorAll('.order-row').forEach(row => {
       row.addEventListener('click', () => {
         const id = (row as HTMLElement).dataset.id;
@@ -1860,11 +1878,11 @@ const base = '';
       });
     });
   }
-
+ 
   function showModal(order: any) {
     activeOrderId = order.id;
     activeOrderNumber = order.order_number || String(order.id);
-
+ 
     const dl = deadlineInfo(order.deadline);
     const startDate = order.created_at
       ? new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
@@ -1872,21 +1890,21 @@ const base = '';
     const dueDate = order.deadline
       ? new Date(order.deadline).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
       : '—';
-
+ 
     const field = (label: string, value: string) =>
       `<div><div class="om-label">${label}</div><div class="om-value">${value}</div></div>`;
-
+ 
     document.getElementById('modalContent')!.innerHTML = `<div class="modal-left"><div class="om-header">
         <div class="om-title">${esc(order.topic || '(no topic)')}</div>
         <div class="om-id">ID ${esc(order.order_number || order.id)}</div>
       </div>
-
+ 
       <div class="om-tabs">
         <button class="om-tab om-tab--active" data-mtab="general">General</button>
         <button class="om-tab" data-mtab="instructions">Instructions</button>
         <button class="om-tab" data-mtab="files">Files</button>
       </div>
-
+ 
       <!-- GENERAL: upload completed work -->
       <div class="om-panel om-panel--active" data-mpanel="general">
         <p class="upload-order-id">Order: ${esc(activeOrderNumber)} — ${esc(order.topic || '')}</p>
@@ -1920,7 +1938,7 @@ const base = '';
           <div class="review-msg" id="reviewMsg"></div>
         </div>
       </div>
-
+ 
       <!-- INSTRUCTIONS: order details + description -->
       <div class="om-panel" data-mpanel="instructions">
         <div class="om-grid">
@@ -1936,12 +1954,12 @@ const base = '';
           <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
         </div>
       </div>
-
+ 
       <!-- FILES: client attachments -->
       <div class="om-panel" data-mpanel="files">
         <div id="clientFilesList" class="files-list"><div class="no-files">Loading client files…</div></div>
       </div>
-
+ 
       </div>
     <div class="modal-right">
       <div style="padding:0.75rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;">
@@ -1957,7 +1975,7 @@ const base = '';
         <button class="woc-send" id="wocSend" style="background:#046fcd;color:#fff;border:none;border-radius:16px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:600;cursor:pointer;">Send</button>
       </div>
     </div>`;
-
+ 
     // Modal tab switching
     const content = document.getElementById('modalContent')!;
     content.querySelectorAll('.om-tab').forEach(tab => {
@@ -1971,9 +1989,9 @@ const base = '';
         if (which === 'files') loadClientFiles(order.id);
       });
     });
-
+ 
     document.getElementById('uploadBtn')?.addEventListener('click', handleUpload);
-
+ 
     // Mark as In Review
     const reviewBtn = document.getElementById('markReviewBtn');
     const reviewWrap = document.getElementById('reviewActionWrap');
@@ -2009,30 +2027,30 @@ const base = '';
         btn.disabled = false; btn.textContent = '📤 Submit & Mark as In Review';
       }
     });
-
+ 
     document.getElementById('detailModal')!.classList.add('open');
     openWriterOrderChat(order);
     loadOrderFiles();
   }
-
+ 
   // ── FILES: load + delete ──
   async function loadOrderFiles() {
     const filesList = document.getElementById('filesList');
     if (!filesList) return;
     filesList.innerHTML = '<div class="no-files">Loading…</div>';
-
+ 
     try {
       const res = await fetch(
         `${SUPABASE_URL}/rest/v1/order_files?order_id=eq.${activeOrderId}&order=created_at.desc`,
         { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
       );
       const files = await res.json();
-
+ 
       if (!files.length) {
         filesList.innerHTML = '<div class="no-files">No files uploaded yet.</div>';
         return;
       }
-
+ 
       filesList.innerHTML = files.map((f: any) => `
         <div class="file-row" data-file-id="${f.id}" data-file-path="${esc(f.file_path)}">
           <div class="file-info">
@@ -2042,14 +2060,14 @@ const base = '';
           <button class="file-delete" data-file-id="${f.id}" data-file-path="${esc(f.file_path)}">🗑️</button>
         </div>
       `).join('');
-
+ 
       filesList.querySelectorAll('.file-delete').forEach(btn => {
         btn.addEventListener('click', async (e) => {
           e.stopPropagation();
           const fileId = (btn as HTMLElement).dataset.fileId;
           const filePath = (btn as HTMLElement).dataset.filePath;
           if (!confirm('Delete this file?')) return;
-
+ 
           await supabase.storage.from('completed-files').remove([filePath || '']);
           await fetch(`${SUPABASE_URL}/rest/v1/order_files?id=eq.${fileId}`, {
             method: 'DELETE',
@@ -2058,27 +2076,27 @@ const base = '';
           await loadOrderFiles();
         });
       });
-
+ 
     } catch (err) {
       console.error(err);
       filesList.innerHTML = '<div class="no-files">Could not load files.</div>';
     }
   }
-
+ 
   // ── UPLOAD ──
   async function handleUpload() {
     const fileType = (document.getElementById('fileType') as HTMLSelectElement).value;
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     const btn = document.getElementById('uploadBtn') as HTMLButtonElement;
     const msg = document.getElementById('uploadMsg')!;
-
+ 
     if (!fileType) {
       msg.textContent = 'Please select a file type.';
       msg.className = 'upload-msg error';
       msg.style.display = 'block';
       return;
     }
-
+ 
     const file = fileInput.files && fileInput.files[0];
     if (!file) {
       msg.textContent = 'Please choose a file.';
@@ -2086,18 +2104,18 @@ const base = '';
       msg.style.display = 'block';
       return;
     }
-
+ 
     btn.disabled = true;
     btn.textContent = '⏳ Uploading…';
     msg.style.display = 'none';
-
+ 
     try {
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
       const path = `${activeOrderNumber}/${fileType.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}_${safeName}`;
-
+ 
       const { error: upErr } = await supabase.storage.from('completed-files').upload(path, file, { upsert: true });
       if (upErr) throw upErr;
-
+ 
       const res = await fetch(`${SUPABASE_URL}/rest/v1/order_files`, {
         method: 'POST',
         headers: {
@@ -2114,9 +2132,9 @@ const base = '';
           uploaded_by: 'writer'
         })
       });
-
+ 
       if (!res.ok) throw new Error('Failed to save file record');
-
+ 
       msg.textContent = `✅ ${fileType} uploaded successfully!`;
       msg.className = 'upload-msg success';
       msg.style.display = 'block';
@@ -2124,9 +2142,9 @@ const base = '';
       btn.textContent = '📤 Upload File';
       fileInput.value = '';
       (document.getElementById('fileType') as HTMLSelectElement).value = '';
-
+ 
       await loadOrderFiles();
-
+ 
     } catch (err) {
       console.error(err);
       msg.textContent = 'Upload failed. Please try again.';
@@ -2140,7 +2158,7 @@ const base = '';
   let wocConvId: string | null = null;
   let wocOrder: any = null;
   let wocSub: any = null;
-
+ 
   function wocRender(messages: any[]) {
     const c = document.getElementById('wocMessages');
     if (!c) return;
@@ -2157,7 +2175,7 @@ const base = '';
     }).join('');
     c.scrollTop = c.scrollHeight;
   }
-
+ 
   async function wocFindConversation(orderId: string) {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/conversations?type=eq.order&order_id=eq.${orderId}&select=id&limit=1`,
@@ -2166,7 +2184,7 @@ const base = '';
     const rows = await res.json();
     return rows[0]?.id || null;
   }
-
+ 
   // Make sure the writer is a participant (self-add, always RLS-allowed)
   async function wocEnsureSelf(convId: string) {
     try {
@@ -2182,7 +2200,7 @@ const base = '';
       });
     } catch (e) { console.error('wocEnsureSelf', e); }
   }
-
+ 
   async function openWriterOrderChat(order: any) {
     wocOrder = order;
     wocConvId = null;
@@ -2201,7 +2219,7 @@ const base = '';
       wocSubscribe();
     } catch (err) { console.error(err); c.innerHTML = '<div class="woc-empty">Could not load chat.</div>'; }
   }
-
+ 
   function wocSubscribe() {
     if (!wocConvId || wocSub) return;
     wocSub = supabase.channel(`woc-${wocConvId}`)
@@ -2217,7 +2235,7 @@ const base = '';
           c.scrollTop = c.scrollHeight;
         }).subscribe();
   }
-
+ 
   async function wocSend() {
     const input = document.getElementById('wocInput') as HTMLInputElement;
     const text = input.value.trim();
@@ -2250,14 +2268,14 @@ const base = '';
     } catch (err) { console.error(err); alert('Could not send message. Please try again.'); }
     btn.disabled = false; input.focus();
   }
-
+ 
   document.addEventListener('click', (e) => { if ((e.target as HTMLElement)?.id === 'wocSend') wocSend(); });
   document.addEventListener('keydown', (e) => { if ((e.target as HTMLElement)?.id === 'wocInput' && (e as KeyboardEvent).key === 'Enter') { e.preventDefault(); wocSend(); } });
-
+ 
   async function showProposalDetail(bid: any) {
     const o = bid.orders || {};
     const dueDate = o.deadline ? new Date(o.deadline).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
-
+ 
     // Fetch full order details if topic is missing
     let order = o;
     if (!order.topic && bid.order_id) {
@@ -2270,23 +2288,23 @@ const base = '';
         if (data[0]) order = data[0];
       } catch(e) { console.error(e); }
     }
-
+ 
     const field = (label: string, value: string) =>
       `<div><div class="om-label">${label}</div><div class="om-value">${value}</div></div>`;
-
+ 
     document.getElementById('modalContent')!.innerHTML = `
       <div class="modal-left">
         <div class="om-header">
           <div class="om-title">${esc(order.topic || '(no topic)')}</div>
           <div class="om-id">ID ${esc(order.order_number || bid.order_id)}</div>
         </div>
-
+ 
         <div class="om-tabs">
           <button class="om-tab om-tab--active" data-mtab="details">Order Details</button>
           <button class="om-tab" data-mtab="instructions">Instructions</button>
           <button class="om-tab" data-mtab="files">File</button>
         </div>
-
+ 
         <div class="om-panel om-panel--active" data-mpanel="details">
           <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem;">
             <div class="om-grid">
@@ -2301,24 +2319,24 @@ const base = '';
             </div>
           </div>
         </div>
-
+ 
         <div class="om-panel" data-mpanel="instructions">
           <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem;">
             <div class="om-desc-label">Description</div>
             <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
           </div>
         </div>
-
+ 
         <div class="om-panel" data-mpanel="files">
           <div style="margin:0 0.5rem;">
             <div id="proposalFilesList" class="files-list"><div class="no-files">Loading files…</div></div>
           </div>
         </div>
       </div>
-
+ 
       <div class="modal-right">
         <div style="padding:0.75rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#94a3b8;">👤</div>
+          <div style="width:28px;height:28px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#0f172a;flex-shrink:0;">${esc((order.client_email?.[0] || 'C').toUpperCase())}</div>
           <div>
             <div style="font-size:0.78rem;font-weight:600;color:var(--text);">${esc(order.client_email?.split('@')[0] || 'Client')}</div>
             <div style="font-size:0.65rem;color:#64748b;" id="bidChatSub">Loading conversation…</div>
@@ -2336,7 +2354,7 @@ const base = '';
           <button id="bidChatSend" style="background:#046fcd;color:#fff;border:none;border-radius:16px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:600;cursor:pointer;">Send</button>
         </div>
       </div>`;
-
+ 
     // Tab switching
     document.getElementById('modalContent')!.querySelectorAll('.om-tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -2348,14 +2366,14 @@ const base = '';
         if (which === 'files') loadProposalClientFiles(order.id);
       });
     });
-
+ 
     document.getElementById('bidChatSend')?.addEventListener('click', bidChatSendMsg);
     document.getElementById('bidChatInput')?.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); bidChatSendMsg(); } });
-
+ 
     document.getElementById('detailModal')!.classList.add('open');
     proposalChatLoad(bid.order_id, order);
   }
-
+ 
   async function loadProposalClientFiles(orderId: number) {
     const box = document.getElementById('proposalFilesList');
     if (!box) return;
@@ -2383,14 +2401,14 @@ const base = '';
       box.innerHTML = '<div class="no-files">Could not load files.</div>';
     }
   }
-
+ 
   async function proposalChatLoad(orderId: number, order: any) {
     const sub = document.getElementById('bidChatSub');
     const locked = document.getElementById('bidChatLocked');
     const messagesBox = document.getElementById('bidChatMessages');
     const inputBar = document.getElementById('bidChatInputBar');
     if (!messagesBox || !locked || !inputBar) return;
-
+ 
     try {
       const convId = await wocFindConversation(String(orderId));
       if (!convId) {
@@ -2404,13 +2422,13 @@ const base = '';
       locked.style.display = 'none';
       messagesBox.style.display = 'flex';
       inputBar.style.display = 'flex';
-
+ 
       const mRes = await fetch(
         `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${convId}&order=created_at.asc`,
         { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
       );
       bidChatRender(await mRes.json());
-
+ 
       if (bidChatSubRT) { bidChatSubRT.unsubscribe(); bidChatSubRT = null; }
       bidChatSubRT = supabase.channel(`bidchat-${convId}`)
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${convId}` },
@@ -2421,7 +2439,7 @@ const base = '';
       locked.style.display = 'flex';
     }
   }
-
+ 
   async function loadClientFiles(orderId: number) {
     const box = document.getElementById('clientFilesList')!;
     try {
@@ -2443,14 +2461,14 @@ const base = '';
       box.innerHTML = '<div class="no-files">Could not load files.</div>';
     }
   }
-
+ 
   function closeModal() {
     document.getElementById('detailModal')!.classList.remove('open');
   }
-
+ 
   document.getElementById('modalClose')!.addEventListener('click', closeModal);
   document.getElementById('modalOverlay')!.addEventListener('click', closeModal);
-
+ 
   // Tabs
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -2460,9 +2478,9 @@ const base = '';
       renderOrders();
     });
   });
-
+ 
   document.getElementById('searchInput')!.addEventListener('input', renderOrders);
-
+ 
   // ═══ VIEW SWITCHING ═══
   document.querySelectorAll('.nav-item[data-view]').forEach(item => {
     item.addEventListener('click', (e) => {
@@ -2509,7 +2527,7 @@ const base = '';
       }
     });
   });
-
+ 
   // ═══ PROFILE TABS ═══
   document.querySelectorAll('[data-ptab]').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -2519,7 +2537,7 @@ const base = '';
       renderProfileTab();
     });
   });
-
+ 
   function renderProfileTab() {
     const container = document.getElementById('profileContent')!;
     if (currentProfileTab === 'overview') renderOverview(container);
@@ -2527,7 +2545,7 @@ const base = '';
     else if (currentProfileTab === 'settings') renderSettings(container);
     else if (currentProfileTab === 'rules') renderRules(container);
   }
-
+ 
   function renderOverview(el: HTMLElement) {
     const completedCount = allOrders.filter(o => o.order_status === 'completed').length;
     const avgRating = writerReviews.length ? (writerReviews.reduce((s: number, r: any) => s + (r.rating||0), 0) / writerReviews.length).toFixed(1) : '—';
@@ -2557,7 +2575,7 @@ const base = '';
           </div>`).join('')}</div>` : '<p style="color:var(--text-muted);font-size:0.85rem;">No reviews yet.</p>'}
       </div>`;
   }
-
+ 
   function renderPortfolio(el: HTMLElement) {
     const skills = (writerData.specialties || '').split(',').map((s: string) => s.trim()).filter(Boolean);
     el.innerHTML = `
@@ -2572,7 +2590,7 @@ const base = '';
         <div class="portfolio-section"><h3>Writing Sample</h3>${writerData.sample_url ? `<div class="file-attached">📄 <a href="${esc(writerData.sample_url)}" target="_blank">${esc(writerData.sample_name || 'View Sample')}</a></div>` : `<p style="font-size:0.85rem;color:var(--text-muted);">No sample uploaded.</p>`}</div>
       </div>`;
   }
-
+ 
   function renderSettings(el: HTMLElement) {
     const userEmail = currentSession?.user?.email || '';
     el.innerHTML = `
@@ -2610,7 +2628,7 @@ const base = '';
     });
     document.getElementById('profileLogoutBtn')?.addEventListener('click', async () => { await supabase.auth.signOut(); window.location.href = `${base}/writer-login/`; });
   }
-
+ 
   function renderRules(el: HTMLElement) {
     el.innerHTML = `
       <div class="profile-card"><div class="rules-content">
@@ -2622,9 +2640,9 @@ const base = '';
         <h3>Account & Payment</h3><ul><li>Payment processed after client confirms completion.</li><li>Your rating affects order assignment priority.</li><li>Violations may result in warnings, suspension, or termination.</li></ul>
       </div></div>`;
   }
-
+ 
   init();
-
+ 
   // ── THEME TOGGLE ──
   const THEME_KEY = 'dashboard-theme';
   const themeIconBtn = document.getElementById('themeIconBtn');
@@ -2632,11 +2650,11 @@ const base = '';
   const themePopupOverlay = document.getElementById('themePopupOverlay');
   const themeIconCurrent = document.getElementById('themeIconCurrent');
   const themeIcons: Record<string, string> = { dark: '🌙', light: '☀️', system: '💻' };
-
+ 
   function getSystemPref() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
-
+ 
   function applyTheme(setting: string) {
     const actual = setting === 'system' ? getSystemPref() : setting;
     if (actual === 'dark') {
@@ -2650,7 +2668,7 @@ const base = '';
     if (themeIconCurrent) themeIconCurrent.textContent = themeIcons[setting] || '☀️';
     localStorage.setItem(THEME_KEY, setting);
   }
-
+ 
   themeIconBtn?.addEventListener('click', () => themePopup?.classList.add('open'));
   themePopupOverlay?.addEventListener('click', () => themePopup?.classList.remove('open'));
   document.querySelectorAll('.theme-popup__opt').forEach(btn => {
@@ -2663,12 +2681,12 @@ const base = '';
     if (localStorage.getItem(THEME_KEY) === 'system') applyTheme('system');
   });
   applyTheme(localStorage.getItem(THEME_KEY) || 'light');
-
+ 
   // ═══ CHAT SYSTEM ═══
   let chatConversations: any[] = [];
   let activeConversationId: string | null = null;
   let chatSubscription: any = null;
-
+ 
   async function loadConversations() {
     const chatList = document.getElementById('chatList')!;
     try {
@@ -2678,7 +2696,7 @@ const base = '';
       );
       const data = await res.json();
       chatConversations = data.map((d: any) => d.conversations).filter(Boolean).sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
-
+ 
       if (!chatConversations.length) {
         chatList.innerHTML = '<div class="chat-list-loading">No conversations yet</div>';
         return;
@@ -2686,12 +2704,12 @@ const base = '';
       renderChatList();
     } catch (err) { console.error(err); chatList.innerHTML = '<div class="chat-list-loading">Could not load chats</div>'; }
   }
-
+ 
   function renderChatList(filter = '') {
     const chatList = document.getElementById('chatList')!;
     let filtered = chatConversations;
     if (filter) filtered = filtered.filter((c: any) => (c.title || '').toLowerCase().includes(filter));
-
+ 
     chatList.innerHTML = filtered.map((c: any) => {
       const isSupport = c.type === 'support';
       const avatarClass = isSupport ? 'avatar-support' : 'avatar-order';
@@ -2700,7 +2718,7 @@ const base = '';
       const typeLabel = isSupport ? 'Support conversation' : 'Order chat';
       const time = c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
       const isActive = c.id === activeConversationId;
-
+ 
       return `<div class="chat-item ${isActive ? 'active' : ''}" data-cid="${c.id}">
         <div class="chat-item-avatar ${avatarClass}">${icon}</div>
         <div class="chat-item-info">
@@ -2710,7 +2728,7 @@ const base = '';
         <div class="chat-item-time">${time}</div>
       </div>`;
     }).join('');
-
+ 
     chatList.querySelectorAll('.chat-item').forEach(item => {
       item.addEventListener('click', () => {
         const cid = (item as HTMLElement).dataset.cid!;
@@ -2718,29 +2736,29 @@ const base = '';
       });
     });
   }
-
+ 
   async function openConversation(conversationId: string) {
     activeConversationId = conversationId;
     const conv = chatConversations.find((c: any) => c.id === conversationId);
-
+ 
     document.getElementById('chatMainEmpty')!.style.display = 'none';
     const thread = document.getElementById('chatThread')!;
     thread.style.display = 'flex';
-
+ 
     const header = document.getElementById('chatThreadHeader')!;
     const title = conv?.title || (conv?.type === 'support' ? 'Support' : 'Order Chat');
     const typeLabel = conv?.type === 'support' ? 'Support channel' : conv?.type === 'order' ? `Order chat` : 'Direct message';
     header.innerHTML = `<div class="chat-thread-title">${esc(title)}</div><div class="chat-thread-sub">${typeLabel}</div>`;
-
+ 
     renderChatList((document.getElementById('chatSearchInput') as HTMLInputElement).value.toLowerCase());
     await loadMessages(conversationId);
     subscribeTo(conversationId);
   }
-
+ 
   async function loadMessages(conversationId: string) {
     const container = document.getElementById('chatMessages')!;
     container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;">Loading…</div>';
-
+ 
     try {
       const res = await fetch(
         `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${conversationId}&order=created_at.asc`,
@@ -2750,7 +2768,7 @@ const base = '';
       renderMessages(messages);
     } catch (err) { console.error(err); container.innerHTML = '<div style="text-align:center;color:var(--text-muted);">Could not load messages</div>'; }
   }
-
+ 
   function renderMessages(messages: any[]) {
     const container = document.getElementById('chatMessages')!;
     if (!messages.length) {
@@ -2768,7 +2786,7 @@ const base = '';
     }).join('');
     container.scrollTop = container.scrollHeight;
   }
-
+ 
   function subscribeTo(conversationId: string) {
     if (chatSubscription) { chatSubscription.unsubscribe(); chatSubscription = null; }
     chatSubscription = supabase
@@ -2791,20 +2809,20 @@ const base = '';
       )
       .subscribe();
   }
-
+ 
   // Send message
   document.getElementById('chatSendBtn')?.addEventListener('click', sendMessage);
   document.getElementById('chatInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
-
+ 
   async function sendMessage() {
     const input = document.getElementById('chatInput') as HTMLInputElement;
     const content = input.value.trim();
     if (!content || !activeConversationId) return;
-
+ 
     const btn = document.getElementById('chatSendBtn') as HTMLButtonElement;
     btn.disabled = true;
     input.value = '';
-
+ 
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
         method: 'POST',
@@ -2827,17 +2845,17 @@ const base = '';
     btn.disabled = false;
     input.focus();
   }
-
+ 
   // Search chats
   document.getElementById('chatSearchInput')?.addEventListener('input', (e) => {
     renderChatList((e.target as HTMLInputElement).value.toLowerCase());
   });
-
+ 
   // New Chat Modal
   document.getElementById('newChatBtn')?.addEventListener('click', () => document.getElementById('newChatModal')!.classList.add('open'));
   document.getElementById('newChatClose')?.addEventListener('click', () => { document.getElementById('newChatModal')!.classList.remove('open'); document.getElementById('orderSelectWrap')!.style.display = 'none'; });
   document.getElementById('newChatOverlay')?.addEventListener('click', () => { document.getElementById('newChatModal')!.classList.remove('open'); document.getElementById('orderSelectWrap')!.style.display = 'none'; });
-
+ 
   document.querySelectorAll('.new-chat-opt').forEach(opt => {
     opt.addEventListener('click', async () => {
       const type = (opt as HTMLElement).dataset.chatType;
@@ -2852,7 +2870,7 @@ const base = '';
       }
     });
   });
-
+ 
   document.getElementById('startOrderChatBtn')?.addEventListener('click', async () => {
     const select = document.getElementById('chatOrderSelect') as HTMLSelectElement;
     const orderId = select.value;
@@ -2862,7 +2880,7 @@ const base = '';
     document.getElementById('newChatModal')!.classList.remove('open');
     document.getElementById('orderSelectWrap')!.style.display = 'none';
   });
-
+ 
   async function createConversation(type: string, orderId: number | null, title: string) {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/conversations`, {
@@ -2873,19 +2891,19 @@ const base = '';
       const convs = await res.json();
       const conv = convs[0];
       if (!conv) throw new Error('Failed to create conversation');
-
+ 
       // Add self as participant
       await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` },
         body: JSON.stringify({ conversation_id: conv.id, user_id: currentSession.user.id, role: 'writer', display_name: writerData?.full_name || 'Writer' })
       });
-
+ 
       await loadConversations();
       openConversation(conv.id);
     } catch (err) { console.error(err); alert('Could not create conversation. Please try again.'); }
   }
-
+ 
   // Load chats when switching to chat view
   const origChatNav = document.querySelector('.nav-item[data-view="chat"]');
   if (origChatNav) {
@@ -2893,6 +2911,7 @@ const base = '';
     origChatNav.addEventListener('click', () => { setTimeout(() => loadConversations(), 100); });
   }
 </script>
-
+ 
 </body>
 </html>
+ 
