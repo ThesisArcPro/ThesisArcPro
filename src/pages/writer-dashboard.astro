@@ -2274,21 +2274,25 @@ const base = '';
         </div>
 
         <div class="om-panel om-panel--active" data-mpanel="details">
-          <div class="om-grid">
-            ${field('Type', esc(order.assignment_type || '—'))}
-            ${field('Subject', esc(order.subject || '—'))}
-            ${field('Education level', esc(order.education_level || '—'))}
-            ${field('Language', esc(order.language || '—'))}
-            ${field('Service', esc(order.service || '—'))}
-            ${field('Deadline', esc(dueDate))}
-            ${field('Pages', esc(String(order.pages || '—')))}
-            ${field('Status', esc(order.order_status || '—'))}
+          <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;">
+            <div class="om-grid">
+              ${field('Type', esc(order.assignment_type || '—'))}
+              ${field('Subject', esc(order.subject || '—'))}
+              ${field('Education level', esc(order.education_level || '—'))}
+              ${field('Language', esc(order.language || '—'))}
+              ${field('Service', esc(order.service || '—'))}
+              ${field('Deadline', esc(dueDate))}
+              ${field('Pages', esc(String(order.pages || '—')))}
+              ${field('Status', esc(order.order_status || '—'))}
+            </div>
           </div>
         </div>
 
         <div class="om-panel" data-mpanel="instructions">
-          <div class="om-desc-label">Description</div>
-          <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
+          <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;">
+            <div class="om-desc-label">Description</div>
+            <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
+          </div>
         </div>
 
         <div class="om-panel" data-mpanel="proposal">
