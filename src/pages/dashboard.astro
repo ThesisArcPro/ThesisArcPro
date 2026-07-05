@@ -1864,7 +1864,7 @@ async function wizSubmitOrder() {
     await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
-      body: JSON.stringify({ order_number: ticketId, client_email: email, topic, assignment_type: type, subject, service: wizState.service, language, education_level: level, pages, deadline, total_amount: total, amount_paid: amountPaid, payment_status: 'Pending', order_status: 'open_for_bids', instructions, transaction_id: '' })
+      body: JSON.stringify({ order_number: ticketId, client_email: email, topic, assignment_type: type, subject, service: wizState.service, language, education_level: level, pages, deadline, total_amount: total, amount_paid: amountPaid, payment_status: 'Pending', order_status: 'open_for_bids', instructions, transaction_id: null })
     });
  
     socket.emit('order:new', { id: ticketId, order_number: ticketId, topic, assignment_type: type, subject, pages, deadline, total_amount: total, order_status: 'open_for_bids' });
@@ -1874,7 +1874,7 @@ async function wizSubmitOrder() {
     const ticket = document.getElementById('wizSuccessTicket'); if (ticket) ticket.textContent = ticketId;
  
   } catch {
-    if (createBtn) { createBtn.disabled = false; createBtn.textContent = '🛒 Create Order'; }
+    if (createBtn) { createBtn.disabled = false; createBtn.textContent = '🚀 Post Order'; }
     alert('❌ Something went wrong. Please try again.');
   }
 }
