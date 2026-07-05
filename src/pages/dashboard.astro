@@ -3083,7 +3083,11 @@ async function wizSubmitOrder() {
       });
       const orderObj = allOrders.find((o: any) => String(o.id) === hireOrderId);
       const orderNumber = orderObj?.order_number;
-      await fetch(`${SUPABASE_URL}/functions/v1/update-order-status?orderId=${orderNumber}&status=in_progress&token=thesisarcpro_action_2026`, { method: 'GET' });
+      await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${hireOrderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal' },
+        body: JSON.stringify({ order_status: 'in_progress', status_updated_at: new Date().toISOString() })
+      });
       const isDeposit = hireBidPrice >= 30;
       const amountPaid = isDeposit ? hireBidPrice * 0.5 : hireBidPrice;
       await fetch(`${SUPABASE_URL}/rest/v1/orders?order_number=eq.${orderNumber}`, {
