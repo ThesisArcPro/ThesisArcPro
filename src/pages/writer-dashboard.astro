@@ -1148,8 +1148,12 @@ const base = '';
     socket.on('order:available', (order: any) => {
       availableOrders.unshift(order);
       renderAvailableOrders();
-      const badge = document.getElementById('notifBadge');
-      if (badge) { badge.textContent = '!'; (badge as HTMLElement).style.display = 'inline-flex'; }
+      const badge = document.getElementById('availBadge');
+      if (badge) {
+        const current = parseInt(badge.textContent || '0') || 0;
+        badge.textContent = String(current + 1);
+        (badge as HTMLElement).style.display = 'inline-flex';
+      }
     });
 
     socket.on('bid:accepted', (data: any) => {
@@ -1297,18 +1301,18 @@ const base = '';
       <div class="om-title">${esc(order.topic || '(no topic)')}</div>
       <div class="om-id" style="margin-bottom:1rem;">ID ${esc(order.order_number || order.id)}</div>
 
-      <div style="display:flex;gap:1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:0.85rem 1rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+      <div style="display:flex;gap:1rem;background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1.2rem;flex-wrap:wrap;">
         <div style="text-align:center;flex:1;">
-          <div style="font-size:0.7rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Min. price</div>
-          <div style="font-size:1rem;font-weight:700;color:#0f172a;">$${budget}</div>
+          <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Min. price</div>
+          <div style="font-size:1rem;font-weight:700;color:var(--text);">$${budget}</div>
         </div>
         <div style="text-align:center;flex:1;">
-          <div style="font-size:0.7rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">My share (80%)</div>
+          <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">My share (80%)</div>
           <div style="font-size:1rem;font-weight:700;color:#16a34a;">$${myShare}</div>
         </div>
         <div style="text-align:center;flex:1;">
-          <div style="font-size:0.7rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Pages</div>
-          <div style="font-size:1rem;font-weight:700;color:#0f172a;">${esc(order.pages||1)}</div>
+          <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Pages</div>
+          <div style="font-size:1rem;font-weight:700;color:var(--text);">${esc(order.pages||1)}</div>
         </div>
       </div>
 
@@ -1318,33 +1322,37 @@ const base = '';
       </div>
 
       <div class="om-panel om-panel--active" data-mpanel="instructions">
-        <div class="om-grid">
-          <div><div class="om-label">Type</div><div class="om-value">${esc(order.assignment_type||'—')}</div></div>
-          <div><div class="om-label">Subject</div><div class="om-value">${esc(order.subject||'—')}</div></div>
-          <div><div class="om-label">Education level</div><div class="om-value">${esc(order.education_level||'—')}</div></div>
-          <div><div class="om-label">Language</div><div class="om-value">${esc(order.language||'—')}</div></div>
-          <div><div class="om-label">Service</div><div class="om-value">${esc(order.service||'—')}</div></div>
-          <div><div class="om-label">Deadline</div><div class="om-value">${dueDate}</div></div>
+        <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem 1rem;">
+          <div class="om-grid">
+            <div><div class="om-label">Type</div><div class="om-value">${esc(order.assignment_type||'—')}</div></div>
+            <div><div class="om-label">Subject</div><div class="om-value">${esc(order.subject||'—')}</div></div>
+            <div><div class="om-label">Education level</div><div class="om-value">${esc(order.education_level||'—')}</div></div>
+            <div><div class="om-label">Language</div><div class="om-value">${esc(order.language||'—')}</div></div>
+            <div><div class="om-label">Service</div><div class="om-value">${esc(order.service||'—')}</div></div>
+            <div><div class="om-label">Deadline</div><div class="om-value">${dueDate}</div></div>
+          </div>
         </div>
-        <div>
+        <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem;">
           <div class="om-desc-label">Description</div>
           <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
         </div>
-        <button class="upload-btn" style="width:100%;margin-top:1.2rem;" id="goToProposalBtn">📨 Make Proposal</button>
+        <button class="upload-btn" style="width:calc(100% - 1rem);margin:1.2rem 0.5rem 0;" id="goToProposalBtn">📨 Make Proposal</button>
       </div>
 
       <div class="om-panel" data-mpanel="proposal">
-        <div class="form-group" style="margin-bottom:1rem;">
-          <label class="om-label">Your bid price ($) — minimum $${budget}</label>
-          <input type="number" id="bidPrice" min="${budget}" step="0.01" value="${budget}" style="width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.6rem 0.8rem;font-size:1rem;font-weight:700;outline:none;" />
-          <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.3rem;">You cannot bid below the client's budget.</div>
+        <div style="margin:0 0.5rem;">
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label class="om-label">Your bid price ($) — minimum $${budget}</label>
+            <input type="number" id="bidPrice" min="${budget}" step="0.01" value="${budget}" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:1rem;font-weight:700;outline:none;color:var(--text);" />
+            <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.3rem;">You cannot bid below the client's budget.</div>
+          </div>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label class="om-label">Your proposal message *</label>
+            <textarea id="bidNote" rows="4" placeholder="Introduce yourself and explain why you're the best fit for this order…" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.85rem;font-family:inherit;outline:none;resize:vertical;color:var(--text);"></textarea>
+          </div>
+          <button class="upload-btn" style="width:100%;" id="submitBidBtn">📨 Submit Proposal</button>
+          <div class="upload-msg" id="bidMsg" style="display:none;margin-top:0.5rem;"></div>
         </div>
-        <div class="form-group" style="margin-bottom:1rem;">
-          <label class="om-label">Your proposal message *</label>
-          <textarea id="bidNote" rows="4" placeholder="Introduce yourself and explain why you're the best fit for this order…" style="width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.6rem 0.8rem;font-size:0.85rem;font-family:inherit;outline:none;resize:vertical;"></textarea>
-        </div>
-        <button class="upload-btn" style="width:100%;" id="submitBidBtn">📨 Submit Proposal</button>
-        <div class="upload-msg" id="bidMsg" style="display:none;margin-top:0.5rem;"></div>
       </div>
       </div>
 
