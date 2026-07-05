@@ -2311,15 +2311,20 @@ const base = '';
         <div style="padding:0.75rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;">
           <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#94a3b8;">👤</div>
           <div>
-            <div style="font-size:0.78rem;font-weight:600;color:var(--text);">Client</div>
-            <div style="font-size:0.65rem;color:#64748b;">Chat not available until hired</div>
+            <div style="font-size:0.78rem;font-weight:600;color:var(--text);">${esc(order.client_email?.split('@')[0] || 'Client')}</div>
+            <div style="font-size:0.65rem;color:#64748b;" id="bidChatSub">Loading conversation…</div>
           </div>
         </div>
-        <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;text-align:center;">
+        <div id="bidChatLocked" style="display:none;flex:1;align-items:center;justify-content:center;padding:2rem;text-align:center;">
           <div>
-            <div style="font-size:2rem;margin-bottom:0.5rem;">⏳</div>
-            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;">Waiting for the client to hire you. Chat will be available once your bid is accepted.</p>
+            <div style="font-size:2rem;margin-bottom:0.5rem;">📨</div>
+            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;">No conversation yet for this proposal.</p>
           </div>
+        </div>
+        <div id="bidChatMessages" style="display:none;flex:1;overflow-y:auto;padding:0.75rem;flex-direction:column;gap:0.5rem;background:var(--main-bg);"></div>
+        <div id="bidChatInputBar" style="display:none;padding:0.6rem;border-top:1px solid var(--border);gap:0.4rem;background:var(--panel-bg);">
+          <input type="text" id="bidChatInput" placeholder="Type a message…" style="flex:1;background:var(--main-bg);border:1px solid var(--border);border-radius:16px;padding:0.4rem 0.7rem;font-size:0.78rem;color:var(--text);outline:none;font-family:inherit;" />
+          <button id="bidChatSend" style="background:#046fcd;color:#fff;border:none;border-radius:16px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:600;cursor:pointer;">Send</button>
         </div>
       </div>`;
 
@@ -2334,7 +2339,49 @@ const base = '';
       });
     });
 
+    document.getElementById('bidChatSend')?.addEventListener('click', bidChatSendMsg);
+    document.getElementById('bidChatInput')?.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); bidChatSendMsg(); } });
+
     document.getElementById('detailModal')!.classList.add('open');
+    proposalChatLoad(bid.order_id, order);
+  }
+
+  async function proposalChatLoad(orderId: number, order: any) {
+    const sub = document.getElementById('bidChatSub');
+    const locked = document.getElementById('bidChatLocked');
+    const messagesBox = document.getElementById('bidChatMessages');
+    const inputBar = document.getElementById('bidChatInputBar');
+    if (!messagesBox || !locked || !inputBar) return;
+
+    try {
+      const convId = await wocFindConversation(String(orderId));
+      if (!convId) {
+        if (sub) sub.textContent = 'No conversation yet';
+        locked.style.display = 'flex';
+        return;
+      }
+      await wocEnsureSelf(convId);
+      bidChatConvId = convId;
+      if (sub) sub.textContent = 'Waiting for client reply';
+      locked.style.display = 'none';
+      messagesBox.style.display = 'flex';
+      inputBar.style.display = 'flex';
+
+      const mRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${convId}&order=created_at.asc`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+      );
+      bidChatRender(await mRes.json());
+
+      if (bidChatSubRT) { bidChatSubRT.unsubscribe(); bidChatSubRT = null; }
+      bidChatSubRT = supabase.channel(`bidchat-${convId}`)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${convId}` },
+          (payload: any) => bidChatAppend(payload.new)).subscribe();
+    } catch (e) {
+      console.error('proposalChatLoad error', e);
+      if (sub) sub.textContent = 'Could not load conversation';
+      locked.style.display = 'flex';
+    }
   }
 
   async function loadClientFiles(orderId: number) {
