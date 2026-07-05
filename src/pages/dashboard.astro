@@ -1069,15 +1069,19 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
       <div style="overflow-y:auto;padding-right:0.5rem;">
  
         <!-- Success state -->
-        <div id="wizSuccess" style="display:none;text-align:center;padding:2.5rem 1rem;">
-          <div style="font-size:3.5rem;margin-bottom:1rem;">🎉</div>
-          <h2 style="color:#0f172a;font-size:1.4rem;margin-bottom:0.8rem;">Order Received!</h2>
-          <p style="color:#64748b;font-size:0.9rem;margin-bottom:1.8rem;line-height:1.6;">Your order is now live for writers to bid on. Check your dashboard for proposals.</p>
-          <div style="background:#f8fafc;border-radius:12px;padding:1.2rem;margin-bottom:1.8rem;">
-            <div style="color:#64748b;font-size:0.82rem;margin-bottom:0.35rem;">Your Ticket Number</div>
-            <div id="wizSuccessTicket" style="color:#c5a059;font-size:2.4rem;font-weight:800;">T-0000</div>
+        <div id="wizSuccess" style="display:none;padding:0.5rem 0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.5rem;">
+            <div>
+              <h2 style="color:#0f172a;font-size:1.15rem;font-weight:800;margin-bottom:0.2rem;">✅ Order Posted!</h2>
+              <p style="color:#64748b;font-size:0.8rem;margin:0;">Ticket: <span id="wizSuccessTicket" style="color:#c5a059;font-weight:700;">T-0000</span></p>
+            </div>
+            <button id="wizSuccessClose" style="background:#f1f5f9;color:#0f172a;padding:0.5rem 1rem;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:0.8rem;">View My Orders</button>
           </div>
-          <button id="wizSuccessClose" style="background:#0f172a;color:#fff;padding:0.9rem 2rem;border-radius:8px;border:none;font-weight:700;cursor:pointer;font-size:0.92rem;">View My Orders →</button>
+          <div id="wizBidsWaiting" style="background:#f8fafc;border-radius:12px;padding:1.2rem;text-align:center;margin-bottom:0.8rem;">
+            <div style="font-size:1.8rem;margin-bottom:0.5rem;">⏳</div>
+            <p style="color:#64748b;font-size:0.84rem;margin:0;line-height:1.6;">Writers are now reviewing your order and preparing proposals. This may take a few minutes.</p>
+          </div>
+          <div id="wizLiveBids" style="display:flex;flex-direction:column;gap:0.6rem;"></div>
         </div>
  
         <div id="wizStepsFlow">
@@ -1825,6 +1829,34 @@ document.getElementById('wizConfirmPaymentBtn')?.addEventListener('click', async
   }
 });
  
+function wizRenderBidCard(bid: any, orderId: string) {
+  const time = bid.created_at ? new Date(bid.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+  return `<div data-wbid="${esc(bid.id)}" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:0.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+    <div style="min-width:0;">
+      <div style="font-size:0.85rem;font-weight:700;color:#0f172a;">Writer #${esc(bid.writer_id)}</div>
+      ${bid.note ? `<div style="font-size:0.78rem;color:#64748b;margin-top:0.15rem;word-break:break-word;">${esc(bid.note)}</div>` : ''}
+      <div style="font-size:0.7rem;color:#94a3b8;margin-top:0.12rem;">${time}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.6rem;flex-shrink:0;">
+      <div style="font-size:1rem;font-weight:800;color:#046fcd;">$${Number(bid.bid_price).toFixed(2)}</div>
+      ${bid.status !== 'accepted'
+        ? `<button class="wiz-hire-btn" data-bid-id="${esc(bid.id)}" data-writer-id="${esc(bid.writer_id)}" data-bid-price="${esc(bid.bid_price)}" data-order-id="${esc(orderId)}" style="background:#046fcd;color:#fff;border:none;border-radius:8px;padding:0.45rem 0.9rem;font-size:0.8rem;font-weight:600;cursor:pointer;">Hire Writer</button>`
+        : `<span style="color:#4ade80;font-size:0.8rem;font-weight:600;">✅ Hired</span>`}
+    </div>
+  </div>`;
+}
+
+function attachWizHireBtns(container: Element, orderId: string) {
+  container.querySelectorAll('.wiz-hire-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const bidId = (btn as HTMLElement).dataset.bidId!;
+      const writerId = (btn as HTMLElement).dataset.writerId!;
+      const bidPrice = parseFloat((btn as HTMLElement).dataset.bidPrice || '0');
+      openHirePaymentModal(bidId, writerId, bidPrice, orderId);
+    });
+  });
+}
+
 async function wizSubmitOrder() {
   const createBtn = document.getElementById('wizCreateOrderBtn') as HTMLButtonElement;
   if (createBtn) { createBtn.disabled = true; createBtn.textContent = '⏳ Submitting…'; }
@@ -1868,6 +1900,43 @@ async function wizSubmitOrder() {
     const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'none';
     const success = document.getElementById('wizSuccess'); if (success) success.style.display = 'block';
     const ticket = document.getElementById('wizSuccessTicket'); if (ticket) ticket.textContent = ticketId;
+
+    // Fetch new order's DB id and subscribe to live bids
+    try {
+      const oRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?order_number=eq.${ticketId}&select=id`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` }
+      });
+      const oData = await oRes.json();
+      const newOrderDbId = String(oData[0]?.id || '');
+      if (newOrderDbId) {
+        socket.emit('bid:join', newOrderDbId);
+        socket.off('bid:new');
+        socket.on('bid:new', (bid: any) => {
+          const waiting = document.getElementById('wizBidsWaiting');
+          if (waiting) waiting.style.display = 'none';
+          const box = document.getElementById('wizLiveBids');
+          if (!box) return;
+          if (!box.querySelector(`[data-wbid="${bid.id}"]`)) {
+            box.insertAdjacentHTML('afterbegin', wizRenderBidCard(bid, newOrderDbId));
+            attachWizHireBtns(box, newOrderDbId);
+          }
+        });
+        // Fetch any bids already placed
+        const bRes = await fetch(`${SUPABASE_URL}/rest/v1/bids?order_id=eq.${newOrderDbId}&select=id,bid_price,note,writer_id,created_at,status&order=created_at.desc`, {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` }
+        });
+        const existingBids = await bRes.json();
+        if (Array.isArray(existingBids) && existingBids.length > 0) {
+          const waiting = document.getElementById('wizBidsWaiting');
+          if (waiting) waiting.style.display = 'none';
+          const box = document.getElementById('wizLiveBids');
+          if (box) {
+            box.innerHTML = existingBids.map((b: any) => wizRenderBidCard(b, newOrderDbId)).join('');
+            attachWizHireBtns(box, newOrderDbId);
+          }
+        }
+      }
+    } catch(e) { console.error('bid subscription error', e); }
  
   } catch (err: any) {
     console.error('wizSubmitOrder error:', err);
