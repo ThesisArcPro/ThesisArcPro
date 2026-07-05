@@ -952,9 +952,7 @@ const base = '';
   <div class="view-panel" id="viewProposals">
     <div class="tabs-bar">
       <div class="tabs">
-        <button class="tab active" data-ptab2="pending">Pending <span class="count" id="pcount_pending">0</span></button>
-        <button class="tab" data-ptab2="accepted">Accepted <span class="count" id="pcount_accepted">0</span></button>
-        <button class="tab" data-ptab2="rejected">Rejected <span class="count" id="pcount_rejected">0</span></button>
+        <button class="tab active" data-ptab2="pending">My Proposals <span class="count" id="pcount_pending">0</span></button>
       </div>
     </div>
     <div class="orders-area">
@@ -1411,23 +1409,15 @@ const base = '';
   async function loadMyBids() {
     try {
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/bids?writer_id=eq.${writerId}&select=id,order_id,bid_price,status,created_at,orders(order_number,topic,deadline)&order=created_at.desc`,
+        `${SUPABASE_URL}/rest/v1/bids?writer_id=eq.${writerId}&status=eq.pending&select=id,order_id,bid_price,status,created_at,note,orders(id,order_number,topic,deadline,assignment_type,order_status)&order=created_at.desc`,
         { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
       );
-      myBids = await res.json();
-      updateProposalCounts();
+      const all = await res.json();
+      // Only show bids on orders still open_for_bids
+      myBids = all.filter((b: any) => b.orders?.order_status === 'open_for_bids');
       renderProposals();
     } catch (err) { console.error(err); }
   }
-
-  function updateProposalCounts() {
-    const countFor = (s: string) => myBids.filter((b: any) => b.status === s).length;
-    const set = (id: string, v: number) => { const el = document.getElementById(id); if (el) el.textContent = String(v); };
-    set('pcount_pending', countFor('pending'));
-    set('pcount_accepted', countFor('accepted'));
-    set('pcount_rejected', countFor('rejected'));
-  }
-
   function renderProposals() {
     const loading = document.getElementById('propLoadingState')!;
     const empty = document.getElementById('propEmptyState')!;
@@ -1435,11 +1425,13 @@ const base = '';
     const list = document.getElementById('propList')!;
     loading.style.display = 'none';
 
-    const filtered = myBids.filter((b: any) => b.status === currentProposalTab);
-    if (!filtered.length) { empty.style.display = 'flex'; table.style.display = 'none'; return; }
+    const countEl = document.getElementById('pcount_pending');
+    if (countEl) countEl.textContent = String(myBids.length);
+
+    if (!myBids.length) { empty.style.display = 'flex'; table.style.display = 'none'; return; }
     empty.style.display = 'none'; table.style.display = 'flex';
 
-    list.innerHTML = filtered.map((b: any) => {
+    list.innerHTML = myBids.map((b: any) => {
       const o = b.orders || {};
       const dl = deadlineInfo(o.deadline);
       return `
@@ -1447,15 +1439,17 @@ const base = '';
           <div class="col-left">
             <div class="order-title">${esc(o.topic || '(no topic)')}</div>
             <div class="order-meta">
-              <span class="status-badge ${statusClass(b.status)}">${esc(b.status)}</span>
+              <span class="status-badge in_progress" style="background:rgba(251,191,36,0.15);color:#fbbf24;">Pending</span>
               <span class="meta-dot">·</span>
-              <span class="order-id">Order ${esc(o.order_number || b.order_id)}</span>
+              <span class="order-id">ID ${esc(o.order_number || b.order_id)}</span>
               <span class="meta-dot">·</span>
               <span style="font-size:0.76rem;color:#64748b;">${esc(o.assignment_type || '—')}</span>
+              <span class="meta-dot">·</span>
+              <span style="font-size:0.76rem;font-weight:700;color:#046fcd;">$${Number(b.bid_price).toFixed(2)}</span>
             </div>
           </div>
           <div class="col-right">
-            <div style="font-size:0.9rem;font-weight:700;color:#046fcd;">$${Number(b.bid_price).toFixed(2)}</div>
+            <div class="col-deadline ${dl.cls}">${dl.text}</div>
           </div>
         </div>`;
     }).join('');
