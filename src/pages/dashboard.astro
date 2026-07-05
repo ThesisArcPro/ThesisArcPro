@@ -2137,12 +2137,14 @@ async function wizSubmitOrder() {
         localStorage.setItem('wizPendingOrderId', newOrderDbId);
         socket.emit('bid:join', newOrderDbId);
         socket.off('bid:new');
-        socket.on('bid:new', (bid: any) => {
+        socket.on('bid:new', async (bid: any) => {
           const waiting = document.getElementById('wizBidsWaiting');
           if (waiting) waiting.style.display = 'none';
           const box = document.getElementById('wizLiveBids');
           if (!box) return;
           if (!box.querySelector(`[data-wbid="${bid.id}"]`)) {
+            const writer = await fetchWriterProfile(String(bid.writer_id));
+            bid.writer = writer || {};
             box.insertAdjacentHTML('afterbegin', wizRenderBidCard(bid, newOrderDbId));
             attachWizHireBtns(box, newOrderDbId);
           }
@@ -2216,10 +2218,12 @@ async function wizSubmitOrder() {
             // Subscribe to live bids
             socket.emit('bid:join', String(pendingId));
             socket.off('bid:new');
-            socket.on('bid:new', (bid: any) => {
+            socket.on('bid:new', async (bid: any) => {
               const waiting = document.getElementById('wizBidsWaiting'); if (waiting) waiting.style.display = 'none';
               const box = document.getElementById('wizLiveBids'); if (!box) return;
               if (!box.querySelector(`[data-wbid="${bid.id}"]`)) {
+                const writer = await fetchWriterProfile(String(bid.writer_id));
+                bid.writer = writer || {};
                 box.insertAdjacentHTML('afterbegin', wizRenderBidCard(bid, String(pendingId)));
                 attachWizHireBtns(box, String(pendingId));
               }
@@ -2231,7 +2235,11 @@ async function wizSubmitOrder() {
             if (Array.isArray(existingBids) && existingBids.length > 0) {
               const waiting = document.getElementById('wizBidsWaiting'); if (waiting) waiting.style.display = 'none';
               const box = document.getElementById('wizLiveBids');
-              if (box) { box.innerHTML = existingBids.map((b: any) => wizRenderBidCard(b, String(pendingId))).join(''); attachWizHireBtns(box, String(pendingId)); }
+              if (box) { 
+              const enriched = await enrichBidsWithWriters(existingBids);
+              box.innerHTML = enriched.map((b: any) => wizRenderBidCard(b, String(pendingId))).join(''); 
+              attachWizHireBtns(box, String(pendingId)); 
+            }
             }
           } else {
             localStorage.removeItem('wizPendingOrderId');
