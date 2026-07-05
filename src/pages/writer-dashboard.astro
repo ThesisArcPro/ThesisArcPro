@@ -2270,11 +2270,11 @@ const base = '';
         <div class="om-tabs">
           <button class="om-tab om-tab--active" data-mtab="details">Order Details</button>
           <button class="om-tab" data-mtab="instructions">Instructions</button>
-          <button class="om-tab" data-mtab="proposal">My Proposal</button>
+          <button class="om-tab" data-mtab="files">File</button>
         </div>
 
         <div class="om-panel om-panel--active" data-mpanel="details">
-          <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;">
+          <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem;">
             <div class="om-grid">
               ${field('Type', esc(order.assignment_type || '—'))}
               ${field('Subject', esc(order.subject || '—'))}
@@ -2289,25 +2289,16 @@ const base = '';
         </div>
 
         <div class="om-panel" data-mpanel="instructions">
-          <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;">
+          <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem;">
             <div class="om-desc-label">Description</div>
             <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
           </div>
         </div>
 
-        <div class="om-panel" data-mpanel="proposal">
-          <div style="display:flex;gap:1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;flex-wrap:wrap;">
-            <div style="text-align:center;flex:1;">
-              <div style="font-size:0.7rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Your bid</div>
-              <div style="font-size:1rem;font-weight:700;color:#046fcd;">$${Number(bid.bid_price).toFixed(2)}</div>
-            </div>
-            <div style="text-align:center;flex:1;">
-              <div style="font-size:0.7rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Status</div>
-              <div style="font-size:1rem;font-weight:700;color:#fbbf24;">Pending</div>
-            </div>
+        <div class="om-panel" data-mpanel="files">
+          <div style="margin:0 0.5rem;">
+            <div id="proposalFilesList" class="files-list"><div class="no-files">Loading files…</div></div>
           </div>
-          <div class="om-desc-label">Your proposal message</div>
-          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem;font-size:0.85rem;color:#475569;line-height:1.6;">${esc(bid.note || 'No message')}</div>
         </div>
       </div>
 
@@ -2340,6 +2331,7 @@ const base = '';
         document.querySelectorAll('#modalContent .om-panel').forEach(p => p.classList.remove('om-panel--active'));
         tab.classList.add('om-tab--active');
         document.querySelector(`#modalContent .om-panel[data-mpanel="${which}"]`)?.classList.add('om-panel--active');
+        if (which === 'files') loadProposalClientFiles(order.id);
       });
     });
 
@@ -2348,6 +2340,34 @@ const base = '';
 
     document.getElementById('detailModal')!.classList.add('open');
     proposalChatLoad(bid.order_id, order);
+  }
+
+  async function loadProposalClientFiles(orderId: number) {
+    const box = document.getElementById('proposalFilesList');
+    if (!box) return;
+    box.innerHTML = '<div class="no-files">Loading files…</div>';
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/order_files?order_id=eq.${orderId}&uploaded_by=eq.client&order=created_at.desc`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+      );
+      const files = await res.json();
+      if (!Array.isArray(files) || !files.length) {
+        box.innerHTML = '<div class="no-files">No files attached by the client.</div>';
+        return;
+      }
+      box.innerHTML = files.map((f: any) => `
+        <div class="file-row">
+          <div class="file-info">
+            <span class="file-type-badge">${esc(f.file_type || 'File')}</span>
+            <div class="file-name">${esc(f.file_name)}</div>
+          </div>
+          <a href="${esc(f.file_url || '#')}" target="_blank" style="font-size:0.78rem;color:#046fcd;font-weight:600;text-decoration:none;">Download</a>
+        </div>`).join('');
+    } catch (err) {
+      console.error(err);
+      box.innerHTML = '<div class="no-files">Could not load files.</div>';
+    }
   }
 
   async function proposalChatLoad(orderId: number, order: any) {
