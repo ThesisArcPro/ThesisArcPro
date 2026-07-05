@@ -1676,6 +1676,7 @@ function wizCalc() {
 document.getElementById('orderFormModalClose')?.addEventListener('click', closeOrderModal);
 document.getElementById('orderFormModalOverlay')?.addEventListener('click', closeOrderModal);
 document.getElementById('wizSuccessClose')?.addEventListener('click', () => {
+  localStorage.removeItem('wizPendingOrderId');
   closeOrderModal();
   if (currentSession) loadOrders(currentSession);
 });
@@ -1847,6 +1848,8 @@ async function wizSubmitOrder() {
     const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'none';
     const success = document.getElementById('wizSuccess'); if (success) success.style.display = 'block';
     const ticket = document.getElementById('wizSuccessTicket'); if (ticket) ticket.textContent = ticketId;
+    const priceCard = document.getElementById('wizPriceCard'); if (priceCard) priceCard.style.display = 'none';
+    const infoCard = document.getElementById('wizInfoCard'); if (infoCard) infoCard.style.display = 'none';
 
     // Fetch new order's DB id and subscribe to live bids
     try {
@@ -1856,6 +1859,7 @@ async function wizSubmitOrder() {
       const oData = await oRes.json();
       const newOrderDbId = String(oData[0]?.id || '');
       if (newOrderDbId) {
+        localStorage.setItem('wizPendingOrderId', newOrderDbId);
         socket.emit('bid:join', newOrderDbId);
         socket.off('bid:new');
         socket.on('bid:new', (bid: any) => {
@@ -1915,6 +1919,50 @@ async function wizSubmitOrder() {
         socket.emit('client:online', myClientId);       
       } catch (e) { console.warn('Could not load client_id', e); }
       await loadOrders(session);
+
+      // Reopen pending order modal if client refreshed while waiting for bids
+      const pendingId = localStorage.getItem('wizPendingOrderId');
+      if (pendingId) {
+        try {
+          const oRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${pendingId}&select=id,order_number,order_status`, {
+            headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}` }
+          });
+          const oData = await oRes.json();
+          const pendingOrder = oData[0];
+          if (pendingOrder && pendingOrder.order_status === 'open_for_bids') {
+            openOrderModal();
+            const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'none';
+            const successEl = document.getElementById('wizSuccess'); if (successEl) successEl.style.display = 'block';
+            const priceCard = document.getElementById('wizPriceCard'); if (priceCard) priceCard.style.display = 'none';
+            const infoCard = document.getElementById('wizInfoCard'); if (infoCard) infoCard.style.display = 'none';
+            const ticketEl = document.getElementById('wizSuccessTicket'); if (ticketEl) ticketEl.textContent = pendingOrder.order_number;
+            const bar = document.getElementById('wizModalBar'); if (bar) bar.style.width = '100%';
+            // Subscribe to live bids
+            socket.emit('bid:join', String(pendingId));
+            socket.off('bid:new');
+            socket.on('bid:new', (bid: any) => {
+              const waiting = document.getElementById('wizBidsWaiting'); if (waiting) waiting.style.display = 'none';
+              const box = document.getElementById('wizLiveBids'); if (!box) return;
+              if (!box.querySelector(`[data-wbid="${bid.id}"]`)) {
+                box.insertAdjacentHTML('afterbegin', wizRenderBidCard(bid, String(pendingId)));
+                attachWizHireBtns(box, String(pendingId));
+              }
+            });
+            const bRes = await fetch(`${SUPABASE_URL}/rest/v1/bids?order_id=eq.${pendingId}&select=id,bid_price,note,writer_id,created_at,status&order=created_at.desc`, {
+              headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}` }
+            });
+            const existingBids = await bRes.json();
+            if (Array.isArray(existingBids) && existingBids.length > 0) {
+              const waiting = document.getElementById('wizBidsWaiting'); if (waiting) waiting.style.display = 'none';
+              const box = document.getElementById('wizLiveBids');
+              if (box) { box.innerHTML = existingBids.map((b: any) => wizRenderBidCard(b, String(pendingId))).join(''); attachWizHireBtns(box, String(pendingId)); }
+            }
+          } else {
+            localStorage.removeItem('wizPendingOrderId');
+          }
+        } catch(e) { console.error('restore pending order error', e); localStorage.removeItem('wizPendingOrderId'); }
+      }
+
     } catch (err) {
       showDebugError(err);
     }
@@ -2576,6 +2624,7 @@ async function wizSubmitOrder() {
       const idx = allOrders.findIndex((o: any) => String(o.id) === hireOrderId);
       if (idx !== -1) { allOrders[idx].order_status = 'in_progress'; allOrders[idx].writer_id = hireWriterId; allOrders[idx].amount_paid = amountPaid; }
       updateCounts(); renderOrders();
+      localStorage.removeItem('wizPendingOrderId');
       document.getElementById('hirePaymentModal')!.classList.remove('open');
       closeModal();
       alert('✅ Writer hired! Your order is now in progress.');
