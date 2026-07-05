@@ -1830,6 +1830,7 @@ async function wizSubmitOrder() {
   if (createBtn) { createBtn.disabled = true; createBtn.textContent = '⏳ Submitting…'; }
  
   const total = wizTotal;
+  const isDeposit = total >= 30;
   const amountPaid = 0;
   const email = currentSession.user.email || '';
   const topic = (document.getElementById('wizTopic') as HTMLInputElement)?.value || '';
