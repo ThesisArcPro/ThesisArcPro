@@ -927,9 +927,6 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
       <button class="tab active" data-tab="in_progress">
         In Progress <span class="count" id="count_in_progress">0</span>
       </button>
-      <button class="tab" data-tab="open_for_bids">
-        Open for Bids <span class="count" id="count_open_for_bids">0</span>
-      </button>
       <button class="tab" data-tab="in_review">
         In Review <span class="count" id="count_in_review">0</span>
       </button>
@@ -1032,28 +1029,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   <div class="modal-overlay" id="orderFormModalOverlay"></div>
   <div class="modal-box" style="max-width:920px;width:96%;max-height:90vh;padding:0;overflow:hidden;display:flex;flex-direction:column;position:relative;">
     <button class="modal-close" id="orderFormModalClose" style="top:1rem;right:1rem;z-index:210;">✕</button>
- 
-    <!-- Payment overlay (inside modal) -->
-    <div id="wizPaymentModal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center;">
-      <div style="background:#fff;border-radius:16px;padding:2.5rem;max-width:460px;width:90%;position:relative;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.35);">
-        <button id="wizPaymentClose" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.2rem;cursor:pointer;color:#64748b;">✕</button>
-        <div style="font-size:3rem;margin-bottom:1rem;">💰</div>
-        <h2 style="color:#0f172a;margin-bottom:1rem;font-size:1.4rem;">Complete Payment</h2>
-        <div id="wizPaymentDetails" style="background:#f8fafc;border-radius:8px;padding:1rem;margin-bottom:0.8rem;"></div>
-        <p id="wizPolicyText" style="color:#64748b;font-size:0.88rem;margin-bottom:1.3rem;"></p>
-        <a href="https://www.paypal.com/ncp/payment/X4GBU659AGXGQ" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:0.7rem;background:#FFC439;color:#003087;font-weight:700;font-size:1rem;padding:0.9rem 2rem;border-radius:8px;text-decoration:none;margin-bottom:0.6rem;">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19c-.988 0-1.829.722-1.974 1.699l-1.12 7.106-.313 1.983h3.293l.742-4.713.048-.306c.145-.977.986-1.699 1.974-1.699h1.245c3.863 0 6.637-1.57 7.49-6.114.333-1.726.163-3.168-.734-4.312z"/></svg>
-          Pay with PayPal or Card
-        </a>
-        <p style="color:#94a3b8;font-size:0.76rem;margin-bottom:1.3rem;">🔒 Secured by PayPal — Accepts Visa, Mastercard & PayPal</p>
-        <div style="margin-bottom:1rem;text-align:left;">
-          <label style="display:block;font-weight:600;color:#0f172a;font-size:0.88rem;margin-bottom:0.35rem;">Enter PayPal Transaction ID *</label>
-          <input type="text" id="wizTxnId" placeholder="e.g. 7GH123456789" style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e2e8f0;border-radius:6px;font-size:0.92rem;outline:none;" />
-          <span style="font-size:0.74rem;color:#94a3b8;">Find it in your PayPal confirmation email</span>
-        </div>
-        <button id="wizConfirmPaymentBtn" disabled style="width:100%;padding:0.95rem;background:#2d6a4f;color:white;border:none;border-radius:8px;font-size:0.95rem;font-weight:700;cursor:pointer;opacity:0.5;">✅ I Have Paid — Submit My Order</button>
-      </div>
-    </div>
+
  
     <!-- Progress bar -->
     <div style="padding:1.2rem 2rem 0.8rem;border-bottom:1px solid #eef2f7;flex-shrink:0;">
@@ -1800,35 +1776,6 @@ document.getElementById('wizCreateOrderBtn')?.addEventListener('click', async ()
   await wizSubmitOrder();
 });
  
-document.getElementById('wizPaymentClose')?.addEventListener('click', () => {
-  const pm = document.getElementById('wizPaymentModal'); if (pm) pm.style.display = 'none';
-});
- 
-document.getElementById('wizTxnId')?.addEventListener('input', (e) => {
-  const v = (e.target as HTMLInputElement).value.trim();
-  const btn = document.getElementById('wizConfirmPaymentBtn') as HTMLButtonElement;
-  if (btn) { btn.disabled = v.length < 5; btn.style.opacity = v.length >= 5 ? '1' : '0.5'; }
-});
- 
-document.getElementById('wizConfirmPaymentBtn')?.addEventListener('click', async () => {
-  const txnId = (document.getElementById('wizTxnId') as HTMLInputElement)?.value.trim();
-  const btn = document.getElementById('wizConfirmPaymentBtn') as HTMLButtonElement;
-  if (!/^[A-Z0-9]{8,20}$/i.test(txnId)) { alert('❌ Invalid Transaction ID format.'); return; }
-  btn.textContent = '⏳ Checking...'; btn.disabled = true;
-  try {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession?.access_token}` }
-    });
-    const d = await r.json();
-    if (d.length > 0) { alert('❌ This Transaction ID has already been used.'); btn.textContent = '✅ I Have Paid — Submit My Order'; btn.disabled = false; return; }
-    const pm = document.getElementById('wizPaymentModal'); if (pm) pm.style.display = 'none';
-    await wizSubmitOrder(txnId);
-  } catch {
-    alert('❌ Verification failed. Please try again.');
-    btn.textContent = '✅ I Have Paid — Submit My Order'; btn.disabled = false;
-  }
-});
- 
 function wizRenderBidCard(bid: any, orderId: string) {
   const time = bid.created_at ? new Date(bid.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
   return `<div data-wbid="${esc(bid.id)}" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:0.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
@@ -1965,17 +1912,7 @@ async function wizSubmitOrder() {
         const clientIdEl = document.getElementById('clientIdDisplay');
         if (clientIdEl && myClientId) clientIdEl.textContent = '#' + myClientId;
         // Tell bidding server this client is online
-        socket.emit('client:online', myClientId);
-
-        // Join bidding room when viewing an order
-        socket.on('bid:new', (bid: any) => {
-          console.log('New bid received:', bid);
-          // We'll render this in the order modal
-        });
-
-        socket.on('bid:closed', () => {
-          console.log('Bidding closed for this order');
-        });
+        socket.emit('client:online', myClientId);       
       } catch (e) { console.warn('Could not load client_id', e); }
       await loadOrders(session);
     } catch (err) {
@@ -2016,7 +1953,6 @@ async function wizSubmitOrder() {
       if (el) el.textContent = String(val);
     };
     set('count_in_progress', countFor('in_progress'));
-    set('count_open_for_bids', countFor('open_for_bids'));
     set('count_in_review', countFor('in_review'));
     set('count_revision', countFor('revision'));
     set('count_completed', countFor('completed'));
@@ -2181,7 +2117,6 @@ async function wizSubmitOrder() {
       <div class="om-tabs">
         <button class="om-tab om-tab--active" data-mtab="general">General</button>
         <button class="om-tab" data-mtab="instructions">Instructions</button>
-        <button class="om-tab" data-mtab="bids">🔥 Live Bids</button>
         <button class="om-tab" data-mtab="files">Files</button>
         <button class="om-tab" data-mtab="chat">💬 Chat</button>
       </div>
@@ -2214,12 +2149,6 @@ async function wizSubmitOrder() {
         <div>
           <div class="om-desc-label">Description</div>
           <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
-        </div>
-      </div>
-<!-- BIDS -->
-      <div class="om-panel" data-mpanel="bids">
-        <div id="liveBidsList" style="display:flex;flex-direction:column;gap:0.75rem;margin-top:0.5rem;">
-          <div style="text-align:center;color:#94a3b8;font-size:0.85rem;padding:2rem;">Loading bids…</div>
         </div>
       </div>
 
@@ -2352,7 +2281,6 @@ async function wizSubmitOrder() {
         content.querySelector(`.om-panel[data-mpanel="${which}"]`)?.classList.add('om-panel--active');
         if (which === 'chat') openOrderChat(order);
         if (which === 'files') loadClientFiles(order.id);
-        if (which === 'bids') loadLiveBids(order.id);
       });
     });
 
@@ -2571,61 +2499,6 @@ async function wizSubmitOrder() {
         });
       });
     } catch (err) { console.error(err); box.innerHTML = '<div class="om-nofile">Could not load files.</div>'; }
-  }
-  async function loadLiveBids(orderId: string) {
-    const box = document.getElementById('liveBidsList')!;
-    box.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:0.85rem;padding:2rem;">Loading bids…</div>';
-
-    // Join the bidding room
-    socket.emit('bid:join', orderId);
-
-    // Listen for new bids in real time
-    socket.off('bid:new');
-    socket.on('bid:new', (bid: any) => {
-      const existing = document.querySelector(`[data-bid-id="${bid.id}"]`);
-      if (!existing) {
-        box.insertAdjacentHTML('afterbegin', renderBidCard(bid));
-      }
-    });
-
-    try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/bids?order_id=eq.${orderId}&select=id,bid_price,note,status,created_at,writer_id&order=created_at.desc`,
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
-      );
-      const bids = await res.json();
-      if (!bids.length) {
-        box.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:0.85rem;padding:2rem;">No bids yet. Writers will bid on your order soon!</div>';
-        return;
-      }
-      box.innerHTML = bids.map((b: any) => renderBidCard(b)).join('');
-      box.querySelectorAll('.accept-bid-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const bidId = (btn as HTMLElement).dataset.bidId!;
-          const acceptWriterId = (btn as HTMLElement).dataset.writerId!;
-          const bidPrice = parseFloat((btn as HTMLElement).dataset.bidPrice || '0');
-          openHirePaymentModal(bidId, acceptWriterId, bidPrice, String(orderId));
-        });
-      });
-    } catch (err) {
-      box.innerHTML = '<div style="text-align:center;color:#f87171;font-size:0.85rem;padding:2rem;">Could not load bids.</div>';
-    }
-  }
-
-  function renderBidCard(bid: any) {
-    const time = bid.created_at ? new Date(bid.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
-    const isAccepted = bid.status === 'accepted';
-    return `<div data-bid-id="${esc(bid.id)}" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
-      <div>
-        <div style="font-size:0.85rem;font-weight:600;color:#0f172a;">Writer #${esc(bid.writer_id)}</div>
-        ${bid.note ? `<div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem;">${esc(bid.note)}</div>` : ''}
-        <div style="font-size:0.72rem;color:#94a3b8;margin-top:0.2rem;">${time}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
-        <div style="font-size:1.1rem;font-weight:800;color:#046fcd;">$${Number(bid.bid_price).toFixed(2)}</div>
-        ${!isAccepted ? `<button class="accept-bid-btn" data-bid-id="${esc(bid.id)}" data-writer-id="${esc(bid.writer_id)}" data-bid-price="${esc(bid.bid_price)}" style="background:#046fcd;color:#fff;border:none;border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;">Hire Writer</button>` : `<span style="color:#4ade80;font-weight:600;font-size:0.82rem;">✅ Hired</span>`}
-      </div>
-    </div>`;
   }
   // ═══ HIRE WRITER PAYMENT FLOW ═══
   let hireBidId = '';
