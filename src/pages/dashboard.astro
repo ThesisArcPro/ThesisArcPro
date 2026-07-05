@@ -1359,7 +1359,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   import { supabase } from '../lib/supabase.js';
   import { io } from 'socket.io-client';
 
-  const BIDDING_SERVER = 'http://https://thesisarcpro.onrender.com';
+  const BIDDING_SERVER = 'https://thesisarcpro.onrender.com';
   const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
 
   socket.on('connect', () => console.log('Connected to bidding server:', socket.id));
