@@ -1255,7 +1255,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
  
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1.4rem;">
               <button type="button" class="wiz-back-btn" data-wback>← Back</button>
-              <button type="button" id="wizCreateOrderBtn" style="background:#c5a059;color:#0f172a;border:none;border-radius:8px;padding:0.75rem 2rem;font-weight:700;font-size:0.9rem;cursor:pointer;">🛒 Create Order</button>
+              <button type="button" id="wizCreateOrderBtn" style="background:#c5a059;color:#0f172a;border:none;border-radius:8px;padding:0.75rem 2rem;font-weight:700;font-size:0.9rem;cursor:pointer;">🚀 Post Order</button>
             </div>
           </div>
  
@@ -1311,6 +1311,29 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     </div>
   </div>
 </div>
+<!-- HIRE WRITER PAYMENT MODAL -->
+<div class="modal" id="hirePaymentModal">
+  <div class="modal-overlay" id="hirePaymentOverlay"></div>
+  <div class="modal-box" style="max-width:460px;text-align:center;">
+    <button class="modal-close" id="hirePaymentClose">✕</button>
+    <div style="font-size:3rem;margin-bottom:1rem;">💰</div>
+    <h2 style="color:#0f172a;font-size:1.3rem;font-weight:800;margin-bottom:1rem;">Hire Writer</h2>
+    <div id="hirePaymentDetails" style="background:#f8fafc;border-radius:8px;padding:1rem;margin-bottom:0.8rem;"></div>
+    <p id="hirePaymentPolicy" style="color:#64748b;font-size:0.85rem;margin-bottom:1.2rem;"></p>
+    <a href="https://www.paypal.com/ncp/payment/X4GBU659AGXGQ" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:0.7rem;background:#FFC439;color:#003087;font-weight:700;font-size:1rem;padding:0.9rem 2rem;border-radius:8px;text-decoration:none;margin-bottom:0.6rem;">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19c-.988 0-1.829.722-1.974 1.699l-1.12 7.106-.313 1.983h3.293l.742-4.713.048-.306c.145-.977.986-1.699 1.974-1.699h1.245c3.863 0 6.637-1.57 7.49-6.114.333-1.726.163-3.168-.734-4.312z"/></svg>
+      Pay with PayPal or Card
+    </a>
+    <p style="color:#94a3b8;font-size:0.75rem;margin-bottom:1.2rem;">🔒 Secured by PayPal — Accepts Visa, Mastercard & PayPal</p>
+    <div style="text-align:left;margin-bottom:1rem;">
+      <label style="display:block;font-weight:600;color:#0f172a;font-size:0.88rem;margin-bottom:0.35rem;">Enter PayPal Transaction ID *</label>
+      <input type="text" id="hireTxnId" placeholder="e.g. 7GH123456789" style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e2e8f0;border-radius:6px;font-size:0.92rem;outline:none;box-sizing:border-box;" />
+      <span style="font-size:0.74rem;color:#94a3b8;">Find it in your PayPal confirmation email</span>
+    </div>
+    <button id="hireConfirmBtn" disabled style="width:100%;padding:0.95rem;background:#2d6a4f;color:white;border:none;border-radius:8px;font-size:0.95rem;font-weight:700;cursor:pointer;opacity:0.5;">✅ I Have Paid — Hire Writer</button>
+  </div>
+</div>
+
 <div class="review-modal" id="reviewModal">
   <div class="review-overlay" id="reviewOverlay"></div>
   <div class="review-box">
@@ -1765,26 +1788,12 @@ document.querySelectorAll('[data-wback]').forEach(btn => {
 });
  
 // ── Create Order → payment modal ──
-document.getElementById('wizCreateOrderBtn')?.addEventListener('click', () => {
+document.getElementById('wizCreateOrderBtn')?.addEventListener('click', async () => {
   const level = (document.getElementById('wizLevel') as HTMLSelectElement)?.value;
   const deadline = (document.getElementById('wizDeadline') as HTMLInputElement)?.value;
   if (!level) { alert('Please select an education level.'); return; }
   if (!deadline) { alert('Please choose a deadline.'); return; }
-  const total = wizTotal;
-  const isDeposit = total >= 30;
-  const amountToPay = isDeposit ? total * 0.5 : total;
-  const pd = document.getElementById('wizPaymentDetails');
-  if (pd) pd.innerHTML = `
-    <p style="font-size:0.95rem;color:#64748b;margin:0 0 0.4rem;">Order Total</p>
-    <p style="font-size:1.7rem;color:#0f172a;font-weight:800;margin:0 0 0.3rem;">$${total.toFixed(2)}</p>
-    <p style="font-size:0.95rem;color:#64748b;margin:0 0 0.3rem;">Pay Now</p>
-    <p style="font-size:1.9rem;color:#c5a059;font-weight:800;margin:0;">$${amountToPay.toFixed(2)}</p>`;
-  const pt = document.getElementById('wizPolicyText');
-  if (pt) pt.textContent = isDeposit
-    ? `50% deposit required now. Remaining $${(total * 0.5).toFixed(2)} due on delivery.`
-    : 'Full payment required for orders under $30.';
-  const pm = document.getElementById('wizPaymentModal');
-  if (pm) pm.style.display = 'flex';
+  await wizSubmitOrder();
 });
  
 document.getElementById('wizPaymentClose')?.addEventListener('click', () => {
@@ -1816,13 +1825,12 @@ document.getElementById('wizConfirmPaymentBtn')?.addEventListener('click', async
   }
 });
  
-async function wizSubmitOrder(txnId: string) {
+async function wizSubmitOrder() {
   const createBtn = document.getElementById('wizCreateOrderBtn') as HTMLButtonElement;
   if (createBtn) { createBtn.disabled = true; createBtn.textContent = '⏳ Submitting…'; }
  
   const total = wizTotal;
-  const isDeposit = total >= 30;
-  const amountPaid = isDeposit ? total * 0.5 : total;
+  const amountPaid = 0;
   const email = currentSession.user.email || '';
   const topic = (document.getElementById('wizTopic') as HTMLInputElement)?.value || '';
   const type = (document.getElementById('wizType') as HTMLInputElement)?.value || '';
@@ -1856,7 +1864,7 @@ async function wizSubmitOrder(txnId: string) {
     await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
-      body: JSON.stringify({ order_number: ticketId, client_email: email, topic, assignment_type: type, subject, service: wizState.service, language, education_level: level, pages, deadline, total_amount: total, amount_paid: amountPaid, payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full', order_status: 'open_for_bids', instructions, transaction_id: txnId })
+      body: JSON.stringify({ order_number: ticketId, client_email: email, topic, assignment_type: type, subject, service: wizState.service, language, education_level: level, pages, deadline, total_amount: total, amount_paid: amountPaid, payment_status: 'Pending', order_status: 'open_for_bids', instructions, transaction_id: '' })
     });
  
     socket.emit('order:new', { id: ticketId, order_number: ticketId, topic, assignment_type: type, subject, pages, deadline, total_amount: total, order_status: 'open_for_bids' });
@@ -2526,60 +2534,11 @@ async function wizSubmitOrder(txnId: string) {
       }
       box.innerHTML = bids.map((b: any) => renderBidCard(b)).join('');
       box.querySelectorAll('.accept-bid-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
+        btn.addEventListener('click', () => {
           const bidId = (btn as HTMLElement).dataset.bidId!;
           const acceptWriterId = (btn as HTMLElement).dataset.writerId!;
-          if (!confirm('Hire this writer for your order?')) return;
-          (btn as HTMLButtonElement).disabled = true;
-          (btn as HTMLButtonElement).textContent = '⏳ Processing…';
-
-          try {
-            // Update bid status to accepted
-            await fetch(`${SUPABASE_URL}/rest/v1/bids?id=eq.${bidId}`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}`, 'Prefer': 'return=minimal' },
-              body: JSON.stringify({ status: 'accepted' })
-            });
-
-            // Reject all other bids
-            await fetch(`${SUPABASE_URL}/rest/v1/bids?order_id=eq.${orderId}&id=neq.${bidId}`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}`, 'Prefer': 'return=minimal' },
-              body: JSON.stringify({ status: 'rejected' })
-            });
-
-            // Update order using the same Edge Function as admin
-            const orderObj = allOrders.find((o: any) => String(o.id) === String(orderId));
-            const orderNumber = orderObj?.order_number;
-            const updateRes = await fetch(
-              `${SUPABASE_URL}/functions/v1/update-order-status?orderId=${orderNumber}&status=in_progress&token=thesisarcpro_action_2026`,
-              { method: 'GET' }
-            );
-
-            // Also assign writer_id directly
-            await fetch(`${SUPABASE_URL}/rest/v1/orders?order_number=eq.${orderNumber}`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}`, 'Prefer': 'return=minimal' },
-              body: JSON.stringify({ writer_id: parseInt(acceptWriterId) })
-            });
-
-            // Notify writer via Socket.io
-            socket.emit('bid:accept', { bidId, orderId: String(orderId), writerId: String(acceptWriterId) });
-
-            // Update local orders
-            const idx = allOrders.findIndex((o: any) => String(o.id) === String(orderId));
-            if (idx !== -1) { allOrders[idx].order_status = 'in_progress'; allOrders[idx].writer_id = acceptWriterId; }
-            updateCounts();
-            renderOrders();
-            closeModal();
-            alert('✅ Writer hired! Your order is now in progress.');
-
-          } catch (err) {
-            console.error(err);
-            (btn as HTMLButtonElement).disabled = false;
-            (btn as HTMLButtonElement).textContent = 'Accept';
-            alert('Could not accept bid. Please try again.');
-          }
+          const bidPrice = parseFloat((btn as HTMLElement).dataset.bidPrice || '0');
+          openHirePaymentModal(bidId, acceptWriterId, bidPrice, String(orderId));
         });
       });
     } catch (err) {
@@ -2598,10 +2557,97 @@ async function wizSubmitOrder(txnId: string) {
       </div>
       <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
         <div style="font-size:1.1rem;font-weight:800;color:#046fcd;">$${Number(bid.bid_price).toFixed(2)}</div>
-        ${!isAccepted ? `<button class="accept-bid-btn" data-bid-id="${esc(bid.id)}" data-writer-id="${esc(bid.writer_id)}" style="background:#046fcd;color:#fff;border:none;border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;">Accept</button>` : `<span style="color:#4ade80;font-weight:600;font-size:0.82rem;">✅ Accepted</span>`}
+        ${!isAccepted ? `<button class="accept-bid-btn" data-bid-id="${esc(bid.id)}" data-writer-id="${esc(bid.writer_id)}" data-bid-price="${esc(bid.bid_price)}" style="background:#046fcd;color:#fff;border:none;border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;">Hire Writer</button>` : `<span style="color:#4ade80;font-weight:600;font-size:0.82rem;">✅ Hired</span>`}
       </div>
     </div>`;
   }
+  // ═══ HIRE WRITER PAYMENT FLOW ═══
+  let hireBidId = '';
+  let hireWriterId = '';
+  let hireOrderId = '';
+  let hireBidPrice = 0;
+
+  function openHirePaymentModal(bidId: string, writerId: string, bidPrice: number, orderId: string) {
+    hireBidId = bidId; hireWriterId = writerId; hireOrderId = orderId; hireBidPrice = bidPrice;
+    const isDeposit = bidPrice >= 30;
+    const amountNow = isDeposit ? bidPrice * 0.5 : bidPrice;
+    const pd = document.getElementById('hirePaymentDetails');
+    if (pd) pd.innerHTML = `
+      <p style="font-size:0.9rem;color:#64748b;margin:0 0 0.4rem;">Writer's Bid</p>
+      <p style="font-size:1.7rem;color:#0f172a;font-weight:800;margin:0 0 0.3rem;">$${bidPrice.toFixed(2)}</p>
+      <p style="font-size:0.9rem;color:#64748b;margin:0 0 0.3rem;">Pay Now</p>
+      <p style="font-size:1.9rem;color:#c5a059;font-weight:800;margin:0;">$${amountNow.toFixed(2)}</p>`;
+    const pp = document.getElementById('hirePaymentPolicy');
+    if (pp) pp.textContent = isDeposit
+      ? `50% deposit now. Remaining $${(bidPrice * 0.5).toFixed(2)} due on delivery.`
+      : 'Full payment required for orders under $30.';
+    const txn = document.getElementById('hireTxnId') as HTMLInputElement;
+    if (txn) txn.value = '';
+    const btn = document.getElementById('hireConfirmBtn') as HTMLButtonElement;
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; btn.textContent = '✅ I Have Paid — Hire Writer'; }
+    document.getElementById('hirePaymentModal')!.classList.add('open');
+  }
+
+  document.getElementById('hirePaymentClose')!.addEventListener('click', () => {
+    document.getElementById('hirePaymentModal')!.classList.remove('open');
+  });
+  document.getElementById('hirePaymentOverlay')!.addEventListener('click', () => {
+    document.getElementById('hirePaymentModal')!.classList.remove('open');
+  });
+  document.getElementById('hireTxnId')!.addEventListener('input', (e) => {
+    const v = (e.target as HTMLInputElement).value.trim();
+    const btn = document.getElementById('hireConfirmBtn') as HTMLButtonElement;
+    if (btn) { btn.disabled = v.length < 5; btn.style.opacity = v.length >= 5 ? '1' : '0.5'; }
+  });
+
+  document.getElementById('hireConfirmBtn')!.addEventListener('click', async () => {
+    const txnId = (document.getElementById('hireTxnId') as HTMLInputElement)?.value.trim();
+    const btn = document.getElementById('hireConfirmBtn') as HTMLButtonElement;
+    if (!/^[A-Z0-9]{8,20}$/i.test(txnId)) { alert('❌ Invalid Transaction ID format.'); return; }
+    btn.textContent = '⏳ Checking...'; btn.disabled = true;
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=id&transaction_id=eq.${txnId}`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession?.access_token}` }
+      });
+      const d = await r.json();
+      if (d.length > 0) { alert('❌ This Transaction ID has already been used.'); btn.textContent = '✅ I Have Paid — Hire Writer'; btn.disabled = false; return; }
+
+      // Accept bid, reject others, update order
+      await fetch(`${SUPABASE_URL}/rest/v1/bids?id=eq.${hireBidId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal' },
+        body: JSON.stringify({ status: 'accepted' })
+      });
+      await fetch(`${SUPABASE_URL}/rest/v1/bids?order_id=eq.${hireOrderId}&id=neq.${hireBidId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal' },
+        body: JSON.stringify({ status: 'rejected' })
+      });
+      const orderObj = allOrders.find((o: any) => String(o.id) === hireOrderId);
+      const orderNumber = orderObj?.order_number;
+      await fetch(`${SUPABASE_URL}/functions/v1/update-order-status?orderId=${orderNumber}&status=in_progress&token=thesisarcpro_action_2026`, { method: 'GET' });
+      const isDeposit = hireBidPrice >= 30;
+      const amountPaid = isDeposit ? hireBidPrice * 0.5 : hireBidPrice;
+      await fetch(`${SUPABASE_URL}/rest/v1/orders?order_number=eq.${orderNumber}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal' },
+        body: JSON.stringify({ writer_id: parseInt(hireWriterId), transaction_id: txnId, amount_paid: amountPaid, payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full' })
+      });
+      socket.emit('bid:accept', { bidId: hireBidId, orderId: hireOrderId, writerId: hireWriterId });
+      const idx = allOrders.findIndex((o: any) => String(o.id) === hireOrderId);
+      if (idx !== -1) { allOrders[idx].order_status = 'in_progress'; allOrders[idx].writer_id = hireWriterId; allOrders[idx].amount_paid = amountPaid; }
+      updateCounts(); renderOrders();
+      document.getElementById('hirePaymentModal')!.classList.remove('open');
+      closeModal();
+      alert('✅ Writer hired! Your order is now in progress.');
+    } catch (err) {
+      console.error(err);
+      btn.textContent = '✅ I Have Paid — Hire Writer'; btn.disabled = false;
+      alert('❌ Something went wrong. Please try again.');
+    }
+  });
+  // ═══ END HIRE WRITER PAYMENT FLOW ═══
+
   function closeModal() {
     document.getElementById('detailModal')!.classList.remove('open');
   }
