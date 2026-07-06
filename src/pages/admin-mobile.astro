@@ -1,0 +1,578 @@
+---
+// This is a standalone page — no BaseLayout import on purpose.
+// It renders its own full <html> document, separate from the
+// main site's shared layout, since it's a self-contained mobile app.
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#1B2A4A" />
+<title>ThesisArcPro Admin — Mobile</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy: #1B2A4A;
+    --navy-deep: #12203a;
+    --paper: #F7F4EE;
+    --paper-raised: #ffffff;
+    --gold: #C9A84C;
+    --ink: #1B2A4A;
+    --ink-muted: #5B6B84;
+    --rule: #E2DCCB;
+    --success: #2F6F4F;
+    --success-bg: rgba(47,111,79,0.1);
+    --urgent: #B8562E;
+    --urgent-bg: rgba(184,86,46,0.1);
+    --danger: #B3302B;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overscroll-behavior: none; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+  h1, h2, h3, .serif { font-family: 'Source Serif 4', serif; }
+
+  #loginScreen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem; }
+  .login-seal { width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-family: 'Source Serif 4', serif; font-size: 1.6rem; font-weight: 700; color: var(--navy); background: var(--paper-raised); }
+  #loginScreen h1 { font-size: 1.5rem; color: var(--navy); margin-bottom: 0.3rem; text-align: center; }
+  #loginScreen p.sub { color: var(--ink-muted); font-size: 0.85rem; margin-bottom: 2rem; text-align: center; }
+  .field { width: 100%; max-width: 320px; margin-bottom: 0.9rem; }
+  .field label { display: block; font-size: 0.72rem; font-weight: 600; color: var(--ink-muted); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .field input { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--rule); border-radius: 10px; font-size: 0.95rem; background: var(--paper-raised); color: var(--ink); outline: none; font-family: inherit; }
+  .field input:focus { border-color: var(--gold); }
+  .btn-primary { width: 100%; max-width: 320px; padding: 0.85rem; background: var(--navy); color: #fff; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem; font-family: inherit; }
+  .btn-primary:disabled { opacity: 0.5; }
+  .error-msg { color: var(--danger); font-size: 0.8rem; margin-top: 0.75rem; text-align: center; max-width: 320px; }
+
+  #app { display: none; flex: 1; flex-direction: column; height: 100vh; overflow: hidden; }
+  .app-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.2rem; background: var(--navy); color: #fff; flex-shrink: 0; }
+  .app-header h1 { font-size: 1.05rem; font-weight: 700; }
+  .app-header .header-sub { font-size: 0.68rem; color: rgba(255,255,255,0.6); font-family: 'IBM Plex Mono', monospace; }
+  .logout-btn { background: rgba(255,255,255,0.12); border: none; color: #fff; width: 34px; height: 34px; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+
+  .tab-content { flex: 1; overflow-y: auto; padding: 1rem 1rem 5.5rem; -webkit-overflow-scrolling: touch; }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--paper-raised); border-top: 1px solid var(--rule); padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom)); z-index: 50; }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; background: none; border: none; color: var(--ink-muted); font-size: 0.68rem; font-weight: 600; cursor: pointer; padding: 0.3rem; font-family: 'Inter', sans-serif; }
+  .nav-btn .nav-icon { font-size: 1.15rem; }
+  .nav-btn.active { color: var(--navy); }
+  .nav-btn.active .nav-icon { transform: scale(1.08); }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1.2rem; }
+  .stat-tile { background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 12px; padding: 0.9rem 1rem; }
+  .stat-tile .eyebrow { display: block; margin-bottom: 0.3rem; }
+  .stat-tile .num { font-family: 'IBM Plex Mono', monospace; font-size: 1.5rem; font-weight: 600; color: var(--navy); }
+  .stat-tile.gold .num { color: var(--gold); }
+  .stat-tile.green .num { color: var(--success); }
+
+  .seal-section { background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 14px; padding: 1.2rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 1rem; }
+  .seal {
+    width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+    border: 2px dashed var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    transform: rotate(-6deg);
+    font-family: 'Source Serif 4', serif;
+    position: relative;
+  }
+  .seal .check { font-size: 1.6rem; }
+  .seal.offline { border-color: var(--danger); }
+  .seal-text h3 { font-size: 0.95rem; color: var(--navy); margin-bottom: 0.2rem; }
+  .seal-text p { font-size: 0.76rem; color: var(--ink-muted); font-family: 'IBM Plex Mono', monospace; }
+
+  .link-row { display: flex; gap: 0.6rem; margin-bottom: 1.2rem; }
+  .link-card { flex: 1; background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 12px; padding: 0.9rem; text-decoration: none; color: var(--navy); text-align: center; font-size: 0.78rem; font-weight: 600; }
+  .link-card .link-icon { display: block; font-size: 1.3rem; margin-bottom: 0.3rem; }
+
+  .section-title { display: flex; align-items: center; gap: 0.5rem; margin: 1.4rem 0 0.7rem; }
+  .section-title .rule-line { flex: 1; height: 1px; background: var(--rule); }
+
+  .order-card { background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 0.65rem; cursor: pointer; }
+  .order-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .order-card-title { font-size: 0.9rem; font-weight: 600; color: var(--navy); line-height: 1.3; }
+  .order-card-id { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--ink-muted); margin-top: 0.15rem; }
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; }
+  .badge.new { background: rgba(99,102,241,0.15); color: #6366f1; }
+  .badge.in_progress { background: var(--urgent-bg); color: var(--urgent); }
+  .badge.in_review { background: rgba(56,138,221,0.15); color: #2563eb; }
+  .badge.completed { background: var(--success-bg); color: var(--success); }
+  .badge.revision { background: rgba(168,85,247,0.15); color: #9333ea; }
+  .badge.cancelled { background: rgba(179,48,43,0.1); color: var(--danger); }
+  .order-card-meta { font-size: 0.76rem; color: var(--ink-muted); }
+  .order-card-amount { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600; color: var(--navy); margin-top: 0.35rem; }
+
+  .search-bar { display: flex; align-items: center; gap: 0.5rem; background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 10px; padding: 0.55rem 0.8rem; margin-bottom: 0.8rem; }
+  .search-bar input { flex: 1; border: none; background: none; outline: none; font-size: 0.85rem; font-family: inherit; color: var(--ink); }
+
+  .sheet-overlay { position: fixed; inset: 0; background: rgba(18,32,58,0.55); z-index: 100; display: none; }
+  .sheet-overlay.open { display: block; }
+  .sheet { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper); border-radius: 18px 18px 0 0; z-index: 101; max-height: 88vh; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.25s ease; padding-bottom: env(safe-area-inset-bottom); }
+  .sheet.open { transform: translateY(0); }
+  .sheet-handle { width: 36px; height: 4px; background: var(--rule); border-radius: 2px; margin: 0.7rem auto 0.5rem; }
+  .sheet-header { padding: 0.3rem 1.2rem 0.8rem; border-bottom: 1px solid var(--rule); }
+  .sheet-header h2 { font-size: 1.05rem; color: var(--navy); }
+  .sheet-header .sub { font-size: 0.75rem; color: var(--ink-muted); font-family: 'IBM Plex Mono', monospace; margin-top: 0.15rem; }
+  .sheet-body { padding: 1rem 1.2rem; overflow-y: auto; flex: 1; }
+  .sheet-close { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; font-size: 1.1rem; color: var(--ink-muted); cursor: pointer; }
+
+  .form-row { margin-bottom: 1rem; }
+  .form-row label { display: block; font-size: 0.72rem; font-weight: 600; color: var(--ink-muted); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .form-row select { width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid var(--rule); border-radius: 10px; font-size: 0.9rem; background: var(--paper-raised); color: var(--ink); font-family: inherit; outline: none; }
+  .save-btn { width: 100%; padding: 0.85rem; background: var(--navy); color: #fff; border: none; border-radius: 10px; font-size: 0.92rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem; font-family: inherit; }
+  .save-btn:disabled { opacity: 0.5; }
+  .save-status { font-size: 0.8rem; margin-top: 0.6rem; text-align: center; }
+  .save-status.success { color: var(--success); }
+  .save-status.error { color: var(--danger); }
+
+  .inbox-item { display: flex; align-items: center; gap: 0.7rem; background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 12px; padding: 0.8rem 0.9rem; margin-bottom: 0.55rem; cursor: pointer; }
+  .inbox-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 700; flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; }
+  .inbox-avatar.support { background: rgba(37,99,235,0.14); color: #2563eb; }
+  .inbox-avatar.order { background: var(--success-bg); color: var(--success); }
+  .inbox-name { font-size: 0.86rem; font-weight: 600; color: var(--navy); }
+  .inbox-type { font-size: 0.7rem; color: var(--ink-muted); margin-top: 0.1rem; }
+
+  .thread-messages { display: flex; flex-direction: column; gap: 0.55rem; padding: 0.2rem 0 0.8rem; }
+  .msg-bubble-row { display: flex; flex-direction: column; max-width: 78%; }
+  .msg-bubble-row.mine { align-self: flex-end; align-items: flex-end; }
+  .msg-bubble-row.theirs { align-self: flex-start; }
+  .msg-bubble-row .who { font-size: 0.65rem; color: var(--ink-muted); margin-bottom: 0.15rem; }
+  .msg-bubble { padding: 0.55rem 0.85rem; border-radius: 13px; font-size: 0.85rem; line-height: 1.5; }
+  .msg-bubble-row.mine .msg-bubble { background: var(--navy); color: #fff; border-bottom-right-radius: 3px; }
+  .msg-bubble-row.theirs .msg-bubble { background: var(--paper-raised); border: 1px solid var(--rule); border-bottom-left-radius: 3px; }
+  .thread-input-bar { display: flex; gap: 0.5rem; padding: 0.6rem 0 0; border-top: 1px solid var(--rule); margin-top: 0.5rem; }
+  .thread-input-bar input { flex: 1; padding: 0.65rem 0.9rem; border: 1.5px solid var(--rule); border-radius: 20px; font-size: 0.85rem; outline: none; font-family: inherit; }
+  .thread-send { background: var(--navy); color: #fff; border: none; border-radius: 20px; padding: 0.6rem 1.1rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+  .empty-note { text-align: center; color: var(--ink-muted); font-size: 0.85rem; padding: 2.5rem 1rem; }
+  .loading-note { text-align: center; color: var(--ink-muted); font-size: 0.85rem; padding: 2rem 1rem; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-seal serif">T·A</div>
+  <h1>ThesisArcPro Admin</h1>
+  <p class="sub">Sign in to manage orders on the go</p>
+  <div class="field">
+    <label>Email</label>
+    <input type="email" id="loginEmail" autocomplete="username" />
+  </div>
+  <div class="field">
+    <label>Password</label>
+    <input type="password" id="loginPassword" autocomplete="current-password" />
+  </div>
+  <button class="btn-primary" id="loginBtn">Sign In</button>
+  <div class="error-msg" id="loginError"></div>
+</div>
+
+<div id="app">
+  <div class="app-header">
+    <div>
+      <h1>ThesisArcPro</h1>
+      <div class="header-sub" id="headerSub">ADMIN · MOBILE</div>
+    </div>
+    <button class="logout-btn" id="logoutBtn">⎋</button>
+  </div>
+
+  <div class="tab-content" id="tabContent"></div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="pulse"><span class="nav-icon">◆</span>Pulse</button>
+    <button class="nav-btn" data-tab="orders"><span class="nav-icon">▤</span>Orders</button>
+    <button class="nav-btn" data-tab="inbox"><span class="nav-icon">✉</span>Inbox</button>
+  </nav>
+</div>
+
+<div class="sheet-overlay" id="sheetOverlay"></div>
+<div class="sheet" id="orderSheet">
+  <button class="sheet-close" id="orderSheetClose">✕</button>
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <h2 id="orderSheetTitle">Order</h2>
+    <div class="sub" id="orderSheetSub"></div>
+  </div>
+  <div class="sheet-body">
+    <div class="form-row">
+      <label>Order Status</label>
+      <select id="sheetStatus">
+        <option value="new">🆕 New</option>
+        <option value="in_progress">⚙️ In Progress</option>
+        <option value="in_review">🔍 In Review</option>
+        <option value="completed">✅ Completed</option>
+        <option value="revision">🔄 Revision</option>
+        <option value="cancelled">❌ Cancelled</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Assigned Writer</label>
+      <select id="sheetWriter"><option value="">— No writer assigned —</option></select>
+    </div>
+    <button class="save-btn" id="sheetSaveBtn">Save Changes</button>
+    <div class="save-status" id="sheetSaveStatus"></div>
+  </div>
+</div>
+
+<div class="sheet" id="threadSheet" style="max-height: 92vh;">
+  <button class="sheet-close" id="threadSheetClose">✕</button>
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <h2 id="threadSheetTitle">Conversation</h2>
+    <div class="sub" id="threadSheetSub"></div>
+  </div>
+  <div class="sheet-body" style="display:flex; flex-direction:column;">
+    <div class="thread-messages" id="threadMessages" style="flex:1; overflow-y:auto;"></div>
+    <div class="thread-input-bar">
+      <input type="text" id="threadInput" placeholder="Reply as Support…" />
+      <button class="thread-send" id="threadSendBtn">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+
+  let accessToken: string | null = null;
+  let userId: string | null = null;
+  let userEmail: string | null = null;
+  let allOrders: any[] = [];
+  let allWriters: any[] = [];
+  let conversations: any[] = [];
+  let activeConvId: string | null = null;
+  let currentTab = 'pulse';
+
+  function esc(v: any) {
+    return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('loginBtn')!.addEventListener('click', doLogin);
+  document.getElementById('loginPassword')!.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') doLogin(); });
+
+  async function doLogin() {
+    const email = (document.getElementById('loginEmail') as HTMLInputElement).value.trim();
+    const password = (document.getElementById('loginPassword') as HTMLInputElement).value;
+    const errEl = document.getElementById('loginError')!;
+    const btn = document.getElementById('loginBtn') as HTMLButtonElement;
+    errEl.textContent = '';
+    if (!email || !password) { errEl.textContent = 'Enter both email and password.'; return; }
+    btn.disabled = true; btn.textContent = 'Signing in…';
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.access_token) throw new Error(data.error_description || data.msg || 'Invalid email or password.');
+
+      accessToken = data.access_token;
+      userId = data.user?.id;
+      userEmail = data.user?.email;
+
+      const profRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(userEmail || '')}&select=is_admin`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${accessToken}` }
+      });
+      const prof = await profRes.json();
+      if (!prof[0]?.is_admin) {
+        throw new Error('This account is not an admin account.');
+      }
+
+      document.getElementById('loginScreen')!.style.display = 'none';
+      document.getElementById('app')!.style.display = 'flex';
+      document.getElementById('headerSub')!.textContent = (userEmail || '').toUpperCase();
+      await loadEverything();
+
+    } catch (e: any) {
+      errEl.textContent = e.message || 'Could not sign in.';
+      accessToken = null;
+    }
+    btn.disabled = false; btn.textContent = 'Sign In';
+  }
+
+  document.getElementById('logoutBtn')!.addEventListener('click', () => {
+    accessToken = null; userId = null; userEmail = null;
+    document.getElementById('app')!.style.display = 'none';
+    document.getElementById('loginScreen')!.style.display = 'flex';
+    (document.getElementById('loginEmail') as HTMLInputElement).value = '';
+    (document.getElementById('loginPassword') as HTMLInputElement).value = '';
+  });
+
+  function authHeaders() {
+    return { apikey: SUPABASE_KEY, Authorization: `Bearer ${accessToken}` };
+  }
+
+  async function loadEverything() {
+    await Promise.all([loadOrders(), loadWriters()]);
+    renderTab();
+  }
+
+  async function loadOrders() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?order=created_at.desc`, { headers: authHeaders() });
+      allOrders = await res.json();
+    } catch (e) { console.error(e); allOrders = []; }
+  }
+
+  async function loadWriters() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/writers?order=full_name.asc`, { headers: authHeaders() });
+      allWriters = await res.json();
+    } catch (e) { console.error(e); allWriters = []; }
+  }
+
+  async function loadConversations() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/conversations?order=updated_at.desc`, { headers: authHeaders() });
+      conversations = await res.json();
+    } catch (e) { console.error(e); conversations = []; }
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTab = (btn as HTMLElement).dataset.tab || 'pulse';
+      renderTab();
+    });
+  });
+
+  function renderTab() {
+    if (currentTab === 'pulse') renderPulse();
+    else if (currentTab === 'orders') renderOrdersTab();
+    else if (currentTab === 'inbox') renderInboxTab();
+  }
+
+  function renderPulse() {
+    const c = document.getElementById('tabContent')!;
+    const total = allOrders.length;
+    const newC = allOrders.filter(o => o.order_status === 'new').length;
+    const inProg = allOrders.filter(o => o.order_status === 'in_progress').length;
+    const collected = allOrders.reduce((s,o) => s + Number(o.amount_paid||0), 0);
+
+    c.innerHTML = `
+      <div class="eyebrow">BUSINESS PULSE</div>
+      <div class="stat-grid" style="margin-top:0.6rem;">
+        <div class="stat-tile"><span class="eyebrow">Total Orders</span><div class="num">${total}</div></div>
+        <div class="stat-tile"><span class="eyebrow">New</span><div class="num">${newC}</div></div>
+        <div class="stat-tile"><span class="eyebrow">In Progress</span><div class="num">${inProg}</div></div>
+        <div class="stat-tile green"><span class="eyebrow">Collected</span><div class="num">$${collected.toFixed(0)}</div></div>
+      </div>
+
+      <div class="section-title"><span class="eyebrow">SITE HEALTH</span><div class="rule-line"></div></div>
+      <div class="seal-section">
+        <div class="seal" id="healthSeal"><span class="check">…</span></div>
+        <div class="seal-text">
+          <h3 id="healthTitle">Checking thesisarcpro.com…</h3>
+          <p id="healthSub">—</p>
+        </div>
+      </div>
+
+      <div class="section-title"><span class="eyebrow">SEO SNAPSHOT</span><div class="rule-line"></div></div>
+      <div class="link-row">
+        <a class="link-card" href="https://search.google.com/search-console" target="_blank">
+          <span class="link-icon">◎</span>Search Console
+        </a>
+        <a class="link-card" href="https://analytics.google.com" target="_blank">
+          <span class="link-icon">▲</span>Analytics
+        </a>
+      </div>
+      <p style="font-size:0.78rem; color:var(--ink-muted); text-align:center; margin-top:-0.4rem;">
+        Live rank/traffic charts require a connected Google API integration — these links jump straight to your real dashboards.
+      </p>
+    `;
+    checkSiteHealth();
+  }
+
+  async function checkSiteHealth() {
+    const seal = document.getElementById('healthSeal')!;
+    const title = document.getElementById('healthTitle')!;
+    const sub = document.getElementById('healthSub')!;
+    try {
+      const start = Date.now();
+      await fetch('https://thesisarcpro.com', { mode: 'no-cors' });
+      const ms = Date.now() - start;
+      seal.innerHTML = '<span class="check">✓</span>';
+      title.textContent = 'thesisarcpro.com is reachable';
+      sub.textContent = `Responded in ~${ms}ms · checked just now`;
+    } catch (e) {
+      seal.classList.add('offline');
+      seal.innerHTML = '<span class="check">✕</span>';
+      title.textContent = 'Could not reach thesisarcpro.com';
+      sub.textContent = 'Check your connection or the site itself';
+    }
+  }
+
+  function statusClass(s: string) {
+    return ['new','in_progress','in_review','completed','revision','cancelled'].includes(s) ? s : 'new';
+  }
+
+  function renderOrdersTab(filter = '') {
+    const c = document.getElementById('tabContent')!;
+    let list = allOrders;
+    if (filter) {
+      const f = filter.toLowerCase();
+      list = list.filter(o => (o.topic||'').toLowerCase().includes(f) || (o.client_email||'').toLowerCase().includes(f) || (o.order_number||'').toLowerCase().includes(f));
+    }
+    c.innerHTML = `
+      <div class="search-bar"><span>🔍</span><input type="text" id="orderSearchInput" placeholder="Search orders…" value="${esc(filter)}" /></div>
+      <div id="orderListWrap">
+        ${!list.length ? '<div class="empty-note">No orders match.</div>' : list.map(o => `
+          <div class="order-card" data-id="${esc(o.id)}">
+            <div class="order-card-top">
+              <div>
+                <div class="order-card-title">${esc(o.topic || 'N/A')}</div>
+                <div class="order-card-id">${esc(o.order_number || o.id)}</div>
+              </div>
+              <span class="badge ${statusClass(o.order_status)}">${esc((o.order_status||'new').replace(/_/g,' '))}</span>
+            </div>
+            <div class="order-card-meta">${esc(o.pages||1)} pages · ${esc(o.assignment_type||'N/A')}</div>
+            <div class="order-card-amount">$${Number(o.total_amount||0).toFixed(2)} <span style="color:var(--ink-muted); font-weight:400;">($${Number(o.amount_paid||0).toFixed(2)} paid)</span></div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    document.getElementById('orderSearchInput')!.addEventListener('input', (e) => renderOrdersTab((e.target as HTMLInputElement).value));
+    document.querySelectorAll('.order-card').forEach(card => {
+      card.addEventListener('click', () => openOrderSheet((card as HTMLElement).dataset.id!));
+    });
+  }
+
+  let activeOrderId: string | null = null;
+
+  function openOrderSheet(id: string) {
+    const order = allOrders.find(o => String(o.id) === id);
+    if (!order) return;
+    activeOrderId = id;
+    document.getElementById('orderSheetTitle')!.textContent = order.topic || 'Order';
+    document.getElementById('orderSheetSub')!.textContent = `${order.order_number || order.id} · ${order.client_email || ''}`;
+    (document.getElementById('sheetStatus') as HTMLSelectElement).value = order.order_status || 'new';
+    const writerSel = document.getElementById('sheetWriter') as HTMLSelectElement;
+    writerSel.innerHTML = '<option value="">— No writer assigned —</option>' +
+      allWriters.map(w => `<option value="${w.id}" ${String(order.writer_id)===String(w.id)?'selected':''}>${esc(w.full_name||'')}</option>`).join('');
+    document.getElementById('sheetSaveStatus')!.textContent = '';
+    document.getElementById('sheetOverlay')!.classList.add('open');
+    document.getElementById('orderSheet')!.classList.add('open');
+  }
+
+  function closeOrderSheet() {
+    document.getElementById('sheetOverlay')!.classList.remove('open');
+    document.getElementById('orderSheet')!.classList.remove('open');
+  }
+  document.getElementById('orderSheetClose')!.addEventListener('click', closeOrderSheet);
+  document.getElementById('sheetOverlay')!.addEventListener('click', () => { closeOrderSheet(); closeThreadSheet(); });
+
+  document.getElementById('sheetSaveBtn')!.addEventListener('click', async () => {
+    const btn = document.getElementById('sheetSaveBtn') as HTMLButtonElement;
+    const statusEl = document.getElementById('sheetSaveStatus')!;
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      const newStatus = (document.getElementById('sheetStatus') as HTMLSelectElement).value;
+      const newWriter = (document.getElementById('sheetWriter') as HTMLSelectElement).value || null;
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${activeOrderId}`, {
+        method: 'PATCH',
+        headers: { ...authHeaders(), 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify({ order_status: newStatus, writer_id: newWriter, status_updated_at: new Date().toISOString() })
+      });
+      if (!res.ok) throw new Error('Save failed');
+      const idx = allOrders.findIndex(o => String(o.id) === activeOrderId);
+      if (idx !== -1) { allOrders[idx].order_status = newStatus; allOrders[idx].writer_id = newWriter; }
+      statusEl.textContent = '✅ Saved'; statusEl.className = 'save-status success';
+      setTimeout(() => { closeOrderSheet(); renderOrdersTab(); }, 700);
+    } catch (e) {
+      statusEl.textContent = 'Could not save — try again.'; statusEl.className = 'save-status error';
+    }
+    btn.disabled = false; btn.textContent = 'Save Changes';
+  });
+
+  async function renderInboxTab() {
+    const c = document.getElementById('tabContent')!;
+    c.innerHTML = '<div class="loading-note">Loading conversations…</div>';
+    await loadConversations();
+    if (!conversations.length) { c.innerHTML = '<div class="empty-note">No conversations yet.</div>'; return; }
+    c.innerHTML = conversations.map(conv => {
+      const isSupport = conv.type === 'support';
+      const time = conv.updated_at ? new Date(conv.updated_at).toLocaleDateString('en-US', { month:'short', day:'numeric' }) : '';
+      return `<div class="inbox-item" data-cid="${conv.id}">
+        <div class="inbox-avatar ${isSupport ? 'support' : 'order'}">${isSupport ? 'SP' : 'OR'}</div>
+        <div style="flex:1; min-width:0;">
+          <div class="inbox-name">${esc(conv.title || (isSupport ? 'Support Chat' : 'Order Chat'))}</div>
+          <div class="inbox-type">${isSupport ? 'Support' : 'Order chat'} · ${time}</div>
+        </div>
+      </div>`;
+    }).join('');
+    document.querySelectorAll('.inbox-item').forEach(item => {
+      item.addEventListener('click', () => openThread((item as HTMLElement).dataset.cid!));
+    });
+  }
+
+  async function openThread(convId: string) {
+    activeConvId = convId;
+    const conv = conversations.find(c => c.id === convId);
+    document.getElementById('threadSheetTitle')!.textContent = conv?.title || 'Conversation';
+    document.getElementById('threadSheetSub')!.textContent = conv?.type === 'support' ? 'Support conversation' : 'Order chat';
+    const msgBox = document.getElementById('threadMessages')!;
+    msgBox.innerHTML = '<div class="loading-note">Loading…</div>';
+    document.getElementById('threadSheet')!.classList.add('open');
+    document.getElementById('sheetOverlay')!.classList.add('open');
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${convId}&order=created_at.asc`, { headers: authHeaders() });
+      const msgs = await res.json();
+      renderThreadMessages(msgs);
+    } catch (e) { msgBox.innerHTML = '<div class="empty-note">Could not load messages.</div>'; }
+  }
+
+  function renderThreadMessages(msgs: any[]) {
+    const box = document.getElementById('threadMessages')!;
+    if (!msgs.length) { box.innerHTML = '<div class="empty-note">No messages yet.</div>'; return; }
+    box.innerHTML = msgs.map(m => {
+      const mine = m.sender_role === 'support' || m.sender_id === userId;
+      return `<div class="msg-bubble-row ${mine?'mine':'theirs'}">
+        ${!mine ? `<div class="who">${esc(m.sender_name || 'User')}</div>` : ''}
+        <div class="msg-bubble">${esc(m.content)}</div>
+      </div>`;
+    }).join('');
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function closeThreadSheet() {
+    document.getElementById('threadSheet')!.classList.remove('open');
+    document.getElementById('sheetOverlay')!.classList.remove('open');
+  }
+  document.getElementById('threadSheetClose')!.addEventListener('click', closeThreadSheet);
+
+  document.getElementById('threadSendBtn')!.addEventListener('click', sendThreadMsg);
+  document.getElementById('threadInput')!.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') sendThreadMsg(); });
+
+  async function sendThreadMsg() {
+    const input = document.getElementById('threadInput') as HTMLInputElement;
+    const content = input.value.trim();
+    if (!content || !activeConvId) return;
+    input.value = '';
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+        method: 'POST',
+        headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ conversation_id: activeConvId, sender_id: userId, sender_name: 'Support', sender_role: 'support', content })
+      });
+      await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${activeConvId}`, {
+        method: 'PATCH',
+        headers: { ...authHeaders(), 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify({ updated_at: new Date().toISOString() })
+      });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${activeConvId}&order=created_at.asc`, { headers: authHeaders() });
+      renderThreadMessages(await res.json());
+    } catch (e) { alert('Could not send message.'); }
+  }
+</script>
+</body>
+</html>
