@@ -72,7 +72,7 @@
   .btn-primary:disabled { opacity: 0.5; }
   .error-msg { color: var(--danger); font-size: 0.8rem; margin-top: 0.75rem; text-align: center; max-width: 320px; }
 
-  #app { display: none; flex: 1; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; position: relative; }
+  #app { display: none; flex: 1; flex-direction: column; height: 100vh; height: 100dvh; position: relative; }
   .app-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.2rem; background: var(--navy); color: #fff; flex-shrink: 0; }
   .app-header h1 { font-size: 1.05rem; font-weight: 700; }
   .app-header .header-sub { font-size: 0.68rem; color: rgba(255,255,255,0.6); font-family: 'IBM Plex Mono', monospace; }
@@ -81,7 +81,8 @@
   .header-actions { display: flex; align-items: center; }
 
   .tab-content { flex: 1; overflow-y: auto; padding: 1rem 1rem 5.5rem; -webkit-overflow-scrolling: touch; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--paper-raised); border-top: 1px solid var(--rule); padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom)); z-index: 999; touch-action: manipulation; }
+  .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--paper-raised); border-top: 1px solid var(--rule); padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom)); z-index: 999; touch-action: manipulation; }
+  .bottom-nav.visible { display: flex; }
   .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem; background: none; border: none; color: var(--ink-muted); font-size: 0.68rem; font-weight: 600; cursor: pointer; padding: 0.5rem 0.3rem; font-family: 'Inter', sans-serif; min-height: 48px; touch-action: manipulation; position: relative; z-index: 1000; -webkit-user-select: none; user-select: none; }
   .nav-btn .nav-icon { font-size: 1.15rem; }
   .nav-btn.active { color: var(--navy); }
@@ -206,13 +207,13 @@
   </div>
 
   <div class="tab-content" id="tabContent"></div>
-
-  <nav class="bottom-nav">
-    <button class="nav-btn active" data-tab="pulse"><span class="nav-icon">◆</span>Pulse</button>
-    <button class="nav-btn" data-tab="orders"><span class="nav-icon">▤</span>Orders</button>
-    <button class="nav-btn" data-tab="inbox"><span class="nav-icon">✉</span>Inbox</button>
-  </nav>
 </div>
+
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-btn active" data-tab="pulse"><span class="nav-icon">◆</span>Pulse</button>
+  <button class="nav-btn" data-tab="orders"><span class="nav-icon">▤</span>Orders</button>
+  <button class="nav-btn" data-tab="inbox"><span class="nav-icon">✉</span>Inbox</button>
+</nav>
 
 <div class="sheet-overlay" id="sheetOverlay"></div>
 <div class="sheet" id="orderSheet">
@@ -311,6 +312,7 @@
 
       document.getElementById('loginScreen')!.style.display = 'none';
       document.getElementById('app')!.style.display = 'flex';
+      document.getElementById('bottomNav')!.classList.add('visible');
       document.getElementById('headerSub')!.textContent = (userEmail || '').toUpperCase();
       await loadEverything();
 
@@ -338,6 +340,7 @@
   document.getElementById('logoutBtn')!.addEventListener('click', () => {
     accessToken = null; userId = null; userEmail = null;
     document.getElementById('app')!.style.display = 'none';
+    document.getElementById('bottomNav')!.classList.remove('visible');
     document.getElementById('loginScreen')!.style.display = 'flex';
     (document.getElementById('loginEmail') as HTMLInputElement).value = '';
     (document.getElementById('loginPassword') as HTMLInputElement).value = '';
