@@ -848,6 +848,18 @@ const base = '';
       });
       ($('orderSuccess') as HTMLElement).style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Trustpilot review invite
+      try {
+        if (typeof (window as any).tp === 'function') {
+          (window as any).tp('createInvitation', {
+            recipientEmail: email,
+            recipientName: email.split('@')[0],
+            referenceId: String(ticketId),
+            source: 'InvitationScript'
+          });
+        }
+      } catch(e) { console.warn('Trustpilot invite error', e); }
     } catch {
       btn.textContent = '❌ Error — please try again'; btn.disabled = false;
     }

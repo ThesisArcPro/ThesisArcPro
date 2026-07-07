@@ -468,7 +468,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     gap: 0.75rem;
     padding: 0.65rem 1rem;
     background: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e2e8f0;const topicEl = document.getElementById('wizOrderTopic'); if (topicEl) topicEl.textContent = topic || 'Your order';
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.18s;
@@ -2286,6 +2286,18 @@ async function wizSubmitOrder() {
     const priceCard = document.getElementById('wizPriceCard'); if (priceCard) priceCard.style.display = 'none';
     const infoCard = document.getElementById('wizInfoCard'); if (infoCard) infoCard.style.display = 'none';
     const topicEl = document.getElementById('wizOrderTopic'); if (topicEl) topicEl.textContent = topic || 'Your order';
+
+// Trustpilot review invite
+try {
+  if (typeof (window as any).tp === 'function') {
+    (window as any).tp('createInvitation', {
+      recipientEmail: email,
+      recipientName: email.split('@')[0],
+      referenceId: ticketId,
+      source: 'InvitationScript'
+    });
+  }
+} catch(e) { console.warn('Trustpilot invite error', e); }
     const progressBar = document.getElementById('wizProgressBar'); if (progressBar) progressBar.style.display = 'none';
     // Populate order details tab
     const detailsEl = document.getElementById('wizOrderDetailsContent');
