@@ -2833,7 +2833,27 @@ const base = '';
     const header = document.getElementById('chatThreadHeader')!;
     const title = conv?.title || (conv?.type === 'support' ? 'Support' : 'Order Chat');
     const typeLabel = conv?.type === 'support' ? 'Support channel' : conv?.type === 'order' ? `Order chat` : 'Direct message';
-    header.innerHTML = `<div class="chat-thread-title">${esc(title)}</div><div class="chat-thread-sub">${typeLabel}</div>`;
+    const viewOrderBtn = conv?.type === 'order' && conv?.order_id
+      ? `<button id="viewOrderFromChatBtn" data-order-id="${conv.order_id}" title="View order" style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1.1rem;padding:0.3rem;">↗</button>`
+      : '';
+    header.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;"><div><div class="chat-thread-title">${esc(title)}</div><div class="chat-thread-sub">${typeLabel}</div></div>${viewOrderBtn}</div>`;
+
+    document.getElementById('viewOrderFromChatBtn')?.addEventListener('click', async () => {
+      const orderId = conv?.order_id;
+      if (!orderId) return;
+      let order = allOrders.find((o: any) => String(o.id) === String(orderId));
+      if (!order) {
+        try {
+          const r = await fetch(
+            `${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}&select=id,order_number,topic,assignment_type,pages,deadline,order_status,instructions,education_level,subject,language,service,created_at,client_email`,
+            { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+          );
+          const data = await r.json();
+          if (data[0]) { order = data[0]; allOrders.push(order); }
+        } catch (e) { console.error(e); }
+      }
+      if (order) showModal(order);
+    });
  
     renderChatList((document.getElementById('chatSearchInput') as HTMLInputElement).value.toLowerCase());
     await loadMessages(conversationId);
