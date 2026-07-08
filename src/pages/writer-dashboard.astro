@@ -519,6 +519,77 @@ const base = '';
   .review-msg.success { background: rgba(34,197,94,0.12); color: #16a34a; display: block; }
   .review-msg.error { background: rgba(239,68,68,0.12); color: #dc2626; display: block; }
   body.dark-mode .review-action { border-top-color: rgba(255,255,255,0.06); }
+
+  /* ── ORDER MODAL POLISH: pill tabs ── */
+.om-tabs {
+  display: flex;
+  gap: 0.3rem;
+  background: var(--main-bg);
+  padding: 4px;
+  border-radius: 12px;
+  width: fit-content;
+  margin-bottom: 1.3rem;
+  border-bottom: none;
+}
+.om-tab {
+  padding: 0.45rem 1rem;
+  border-radius: 9px;
+  border-bottom: none;
+  top: 0;
+}
+.om-tab--active {
+  background: #ffffff;
+  color: #046fcd;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  border-bottom: none;
+}
+body.dark-mode .om-tabs { background: #161b27; }
+body.dark-mode .om-tab--active { background: #1a1f2e; color: #60a5fa; box-shadow: none; }
+
+/* ── ORDER MODAL POLISH: status badge next to ID ── */
+.om-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding-right: 2rem; }
+.om-status-badge {
+  display: inline-block;
+  padding: 0.22rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── ORDER MODAL POLISH: info cards row (deadline / status) ── */
+.om-info-row { display: flex; gap: 0.75rem; margin-bottom: 1.3rem; }
+.om-info-card { flex: 1; background: var(--main-bg); border-radius: 10px; padding: 0.9rem 1rem; }
+.om-info-card .om-info-label {
+  font-size: 0.68rem; color: #94a3b8; text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 0.35rem;
+}
+.om-info-card .om-info-value { font-size: 0.92rem; font-weight: 700; color: var(--text); }
+.om-info-card .om-info-sub { font-size: 0.72rem; color: #94a3b8; margin-top: 0.2rem; }
+
+/* ── ORDER MODAL POLISH: dashed dropzone (wraps the native file input) ── */
+.dropzone {
+  position: relative;
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: 1.4rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  background: var(--main-bg);
+}
+.dropzone:hover { border-color: #046fcd; background: #f8fafc; }
+.dropzone p { font-size: 0.82rem; color: #64748b; margin-top: 0.4rem; }
+.dropzone .dz-filename { font-size: 0.8rem; color: #046fcd; font-weight: 600; margin-top: 0.4rem; }
+.dropzone input[type="file"] {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; cursor: pointer;
+}
+body.dark-mode .dropzone { background: #161b27; border-color: rgba(255,255,255,0.1); }
+body.dark-mode .dropzone:hover { border-color: #60a5fa; background: #1a1f2e; }
+body.dark-mode .dropzone .dz-filename { color: #60a5fa; }
 </style>
  
 <style is:global>
@@ -1900,8 +1971,24 @@ const base = '';
       `<div><div class="om-label">${label}</div><div class="om-value">${value}</div></div>`;
  
     document.getElementById('modalContent')!.innerHTML = `<div class="modal-left"><div class="om-header">
-        <div class="om-title">${esc(order.topic || '(no topic)')}</div>
-        <div class="om-id">ID ${esc(order.order_number || order.id)}</div>
+        <div>
+          <div class="om-title">${esc(order.topic || '(no topic)')}</div>
+          <div class="om-id">ID ${esc(order.order_number || order.id)}</div>
+        </div>
+        <span class="om-status-badge status-badge ${statusClass(order.order_status)}">${esc((order.order_status||'').replace(/_/g,' '))}</span>
+      </div>
+ 
+      <div class="om-info-row">
+        <div class="om-info-card">
+          <div class="om-info-label">Deadline</div>
+          <div class="om-info-value">${dl.text}</div>
+          <div class="om-info-sub">Due ${esc(dueDate)}</div>
+        </div>
+        <div class="om-info-card">
+          <div class="om-info-label">Started</div>
+          <div class="om-info-value">${esc(startDate)}</div>
+          <div class="om-info-sub">${esc(order.assignment_type || 'Essay')}</div>
+        </div>
       </div>
  
       <div class="om-tabs">
@@ -1929,8 +2016,12 @@ const base = '';
           </select>
         </div>
         <div class="form-group">
-          <label>Choose file</label>
-          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.zip,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg" />
+          <label>Upload file</label>
+          <div class="dropzone" id="dropzone">
+            <div id="dzIcon">📎</div>
+            <p id="dzText">Browse or drag and drop a file here</p>
+            <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.zip,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg" />
+          </div>
         </div>
         <button class="upload-btn" id="uploadBtn">📤 Upload File</button>
         <div class="upload-msg" id="uploadMsg" style="display:none;"></div>
@@ -1996,6 +2087,11 @@ const base = '';
     });
  
     document.getElementById('uploadBtn')?.addEventListener('click', handleUpload);
+    document.getElementById('fileInput')?.addEventListener('change', () => {
+      const f = (document.getElementById('fileInput') as HTMLInputElement).files?.[0];
+      const dzText = document.getElementById('dzText');
+      if (f && dzText) dzText.innerHTML = `<span class="dz-filename">${f.name}</span>`;
+    });
  
     // Mark as In Review
     const reviewBtn = document.getElementById('markReviewBtn');
