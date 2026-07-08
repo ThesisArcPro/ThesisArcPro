@@ -240,20 +240,20 @@ const base = '';
   }
   .modal-left {
     flex: 1;
-    padding: 2rem;
+    padding: 1.5rem 2rem;
     overflow-y: auto;
     min-width: 0;
     height: 100%;
   }
   .modal-right {
     width: 320px;
-    border-left: 1px solid var(--border);
+    border-left: 1.5px solid #dbe1ea;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
     height: 100%;
   }
-  body.dark-mode .modal-right { background: #0f1117; border-left-color: rgba(255,255,255,0.15); }
+  body.dark-mode .modal-right { background: #0f1117; border-left-color: rgba(255,255,255,0.18); }
  
   @media (max-width: 720px) {
     .modal-box { width: 96%; height: 92vh; flex-direction: column; }
@@ -583,7 +583,7 @@ const base = '';
   .status-badge.cancelled { background: rgba(239,68,68,0.16); color: #f87171; }
  
   /* ── ORDER DETAIL MODAL ── */
-  .om-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; padding-right: 2rem; }
+  .om-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.9rem; padding-right: 2rem; }
   .om-title { font-size: 1.15rem; font-weight: 800; color: #0f172a; line-height: 1.3; }
   .om-id { font-size: 0.75rem; color: #94a3b8; margin-top: 0.3rem; }
   .om-status-badge {
@@ -597,7 +597,7 @@ const base = '';
     flex-shrink: 0;
   }
 
-  .om-info-row { display: flex; gap: 0.75rem; margin-bottom: 1.3rem; }
+  .om-info-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
   .om-info-card { flex: 1; background: #f1f5f9; border-radius: 10px; padding: 0.9rem 1rem; }
   .om-info-card .om-info-label {
     font-size: 0.68rem; color: #94a3b8; text-transform: uppercase;
@@ -613,7 +613,7 @@ const base = '';
     padding: 4px;
     border-radius: 12px;
     width: fit-content;
-    margin-bottom: 1.3rem;
+    margin-bottom: 1rem;
     border-bottom: none;
   }
  
