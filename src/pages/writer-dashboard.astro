@@ -2772,6 +2772,9 @@ const base = '';
   let activeConversationId: string | null = null;
   let chatSubscription: any = null;
  
+  let chatOrderStatuses: Record<string, string> = {};
+  let chatLastMessages: Record<string, { content: string; mine: boolean; delivered: boolean }> = {};
+
   async function loadConversations() {
     const chatList = document.getElementById('chatList')!;
     try {
@@ -2786,6 +2789,41 @@ const base = '';
         chatList.innerHTML = '<div class="chat-list-loading">No conversations yet</div>';
         return;
       }
+
+      const orderIds = chatConversations.filter((c: any) => c.type === 'order' && c.order_id).map((c: any) => c.order_id);
+      if (orderIds.length) {
+        try {
+          const orderRes = await fetch(
+            `${SUPABASE_URL}/rest/v1/orders?id=in.(${orderIds.join(',')})&select=id,order_status`,
+            { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+          );
+          const orderRows = await orderRes.json();
+          chatOrderStatuses = {};
+          (orderRows || []).forEach((o: any) => { chatOrderStatuses[String(o.id)] = o.order_status; });
+        } catch (e) { console.error(e); }
+      }
+
+      const convIds = chatConversations.map((c: any) => c.id);
+      if (convIds.length) {
+        try {
+          const msgRes = await fetch(
+            `${SUPABASE_URL}/rest/v1/messages?conversation_id=in.(${convIds.join(',')})&select=conversation_id,content,sender_id,created_at&order=created_at.desc&limit=200`,
+            { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+          );
+          const msgRows = await msgRes.json();
+          chatLastMessages = {};
+          (msgRows || []).forEach((m: any) => {
+            if (!chatLastMessages[m.conversation_id]) {
+              chatLastMessages[m.conversation_id] = {
+                content: m.content,
+                mine: m.sender_id === currentSession.user.id,
+                delivered: true
+              };
+            }
+          });
+        } catch (e) { console.error(e); }
+      }
+
       renderChatList();
     } catch (err) { console.error(err); chatList.innerHTML = '<div class="chat-list-loading">Could not load chats</div>'; }
   }
@@ -2800,15 +2838,26 @@ const base = '';
       const avatarClass = isSupport ? 'avatar-support' : 'avatar-order';
       const icon = isSupport ? 'SP' : 'OR';
       const title = c.title || (isSupport ? 'Support' : 'Order Chat');
-      const typeLabel = isSupport ? 'Support conversation' : 'Order chat';
       const time = c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
       const isActive = c.id === activeConversationId;
+
+      const status = c.type === 'order' && c.order_id ? chatOrderStatuses[String(c.order_id)] : null;
+      const badge = status
+        ? `<span class="status-badge ${statusClass(status)}" style="font-size:0.66rem;padding:0.1rem 0.4rem;">${esc(status.replace(/_/g,' '))}</span>`
+        : '';
+
+      const lastMsg = chatLastMessages[c.id];
+      const previewText = lastMsg ? (lastMsg.mine ? 'You: ' : '') + lastMsg.content : 'No messages yet';
+      const previewTick = lastMsg && lastMsg.mine ? ' <span style="color:#60a5fa;">✓</span>' : '';
  
       return `<div class="chat-item ${isActive ? 'active' : ''}" data-cid="${c.id}">
         <div class="chat-item-avatar ${avatarClass}">${icon}</div>
         <div class="chat-item-info">
-          <div class="chat-item-name">${esc(title)}</div>
-          <div class="chat-item-type">${typeLabel}</div>
+          <div style="display:flex;align-items:center;gap:0.4rem;">
+            ${badge}
+            <div class="chat-item-name">${esc(title)}</div>
+          </div>
+          <div class="chat-item-type">${esc(previewText)}${previewTick}</div>
         </div>
         <div class="chat-item-time">${time}</div>
       </div>`;
