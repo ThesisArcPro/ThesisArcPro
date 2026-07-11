@@ -4,22 +4,38 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 const base = '';
 ---
-
+ 
 <BaseLayout 
   title="About Us" 
   description="Learn about ThesisArcPro — our mission, our team, and our commitment to providing expert academic writing support for students worldwide."
   url="https://thesisarcpro.github.io/about">
   <Header />
-
+ 
   <main>
     <section class="page-hero">
       <div class="container">
-        <p class="page-hero__eyebrow">Our Story</p>
-        <h1>About ThesisArcPro</h1>
+        <p class="page-hero__eyebrow">Not Just Writers, Your Academic Partners</p>
+        <h1>We exist so you can finally have time to <span class="page-hero__pill">focus on what matters most</span></h1>
         <p class="page-hero__sub">We are a team of academic experts, researchers, and writers dedicated to helping students achieve their full potential.</p>
+        <a href={`${base}/services`} class="btn-primary" style="margin-top: 1.5rem; display: inline-block;">Get Started</a>
+ 
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat__number">2,000+</span>
+            <span class="hero-stat__label">Students Helped</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__number">98%</span>
+            <span class="hero-stat__label">Satisfaction Rate</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__number">3 hrs</span>
+            <span class="hero-stat__label">Deadlines From</span>
+          </div>
+        </div>
       </div>
     </section>
-
+ 
     <section class="mission">
       <div class="container mission__inner">
         <div class="mission__content">
@@ -59,7 +75,7 @@ const base = '';
         </div>
       </div>
     </section>
-
+ 
     <section class="values">
       <div class="container">
         <p class="values__eyebrow">What We Stand For</p>
@@ -67,39 +83,71 @@ const base = '';
         <hr class="gold-line" />
         <div class="values__grid">
           <div class="value-card">
-            <div class="value-card__icon">🎯</div>
+            <div class="value-card__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
+            </div>
             <h3>Excellence</h3>
             <p>We hold ourselves to the highest academic standards. Every piece of work we produce reflects our commitment to quality and excellence.</p>
           </div>
           <div class="value-card">
-            <div class="value-card__icon">🤝</div>
+            <div class="value-card__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.97-4.03 9-9 9-1.5 0-2.9-.37-4.14-1.02L3 21l1.02-3.86A8.96 8.96 0 013 12c0-4.97 4.03-9 9-9s9 4.03 9 9z"/></svg>
+            </div>
             <h3>Integrity</h3>
             <p>We operate with complete transparency and honesty. Our ethical commitment to responsible academic support is at the heart of everything we do.</p>
           </div>
           <div class="value-card">
-            <div class="value-card__icon">🔒</div>
+            <div class="value-card__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+            </div>
             <h3>Confidentiality</h3>
             <p>Your privacy is sacred to us. We never share your personal information or order details with any third party under any circumstances.</p>
           </div>
           <div class="value-card">
-            <div class="value-card__icon">⚡</div>
+            <div class="value-card__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+            </div>
             <h3>Reliability</h3>
             <p>We deliver on our promises every time. On time delivery, plagiarism free work, and unlimited revisions — guaranteed.</p>
           </div>
           <div class="value-card">
-            <div class="value-card__icon">🌍</div>
+            <div class="value-card__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-6-4-9s1.5-6.4 4-9z"/></svg>
+            </div>
             <h3>Accessibility</h3>
             <p>We believe quality academic support should be available to every student worldwide — not just those at elite institutions.</p>
           </div>
           <div class="value-card">
-            <div class="value-card__icon">📈</div>
+            <div class="value-card__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8M21 7v6M21 7h-6"/></svg>
+            </div>
             <h3>Growth</h3>
             <p>We are committed to helping students not just complete assignments but to genuinely grow their academic skills and confidence.</p>
           </div>
         </div>
       </div>
     </section>
-
+ 
+    <section class="services">
+      <div class="container">
+        <p class="services__eyebrow">What We Offer</p>
+        <h2 class="section-title section-title--white">Our Services</h2>
+        <hr class="gold-line" />
+        <div class="services__grid">
+          <div class="service-card">
+            <h3>Writing</h3>
+            <p>Our professional experts can write from scratch any type of assignment, following your instructions.</p>
+            <a href={`${base}/services`} class="btn-primary" style="margin-top: 1rem; display: inline-block;">Write My Paper</a>
+          </div>
+          <div class="service-card">
+            <h3>Editing</h3>
+            <p>Our professional experts can edit and proofread any type of text, eliminating all grammar and syntax mistakes.</p>
+            <a href={`${base}/services`} class="btn-primary" style="margin-top: 1rem; display: inline-block;">Edit My Paper</a>
+          </div>
+        </div>
+      </div>
+    </section>
+ 
     <section class="why-us">
       <div class="container why-us__inner">
         <div class="why-us__content">
@@ -166,17 +214,58 @@ const base = '';
         </div>
       </div>
     </section>
-
+ 
+    <section class="faq">
+      <div class="container faq__inner">
+        <div class="faq__list">
+          <p class="faq__eyebrow">Got Questions</p>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <hr class="gold-line" />
+          <details class="faq-item" open>
+            <summary>What is ThesisArcPro?</summary>
+            <p>ThesisArcPro is an academic writing platform where students can work with experienced writers and researchers for essays, dissertations, and coursework support.</p>
+          </details>
+          <details class="faq-item">
+            <summary>How much does ThesisArcPro cost?</summary>
+            <p>Pricing depends on academic level, deadline, and paper type, with rates starting at student-friendly prices. You get an instant quote before placing an order, and there are no hidden fees.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Is ThesisArcPro free?</summary>
+            <p>No, ThesisArcPro is a paid service. We connect you with qualified academic experts, and pricing reflects the quality, research, and one-on-one support you receive.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Is ThesisArcPro legit?</summary>
+            <p>Yes. ThesisArcPro is a registered academic writing service with verified writers, secure payments, and a track record of helping students across the US, UK, UAE, Canada, and Australia.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Is ThesisArcPro safe?</summary>
+            <p>Yes. Your personal information and order details are kept confidential, payments are processed securely, and every paper is checked for originality before delivery.</p>
+          </details>
+        </div>
+        <div class="faq__contact">
+          <h3>Questions?</h3>
+          <p>Contact our Support Team.<br />We'll take care of you.</p>
+          <a href={`${base}/contact`} class="btn-primary" style="margin-top: 1rem; display: inline-block;">Contact Support</a>
+        </div>
+      </div>
+    </section>
+ 
   </main>
-
+ 
   <Footer />
 </BaseLayout>
-
+ 
 <style>
 .page-hero { background-color: var(--navy); padding: 10rem 0 5rem; text-align: center; }
 .page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
-.page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
+.page-hero h1 { color: var(--white); margin-bottom: 1.5rem; max-width: 720px; margin-left: auto; margin-right: auto; }
+.page-hero__pill { display: inline-block; background-color: var(--white); color: var(--navy); padding: 0.15em 0.5em; border-radius: 8px; }
 .page-hero__sub { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+.hero-stats { display: flex; justify-content: center; gap: 3rem; margin-top: 3rem; flex-wrap: wrap; }
+.hero-stat { display: flex; flex-direction: column; align-items: center; }
+.hero-stat__number { color: var(--gold); font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; }
+.hero-stat__label { color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 0.2rem; }
+ 
 .mission { padding: var(--section-padding); background-color: var(--white); }
 .mission__inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: center; }
 .mission__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
@@ -188,14 +277,24 @@ const base = '';
 .mission__stat { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.3rem; }
 .stat__number { color: var(--gold); font-family: var(--font-heading); font-size: 2rem; font-weight: 700; line-height: 1; }
 .stat__label { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+ 
 .values { padding: var(--section-padding); background-color: var(--off-white); }
 .values__eyebrow { text-align: center; color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
 .values__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
 .value-card { background-color: var(--white); border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; padding: 2rem; transition: all 0.3s ease; }
 .value-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(27,42,74,0.1); border-color: var(--gold); }
-.value-card__icon { font-size: 2rem; margin-bottom: 1rem; }
+.value-card__icon { color: var(--gold); margin-bottom: 1rem; }
 .value-card h3 { color: var(--navy); font-size: 1.1rem; margin-bottom: 0.8rem; }
 .value-card p { color: var(--text-mid); font-size: 0.9rem; line-height: 1.7; }
+ 
+.services { padding: var(--section-padding); background-color: var(--navy); text-align: center; }
+.services__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+.section-title--white { color: var(--white); }
+.services__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; text-align: left; }
+.service-card { background-color: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 2rem; }
+.service-card h3 { color: var(--white); font-size: 1.2rem; margin-bottom: 0.8rem; }
+.service-card p { color: rgba(255,255,255,0.65); font-size: 0.9rem; line-height: 1.7; }
+ 
 .why-us { padding: var(--section-padding); background-color: var(--navy); }
 .why-us__inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: center; }
 .why-us__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
@@ -211,15 +310,30 @@ const base = '';
 .why-us__card p { color: rgba(255,255,255,0.65); font-size: 0.95rem; line-height: 1.7; }
 .btn-outline-gold { display: inline-block; background-color: transparent; color: var(--gold); padding: 0.85rem 2rem; border-radius: 4px; font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; border: 2px solid var(--gold); transition: all 0.3s ease; }
 .btn-outline-gold:hover { background-color: var(--gold); color: var(--navy); transform: translateY(-2px); }
+ 
+.faq { padding: var(--section-padding); background-color: var(--off-white); }
+.faq__inner { display: grid; grid-template-columns: 1.6fr 1fr; gap: 3rem; align-items: start; }
+.faq__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+.faq-item { background-color: var(--white); border: 1px solid rgba(0,0,0,0.06); border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: 0.8rem; }
+.faq-item summary { color: var(--navy); font-weight: 600; font-size: 1rem; cursor: pointer; list-style: none; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: '+'; float: right; color: var(--gold); font-size: 1.3rem; }
+.faq-item[open] summary::after { content: '−'; }
+.faq-item p { color: var(--text-mid); font-size: 0.9rem; line-height: 1.7; margin-top: 0.8rem; }
+.faq__contact { background-color: var(--navy); border-radius: 16px; padding: 2.5rem; text-align: center; }
+.faq__contact h3 { color: var(--white); font-size: 1.3rem; margin-bottom: 0.8rem; }
+.faq__contact p { color: rgba(255,255,255,0.65); font-size: 0.9rem; line-height: 1.6; }
+ 
 @media (max-width: 768px) {
-  .mission__inner, .why-us__inner { grid-template-columns: 1fr; gap: 3rem; }
+  .mission__inner, .why-us__inner, .services__grid, .faq__inner { grid-template-columns: 1fr; gap: 3rem; }
   .values__grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-stats { gap: 2rem; }
 }
 @media (max-width: 480px) {
   .values__grid { grid-template-columns: 1fr; }
 }
 </style>
-
+ 
 <script>
   import { supabase } from '../lib/supabase.js';
   const base = '';
