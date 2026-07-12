@@ -4,16 +4,16 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 const base = '';
 ---
- 
+
 <BaseLayout 
   title="About Us" 
   description="Learn about ThesisArcPro — our mission, our team, and our commitment to providing expert academic writing support for students worldwide."
   url="https://thesisarcpro.github.io/about">
   <Header />
- 
+
   <main>
- 
-    <!-- ░░ 1. HERO ░░ -->
+
+    <!-- 1. HERO -->
     <section class="hero">
       <div class="container hero__inner">
         <div class="hero__text">
@@ -27,29 +27,30 @@ const base = '';
         </div>
       </div>
     </section>
- 
-    <!-- ░░ 2. STATS BAR ░░ -->
-    <section class="stats-bar">
-      <div class="container stats-bar__inner">
-        <div class="stat">
-          <span class="stat__number">2,000+</span>
-          <span class="stat__label">Students Helped</span>
-        </div>
-        <div class="stat">
-          <span class="stat__number">98%</span>
-          <span class="stat__label">Satisfaction Rate</span>
-        </div>
-        <div class="stat">
-          <span class="stat__label-only">Deadlines from</span>
-          <span class="stat__hours">3 Hours</span>
+
+    <!-- 2. STATS BAR -->
+    <section class="stats-bar-wrap">
+      <div class="container">
+        <div class="stats-bar">
+          <div class="stat">
+            <span class="stat__number">2,000+</span>
+            <span class="stat__label">Students Helped</span>
+          </div>
+          <div class="stat">
+            <span class="stat__number">98%</span>
+            <span class="stat__label">Satisfaction Rate</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label-only">Deadlines from</span>
+            <span class="stat__hours">3 Hours</span>
+          </div>
         </div>
       </div>
     </section>
- 
-    <!-- ░░ 3. OUR MISSION ░░ -->
+
+    <!-- 3. OUR MISSION -->
     <section class="mission">
       <div class="container mission__inner">
- 
         <div class="mission__left">
           <h2 class="mission__title">Our Mission</h2>
           <h3 class="mission__subtitle">Empowering Every Student To Succeed</h3>
@@ -57,180 +58,142 @@ const base = '';
           <p>We believe every student deserves access to expert guidance. Whether you are a high school student struggling with your first essay or a PhD candidate working on your dissertation — we are here to help you succeed.</p>
           <p>Our team of over 50 qualified academic experts brings decades of combined experience across all disciplines and academic levels.</p>
         </div>
- 
+
         <div class="mission__right">
           <div class="mission__value">
-            <div class="mission__value-icon">
-              <!-- PLACEHOLDER: Students icon -->
-              <div class="icon-placeholder"></div>
-            </div>
+            <div class="icon-placeholder"></div>
             <div>
               <h4 class="mission__value-title">Students</h4>
               <p class="mission__value-text">We help and support 24/7</p>
             </div>
           </div>
- 
           <div class="mission__value">
-            <div class="mission__value-icon">
-              <!-- PLACEHOLDER: Confidentiality icon -->
-              <div class="icon-placeholder"></div>
-            </div>
+            <div class="icon-placeholder"></div>
             <div>
               <h4 class="mission__value-title">Confidentiality</h4>
               <p class="mission__value-text">Your privacy is sacred to us. We never share your personal information or order details with any third party under any circumstances.</p>
             </div>
           </div>
- 
           <div class="mission__value">
-            <div class="mission__value-icon">
-              <!-- PLACEHOLDER: Excellence icon -->
-              <div class="icon-placeholder"></div>
-            </div>
+            <div class="icon-placeholder"></div>
             <div>
               <h4 class="mission__value-title">Excellence</h4>
               <p class="mission__value-text">We hold ourselves to the highest academic standards. Every piece of work we produce reflects our commitment to quality and excellence.</p>
             </div>
           </div>
- 
           <div class="mission__value">
-            <div class="mission__value-icon">
-              <!-- PLACEHOLDER: Integrity icon -->
-              <div class="icon-placeholder"></div>
-            </div>
+            <div class="icon-placeholder"></div>
             <div>
               <h4 class="mission__value-title">Integrity</h4>
               <p class="mission__value-text">We operate with complete transparency and honesty. Our ethical commitment to responsible academic support is at the heart of everything we do.</p>
             </div>
           </div>
         </div>
- 
       </div>
     </section>
- 
-    <!-- ░░ 4. OUR SERVICES ░░ -->
-    <section class="services">
-      <!-- PLACEHOLDER: Replace with background room image -->
-      <div class="services__bg-placeholder"></div>
-      <div class="container services__inner">
-        <h2 class="services__title">Our Services</h2>
-        <div class="services__cards">
- 
-          <div class="service-card">
-            <h3 class="service-card__title">Writing</h3>
-            <p class="service-card__text">Our professional experts can write from scratch any type of assignment, following your instructions.</p>
-            <a href="#" class="btn-gold-outline auth-gate-page">WRITE MY PAPER</a>
+
+    <!-- 4. OUR SERVICES -->
+    <section class="services-wrap">
+      <div class="container">
+        <div class="services">
+          <!-- PLACEHOLDER: Replace src with actual room background image -->
+          <div class="services__bg-placeholder"></div>
+          <div class="services__inner">
+            <h2 class="services__title">Our Services</h2>
+            <div class="services__cards">
+              <div class="service-card">
+                <h3 class="service-card__title">Writing</h3>
+                <p class="service-card__text">Our professional experts can write from scratch any type of assignment, following your instructions.</p>
+                <a href="#" class="btn-gold-solid auth-gate-page">WRITE MY PAPER</a>
+              </div>
+              <div class="service-card">
+                <h3 class="service-card__title">Editing</h3>
+                <p class="service-card__text">Our professional experts can edit and proofread any type of text, eliminating all grammar and syntax mistakes.</p>
+                <a href="#" class="btn-gold-solid auth-gate-page">EDIT MY PAPER</a>
+              </div>
+            </div>
           </div>
- 
-          <div class="service-card">
-            <h3 class="service-card__title">Editing</h3>
-            <p class="service-card__text">Our professional experts can edit and proofread any type of text, eliminating all grammar and syntax mistakes.</p>
-            <a href="#" class="btn-gold-outline auth-gate-page">EDIT MY PAPER</a>
-          </div>
- 
         </div>
       </div>
     </section>
- 
-    <!-- ░░ 5. WHAT MAKES US DIFFERENT ░░ -->
+
+    <!-- 5. WHAT MAKES US DIFFERENT -->
     <section class="why-us">
       <div class="container">
-        <p class="why-us__eyebrow">Why ThesisArcPro</p>
+        <p class="why-us__eyebrow">WHY THESISARCPRO</p>
         <h2 class="why-us__title">What Makes Us Different</h2>
- 
         <div class="why-us__list">
- 
           <div class="why-point">
-            <div class="why-point__icon">
-              <!-- PLACEHOLDER: Qualified icon -->
-              <div class="icon-placeholder icon-placeholder--dark"></div>
-            </div>
+            <div class="icon-placeholder icon-placeholder--sm"></div>
             <div>
               <h4 class="why-point__title">Qualified Academic Experts</h4>
               <p class="why-point__text">All our writers hold Masters or PhD degrees in their respective fields.</p>
             </div>
           </div>
- 
           <div class="why-point">
-            <div class="why-point__icon">
-              <!-- PLACEHOLDER: Levels icon -->
-              <div class="icon-placeholder icon-placeholder--dark"></div>
-            </div>
+            <div class="icon-placeholder icon-placeholder--sm"></div>
             <div>
               <h4 class="why-point__title">All Academic Levels</h4>
               <p class="why-point__text">From high school to PhD — we support students at every academic level.</p>
             </div>
           </div>
- 
           <div class="why-point">
-            <div class="why-point__icon">
-              <!-- PLACEHOLDER: Fast icon -->
-              <div class="icon-placeholder icon-placeholder--dark"></div>
-            </div>
+            <div class="icon-placeholder icon-placeholder--sm"></div>
             <div>
               <h4 class="why-point__title">Fast Turnaround</h4>
               <p class="why-point__text">Urgent deadlines? We can deliver quality work in as little as 6 hours.</p>
             </div>
           </div>
- 
           <div class="why-point">
-            <div class="why-point__icon">
-              <!-- PLACEHOLDER: Pricing icon -->
-              <div class="icon-placeholder icon-placeholder--dark"></div>
-            </div>
+            <div class="icon-placeholder icon-placeholder--sm"></div>
             <div>
               <h4 class="why-point__title">Affordable Pricing</h4>
               <p class="why-point__text">Premium quality at student-friendly prices with flexible payment options.</p>
             </div>
           </div>
- 
           <div class="why-point">
-            <div class="why-point__icon">
-              <!-- PLACEHOLDER: Money back icon -->
-              <div class="icon-placeholder icon-placeholder--dark"></div>
-            </div>
+            <div class="icon-placeholder icon-placeholder--sm"></div>
             <div>
               <h4 class="why-point__title">Money Back Guarantee</h4>
               <p class="why-point__text">Not satisfied? We offer a full refund — no questions asked.</p>
             </div>
           </div>
- 
         </div>
       </div>
     </section>
- 
-    <!-- ░░ 6. FAQ ░░ -->
+
+    <!-- 6. FAQ -->
     <section class="faq">
       <div class="container faq__inner">
- 
         <div class="faq__left">
           <h2 class="faq__title">Frequently Asked Questions</h2>
- 
+
           <details class="faq__item" open>
             <summary class="faq__question">What is ThesisArcPro?</summary>
             <p class="faq__answer">ThesisArcPro is an academic writing platform where students can work with experienced writers and researchers for essays, dissertations, and coursework support.</p>
           </details>
- 
+
           <details class="faq__item">
             <summary class="faq__question">How much does ThesisArcPro cost?</summary>
             <p class="faq__answer">Pricing depends on academic level, deadline, and paper type, with rates starting at student-friendly prices. You get an instant quote before placing an order, and there are no hidden fees.</p>
           </details>
- 
+
           <details class="faq__item">
             <summary class="faq__question">Is ThesisArcPro free?</summary>
             <p class="faq__answer">No, ThesisArcPro is a paid service. We connect you with qualified academic experts, and pricing reflects the quality, research, and one-on-one support you receive.</p>
           </details>
- 
+
           <details class="faq__item">
             <summary class="faq__question">Is ThesisArcPro legit?</summary>
             <p class="faq__answer">Yes, ThesisArcPro is a registered academic writing service with verified writers, secure payments, and a track record of helping students across the US, UK, UAE, Canada, and Australia.</p>
           </details>
- 
+
           <details class="faq__item">
             <summary class="faq__question">Is ThesisArcPro safe?</summary>
             <p class="faq__answer">Yes. Your personal information and order details are kept confidential, payments are processed securely, and every paper is checked for originality before delivery.</p>
           </details>
         </div>
- 
+
         <div class="faq__right">
           <h3 class="faq__contact-title">Questions?</h3>
           <p class="faq__contact-sub">Contact our Support Team.<br/>We'll respond within a minute</p>
@@ -239,24 +202,23 @@ const base = '';
           </div>
           <a href={`${base}/contact/`} class="btn-contact">Contact Support</a>
         </div>
- 
       </div>
     </section>
- 
+
   </main>
- 
+
   <Footer />
 </BaseLayout>
- 
+
 <style>
- 
+
 /* ── GLOBAL ── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
- 
+
 /* ── 1. HERO ── */
 .hero {
   background-color: #0D1B3E;
-  padding: 7rem 0 5rem;
+  padding: 7rem 0 4rem;
 }
 .hero__inner {
   display: grid;
@@ -299,7 +261,7 @@ const base = '';
 }
 .btn-gold:hover { opacity: 0.88; }
 .hero__image-placeholder {
-  background-color: rgba(255,255,255,0.08);
+  background-color: rgba(255,255,255,0.06);
   border: 2px dashed rgba(255,255,255,0.2);
   border-radius: 12px;
   height: 320px;
@@ -310,17 +272,19 @@ const base = '';
   font-size: 0.85rem;
 }
 .hero__image-placeholder::after { content: '[ Hero Image ]'; }
- 
+
 /* ── 2. STATS BAR ── */
+.stats-bar-wrap {
+  background-color: #0D1B3E;
+  padding-bottom: 2.5rem;
+}
 .stats-bar {
   background-color: #ffffff;
-  border-bottom: 1px solid #e8e8e8;
-  padding: 2.2rem 0;
-}
-.stats-bar__inner {
+  border: 1.5px solid #dce3f0;
+  border-radius: 8px;
+  padding: 1.8rem 3rem;
   display: flex;
-  justify-content: center;
-  gap: 6rem;
+  justify-content: space-around;
   align-items: center;
 }
 .stat { display: flex; flex-direction: column; align-items: center; }
@@ -338,13 +302,15 @@ const base = '';
 .stat__label-only {
   color: #333;
   font-size: 0.85rem;
+  text-align: center;
 }
 .stat__hours {
   color: #C8A951;
   font-size: 1rem;
   font-weight: 700;
+  text-align: center;
 }
- 
+
 /* ── 3. OUR MISSION ── */
 .mission {
   background-color: #ffffff;
@@ -360,11 +326,11 @@ const base = '';
   color: #1B3A6B;
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 .mission__subtitle {
   color: #0D1B3E;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }
@@ -388,13 +354,13 @@ const base = '';
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: rgba(13,27,62,0.1);
-  border: 2px dashed rgba(13,27,62,0.2);
+  background-color: #eef2f9;
+  border: 2px dashed #b0bdd4;
   flex-shrink: 0;
 }
-.icon-placeholder--dark {
-  background-color: rgba(13,27,62,0.08);
-  border: 2px dashed rgba(13,27,62,0.18);
+.icon-placeholder--sm {
+  width: 38px;
+  height: 38px;
 }
 .mission__value-title {
   color: #C8A951;
@@ -407,18 +373,22 @@ const base = '';
   font-size: 0.88rem;
   line-height: 1.6;
 }
- 
+
 /* ── 4. OUR SERVICES ── */
+.services-wrap {
+  background-color: #ffffff;
+  padding: 3rem 0 5rem;
+}
 .services {
   position: relative;
-  padding: 5rem 0;
+  border-radius: 20px;
   overflow: hidden;
+  min-height: 420px;
 }
 .services__bg-placeholder {
   position: absolute;
   inset: 0;
-  background-color: #c9c3bb;
-  border: 3px dashed rgba(0,0,0,0.15);
+  background-color: #b8b0a6;
 }
 .services__bg-placeholder::after {
   content: '[ Background Room Image ]';
@@ -433,11 +403,12 @@ const base = '';
 .services__inner {
   position: relative;
   z-index: 1;
+  padding: 3rem 2rem;
 }
 .services__title {
   text-align: center;
-  color: #1B3A6B;
-  font-size: 2rem;
+  color: #4A90D9;
+  font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 2.5rem;
 }
@@ -445,12 +416,12 @@ const base = '';
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto;
 }
 .service-card {
   background-color: #1B2A4A;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 2.5rem 2rem;
   display: flex;
   flex-direction: column;
@@ -462,15 +433,15 @@ const base = '';
   font-weight: 700;
 }
 .service-card__text {
-  color: rgba(255,255,255,0.72);
+  color: rgba(255,255,255,0.75);
   font-size: 0.88rem;
   line-height: 1.7;
   flex: 1;
 }
-.btn-gold-outline {
+.btn-gold-solid {
   display: inline-block;
-  border: 1.5px solid #C8A951;
-  color: #C8A951;
+  background-color: #C8A951;
+  color: #0D1B3E;
   padding: 0.55rem 1.3rem;
   border-radius: 4px;
   font-size: 0.78rem;
@@ -478,21 +449,19 @@ const base = '';
   letter-spacing: 1px;
   text-decoration: none;
   align-self: flex-start;
-  transition: all 0.2s;
+  transition: opacity 0.2s;
 }
-.btn-gold-outline:hover {
-  background-color: #C8A951;
-  color: #0D1B3E;
-}
- 
+.btn-gold-solid:hover { opacity: 0.88; }
+
 /* ── 5. WHAT MAKES US DIFFERENT ── */
 .why-us {
   background-color: #ffffff;
   padding: 5rem 0;
+  border-top: 1px solid #eee;
 }
 .why-us__eyebrow {
   color: #C8A951;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -514,7 +483,6 @@ const base = '';
   gap: 1.2rem;
   align-items: flex-start;
 }
-.why-point__icon { flex-shrink: 0; }
 .why-point__title {
   color: #0D1B3E;
   font-size: 1rem;
@@ -526,7 +494,7 @@ const base = '';
   font-size: 0.88rem;
   line-height: 1.6;
 }
- 
+
 /* ── 6. FAQ ── */
 .faq {
   background-color: #ffffff;
@@ -566,6 +534,8 @@ const base = '';
   content: '+';
   font-size: 1.2rem;
   color: #aaa;
+  flex-shrink: 0;
+  margin-left: 1rem;
 }
 details[open] .faq__question::after { content: '−'; }
 .faq__answer {
@@ -580,7 +550,8 @@ details[open] .faq__question::after { content: '−'; }
   align-items: center;
   text-align: center;
   padding: 2rem;
-  background-color: #f9f9f9;
+  background-color: #f7f9fc;
+  border: 1px solid #dce3f0;
   border-radius: 12px;
 }
 .faq__contact-title {
@@ -606,7 +577,7 @@ details[open] .faq__question::after { content: '−'; }
   align-items: center;
   justify-content: center;
   color: #aaa;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
 }
 .faq__avatar::after { content: '[ Agent Photo ]'; }
 .btn-contact {
@@ -619,32 +590,33 @@ details[open] .faq__question::after { content: '−'; }
   font-weight: 600;
   text-decoration: none;
   transition: opacity 0.2s;
+  width: 100%;
+  text-align: center;
 }
 .btn-contact:hover { opacity: 0.88; }
- 
+
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
   .hero__inner,
   .mission__inner,
   .faq__inner { grid-template-columns: 1fr; gap: 3rem; }
   .services__cards { grid-template-columns: 1fr; }
-  .stats-bar__inner { gap: 3rem; flex-wrap: wrap; }
+  .stats-bar { gap: 2rem; flex-wrap: wrap; justify-content: center; }
   .hero__image-placeholder { height: 220px; }
 }
 @media (max-width: 480px) {
   .hero__heading { font-size: 1.9rem; }
-  .stats-bar__inner { gap: 1.5rem; }
+  .stats-bar { padding: 1.5rem; }
 }
 </style>
- 
+
 <script>
   import { supabase } from '../lib/supabase.js';
   const base = '';
- 
+
   const { data: { session } } = await supabase.auth.getSession();
   const btns = document.querySelectorAll('.auth-gate-page');
   btns.forEach(btn => {
     btn.setAttribute('href', session ? `${base}/contact/` : `${base}/login/`);
   });
 </script>
- 
