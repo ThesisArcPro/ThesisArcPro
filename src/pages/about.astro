@@ -93,29 +93,26 @@ const base = '';
     </section>
 
     <!-- 4. OUR SERVICES -->
-    <section class="services-wrap">
-      <div class="container">
-        <div class="services">
-          <!-- PLACEHOLDER: Replace src with actual room background image -->
-          <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/services-bg.jpg.jpg" alt="Student studying" class="services__bg-img" />
-          <div class="services__inner">
-            <h2 class="services__title">Our Services</h2>
-            <div class="services__cards">
-              <div class="service-card">
-                <h3 class="service-card__title">Writing</h3>
-                <p class="service-card__text">Our professional experts can write from scratch any type of assignment, following your instructions.</p>
-                <a href="#" class="btn-gold-solid auth-gate-page">WRITE MY PAPER</a>
-              </div>
-              <div class="service-card">
-                <h3 class="service-card__title">Editing</h3>
-                <p class="service-card__text">Our professional experts can edit and proofread any type of text, eliminating all grammar and syntax mistakes.</p>
-                <a href="#" class="btn-gold-solid auth-gate-page">EDIT MY PAPER</a>
-              </div>
-            </div>
-          </div>
+<section class="services-wrap">
+  <div class="services">
+    <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/services-bg.jpg.jpg" alt="Student studying" class="services__bg-img" />
+    <div class="services__inner">
+      <h2 class="services__title">Our Services</h2>
+      <div class="services__cards">
+        <div class="service-card">
+          <h3 class="service-card__title">Writing</h3>
+          <p class="service-card__text">Our professional experts can write from scratch any type of assignment, following your instructions.</p>
+          <a href="#" class="btn-gold-solid auth-gate-page">WRITE MY PAPER</a>
+        </div>
+        <div class="service-card">
+          <h3 class="service-card__title">Editing</h3>
+          <p class="service-card__text">Our professional experts can edit and proofread any type of text, eliminating all grammar and syntax mistakes.</p>
+          <a href="#" class="btn-gold-solid auth-gate-page">EDIT MY PAPER</a>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <!-- 5. WHAT MAKES US DIFFERENT -->
     <section class="why-us">
@@ -376,14 +373,19 @@ const base = '';
 
 /* ── 4. OUR SERVICES ── */
 .services-wrap {
-  background-color: #ffffff;
-  padding: 3rem 0 5rem;
+  background-color: #0D1B3E;
+  padding: 2.5rem;
 }
 .services {
   position: relative;
   border-radius: 20px;
   overflow: hidden;
   min-height: 420px;
+  max-width: 850px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .services__bg-img {
   position: absolute;
@@ -391,12 +393,13 @@ const base = '';
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.75);
+  filter: brightness(0.55);
 }
 .services__inner {
   position: relative;
   z-index: 1;
   padding: 3rem 2rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -411,22 +414,21 @@ const base = '';
 .services__cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 1.5rem;
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 560px;
 }
 .service-card {
   background-color: #1B2A4A;
   border-radius: 16px;
-  padding: 2.5rem 2rem;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 .service-card__title {
   color: #ffffff;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 .service-card__text {
