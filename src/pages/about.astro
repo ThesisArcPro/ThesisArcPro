@@ -19,6 +19,20 @@ const base = '';
         <div class="hero__text">
           <p class="hero__eyebrow">NOT JUST WRITERS, YOUR ACADEMIC PARTNERS</p>
           <h1 class="hero__heading">We exist so you can finally have time to</h1>
+          <div class="hero__slider">
+            <div class="hero__slider-track" id="sliderTrack">
+              <span>finish your sales report</span>
+              <span>use your yoga studio membership</span>
+              <span>get an ice cream with your child</span>
+              <span>spend time with your family</span>
+              <span>complete your dissertation</span>
+              <span>write your research paper</span>
+              <span>catch up on your favourite show</span>
+              <span>take a well deserved nap</span>
+              <span>attend your friend's birthday</span>
+              <span>focus on what matters most</span>
+            </div>
+          </div>
           <p class="hero__sub">We are a team of academic experts, researchers, and writers dedicated to helping students achieve their full potential.</p>
           <a href="#" class="btn-gold auth-gate-page">Get started</a>
         </div>
@@ -229,7 +243,31 @@ const base = '';
   font-size: 2.6rem;
   font-weight: 700;
   line-height: 1.2;
+  margin-bottom: 0.8rem;
+}
+.hero__slider {
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.45);
+  border-radius: 4px;
+  padding: 0.4rem 1rem;
   margin-bottom: 1.5rem;
+  width: fit-content;
+  max-width: 100%;
+  height: 2rem;
+}
+.hero__slider-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s ease-in-out;
+}
+.hero__slider-track span {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  height: 2rem;
+  line-height: 2rem;
+  white-space: nowrap;
+  display: block;
 }
 .hero__sub {
   color: rgba(255,255,255,0.72);
@@ -605,4 +643,14 @@ details[open] .faq__question::after { content: '−'; }
   btns.forEach(btn => {
     btn.setAttribute('href', session ? `${base}/contact/` : `${base}/login/`);
   });
+
+  const track = document.getElementById('sliderTrack');
+  if (track) {
+    const spans = track.querySelectorAll('span');
+    let current = 0;
+    setInterval(() => {
+      current = (current + 1) % spans.length;
+      (track as HTMLElement).style.transform = `translateY(-${current * 2}rem)`;
+    }, 2000);
+  }
 </script>
