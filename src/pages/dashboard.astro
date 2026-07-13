@@ -3,12 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ChatWidget from '../components/ChatWidget.astro';
 const base = '';
 ---
-
+ 
 <BaseLayout title="My Orders" description="View your orders on ThesisArcPro">
-
+ 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
+ 
   :root {
     --gold: #c5a059;
     --sidebar-bg: #111827;
@@ -20,7 +20,7 @@ const base = '';
     --text-muted: #64748b;
     --active-blue: #6366f1;
   }
-
+ 
   body {
     font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif;
     background: var(--main-bg);
@@ -29,7 +29,7 @@ const base = '';
     height: 100vh;
     overflow: hidden;
   }
-
+ 
   .sidebar {
     width: 240px;
     background: #ffffff;
@@ -39,7 +39,7 @@ const base = '';
     border-right: 1px solid #eef2f7;
     flex-shrink: 0;
   }
-
+ 
   .sidebar-new-order {
     margin: 0 1rem 1.5rem;
     background: #046fcd;
@@ -58,10 +58,10 @@ const base = '';
     justify-content: center;
     box-shadow: 0 2px 8px rgba(4,111,205,0.25);
   }
-
+ 
   .sidebar-new-order:hover { background: #0361b3; transform: translateY(-1px); }
   .sidebar-nav { display: flex; flex-direction: column; gap: 0.2rem; padding: 0 0.5rem; }
-
+ 
   .nav-item {
     display: flex;
     align-items: center;
@@ -75,14 +75,14 @@ const base = '';
     transition: all 0.2s;
     text-decoration: none;
   }
-
+ 
   .nav-item:hover { background: #f1f5f9; color: #0f172a; }
   .nav-item.active { background: #eef6fb; color: #046fcd; font-weight: 600; }
   .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
   .sidebar-divider { height: 1px; background: #eef2f7; margin: 1rem 0.9rem; }
-
+ 
   .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
+ 
   .main-header {
     display: flex;
     align-items: center;
@@ -91,9 +91,9 @@ const base = '';
     border-bottom: 1px solid #eef2f7;
     background: #ffffff;
   }
-
+ 
   .main-header h1 { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
-
+ 
   .btn-new-order-main {
     background: #ffffff;
     color: #303b4f;
@@ -109,9 +109,9 @@ const base = '';
     transition: all 0.2s;
     text-decoration: none;
   }
-
+ 
   .btn-new-order-main:hover { border-color: #046fcd; color: #046fcd; background: #f8fafc; }
-
+ 
   .tabs-bar {
     display: flex;
     align-items: center;
@@ -119,9 +119,9 @@ const base = '';
     border-bottom: 1px solid var(--border);
     overflow-x: auto;
   }
-
+ 
   .tabs { display: flex; gap: 0.2rem; }
-
+ 
   .tab {
     background: none;
     border: none;
@@ -136,10 +136,10 @@ const base = '';
     top: 1px;
     white-space: nowrap;
   }
-
+ 
   .tab.active { color: #046fcd; border-bottom-color: #046fcd; font-weight: 600; }
   .tab:hover:not(.active) { color: #303b4f; }
-
+ 
   .tab .count {
     display: inline-flex;
     align-items: center;
@@ -152,19 +152,19 @@ const base = '';
     margin-left: 0.4rem;
     color: #94a3b8;
   }
-
+ 
   .tab.active .count { background: #eef6fb; color: #046fcd; }
-
+ 
   .controls-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 2rem;
   }
-
+ 
   .sort-wrap { display: flex; align-items: center; gap: 0.5rem; }
   .sort-label { font-size: 0.82rem; color: var(--text-muted); }
-
+ 
   .sort-select {
     background: var(--panel-bg);
     border: 1px solid var(--border);
@@ -175,9 +175,9 @@ const base = '';
     cursor: pointer;
     outline: none;
   }
-
+ 
   .search-wrap { position: relative; width: 220px; }
-
+ 
   .search-icon {
     position: absolute;
     left: 0.7rem;
@@ -186,7 +186,7 @@ const base = '';
     color: var(--text-muted);
     font-size: 0.85rem;
   }
-
+ 
   .search-input {
     width: 100%;
     background: #f8fafc;
@@ -198,11 +198,11 @@ const base = '';
     outline: none;
     transition: 0.2s;
   }
-
+ 
   .search-input:focus { border-color: #046fcd; background: #ffffff; }
   .search-input::placeholder { color: #94a3b8; }
   .orders-area { flex: 1; overflow-y: auto; padding: 1.5rem 2rem 2rem; }
-
+ 
   .empty-state {
     display: flex;
     flex-direction: column;
@@ -212,7 +212,7 @@ const base = '';
     padding: 4rem;
     text-align: center;
   }
-
+ 
   .empty-illustration {
     width: 120px;
     height: 120px;
@@ -224,10 +224,10 @@ const base = '';
     margin-bottom: 1.5rem;
     font-size: 3rem;
   }
-
+ 
   .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: #303b4f; margin-bottom: 0.5rem; }
   .empty-state p { font-size: 0.88rem; color: #64748b; margin-bottom: 1.5rem; line-height: 1.6; }
-
+ 
   .btn-empty-order {
     background: #046fcd;
     color: white;
@@ -244,9 +244,9 @@ const base = '';
     text-decoration: none;
     box-shadow: 0 2px 8px rgba(4,111,205,0.2);
   }
-
+ 
   .btn-empty-order:hover { background: #0361b3; transform: translateY(-1px); }
-
+ 
   .loading-state {
     display: flex;
     flex-direction: column;
@@ -256,7 +256,7 @@ const base = '';
     gap: 1rem;
     color: var(--text-muted);
   }
-
+ 
   .spinner {
     width: 36px; height: 36px;
     border: 3px solid #eef2f7;
@@ -264,9 +264,9 @@ const base = '';
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
-
+ 
   @keyframes spin { to { transform: rotate(360deg); } }
-
+ 
   .modal {
     position: fixed; inset: 0;
     z-index: 100;
@@ -274,10 +274,10 @@ const base = '';
     align-items: center;
     justify-content: center;
   }
-
+ 
   .modal.open { display: flex; }
   .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.65); }
-
+ 
   .modal-box {
     position: relative; z-index: 101;
     background: #ffffff;
@@ -289,7 +289,7 @@ const base = '';
     max-height: 82vh;
     overflow-y: auto;
   }
-
+ 
   .modal-close {
     position: absolute; top: 1rem; right: 1rem;
     background: none; border: none;
@@ -297,9 +297,9 @@ const base = '';
     cursor: pointer; transition: 0.2s;
     z-index: 2;
   }
-
+ 
   .modal-close:hover { color: var(--text); }
-
+ 
   /* Review popup overlay */
   .review-modal {
     position: fixed; inset: 0;
@@ -320,12 +320,12 @@ const base = '';
     max-width: 460px;
     text-align: center;
   }
-
+ 
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
+ 
   /* Client ID badge in sidebar */
   .client-id-box {
     margin: 0.5rem 1rem 0;
@@ -338,7 +338,7 @@ const base = '';
   .client-id-box__number { font-size: 1.3rem; font-weight: 800; color: var(--text); letter-spacing: 1px; }
   .client-id-box__copy { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem; line-height: 1.4; }
   .client-id-box__privacy { margin-top: 0.6rem; font-size: 0.68rem; color: var(--gold); display: flex; align-items: flex-start; gap: 0.3rem; line-height: 1.4; }
-
+ 
   /* Sidebar bottom */
   .sidebar-bottom { margin-top: auto; padding: 0.8rem 1rem; }
   .theme-icon-btn {
@@ -349,7 +349,7 @@ const base = '';
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
   .theme-icon-btn:hover { background: #334155; transform: scale(1.05); }
-
+ 
   /* Theme popup */
   .theme-popup { display: none; position: fixed; inset: 0; z-index: 30000; align-items: center; justify-content: center; }
   .theme-popup.open { display: flex; }
@@ -374,11 +374,11 @@ const base = '';
   .theme-popup__opt:hover { background: #334155; color: #ffffff; }
   .theme-popup__opt.active { background: #046fcd; color: #ffffff; }
   .theme-popup__icon { font-size: 1rem; width: 24px; text-align: center; }
-
+ 
   /* Light mode adjustments for the icon button */
   body:not(.dark-mode) .theme-icon-btn { background: #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
   body:not(.dark-mode) .theme-icon-btn:hover { background: #e2e8f0; }
-
+ 
   /* ══ DARK MODE ══ */
   body.dark-mode { --main-bg: #0f1117; --panel-bg: #1a1f2e; --border: rgba(255,255,255,0.08); --text: #e2e8f0; --text-muted: #94a3b8; background: #0f1117; color: #e2e8f0; }
   body.dark-mode .sidebar { background: #161b27; border-right-color: rgba(255,255,255,0.06); }
@@ -418,25 +418,18 @@ const base = '';
   body.dark-mode .review-box p { color: #94a3b8; }
   body.dark-mode .star { color: #334155 !important; }
   body.dark-mode #chatsPanelWrap { background: #0f1117; }
-body.dark-mode #convList { border-right-color: rgba(255,255,255,0.06); background: #161b27; }
-body.dark-mode .cp-conv-item { border-bottom-color: rgba(255,255,255,0.04) !important; }
-body.dark-mode #threadHeader { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
-body.dark-mode #threadTitle { color: #e2e8f0; }
-body.dark-mode #chatsPanelWrap { background: #0f1117; }
-body.dark-mode #convList { border-right-color: rgba(255,255,255,0.06); background: #161b27; }
-body.dark-mode .cp-conv-item { border-bottom-color: rgba(255,255,255,0.04) !important; color: #e2e8f0; }
-body.dark-mode #threadHeader { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
-body.dark-mode #threadTitle { color: #e2e8f0; }
-body.dark-mode #threadSub { color: #64748b; }
-body.dark-mode #threadMessages { background: #0f1117; }
-body.dark-mode #convThread { background: #0f1117; }
-body.dark-mode #threadInputBar { background: #161b27; border-top-color: rgba(255,255,255,0.06); }
-body.dark-mode #threadInput { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
-body.dark-mode #threadInput::placeholder { color: #4a5568; }
-body.dark-mode #threadInputBar { background: #161b27; border-top-color: rgba(255,255,255,0.06); }
-body.dark-mode #threadInput { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
-body.dark-mode .star.selected { color: #fbbf24 !important; }
-body.dark-mode .star:hover { color: #fbbf24 !important; }
+  body.dark-mode #convList { border-right-color: rgba(255,255,255,0.06); background: #161b27; }
+  body.dark-mode .cp-conv-item { border-bottom-color: rgba(255,255,255,0.04) !important; color: #e2e8f0; }
+  body.dark-mode #threadHeader { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode #threadTitle { color: #e2e8f0; }
+  body.dark-mode #threadSub { color: #64748b; }
+  body.dark-mode #threadMessages { background: #0f1117; }
+  body.dark-mode #convThread { background: #0f1117; }
+  body.dark-mode #threadInputBar { background: #161b27; border-top-color: rgba(255,255,255,0.06); }
+  body.dark-mode #threadInput { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
+  body.dark-mode #threadInput::placeholder { color: #4a5568; }
+  body.dark-mode .star.selected { color: #fbbf24 !important; }
+  body.dark-mode .star:hover { color: #fbbf24 !important; }
   body.dark-mode .review-textarea { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
   body.dark-mode .review-textarea::placeholder { color: #4a5568; }
   body.dark-mode .btn-skip-review { color: #94a3b8; border-color: rgba(255,255,255,0.1); }
@@ -444,10 +437,10 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   body.dark-mode ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
   body.dark-mode ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 </style>
-
+ 
 <style is:global>
   .order-table { display: flex; flex-direction: column; gap: 0.5rem; }
-
+ 
   .order-table-head {
     display: flex;
     justify-content: space-between;
@@ -458,9 +451,9 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-
+ 
   .order-table-head-right { display: flex; gap: 3rem; }
-
+ 
   .order-row {
     display: flex;
     align-items: center;
@@ -468,28 +461,28 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     gap: 0.75rem;
     padding: 0.65rem 1rem;
     background: #ffffff;
-    border: 1px solid #e2e8f0;const topicEl = document.getElementById('wizOrderTopic'); if (topicEl) topicEl.textContent = topic || 'Your order';
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.18s;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04);
   }
-
+ 
   .order-row:hover { background: #fafafa; border-color: rgba(99,102,241,0.45); }
-
+ 
   .col-left { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 0; overflow: hidden; }
   .order-title { font-size: 0.93rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .order-meta { display: flex; align-items: center; gap: 0.35rem; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; }
   .meta-dot { color: #cbd5e1; }
   .order-id { color: #94a3b8; }
-
+ 
   .col-right { display: flex; align-items: center; gap: 2.5rem; flex-shrink: 0; }
   .col-deadline { font-size: 0.82rem; color: #64748b; white-space: nowrap; min-width: 90px; text-align: right; }
   .col-deadline.overdue { color: #f87171; }
   .col-deadline.urgent { color: #fb923c; }
   .col-deadline.ok { color: #34d399; }
   .col-amount { font-size: 0.9rem; font-weight: 700; color: #0f172a; white-space: nowrap; min-width: 70px; text-align: right; }
-
+ 
   .status-badge {
     display: inline-block;
     padding: 0.18rem 0.55rem;
@@ -499,26 +492,26 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     background: rgba(251,191,36,0.12);
     color: #fbbf24;
   }
-
+ 
   .status-badge.new { background: rgba(99,102,241,0.15); color: #818cf8; }
   .status-badge.in_progress { background: rgba(251,191,36,0.15); color: #fbbf24; }
   .status-badge.in_review { background: rgba(56,138,221,0.18); color: #60a5fa; }
   .status-badge.completed { background: rgba(34,197,94,0.12); color: #4ade80; }
   .status-badge.revision { background: rgba(168,85,247,0.18); color: #c084fc; }
   .status-badge.cancelled { background: rgba(239,68,68,0.16); color: #f87171; }
-
+ 
   /* ── ORDER DETAIL MODAL ── */
   .om-header { margin-bottom: 1.2rem; padding-right: 2rem; }
   .om-title { font-size: 1.15rem; font-weight: 800; color: #0f172a; line-height: 1.3; }
   .om-id { font-size: 0.75rem; color: #94a3b8; margin-top: 0.3rem; }
-
+ 
   .om-tabs {
     display: flex;
     gap: 0.3rem;
     border-bottom: 1px solid rgba(255,255,255,0.08);
     margin-bottom: 1.3rem;
   }
-
+ 
   .om-tab {
     background: none;
     border: none;
@@ -532,13 +525,13 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     top: 1px;
     transition: all 0.2s;
   }
-
+ 
   .om-tab:hover:not(.om-tab--active) { color: #303b4f; }
   .om-tab--active { color: #046fcd; border-bottom-color: #046fcd; }
-
+ 
   .om-panel { display: none; }
   .om-panel--active { display: block; }
-
+ 
   .om-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -548,7 +541,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     border-bottom: 1px solid rgba(255,255,255,0.07);
   }
   .om-grid:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
+ 
   .om-label {
     font-size: 0.66rem;
     color: #94a3b8;
@@ -558,7 +551,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   }
   .om-value { font-weight: 600; font-size: 0.88rem; color: #0f172a; text-transform: capitalize; }
   .om-value.green { color: #4ade80; }
-
+ 
   .om-desc-label {
     font-size: 0.66rem;
     color: #94a3b8;
@@ -575,7 +568,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     padding-right: 0.5rem;
     white-space: pre-wrap;
   }
-
+ 
   .om-download {
     display: inline-block;
     background: #c5a059;
@@ -591,7 +584,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   .om-download:hover { background: #d4b06a; }
   .om-download:disabled { opacity: 0.6; cursor: not-allowed; }
   .om-dl-note { color: #f87171; font-size: 0.8rem; margin-top: 0.6rem; }
-
+ 
   .om-nofile {
     text-align: center;
     padding: 1.4rem;
@@ -601,7 +594,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     color: #64748b;
     font-size: 0.85rem;
   }
-
+ 
   /* ── CLIENT ACTION BUTTONS ── */
   .om-actions {
     display: flex;
@@ -611,7 +604,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     border-top: 1px solid rgba(255,255,255,0.07);
     flex-wrap: wrap;
   }
-
+ 
   .btn-revision {
     background: rgba(168,85,247,0.15);
     color: #c084fc;
@@ -625,7 +618,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   }
   .btn-revision:hover { background: rgba(168,85,247,0.25); }
   .btn-revision:disabled { opacity: 0.5; cursor: not-allowed; }
-
+ 
   .btn-complete {
     background: rgba(34,197,94,0.12);
     color: #4ade80;
@@ -639,7 +632,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   }
   .btn-complete:hover { background: rgba(34,197,94,0.22); }
   .btn-complete:disabled { opacity: 0.5; cursor: not-allowed; }
-
+ 
   /* Revision reason form */
   .revision-form {
     margin-top: 1rem;
@@ -648,7 +641,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     gap: 0.75rem;
   }
   .revision-form.open { display: flex; }
-
+ 
   .revision-textarea {
     width: 100%;
     background: #f8fafc;
@@ -664,7 +657,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   }
   .revision-textarea:focus { border-color: #c084fc; }
   .revision-textarea::placeholder { color: #94a3b8; }
-
+ 
   .revision-submit {
     background: #c084fc;
     color: #0f172a;
@@ -679,7 +672,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   }
   .revision-submit:hover { background: #a855f7; }
   .revision-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
+ 
   .om-action-msg {
     font-size: 0.8rem;
     margin-top: 0.5rem;
@@ -689,18 +682,18 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   }
   .om-action-msg.success { background: rgba(34,197,94,0.12); color: #4ade80; display: block; }
   .om-action-msg.error { background: rgba(239,68,68,0.12); color: #f87171; display: block; }
-
+ 
   /* ── REVIEW POPUP ── */
   .review-box h2 { font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem; }
   .review-box p { font-size: 0.85rem; color: #64748b; margin-bottom: 1.2rem; }
-
+ 
   .star-row {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
     margin-bottom: 1.2rem;
   }
-
+ 
   .star {
     font-size: 2rem;
     cursor: pointer;
@@ -713,7 +706,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   }
   .star.selected { color: #fbbf24; }
   .star:hover { color: #fbbf24; }
-
+ 
   .review-textarea {
     width: 100%;
     background: #f8fafc;
@@ -730,9 +723,9 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   }
   .review-textarea:focus { border-color: #c5a059; }
   .review-textarea::placeholder { color: #94a3b8; }
-
+ 
   .review-actions { display: flex; gap: 0.75rem; justify-content: center; }
-
+ 
   .btn-submit-review {
     background: #c5a059;
     color: #0f172a;
@@ -746,7 +739,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   }
   .btn-submit-review:hover { background: #d4b06a; }
   .btn-submit-review:disabled { opacity: 0.5; cursor: not-allowed; }
-
+ 
   .btn-skip-review {
     background: transparent;
     color: #64748b;
@@ -759,14 +752,14 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     transition: 0.2s;
   }
   .btn-skip-review:hover { color: #303b4f; border-color: #cbd5e1; background: #f8fafc; }
-
+ 
   .review-success {
     color: #4ade80;
     font-size: 0.9rem;
     margin-top: 0.75rem;
     display: none;
   }
-
+ 
   /* ══ DARK MODE: order rows ══ */
   body.dark-mode .order-row { background: #1a1f2e; border-color: rgba(255,255,255,0.06); box-shadow: none; }
   body.dark-mode .order-row:hover { background: #1e2536; border-color: rgba(96,165,250,0.3); }
@@ -791,7 +784,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   body.dark-mode .om-actions { border-top-color: rgba(255,255,255,0.06); }
   body.dark-mode .revision-textarea { background: #161b27; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
   body.dark-mode .revision-textarea::placeholder { color: #4a5568; }
-
+ 
   /* ── ORDER CHAT (injected via innerHTML → must be global) ── */
   .oc-thread { display: flex; flex-direction: column; height: 360px; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
   .oc-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem; background: #f8fafc; }
@@ -811,14 +804,14 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   .oc-send { background: #046fcd; color: #fff; border: none; border-radius: 20px; padding: 0.55rem 1.2rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: inherit; }
   .oc-send:hover { background: #0361b3; }
   .oc-send:disabled { opacity: 0.5; cursor: not-allowed; }
-
+ 
   body.dark-mode .oc-thread { border-color: rgba(255,255,255,0.08); }
   body.dark-mode .oc-messages { background: #0f1117; }
   body.dark-mode .oc-row.theirs .oc-bubble { background: #1e2536; color: #e2e8f0; border-color: rgba(255,255,255,0.06); }
   body.dark-mode .oc-input-bar { background: #161b27; border-top-color: rgba(255,255,255,0.06); }
   body.dark-mode .oc-input { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
   body.dark-mode .oc-send:hover { background: #0361b3; }
-
+ 
   .cf-row { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.8rem 1rem; margin-bottom: 0.5rem; }
   .cf-info { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
   .cf-type { font-size: 0.7rem; font-weight: 700; color: #046fcd; text-transform: uppercase; }
@@ -828,12 +821,12 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   .cf-dl:disabled { opacity: 0.6; cursor: not-allowed; }
   body.dark-mode .cf-row { background: #161b27; border-color: rgba(255,255,255,0.06); }
   body.dark-mode .cf-name { color: #e2e8f0; }
-
+ 
   /* unread dot on order rows */
   .order-row { position: relative; }
   .unread-dot { width: 9px; height: 9px; border-radius: 50%; background: #ef4444; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(239,68,68,0.18); }
   .om-tab .tab-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #ef4444; margin-left: 4px; vertical-align: middle; }
-
+ 
   /* ── MODAL FONT + THEME ── */
   #orderFormModal,
   #orderFormModal input,
@@ -854,7 +847,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   body.dark-mode #wizPaymentModal p { color: #94a3b8 !important; }
   body.dark-mode #wizPaymentModal h2 { color: #e2e8f0 !important; }
   body.dark-mode #wizTxnId { background: #161b27 !important; color: #e2e8f0 !important; border-color: rgba(255,255,255,0.1) !important; }
-
+ 
   /* ── SUCCESS STATE THEME ── */
   body.dark-mode #wizSuccess { color: #e2e8f0; }
   body.dark-mode #wizOrderTopic { color: #e2e8f0 !important; }
@@ -892,7 +885,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
   body.dark-mode #writerProfileContent div[style*="background:#f8fafc"] { background: #1a1f2e !important; border-color: rgba(255,255,255,0.06) !important; }
   body.dark-mode #writerProfileContent span[style*="background:#f1f5f9"] { background: #1e2536 !important; border-color: rgba(255,255,255,0.08) !important; color: #e2e8f0 !important; }
 </style>
-
+ 
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <button class="sidebar-new-order" id="sidebarNewOrderBtn">＋ New order</button>
@@ -910,7 +903,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     </a>
   </nav>
   <div class="sidebar-divider"></div>
-
+ 
   <!-- Client ID -->
   <div class="client-id-box">
     <div class="client-id-box__label">🔒 Your Client ID</div>
@@ -918,7 +911,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     <div class="client-id-box__copy">Use this ID for all order references & reviews — no personal info needed.</div>
     <div class="client-id-box__privacy">🛡️ Your identity stays private. We never share your details.</div>
   </div>
-
+ 
   <div class="sidebar-divider"></div>
   <nav class="sidebar-nav">
     <a class="nav-item" href="#" id="logoutBtn">
@@ -929,7 +922,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
         <span class="theme-icon-current" id="themeIconCurrent">🌙</span>
       </button>
     </div>
-
+ 
     <!-- Theme popup -->
     <div class="theme-popup" id="themePopup">
       <div class="theme-popup__overlay" id="themePopupOverlay"></div>
@@ -951,14 +944,14 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     </div>
   </nav>
 </aside>
-
+ 
 <!-- MAIN -->
 <main class="main">
   <div class="main-header">
     <h1>My Orders</h1>
     <button class="btn-new-order-main" id="headerNewOrderBtn">New order ＋</button>
   </div>
-
+ 
   <div class="tabs-bar">
     <div class="tabs">
       <button class="tab active" data-tab="in_progress">
@@ -978,7 +971,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
       </button>
     </div>
   </div>
-
+ 
   <div class="controls-bar">
     <div class="sort-wrap">
       <span class="sort-label">Sort by</span>
@@ -993,20 +986,20 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
       <input class="search-input" type="text" placeholder="Search" id="searchInput" />
     </div>
   </div>
-
+ 
   <div class="orders-area">
     <div class="loading-state" id="loadingState">
       <div class="spinner"></div>
       <p>Loading your orders...</p>
     </div>
-
+ 
     <div class="empty-state" id="emptyState" style="display:none;">
       <div class="empty-illustration">📄</div>
       <h3 id="emptyHeading">You have no active orders</h3>
       <p>Place your first order and track it right here.</p>
       <button class="btn-empty-order" id="emptyNewOrderBtn">New order ＋</button>
     </div>
-
+ 
     <div class="order-table" id="orderTable" style="display:none;">
       <div class="order-table-head">
         <div>Topic</div>
@@ -1018,10 +1011,10 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
       <div id="ordersList"></div>
     </div>
   </div>
-
+ 
   <div id="chatsPanelWrap" style="display:none;flex:1;overflow:hidden;height:100%;">
   <div style="display:flex;height:100%;width:100%;">
-
+ 
     <!-- Conversation list -->
     <div id="convList" style="width:300px;border-right:1px solid #eef2f7;display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;">
       <div style="padding:1rem 1.2rem;font-size:1.1rem;font-weight:700;color:#0f172a;border-bottom:1px solid #eef2f7;">Chats</div>
@@ -1029,7 +1022,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
         <div style="padding:2rem;text-align:center;color:#94a3b8;font-size:0.85rem;">Loading conversations…</div>
       </div>
     </div>
-
+ 
     <!-- Message thread -->
     <div id="convThread" style="flex:1;display:flex;flex-direction:column;min-width:0;background:var(--main-bg);">
       <div id="threadHeader" style="padding:0.9rem 1.2rem;border-bottom:1px solid #eef2f7;display:none;align-items:center;gap:0.8rem;background:#fff;">
@@ -1047,11 +1040,11 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
         <button id="threadSend" style="background:#046fcd;color:#fff;border:none;border-radius:20px;padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:inherit;">Send</button>
       </div>
     </div>
-
+ 
   </div>
 </div>
 </main>
-
+ 
 <!-- ORDER DETAIL MODAL -->
 <div class="modal" id="detailModal">
   <div class="modal-overlay" id="modalOverlay"></div>
@@ -1060,13 +1053,13 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     <div id="modalContent"></div>
   </div>
 </div>
-
+ 
 <!-- ORDER FORM MODAL -->
 <div class="modal" id="orderFormModal">
   <div class="modal-overlay" id="orderFormModalOverlay"></div>
   <div class="modal-box" style="max-width:920px;width:96%;max-height:90vh;padding:0;overflow:hidden;display:flex;flex-direction:column;position:relative;">
     <button class="modal-close" id="orderFormModalClose" style="top:1rem;right:1rem;z-index:210;">✕</button>
-
+ 
  
     <!-- Progress bar (hidden on success) -->
     <div id="wizProgressBar" style="padding:1.2rem 2rem 0.8rem;border-bottom:1px solid #eef2f7;flex-shrink:0;">
@@ -1083,7 +1076,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
  
         <!-- Success state -->
         <div id="wizSuccess" style="display:none;padding:0;">
-
+ 
           <!-- Header bar -->
           <div style="margin-bottom:0.75rem;">
             <div id="wizOrderTopic" style="font-size:1rem;font-weight:700;color:#0f172a;margin-bottom:0.6rem;"></div>
@@ -1106,7 +1099,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
               </div>
             </div>
           </div>
-
+ 
           <!-- Tab panels -->
           <div id="wizTabProposals">
             <!-- Filter row -->
@@ -1114,33 +1107,33 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
               <span style="font-size:0.78rem;color:#64748b;font-weight:500;"><span id="wizBidCount">0</span> proposals received</span>
               <button id="wizInviteWritersBtn" style="background:#6366f1;color:#fff;border:none;border-radius:8px;padding:0.35rem 0.8rem;font-size:0.76rem;font-weight:600;cursor:pointer;">Invite writers</button>
             </div>
-
+ 
             <!-- New proposals banner -->
             <div id="wizNewBidsBanner" style="display:none;background:#1e2536;border-radius:10px;padding:0.65rem 1rem;margin-bottom:0.6rem;cursor:pointer;align-items:center;gap:0.75rem;">
               <div id="wizBannerAvatars" style="display:flex;"></div>
               <span id="wizBannerText" style="font-size:0.82rem;font-weight:600;color:#e2e8f0;">Show new proposals</span>
             </div>
-
+ 
             <!-- Waiting state -->
             <div id="wizBidsWaiting" style="background:#f8fafc;border-radius:12px;padding:1.2rem;text-align:center;margin-bottom:0.8rem;">
               <div style="font-size:1.8rem;margin-bottom:0.5rem;">⏳</div>
               <p style="color:#64748b;font-size:0.84rem;margin:0;line-height:1.6;">Writers are now reviewing your order and preparing proposals. This may take a few minutes.</p>
             </div>
-
+ 
             <!-- Live bids -->
             <div id="wizLiveBids" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
           </div>
-
+ 
           <!-- Order details tab -->
           <div id="wizTabDetails" style="display:none;">
             <div id="wizOrderDetailsContent" style="display:flex;flex-direction:column;gap:0.6rem;"></div>
           </div>
-
+ 
           <!-- Instructions tab -->
           <div id="wizTabInstructions" style="display:none;">
             <div id="wizOrderInstructionsContent" style="font-size:0.85rem;color:#475569;line-height:1.7;background:#f8fafc;border-radius:8px;padding:1rem;"></div>
           </div>
-
+ 
         </div>
  
         <div id="wizStepsFlow">
@@ -1327,7 +1320,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
  
       <!-- RIGHT: order summary / bid chat -->
       <div style="display:flex;flex-direction:column;overflow:hidden;height:100%;">
-
+ 
         <!-- Bid Chat Panel -->
         <div id="wizBidChatPanel" style="display:none;flex-direction:column;flex:1;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
           <div style="padding:0.75rem 1rem;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:0.6rem;background:#fff;flex-shrink:0;">
@@ -1347,7 +1340,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
             <button id="wizBidChatSend" style="background:#046fcd;color:#fff;border:none;border-radius:20px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;">Send</button>
           </div>
         </div>
-
+ 
         <!-- Info card (steps 1–3) -->
         <div id="wizInfoCard" style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:1.3rem;">
           <div style="color:#0f172a;font-weight:700;font-size:0.92rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(0,0,0,0.07);margin-bottom:0.2rem;">Order info</div>
@@ -1417,7 +1410,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     <button id="hireConfirmBtn" disabled style="width:100%;padding:0.95rem;background:#2d6a4f;color:white;border:none;border-radius:8px;font-size:0.95rem;font-weight:700;cursor:pointer;opacity:0.5;">✅ I Have Paid — Hire Writer</button>
   </div>
 </div>
-
+ 
 <!-- WRITER PROFILE MODAL -->
 <div class="modal" id="writerProfileModal">
   <div class="modal-overlay" id="writerProfileOverlay"></div>
@@ -1429,7 +1422,7 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     </div>
   </div>
 </div>
-
+ 
 <div class="review-modal" id="reviewModal">
   <div class="review-overlay" id="reviewOverlay"></div>
   <div class="review-box">
@@ -1450,38 +1443,38 @@ body.dark-mode .star:hover { color: #fbbf24 !important; }
     <div class="review-success" id="reviewSuccess">✅ Thank you for your review!</div>
   </div>
 </div>
-
+ 
 <script>
   import { supabase } from '../lib/supabase.js';
   import { io } from 'socket.io-client';
-
+ 
   const BIDDING_SERVER = 'https://thesisarcpro.onrender.com';
   const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
-
+ 
   socket.on('connect', () => console.log('Connected to bidding server:', socket.id));
   socket.on('disconnect', () => console.log('Disconnected from bidding server'));
-
+ 
   const base = '';
   const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
-
+ 
   let allOrders: any[] = [];
   let currentTab = 'in_progress';
   let currentSession: any = null;
   let myClientId: string | null = null;
-
+ 
   // Track the review popup state
   let reviewOrderNumber = '';
   let reviewClientEmail = '';
   let reviewClientId = '';
   let selectedRating = 0;
-
+ 
   // ── TEMPORARY DEBUG HELPERS (remove once the mobile loading issue is fixed) ──
   function setStatus(text: string) {
     const p = document.querySelector('#loadingState p');
     if (p) p.textContent = text;
   }
-
+ 
   function showDebugError(err: any) {
     console.error(err);
     const loading = document.getElementById('loadingState');
@@ -1493,7 +1486,7 @@ ${String(err?.message || err)}
         </div>`;
     }
   }
-
+ 
   function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
     return Promise.race([
       promise,
@@ -1502,15 +1495,15 @@ ${String(err?.message || err)}
       )
     ]);
   }
-
+ 
   window.addEventListener('error', (e) => showDebugError((e as ErrorEvent).error || (e as ErrorEvent).message));
   window.addEventListener('unhandledrejection', (e) => showDebugError((e as PromiseRejectionEvent).reason));
   // ── END DEBUG HELPERS ──
-
+ 
   // ═══ CHATS PANEL ═══
 let cpConvId: string | null = null;
 let cpSub: any = null;
-
+ 
 async function loadChatsPanel() {
   const box = document.getElementById('convListItems')!;
   box.innerHTML = '<div style="padding:2rem;text-align:center;color:#94a3b8;font-size:0.85rem;">Loading…</div>';
@@ -1545,7 +1538,7 @@ async function loadChatsPanel() {
           </div>
         </div>`;
     }).join('');
-
+ 
     // Load last message previews
     for (const c of convs) {
       const mRes = await fetch(
@@ -1559,7 +1552,7 @@ async function loadChatsPanel() {
         previewEl.textContent = m ? `You: ${m.content.slice(0, 40)}…` : 'No messages yet';
       }
     }
-
+ 
     box.querySelectorAll('.cp-conv-item').forEach(item => {
       item.addEventListener('mouseenter', () => (item as HTMLElement).style.background = '#f8fafc');
       item.addEventListener('mouseleave', () => (item as HTMLElement).style.background = '');
@@ -1572,10 +1565,10 @@ async function loadChatsPanel() {
         openCpThread(cid, title, status);
       });
     });
-
+ 
   } catch (err) { console.error(err); box.innerHTML = '<div style="padding:2rem;text-align:center;color:#f87171;font-size:0.85rem;">Could not load conversations.</div>'; }
 }
-
+ 
 async function openCpThread(convId: string, title: string, status: string) {
   cpConvId = convId;
   if (cpSub) { cpSub.unsubscribe(); cpSub = null; }
@@ -1598,7 +1591,7 @@ async function openCpThread(convId: string, title: string, status: string) {
       .subscribe();
   } catch (err) { msgs.innerHTML = '<div style="text-align:center;color:#f87171;font-size:0.85rem;margin:auto;">Could not load messages.</div>'; }
 }
-
+ 
 function renderCpMessages(messages: any[]) {
   const c = document.getElementById('threadMessages')!;
   if (!messages.length) { c.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:0.85rem;margin:auto;">No messages yet. Say hello!</div>'; return; }
@@ -1618,7 +1611,7 @@ function renderCpMessages(messages: any[]) {
   }).join('');
   c.scrollTop = c.scrollHeight;
 }
-
+ 
 function appendCpMessage(m: any) {
   const c = document.getElementById('threadMessages')!;
   const ph = c.querySelector('div[style*="margin:auto"]'); if (ph) c.innerHTML = '';
@@ -1631,7 +1624,7 @@ function appendCpMessage(m: any) {
   </div>`);
   c.scrollTop = c.scrollHeight;
 }
-
+ 
 async function cpSendMessage() {
   if (!cpConvId) return;
   const input = document.getElementById('threadInput') as HTMLInputElement;
@@ -1654,7 +1647,7 @@ async function cpSendMessage() {
   } catch (err) { console.error(err); alert('Could not send message. Please try again.'); }
   btn.disabled = false; input.focus();
 }
-
+ 
 document.getElementById('threadSend')!.addEventListener('click', cpSendMessage);
 document.getElementById('threadInput')!.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); cpSendMessage(); } });
 // ═══════════════════════════════════════════
@@ -1903,7 +1896,7 @@ async function fetchWriterProfile(writerId: string): Promise<any> {
     return data[0] || null;
   } catch { return null; }
 }
-
+ 
 function wizRenderBidCard(bid: any, orderId: string) {
   const time = bid.created_at ? new Date(bid.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
   const w = bid.writer || {};
@@ -1913,7 +1906,7 @@ function wizRenderBidCard(bid: any, orderId: string) {
   const completed = w.orders_completed || 0;
   const specialties = w.specialties ? w.specialties.split(',').slice(0, 3).map((s: string) => s.trim()).join(' · ') : '';
   const initials = name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
-
+ 
   return `<div data-wbid="${esc(bid.id)}" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.2rem;margin-bottom:0.6rem;">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
       <div style="display:flex;align-items:center;gap:0.75rem;min-width:0;flex:1;">
@@ -1946,10 +1939,10 @@ function wizRenderBidCard(bid: any, orderId: string) {
     </div>
   </div>`;
 }
-
+ 
 let wizBidChatSub: any = null;
 let wizBidChatConvId: string | null = null;
-
+ 
 async function openBidChat(writerId: string, writerName: string, writerPhoto: string, writerAuthId: string, orderDbId: string, bidNote: string) {
   // Show chat panel, hide summary cards
   const chatPanel = document.getElementById('wizBidChatPanel')!;
@@ -1958,7 +1951,7 @@ async function openBidChat(writerId: string, writerName: string, writerPhoto: st
   if (infoCard) infoCard.style.display = 'none';
   if (priceCard) priceCard.style.display = 'none';
   chatPanel.style.display = 'flex';
-
+ 
   // Set writer info in header
   const nameEl = document.getElementById('wizBidChatName')!;
   const avatarEl = document.getElementById('wizBidChatAvatar')!;
@@ -1967,15 +1960,15 @@ async function openBidChat(writerId: string, writerName: string, writerPhoto: st
   avatarEl.innerHTML = writerPhoto
     ? `<img src="${esc(writerPhoto)}" style="width:100%;height:100%;object-fit:cover;" />`
     : initials;
-
+ 
   // Clear messages
   const msgs = document.getElementById('wizBidChatMessages')!;
   msgs.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:0.78rem;padding:1rem;">Loading…</div>';
-
+ 
   // Unsubscribe previous
   if (wizBidChatSub) { wizBidChatSub.unsubscribe(); wizBidChatSub = null; }
   wizBidChatConvId = null;
-
+ 
   try {
     // Find existing conversation for this order with this writer
     let convId: string | null = null;
@@ -1988,7 +1981,7 @@ async function openBidChat(writerId: string, writerName: string, writerPhoto: st
       const match = parts.find((p: any) => p.conversations?.order_id === parseInt(orderDbId) && p.conversations?.type === 'order');
       if (match) convId = match.conversation_id;
     }
-
+ 
     // If no conversation, create one and seed with bid note
     if (!convId) {
       const cRes = await fetch(`${SUPABASE_URL}/rest/v1/conversations`, {
@@ -1998,14 +1991,14 @@ async function openBidChat(writerId: string, writerName: string, writerPhoto: st
       });
       convId = (await cRes.json())[0]?.id;
       if (!convId) throw new Error('Could not create conversation');
-
+ 
       // Add client as participant
       await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
         body: JSON.stringify({ conversation_id: convId, user_id: currentSession.user.id, role: 'client', display_name: currentSession.user.email?.split('@')[0] || 'Client' })
       });
-
+ 
       // Seed with bid note as writer's first message
       if (bidNote) {
         const senderId = writerAuthId || '00000000-0000-0000-0000-000000000000';
@@ -2016,9 +2009,9 @@ async function openBidChat(writerId: string, writerName: string, writerPhoto: st
         });
       }
     }
-
+ 
     wizBidChatConvId = convId;
-
+ 
     // Load messages
     const mRes = await fetch(
       `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${convId}&order=created_at.asc`,
@@ -2026,33 +2019,33 @@ async function openBidChat(writerId: string, writerName: string, writerPhoto: st
     );
     const messages = await mRes.json();
     renderWizBidMessages(messages);
-
+ 
     // Subscribe to new messages
     wizBidChatSub = supabase.channel(`wiz-bid-chat-${convId}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${convId}` }, (payload: any) => {
         appendWizBidMessage(payload.new);
       }).subscribe();
-
+ 
   } catch(e) {
     console.error('openBidChat error', e);
     msgs.innerHTML = '<div style="text-align:center;color:#f87171;font-size:0.78rem;padding:1rem;">Could not load chat.</div>';
   }
 }
-
+ 
 function renderWizBidMessages(messages: any[]) {
   const c = document.getElementById('wizBidChatMessages')!;
   if (!messages.length) { c.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:0.78rem;padding:1rem;">No messages yet.</div>'; return; }
   c.innerHTML = messages.map((m: any) => wizBidChatBubble(m)).join('');
   c.scrollTop = c.scrollHeight;
 }
-
+ 
 function appendWizBidMessage(m: any) {
   const c = document.getElementById('wizBidChatMessages')!;
   const ph = c.querySelector('div[style*="padding:1rem"]'); if (ph) c.innerHTML = '';
   c.insertAdjacentHTML('beforeend', wizBidChatBubble(m));
   c.scrollTop = c.scrollHeight;
 }
-
+ 
 function wizBidChatBubble(m: any) {
   const mine = m.sender_id === currentSession.user.id;
   const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
@@ -2062,7 +2055,7 @@ function wizBidChatBubble(m: any) {
     <div style="font-size:0.6rem;color:#94a3b8;margin-top:0.1rem;">${time}</div>
   </div>`;
 }
-
+ 
 async function wizBidChatSendMessage() {
   if (!wizBidChatConvId) return;
   const input = document.getElementById('wizBidChatInput') as HTMLInputElement;
@@ -2085,7 +2078,7 @@ async function wizBidChatSendMessage() {
   } catch(e) { console.error(e); alert('Could not send message.'); }
   btn.disabled = false; input.focus();
 }
-
+ 
 document.getElementById('wizBidChatClose')!.addEventListener('click', () => {
   document.getElementById('wizBidChatPanel')!.style.display = 'none';
   if (wizBidChatSub) { wizBidChatSub.unsubscribe(); wizBidChatSub = null; }
@@ -2095,7 +2088,7 @@ document.getElementById('wizBidChatSend')!.addEventListener('click', wizBidChatS
 document.getElementById('wizBidChatInput')!.addEventListener('keydown', (e) => {
   if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); wizBidChatSendMessage(); }
 });
-
+ 
 function attachWizHireBtns(container: Element, orderId: string) {
   container.querySelectorAll('.wiz-hire-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -2122,7 +2115,7 @@ function attachWizHireBtns(container: Element, orderId: string) {
     });
   });
 }
-
+ 
 async function enrichBidsWithWriters(bids: any[]): Promise<any[]> {
   const writerIds = [...new Set(bids.map(b => b.writer_id))];
   const res = await fetch(
@@ -2132,7 +2125,7 @@ async function enrichBidsWithWriters(bids: any[]): Promise<any[]> {
   const writers = await res.json();
   return bids.map(b => ({ ...b, writer: writers.find((w: any) => w.id === b.writer_id) || {} }));
 }
-
+ 
 async function openWriterProfileModal(writerId: string) {
   document.getElementById('writerProfileModal')!.classList.add('open');
   const content = document.getElementById('writerProfileContent')!;
@@ -2162,10 +2155,10 @@ async function openWriterProfileModal(writerId: string) {
     ${w.sample_url && w.sample_name ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Sample</div><div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem 1rem;"><span style="font-size:0.82rem;color:#0f172a;">📄 ${esc(w.sample_name)}</span><a href="${esc(w.sample_url)}" target="_blank" style="background:#046fcd;color:#fff;border:none;border-radius:6px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:600;text-decoration:none;">View</a></div></div>` : ''}
   `;
 }
-
+ 
 let wizPendingBids: any[] = [];
 let wizCurrentOrderDbId = '';
-
+ 
 // Tab switching
 document.querySelectorAll('.wiz-tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -2181,7 +2174,7 @@ document.querySelectorAll('.wiz-tab-btn').forEach(btn => {
     document.getElementById('wizTabInstructions')!.style.display = tab === 'instructions' ? 'block' : 'none';
   });
 });
-
+ 
 // Three dot menu
 document.getElementById('wizThreeDotBtn')?.addEventListener('click', () => {
   const menu = document.getElementById('wizThreeDotMenu')!;
@@ -2220,7 +2213,7 @@ document.getElementById('wizCancelOrderBtn')?.addEventListener('click', async ()
     alert('Order cancelled.');
   } catch(e) { alert('Could not cancel order. Please try again.'); }
 });
-
+ 
 // New proposals banner click
 document.getElementById('wizNewBidsBanner')?.addEventListener('click', async () => {
   const banner = document.getElementById('wizNewBidsBanner')!;
@@ -2239,7 +2232,7 @@ document.getElementById('wizNewBidsBanner')?.addEventListener('click', async () 
   const countEl = document.getElementById('wizBidCount');
   if (countEl) countEl.textContent = String(box.querySelectorAll('[data-wbid]').length);
 });
-
+ 
 async function wizSubmitOrder() {
   const createBtn = document.getElementById('wizCreateOrderBtn') as HTMLButtonElement;
   if (createBtn) { createBtn.disabled = true; createBtn.textContent = '⏳ Submitting…'; }
@@ -2286,7 +2279,7 @@ async function wizSubmitOrder() {
     const priceCard = document.getElementById('wizPriceCard'); if (priceCard) priceCard.style.display = 'none';
     const infoCard = document.getElementById('wizInfoCard'); if (infoCard) infoCard.style.display = 'none';
     const topicEl = document.getElementById('wizOrderTopic'); if (topicEl) topicEl.textContent = topic || 'Your order';
-
+ 
 // Trustpilot review invite
 try {
   if (typeof (window as any).tp === 'function') {
@@ -2317,7 +2310,7 @@ try {
     // Reset bid count
     const countEl = document.getElementById('wizBidCount'); if (countEl) countEl.textContent = '0';
     wizPendingBids = [];
-
+ 
     // Fetch new order's DB id and subscribe to live bids
     try {
       const oRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?order_number=eq.${ticketId}&select=id`, {
@@ -2392,7 +2385,7 @@ try {
         socket.emit('client:online', myClientId);       
       } catch (e) { console.warn('Could not load client_id', e); }
       await loadOrders(session);
-
+ 
       // Reopen pending order modal if client refreshed while waiting for bids
       const pendingId = localStorage.getItem('wizPendingOrderId');
       if (pendingId) {
@@ -2441,12 +2434,12 @@ try {
           }
         } catch(e) { console.error('restore pending order error', e); localStorage.removeItem('wizPendingOrderId'); }
       }
-
+ 
     } catch (err) {
       showDebugError(err);
     }
   }
-
+ 
   async function loadOrders(session: any) {
     try {
       setStatus('Fetching your orders…');
@@ -2467,14 +2460,14 @@ try {
       showDebugError(err);
     }
   }
-
+ 
   function updateCounts() {
     const countFor = (tab: string) => allOrders.filter((o: any) => {
       const s = o.order_status;
       if (tab === 'in_progress') return s === 'in_progress' || s === 'new';
       return s === tab;
     }).length;
-
+ 
     const set = (id: string, val: number) => {
       const el = document.getElementById(id);
       if (el) el.textContent = String(val);
@@ -2485,7 +2478,7 @@ try {
     set('count_completed', countFor('completed'));
     set('count_cancelled', countFor('cancelled'));
   }
-
+ 
   function deadlineInfo(deadline: string) {
     if (!deadline) return { text: 'No deadline', cls: '' };
     const diff = new Date(deadline).getTime() - Date.now();
@@ -2496,12 +2489,12 @@ try {
     if (days <= 2) return { text: `⏰ ${days}d left`, cls: 'urgent' };
     return { text: `⏰ ${days}d left`, cls: 'ok' };
   }
-
+ 
   function statusClass(status: string) {
     const known = ['new','in_progress','in_review','completed','revision','cancelled'];
     return known.includes(status) ? status : 'new';
   }
-
+ 
   function esc(v: any) {
     return String(v ?? '')
       .replace(/&/g, '&amp;')
@@ -2509,29 +2502,29 @@ try {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
   }
-
+ 
   function renderOrders() {
     const loading = document.getElementById('loadingState')!;
     const empty = document.getElementById('emptyState')!;
     const table = document.getElementById('orderTable')!;
     const list = document.getElementById('ordersList')!;
     const search = (document.getElementById('searchInput') as HTMLInputElement).value.toLowerCase();
-
+ 
     loading.style.display = 'none';
-
+ 
     let filtered = allOrders.filter((o: any) =>
       currentTab === 'in_progress'
         ? (o.order_status === 'in_progress' || o.order_status === 'new' || o.order_status === 'open_for_bids')
         : o.order_status === currentTab
     );
-
+ 
     if (search) {
       filtered = filtered.filter((o: any) =>
         (o.topic || '').toLowerCase().includes(search) ||
         (o.assignment_type || '').toLowerCase().includes(search)
       );
     }
-
+ 
     if (!filtered.length) {
       empty.style.display = 'flex';
       table.style.display = 'none';
@@ -2539,13 +2532,13 @@ try {
       if (emptyHeading) emptyHeading.textContent = 'No orders in this view';
       return;
     }
-
+ 
     empty.style.display = 'none';
     table.style.display = 'flex';
     list.style.display = 'flex';
     list.style.flexDirection = 'column';
     list.style.gap = '0.5rem';
-
+ 
     list.innerHTML = filtered.map((o: any) => {
       const dl = deadlineInfo(o.deadline);
       return `
@@ -2569,7 +2562,7 @@ try {
         </div>
       `;
     }).join('');
-
+ 
     list.querySelectorAll('.order-row').forEach(row => {
       row.addEventListener('click', () => {
         const id = (row as HTMLElement).dataset.id;
@@ -2578,9 +2571,8 @@ try {
       });
     });
   }
-
+ 
   // ── UPDATE ORDER STATUS (client-side) ──
-  // Optionally saves a revision note in the same PATCH.
   async function updateOrderStatus(orderId: string, newStatus: string, revisionNote?: string): Promise<boolean> {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return false;
@@ -2601,7 +2593,7 @@ try {
     );
     return res.ok;
   }
-
+ 
   function showModal(order: any) {
     const dl = deadlineInfo(order.deadline);
     const startDate = order.created_at
@@ -2610,19 +2602,18 @@ try {
     const dueDate = order.deadline
       ? new Date(order.deadline).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
       : '—';
-
+ 
     const total = Number(order.total_amount || 0);
     const paid = Number(order.amount_paid || 0);
     const balance = Math.max(total - paid, 0);
-
+ 
     const field = (label: string, value: string, extraClass = '') =>
       `<div><div class="om-label">${label}</div><div class="om-value ${extraClass}">${value}</div></div>`;
-
-    // Determine which client action buttons to show
+ 
     const status = order.order_status || '';
     const canRevise = ['in_progress', 'in_review', 'revision'].includes(status);
     const canComplete = ['in_progress', 'in_review', 'revision'].includes(status);
-
+ 
     const actionButtons = (canRevise || canComplete) ? `
       <div class="om-actions">
         ${canRevise ? `<button class="btn-revision" id="revisionBtn">🔄 Request Revision</button>` : ''}
@@ -2634,20 +2625,20 @@ try {
       </div>
       <div class="om-action-msg" id="actionMsg"></div>
     ` : '';
-
+ 
     document.getElementById('modalContent')!.innerHTML = `
       <div class="om-header">
         <div class="om-title">${esc(order.topic || '(no topic)')}</div>
         <div class="om-id">ID ${esc(order.order_number || order.id)}</div>
       </div>
-
+ 
       <div class="om-tabs">
         <button class="om-tab om-tab--active" data-mtab="general">General</button>
         <button class="om-tab" data-mtab="instructions">Instructions</button>
         <button class="om-tab" data-mtab="files">Files</button>
         <button class="om-tab" data-mtab="chat">💬 Chat</button>
       </div>
-
+ 
       <!-- GENERAL -->
       <div class="om-panel om-panel--active" data-mpanel="general">
         <div class="om-grid">
@@ -2662,7 +2653,7 @@ try {
         </div>
         ${actionButtons}
       </div>
-
+ 
       <!-- INSTRUCTIONS -->
       <div class="om-panel" data-mpanel="instructions">
         <div class="om-grid">
@@ -2678,12 +2669,12 @@ try {
           <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
         </div>
       </div>
-
+ 
       <!-- FILES -->
       <div class="om-panel" data-mpanel="files">
         <div id="clientFilesList"><div class="om-nofile">Loading files…</div></div>
       </div>
-
+ 
       <!-- CHAT -->
       <div class="om-panel" data-mpanel="chat">
         <div class="oc-thread">
@@ -2695,21 +2686,21 @@ try {
         </div>
       </div>
     `;
-
+ 
     // ── REVISION BUTTON ──
     const revisionBtn = document.getElementById('revisionBtn');
     const revisionForm = document.getElementById('revisionForm');
     const revisionSubmit = document.getElementById('revisionSubmit');
     const revisionReason = document.getElementById('revisionReason') as HTMLTextAreaElement;
     const actionMsg = document.getElementById('actionMsg');
-
+ 
     if (revisionBtn && revisionForm) {
       revisionBtn.addEventListener('click', () => {
         revisionForm.classList.toggle('open');
         revisionReason.focus();
       });
     }
-
+ 
     if (revisionSubmit && revisionReason && actionMsg) {
       revisionSubmit.addEventListener('click', async () => {
         const reason = revisionReason.value.trim();
@@ -2720,8 +2711,7 @@ try {
         }
         (revisionSubmit as HTMLButtonElement).disabled = true;
         revisionSubmit.textContent = 'Submitting…';
-
-        // Update status to revision AND save the client's note in the same PATCH
+ 
         const ok = await updateOrderStatus(String(order.id), 'revision', reason);
         if (ok) {
           const idx = allOrders.findIndex((o: any) => o.id === order.id);
@@ -2743,17 +2733,17 @@ try {
         }
       });
     }
-
+ 
     // ── COMPLETE BUTTON ──
     const completeBtn = document.getElementById('completeBtn');
     if (completeBtn && actionMsg) {
       completeBtn.addEventListener('click', async () => {
         const confirmed = window.confirm('Are you sure you want to mark this order as complete?');
         if (!confirmed) return;
-
+ 
         (completeBtn as HTMLButtonElement).disabled = true;
         completeBtn.textContent = 'Updating…';
-
+ 
         const ok = await updateOrderStatus(String(order.id), 'completed');
         if (ok) {
           const idx = allOrders.findIndex((o: any) => o.id === order.id);
@@ -2773,7 +2763,7 @@ try {
         }
       });
     }
-
+ 
     // ── SIGNED DOWNLOAD ──
     const downloadBtn = document.getElementById('downloadBtn');
     if (downloadBtn) {
@@ -2796,7 +2786,7 @@ try {
         }
       });
     }
-
+ 
     // ── MODAL TABS ──
     const content = document.getElementById('modalContent')!;
     content.querySelectorAll('.om-tab').forEach(tab => {
@@ -2810,10 +2800,10 @@ try {
         if (which === 'files') loadClientFiles(order.id);
       });
     });
-
+ 
     document.getElementById('detailModal')!.classList.add('open');
   }
-
+ 
   // ── REVIEW MODAL ──
   function openReviewModal() {
     selectedRating = 0;
@@ -2825,11 +2815,11 @@ try {
     submitBtn.textContent = 'Submit Review';
     document.getElementById('reviewModal')!.classList.add('open');
   }
-
+ 
   function closeReviewModal() {
     document.getElementById('reviewModal')!.classList.remove('open');
   }
-
+ 
   // Star selection
   document.querySelectorAll('.star').forEach(star => {
     star.addEventListener('click', () => {
@@ -2850,7 +2840,7 @@ try {
       });
     });
   });
-
+ 
   document.getElementById('submitReviewBtn')!.addEventListener('click', async () => {
     if (!selectedRating) {
       alert('Please select a star rating before submitting.');
@@ -2859,9 +2849,9 @@ try {
     const submitBtn = document.getElementById('submitReviewBtn') as HTMLButtonElement;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting…';
-
+ 
     const reviewText = (document.getElementById('reviewText') as HTMLTextAreaElement).value.trim();
-
+ 
     const { error } = await supabase.from('reviews').insert({
       order_number: reviewOrderNumber,
       client_email: reviewClientEmail,
@@ -2869,7 +2859,7 @@ try {
       rating: selectedRating,
       review_text: reviewText || null
     });
-
+ 
     if (error) {
       console.error(error);
       submitBtn.disabled = false;
@@ -2877,20 +2867,20 @@ try {
       alert('Could not save your review. Please try again.');
       return;
     }
-
+ 
     document.getElementById('reviewSuccess')!.style.display = 'block';
     submitBtn.style.display = 'none';
     document.getElementById('skipReviewBtn')!.textContent = 'Close';
   });
-
+ 
   document.getElementById('skipReviewBtn')!.addEventListener('click', closeReviewModal);
   document.getElementById('reviewOverlay')!.addEventListener('click', closeReviewModal);
-
+ 
   // ═══ ORDER CHAT (client side) ═══
   let ocConvId: string | null = null;
   let ocOrder: any = null;
   let ocSub: any = null;
-
+ 
   function ocRender(messages: any[]) {
     const c = document.getElementById('ocMessages');
     if (!c) return;
@@ -2907,7 +2897,7 @@ try {
     }).join('');
     c.scrollTop = c.scrollHeight;
   }
-
+ 
   async function ocFindConversation(orderId: string) {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/conversations?type=eq.order&order_id=eq.${orderId}&select=id&limit=1`,
@@ -2916,7 +2906,7 @@ try {
     const rows = await res.json();
     return rows[0]?.id || null;
   }
-
+ 
   async function openOrderChat(order: any) {
     ocOrder = order;
     ocConvId = null;
@@ -2935,7 +2925,7 @@ try {
       if (ocConvId) markConversationRead(ocConvId, String(order.id));
     } catch (err) { console.error(err); c.innerHTML = '<div class="oc-empty">Could not load chat.</div>'; }
   }
-
+ 
   function ocSubscribe() {
     if (!ocConvId || ocSub) return;
     ocSub = supabase.channel(`oc-${ocConvId}`)
@@ -2951,7 +2941,7 @@ try {
           c.scrollTop = c.scrollHeight;
         }).subscribe();
   }
-
+ 
   async function ocSend() {
     const input = document.getElementById('ocInput') as HTMLInputElement;
     const text = input.value.trim();
@@ -2960,7 +2950,6 @@ try {
     btn.disabled = true; input.value = '';
     const clientName = currentSession.user.email?.split('@')[0] || 'Client';
     try {
-      // First message creates the conversation + adds client as participant
       if (!ocConvId) {
         const title = `Order ${ocOrder.order_number || ocOrder.id}`;
         const cRes = await fetch(`${SUPABASE_URL}/rest/v1/conversations`, {
@@ -2990,9 +2979,10 @@ try {
     } catch (err) { console.error(err); alert('Could not send message. Please try again.'); }
     btn.disabled = false; input.focus();
   }
-
+ 
   document.addEventListener('click', (e) => { if ((e.target as HTMLElement)?.id === 'ocSend') ocSend(); });
   document.addEventListener('keydown', (e) => { if ((e.target as HTMLElement)?.id === 'ocInput' && (e as KeyboardEvent).key === 'Enter') { e.preventDefault(); ocSend(); } });
+ 
   async function loadClientFiles(orderId: string) {
     const box = document.getElementById('clientFilesList');
     if (!box) return;
@@ -3027,12 +3017,13 @@ try {
       });
     } catch (err) { console.error(err); box.innerHTML = '<div class="om-nofile">Could not load files.</div>'; }
   }
+ 
   // ═══ HIRE WRITER PAYMENT FLOW ═══
   let hireBidId = '';
   let hireWriterId = '';
   let hireOrderId = '';
   let hireBidPrice = 0;
-
+ 
   function openHirePaymentModal(bidId: string, writerId: string, bidPrice: number, orderId: string) {
     hireBidId = bidId; hireWriterId = writerId; hireOrderId = orderId; hireBidPrice = bidPrice;
     const isDeposit = bidPrice >= 30;
@@ -3053,14 +3044,14 @@ try {
     if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; btn.textContent = '✅ I Have Paid — Hire Writer'; }
     document.getElementById('hirePaymentModal')!.classList.add('open');
   }
-
+ 
   document.getElementById('writerProfileClose')!.addEventListener('click', () => {
     document.getElementById('writerProfileModal')!.classList.remove('open');
   });
   document.getElementById('writerProfileOverlay')!.addEventListener('click', () => {
     document.getElementById('writerProfileModal')!.classList.remove('open');
   });
-
+ 
   document.getElementById('hirePaymentClose')!.addEventListener('click', () => {
     document.getElementById('hirePaymentModal')!.classList.remove('open');
   });
@@ -3072,7 +3063,7 @@ try {
     const btn = document.getElementById('hireConfirmBtn') as HTMLButtonElement;
     if (btn) { btn.disabled = v.length < 5; btn.style.opacity = v.length >= 5 ? '1' : '0.5'; }
   });
-
+ 
   document.getElementById('hireConfirmBtn')!.addEventListener('click', async () => {
     const txnId = (document.getElementById('hireTxnId') as HTMLInputElement)?.value.trim();
     const btn = document.getElementById('hireConfirmBtn') as HTMLButtonElement;
@@ -3084,8 +3075,7 @@ try {
       });
       const d = await r.json();
       if (d.length > 0) { alert('❌ This Transaction ID has already been used.'); btn.textContent = '✅ I Have Paid — Hire Writer'; btn.disabled = false; return; }
-
-      // Accept bid, reject others, update order
+ 
       await fetch(`${SUPABASE_URL}/rest/v1/bids?id=eq.${hireBidId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal' },
@@ -3124,14 +3114,14 @@ try {
     }
   });
   // ═══ END HIRE WRITER PAYMENT FLOW ═══
-
+ 
   function closeModal() {
     document.getElementById('detailModal')!.classList.remove('open');
   }
-
+ 
   document.getElementById('modalClose')!.addEventListener('click', closeModal);
   document.getElementById('modalOverlay')!.addEventListener('click', closeModal);
-
+ 
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -3140,10 +3130,9 @@ try {
       renderOrders();
     });
   });
-
+ 
   document.getElementById('searchInput')!.addEventListener('input', renderOrders);
-
-  // Open Chat widget when "Chats" is clicked
+ 
   document.getElementById('chatsLink')!.addEventListener('click', (e) => {
   e.preventDefault();
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -3164,23 +3153,21 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
   (document.querySelector('.tabs-bar') as HTMLElement).style.display = 'flex';
   (document.querySelector('.controls-bar') as HTMLElement).style.display = 'flex';
   (document.querySelector('.orders-area') as HTMLElement).style.display = 'flex';
-
 });
-
-
+ 
   document.getElementById('logoutBtn')!.addEventListener('click', async (e) => {
     e.preventDefault();
     await supabase.auth.signOut();
     window.location.href = `${base}/login/`;
   });
-
+ 
   init();
-
+ 
   // ═══ UNREAD / NOTIFICATIONS ═══
   let unreadOrderIds = new Set<string>();
-  let myConvParticipants: any[] = [];   // {conversation_id, last_read_at, order_id}
+  let myConvParticipants: any[] = [];
   let unreadGlobalSub: any = null;
-
+ 
   function playPing() {
     try {
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -3194,11 +3181,10 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
       osc.start(); osc.stop(ctx.currentTime + 0.35);
     } catch (e) {}
   }
-
+ 
   async function refreshUnread() {
     if (!currentSession) return;
     try {
-      // 1. My participant rows + the conversation's order_id
       const pRes = await fetch(
         `${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${currentSession.user.id}&select=conversation_id,last_read_at,conversations(order_id,type)`,
         { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
@@ -3209,10 +3195,9 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
         last_read_at: p.last_read_at,
         order_id: p.conversations?.order_id ? String(p.conversations.order_id) : null
       }));
-
+ 
       if (!myConvParticipants.length) { unreadOrderIds = new Set(); paintUnread(); return; }
-
-      // 2. Fetch recent messages for those conversations in one call
+ 
       const ids = myConvParticipants.map(p => p.conversation_id);
       const inList = ids.map(i => `"${i}"`).join(',');
       const mRes = await fetch(
@@ -3220,8 +3205,7 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
         { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
       );
       const msgs = await mRes.json();
-
-      // 3. A conversation is unread if it has a message from someone else, newer than my last_read_at
+ 
       const newUnread = new Set<string>();
       for (const p of myConvParticipants) {
         const lr = p.last_read_at ? new Date(p.last_read_at).getTime() : 0;
@@ -3236,16 +3220,14 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
       paintUnread();
     } catch (err) { console.error('refreshUnread', err); }
   }
-
+ 
   function paintUnread() {
-    // Sidebar badge
     const badge = document.getElementById('chatsBadge');
     if (badge) {
       const n = unreadOrderIds.size;
       if (n > 0) { badge.textContent = String(n); (badge as HTMLElement).style.display = 'inline-flex'; }
       else (badge as HTMLElement).style.display = 'none';
     }
-    // Dots on order rows
     document.querySelectorAll('.order-row').forEach(row => {
       const id = (row as HTMLElement).dataset.id || '';
       let dot = row.querySelector('.unread-dot');
@@ -3258,8 +3240,7 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
       } else if (dot) { dot.remove(); }
     });
   }
-
-  // Mark a conversation read (stamp last_read_at = now)
+ 
   async function markConversationRead(conversationId: string, orderId: string) {
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${currentSession.user.id}&conversation_id=eq.${conversationId}`, {
@@ -3271,42 +3252,40 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
     unreadOrderIds.delete(orderId);
     paintUnread();
   }
-
-  // Global subscription: any new message in ANY of my conversations
+ 
   function startGlobalUnreadSub() {
     if (unreadGlobalSub) return;
     unreadGlobalSub = supabase.channel('client-unread-all')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload: any) => {
         const m = payload.new;
-        if (m.sender_id === currentSession.user.id) return;            // ignore my own
+        if (m.sender_id === currentSession.user.id) return;
         const mine = myConvParticipants.find(p => p.conversation_id === m.conversation_id);
-        if (!mine) return;                                             // not my conversation
+        if (!mine) return;
         playPing();
         if (mine.order_id) { unreadOrderIds.add(mine.order_id); paintUnread(); }
       }).subscribe();
   }
-
-  // Kick off once orders + session are ready
+ 
   (async function initUnread() {
     for (let i = 0; i < 40 && !currentSession; i++) await new Promise(r => setTimeout(r, 250));
     if (!currentSession) return;
     await refreshUnread();
     startGlobalUnreadSub();
   })();
-
+ 
   // ── THEME TOGGLE (icon + popup) ──
   const THEME_KEY = 'dashboard-theme';
   const themeIconBtn = document.getElementById('themeIconBtn');
   const themePopup = document.getElementById('themePopup');
   const themePopupOverlay = document.getElementById('themePopupOverlay');
   const themeIconCurrent = document.getElementById('themeIconCurrent');
-
+ 
   const themeIcons: Record<string, string> = { dark: '🌙', light: '☀️', system: '💻' };
-
+ 
   function getSystemPref() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
-
+ 
   function applyTheme(setting: string) {
     const actual = setting === 'system' ? getSystemPref() : setting;
     if (actual === 'dark') {
@@ -3320,30 +3299,26 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
     if (themeIconCurrent) themeIconCurrent.textContent = themeIcons[setting] || '☀️';
     localStorage.setItem(THEME_KEY, setting);
   }
-
-  // Open popup
+ 
   themeIconBtn?.addEventListener('click', () => {
     themePopup?.classList.add('open');
   });
-
-  // Close popup
+ 
   themePopupOverlay?.addEventListener('click', () => {
     themePopup?.classList.remove('open');
   });
-
-  // Option clicks
+ 
   document.querySelectorAll('.theme-popup__opt').forEach(btn => {
     btn.addEventListener('click', () => {
       applyTheme((btn as HTMLElement).dataset.theme || 'light');
       themePopup?.classList.remove('open');
     });
   });
-
-  // System preference change
+ 
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if (localStorage.getItem(THEME_KEY) === 'system') applyTheme('system');
   });
-
+ 
   applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 </script>
 </BaseLayout>
