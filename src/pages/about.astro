@@ -22,9 +22,7 @@ const base = '';
           <p class="hero__sub">We are a team of academic experts, researchers, and writers dedicated to helping students achieve their full potential.</p>
           <a href="#" class="btn-gold auth-gate-page">Get started</a>
         </div>
-        <div class="hero__image-placeholder">
-          <!-- PLACEHOLDER: Replace with hero image -->
-        </div>
+        <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/hero-image.png" alt="Student studying" class="hero__image" />
       </div>
     </section>
 
@@ -252,18 +250,12 @@ const base = '';
   transition: opacity 0.2s;
 }
 .btn-gold:hover { opacity: 0.88; }
-.hero__image-placeholder {
-  background-color: rgba(255,255,255,0.06);
-  border: 2px dashed rgba(255,255,255,0.2);
+.hero__image {
+  width: 100%;
+  height: auto;
   border-radius: 12px;
-  height: 320px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255,255,255,0.3);
-  font-size: 0.85rem;
+  object-fit: contain;
 }
-.hero__image-placeholder::after { content: '[ Hero Image ]'; }
 
 /* ── 2. STATS BAR ── */
 .stats-bar-wrap {
@@ -596,7 +588,7 @@ details[open] .faq__question::after { content: '−'; }
   .faq__inner { grid-template-columns: 1fr; gap: 3rem; }
   .services__cards { grid-template-columns: 1fr; }
   .stats-bar { gap: 2rem; flex-wrap: wrap; justify-content: center; }
-  .hero__image-placeholder { height: 220px; }
+  .hero__image { height: 220px; object-fit: contain; }
 }
 @media (max-width: 480px) {
   .hero__heading { font-size: 1.9rem; }
