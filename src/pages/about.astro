@@ -201,9 +201,7 @@ const base = '';
         <div class="faq__right">
           <h3 class="faq__contact-title">Questions?</h3>
           <p class="faq__contact-sub">Contact our Support Team.<br/>We'll respond within a minute</p>
-          <div class="faq__avatar">
-            <!-- PLACEHOLDER: Support agent image -->
-          </div>
+          <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/Support.jpg" alt="Support Agent" class="faq__avatar-img" />
           <a href={`${base}/contact/`} class="btn-contact">Contact Support</a>
         </div>
       </div>
@@ -247,13 +245,16 @@ const base = '';
 }
 .hero__slider {
   overflow: hidden;
-  border: 2px solid rgba(255,255,255,0.45);
+  border: 2px solid #4A90D9;
   border-radius: 4px;
-  padding: 0.4rem 1rem;
+  background-color: #ffffff;
   margin-bottom: 1.5rem;
   width: fit-content;
   max-width: 100%;
-  height: 2rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
 }
 .hero__slider-track {
   display: flex;
@@ -261,13 +262,14 @@ const base = '';
   transition: transform 0.5s ease-in-out;
 }
 .hero__slider-track span {
-  color: #ffffff;
+  color: #1B3A6B;
   font-size: 0.95rem;
-  font-weight: 500;
-  height: 2rem;
-  line-height: 2rem;
+  font-weight: 600;
+  height: 2.5rem;
+  line-height: 2.5rem;
   white-space: nowrap;
   display: block;
+  text-align: center;
 }
 .hero__sub {
   color: rgba(255,255,255,0.72);
@@ -590,20 +592,14 @@ details[open] .faq__question::after { content: '−'; }
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
-.faq__avatar {
+.faq__avatar-img {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  border: 2px dashed #1B3A6B;
-  background-color: #eef2f9;
+  object-fit: cover;
   margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #aaa;
-  font-size: 0.72rem;
+  border: 3px solid #1B3A6B;
 }
-.faq__avatar::after { content: '[ Agent Photo ]'; }
 .btn-contact {
   display: inline-block;
   background-color: #1B3A6B;
@@ -650,7 +646,7 @@ details[open] .faq__question::after { content: '−'; }
     let current = 0;
     setInterval(() => {
       current = (current + 1) % spans.length;
-      (track as HTMLElement).style.transform = `translateY(-${current * 2}rem)`;
+      (track as HTMLElement).style.transform = `translateY(-${current * 2.5}rem)`;
     }, 2000);
   }
 </script>
