@@ -280,14 +280,15 @@ const base = '';
  
   .modal-box {
     position: relative; z-index: 101;
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 2rem;
-    width: 90%;
-    max-width: 560px;
-    max-height: 82vh;
-    overflow-y: auto;
+    background: #141821;
+    border: 1px solid #23262E;
+    border-radius: 16px;
+    padding: 0;
+    width: 92%;
+    max-width: 920px;
+    max-height: 88vh;
+    overflow: hidden;
+    display: flex;
   }
  
   .modal-close {
@@ -410,9 +411,14 @@ const base = '';
   body.dark-mode .empty-state p { color: #64748b; }
   body.dark-mode .loading-state { color: #64748b; }
   body.dark-mode .spinner { border-color: rgba(255,255,255,0.06); border-top-color: #60a5fa; }
-  body.dark-mode .modal-box { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
-  body.dark-mode .modal-close { color: #64748b; }
-  body.dark-mode .modal-close:hover { color: #e2e8f0; }
+  body.dark-mode .modal-box { background: #141821; border-color: #23262E; }
+  body.dark-mode .modal-close { color: #5B6270; }
+  body.dark-mode .modal-close:hover { color: #E7E9EE; }
+  .modal-box .om-tab { color: #6B7280; }
+  .modal-box .om-tab--active { color: #5B8FFF; border-bottom-color: #5B8FFF; }
+  .modal-box .om-tabs { border-bottom-color: #23262E; }
+  .modal-box .om-title { color: #E7E9EE; font-size: 1rem; }
+  .modal-box .om-id { color: #5B6270; font-size: 0.78rem; }
   body.dark-mode .review-box { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
   body.dark-mode .review-box h2 { color: #e2e8f0; }
   body.dark-mode .review-box p { color: #94a3b8; }
@@ -592,6 +598,29 @@ const base = '';
   .om-download:hover { background: #d4b06a; }
   .om-download:disabled { opacity: 0.6; cursor: not-allowed; }
   .om-dl-note { color: #f87171; font-size: 0.8rem; margin-top: 0.6rem; }
+  /* ── CLIENT ORDER MODAL DARK THEME ── */
+  .om-field-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+  }
+  .om-field-value {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #E7E9EE;
+  }
+  .om-field-value.green { color: #4ade80; }
+  .om-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #23262E;
+  }
  
   .om-nofile {
     text-align: center;
@@ -2774,7 +2803,7 @@ try {
     return res.ok;
   }
  
-  function showModal(order: any) {
+function showModal(order: any) {
     const dl = deadlineInfo(order.deadline);
     const startDate = order.created_at
       ? new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
@@ -2806,55 +2835,86 @@ try {
       <div class="om-action-msg" id="actionMsg"></div>
     ` : '';
  
+    const dfield = (label: string, value: string, cls = '') =>
+      `<div><div class="om-field-label">${label}</div><div class="om-field-value ${cls}">${value}</div></div>`;
+
     document.getElementById('modalContent')!.innerHTML = `
-      <div class="om-header">
-        <div class="om-title">${esc(order.topic || '(no topic)')}</div>
-        <div class="om-id">ID ${esc(order.order_number || order.id)}</div>
-      </div>
- 
-      <div class="om-tabs">
-        <button class="om-tab om-tab--active" data-mtab="general">General</button>
-        <button class="om-tab" data-mtab="instructions">Instructions</button>
-        <button class="om-tab" data-mtab="files">Files</button>
-      </div>
- 
-      <!-- GENERAL -->
-      <div class="om-panel om-panel--active" data-mpanel="general">
-        <div class="om-grid">
-          ${field('Status', esc((order.order_status || '—').replace(/_/g,' ')))}
-          ${field('Payment', esc(order.payment_status || '—'))}
-          ${field('Started', esc(startDate))}
-          ${field('Time Left', dl.text)}
-          ${field('Total', `$${total.toFixed(2)}`)}
-          ${field('Amount Paid', `$${paid.toFixed(2)}`, 'green')}
-          ${field('Balance Due', `$${balance.toFixed(2)}`)}
-          ${field('Deadline', esc(dueDate))}
+      <!-- LEFT: order detail -->
+      <div style="flex:1.3;padding:1.8rem 2rem;overflow-y:auto;min-width:0;border-right:1px solid #23262E;background:#141821;">
+        <div style="margin-bottom:0.3rem;">
+          <div class="om-title">${esc(order.topic || '(no topic)')}</div>
+          <div class="om-id" style="margin-top:0.3rem;">ID ${esc(order.order_number || order.id)}</div>
         </div>
-        ${actionButtons}
-      </div>
- 
-      <!-- INSTRUCTIONS -->
-      <div class="om-panel" data-mpanel="instructions">
-        <div class="om-grid">
-          ${field('Type', esc(order.assignment_type || '—'))}
-          ${field('Pages', esc(order.pages || '—'))}
-          ${field('Education level', esc(order.education_level || '—'))}
-          ${field('Subject', esc(order.subject || '—'))}
-          ${field('Language', esc(order.language || '—'))}
-          ${field('Service', esc(order.service || '—'))}
+
+        <div class="om-tabs" style="margin:1.1rem 0;">
+          <button class="om-tab om-tab--active" data-mtab="general">General</button>
+          <button class="om-tab" data-mtab="instructions">Instructions</button>
+          <button class="om-tab" data-mtab="files">Files</button>
         </div>
-        <div>
-          <div class="om-desc-label">Description</div>
-          <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
+
+        <!-- GENERAL -->
+        <div class="om-panel om-panel--active" data-mpanel="general">
+          <div class="om-detail-grid">
+            ${dfield('Status', esc((order.order_status || '—').replace(/_/g,' ')))}
+            ${dfield('Payment', esc(order.payment_status || '—'))}
+            ${dfield('Started', esc(startDate))}
+            ${dfield('Time Left', dl.text)}
+            ${dfield('Total', `$${total.toFixed(2)}`)}
+            ${dfield('Amount Paid', `$${paid.toFixed(2)}`, 'green')}
+            ${dfield('Balance Due', `$${balance.toFixed(2)}`)}
+            ${dfield('Deadline', esc(dueDate))}
+          </div>
+          ${actionButtons}
+        </div>
+
+        <!-- INSTRUCTIONS -->
+        <div class="om-panel" data-mpanel="instructions">
+          <div class="om-detail-grid">
+            ${dfield('Type', esc(order.assignment_type || '—'))}
+            ${dfield('Pages', String(order.pages || '—'))}
+            ${dfield('Education level', esc(order.education_level || '—'))}
+            ${dfield('Subject', esc(order.subject || '—'))}
+            ${dfield('Language', esc(order.language || '—'))}
+            ${dfield('Service', esc(order.service || '—'))}
+          </div>
+          <div>
+            <div class="om-field-label" style="margin-bottom:0.5rem;">Description</div>
+            <div style="font-size:0.85rem;color:#9CA1AC;line-height:1.75;max-height:300px;overflow-y:auto;">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
+          </div>
+        </div>
+
+        <!-- FILES -->
+        <div class="om-panel" data-mpanel="files">
+          <div id="clientFilesList"><div class="om-nofile">Loading files…</div></div>
         </div>
       </div>
- 
-      <!-- FILES -->
-      <div class="om-panel" data-mpanel="files">
-        <div id="clientFilesList"><div class="om-nofile">Loading files…</div></div>
+
+      <!-- RIGHT: Chat panel -->
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:#0E1116;">
+        <div style="padding:0.9rem 1.2rem;border-bottom:1px solid #23262E;background:#141821;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div style="width:36px;height:36px;border-radius:50%;background:#1B1E26;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;color:#8A90A0;flex-shrink:0;">✍</div>
+            <div>
+              <div style="font-size:0.88rem;font-weight:600;color:#E7E9EE;" id="ocChatName">Writer</div>
+              <div style="font-size:0.7rem;color:#5B6270;margin-top:0.1rem;">Last seen: today</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.78rem;color:#C6CAD3;font-weight:500;">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})} 🇺🇸</div>
+            <div style="font-size:0.65rem;color:#5B6270;">Local time</div>
+          </div>
+        </div>
+        <div id="ocMessages" style="flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.5rem;background:#0E1116;">
+          <div style="text-align:center;color:#5B6270;font-size:0.82rem;padding:1.5rem;">Loading…</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.75rem 1rem;border-top:1px solid #23262E;background:#141821;flex-shrink:0;">
+          <button style="background:none;border:none;color:#6B7280;font-size:1rem;cursor:pointer;flex-shrink:0;">📎</button>
+          <input type="text" id="ocInput" placeholder="Type a message…" style="flex:1;background:#181B22;border:1px solid #23262E;border-radius:22px;padding:0.55rem 1rem;font-size:0.85rem;color:#E7E9EE;outline:none;font-family:inherit;" />
+          <button id="ocSend" style="width:36px;height:36px;border-radius:50%;background:#D6B36A;border:none;color:#14110A;cursor:pointer;font-size:1rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;">➤</button>
+        </div>
       </div>
     `;
- 
+
     // ── REVISION BUTTON ──
     const revisionBtn = document.getElementById('revisionBtn');
     const revisionForm = document.getElementById('revisionForm');
@@ -3051,15 +3111,15 @@ try {
   function ocRender(messages: any[]) {
     const c = document.getElementById('ocMessages');
     if (!c) return;
-    if (!messages.length) { c.innerHTML = '<div class="oc-empty">No messages yet. Say hello to your writer!</div>'; return; }
+    if (!messages.length) { c.innerHTML = '<div style="text-align:center;color:#5B6270;font-size:0.82rem;padding:1.5rem;">No messages yet. Say hello to your writer!</div>'; return; }
     c.innerHTML = messages.map((m: any) => {
       const mine = m.sender_id === currentSession.user.id;
       const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
       const who = m.sender_role === 'support' ? 'Support' : (m.sender_name || 'Writer');
-      return `<div class="oc-row ${mine ? 'mine' : 'theirs'}">
-        ${!mine ? `<div class="oc-name">${esc(who)}</div>` : ''}
-        <div class="oc-bubble">${esc(m.content)}</div>
-        <div class="oc-time">${time}</div>
+      return `<div style="display:flex;flex-direction:column;max-width:82%;align-self:${mine ? 'flex-end' : 'flex-start'};align-items:${mine ? 'flex-end' : 'flex-start'};">
+        ${!mine ? `<div style="font-size:0.66rem;font-weight:600;color:#6B7280;margin-bottom:0.15rem;">${esc(who)}</div>` : ''}
+        <div style="padding:0.6rem 0.9rem;border-radius:13px;font-size:0.85rem;line-height:1.55;word-wrap:break-word;background:${mine ? '#D6B36A' : '#181B22'};color:${mine ? '#14110A' : '#E7E9EE'};border:${mine ? 'none' : '1px solid #23262E'};border-bottom-${mine ? 'right' : 'left'}-radius:4px;">${esc(m.content)}</div>
+        <div style="font-size:0.62rem;color:#5B6270;margin-top:0.15rem;font-family:monospace;">${time}${mine ? ' ✓' : ''}</div>
       </div>`;
     }).join('');
     c.scrollTop = c.scrollHeight;
@@ -3104,7 +3164,7 @@ try {
           const mine = m.sender_id === currentSession.user.id;
           const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
           const who = m.sender_role === 'support' ? 'Support' : (m.sender_name || 'Writer');
-          c.insertAdjacentHTML('beforeend', `<div class="oc-row ${mine ? 'mine' : 'theirs'}">${!mine ? `<div class="oc-name">${esc(who)}</div>` : ''}<div class="oc-bubble">${esc(m.content)}</div><div class="oc-time">${time}</div></div>`);
+          c.insertAdjacentHTML('beforeend', `<div style="display:flex;flex-direction:column;max-width:82%;align-self:${mine ? 'flex-end' : 'flex-start'};align-items:${mine ? 'flex-end' : 'flex-start'};">${!mine ? `<div style="font-size:0.66rem;font-weight:600;color:#6B7280;margin-bottom:0.15rem;">${esc(who)}</div>` : ''}<div style="padding:0.6rem 0.9rem;border-radius:13px;font-size:0.85rem;line-height:1.55;word-wrap:break-word;background:${mine ? '#D6B36A' : '#181B22'};color:${mine ? '#14110A' : '#E7E9EE'};border:${mine ? 'none' : '1px solid #23262E'};border-bottom-${mine ? 'right' : 'left'}-radius:4px;">${esc(m.content)}</div><div style="font-size:0.62rem;color:#5B6270;margin-top:0.15rem;font-family:monospace;">${time}${mine ? ' ✓' : ''}</div></div>`);
           c.scrollTop = c.scrollHeight;
         }).subscribe();
   }
