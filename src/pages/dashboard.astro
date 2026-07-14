@@ -3126,13 +3126,25 @@ function showModal(order: any) {
   }
  
   async function ocFindConversation(orderId: string) {
-    const res = await fetch(
+    // Try via participants first (client is a participant)
+    const r1 = await fetch(
       `${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${currentSession.user.id}&select=conversation_id,conversations(id,order_id,type)`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
     );
-    const rows = await res.json();
-    const match = rows.find((r: any) => r.conversations?.order_id === parseInt(orderId) && r.conversations?.type === 'order');
-    return match?.conversation_id || null;
+    const rows = await r1.json();
+    const match = Array.isArray(rows) && rows.find((r: any) => r.conversations?.order_id === parseInt(orderId) && r.conversations?.type === 'order');
+    if (match) return match.conversation_id;
+
+    // Fallback: search all participants for this order's conversation
+    const r2 = await fetch(
+      `${SUPABASE_URL}/rest/v1/conversation_participants?select=conversation_id,conversations(id,order_id,type)&conversations.order_id=eq.${orderId}&conversations.type=eq.order`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
+    );
+    const rows2 = await r2.json();
+    const match2 = Array.isArray(rows2) && rows2.find((r: any) => r.conversations?.order_id === parseInt(orderId));
+    if (match2) return match2.conversation_id;
+
+    return null;
   }
  
   async function openOrderChat(order: any) {
