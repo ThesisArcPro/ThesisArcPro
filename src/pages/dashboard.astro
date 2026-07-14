@@ -1678,7 +1678,7 @@ async function cpSendMessage() {
   if (!text) return;
   const btn = document.getElementById('threadSend') as HTMLButtonElement;
   btn.disabled = true; input.value = '';
-  const clientName = currentSession.user.email?.split('@')[0] || 'Client';
+  const clientName = myClientId ? `#${myClientId}` : currentSession.user.email?.split('@')[0] || 'Client';
   try {
     await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
       method: 'POST',
@@ -2186,7 +2186,7 @@ async function wizBidChatSendMessage() {
   if (!text) return;
   const btn = document.getElementById('wizBidChatSend') as HTMLButtonElement;
   btn.disabled = true; input.value = '';
-  const clientName = currentSession.user.email?.split('@')[0] || 'Client';
+  const clientName = myClientId ? `#${myClientId}` : currentSession.user.email?.split('@')[0] || 'Client';
   try {
     await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
       method: 'POST',
@@ -3070,7 +3070,7 @@ try {
     if (!text || !ocOrder) return;
     const btn = document.getElementById('ocSend') as HTMLButtonElement;
     btn.disabled = true; input.value = '';
-    const clientName = currentSession.user.email?.split('@')[0] || 'Client';
+    const clientName = myClientId ? `#${myClientId}` : currentSession.user.email?.split('@')[0] || 'Client';
     try {
       if (!ocConvId) {
         const title = `Order ${ocOrder.order_number || ocOrder.id}`;
