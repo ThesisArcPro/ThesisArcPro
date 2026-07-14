@@ -2747,7 +2747,7 @@ const base = '';
           <div class="review-item">
             <div class="review-header"><div class="review-stars">${'★'.repeat(r.rating||0)}${'☆'.repeat(5-(r.rating||0))}</div><div class="review-date">${r.created_at ? new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : ''}</div></div>
             ${r.review_text ? `<div class="review-text">${esc(r.review_text)}</div>` : ''}
-            <div class="review-order">Order ${esc(r.order_number)}</div>
+            <div class="review-order">Order ${esc(r.order_number)} · Client #${esc(r.client_id || '—')}</div>
           </div>`).join('')}</div>` : '<p style="color:var(--text-muted);font-size:0.85rem;">No reviews yet.</p>'}
       </div>`;
   }
