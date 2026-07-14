@@ -1250,6 +1250,26 @@ const base = '';
       const badge = document.getElementById('notifBadge');
       if (badge) { badge.textContent = '!'; (badge as HTMLElement).style.display = 'inline-flex'; }
     });
+
+    // bid:accept fired by client when they hire a writer
+    socket.on('bid:accept', (data: any) => {
+      const orderId = String(data.orderId);
+      const hiredWriterId = String(data.writerId);
+      // Remove from available orders instantly
+      availableOrders = availableOrders.filter((o: any) => String(o.id) !== orderId);
+      renderAvailableOrders();
+      // If we are the hired writer — reload our orders to show it in My Orders
+      if (hiredWriterId === String(writerId)) {
+        loadOrders();
+        loadMyBids();
+        const badge = document.getElementById('notifBadge');
+        if (badge) { badge.textContent = '!'; (badge as HTMLElement).style.display = 'inline-flex'; }
+      } else {
+        // We were not hired — remove our proposal for this order too
+        myBids = myBids.filter((b: any) => String(b.order_id) !== orderId);
+        renderProposals();
+      }
+    });
  
     // Real-time: order assigned to writer
     supabase.channel(`writer-orders-${writerId}`)
@@ -2282,12 +2302,17 @@ const base = '';
   let ocLastDate = '';
 
   async function ocFindConversation(orderId: string) {
+    // Scope to conversations where THIS writer is a participant — prevents chat leaking to other writers
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/conversations?type=eq.order&order_id=eq.${orderId}&select=id&limit=1`,
+      `${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${currentSession.user.id}&select=conversation_id,conversations(id,order_id,type)`,
       { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
     );
-    const rows = await res.json();
-    return rows[0]?.id || null;
+    const parts = await res.json();
+    const match = parts.find((p: any) =>
+      p.conversations?.order_id === parseInt(orderId) &&
+      p.conversations?.type === 'order'
+    );
+    return match?.conversation_id || null;
   }
 
   async function ocEnsureSelf(convId: string) {
