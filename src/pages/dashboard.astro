@@ -1076,7 +1076,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   <div style="display:flex;height:100%;width:100%;">
 
     <!-- Left: conversation list -->
-    <div id="convList" style="width:320px;border-right:1px solid #eef2f7;display:flex;flex-direction:column;flex-shrink:0;background:#fff;">
+    <div id="convList" style="width:320px;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;background:var(--panel-bg);">
       <div style="padding:1rem 1.2rem;font-size:1.1rem;font-weight:700;color:#0f172a;border-bottom:1px solid #eef2f7;">Chats</div>
       <div id="convListItems" style="flex:1;overflow-y:auto;">
         <div style="padding:2rem;text-align:center;color:#94a3b8;font-size:0.85rem;">Loading conversations…</div>
@@ -1095,7 +1095,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       <!-- Active thread -->
       <div id="convThreadActive" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
         <!-- Header -->
-        <div style="padding:0.75rem 1.2rem;border-bottom:1px solid #eef2f7;background:#fff;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+        <div style="padding:0.75rem 1.2rem;border-bottom:1px solid var(--border);background:var(--panel-bg);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
           <div style="display:flex;align-items:center;gap:0.75rem;">
             <div id="convThreadAvatar" style="width:38px;height:38px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;color:#0f172a;flex-shrink:0;overflow:hidden;"></div>
             <div>
@@ -1111,8 +1111,8 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
         <!-- Messages -->
         <div id="convThreadMessages" style="flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.6rem;background:var(--main-bg);"></div>
         <!-- Input -->
-        <div style="display:flex;gap:0.5rem;padding:0.8rem 1rem;border-top:1px solid #eef2f7;background:#fff;flex-shrink:0;">
-          <input id="convThreadInput" type="text" placeholder="Type a message..." style="flex:1;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:20px;padding:0.6rem 1rem;font-size:0.85rem;color:#0f172a;outline:none;font-family:inherit;" />
+        <div style="display:flex;gap:0.5rem;padding:0.8rem 1rem;border-top:1px solid var(--border);background:var(--panel-bg);flex-shrink:0;">
+          <input id="convThreadInput" type="text" placeholder="Type a message..." style="flex:1;background:var(--main-bg);border:1px solid var(--border);border-radius:20px;padding:0.6rem 1rem;font-size:0.85rem;color:var(--text);outline:none;font-family:inherit;" />
           <button id="convThreadSend" style="background:#046fcd;color:#fff;border:none;border-radius:20px;padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:inherit;">Send</button>
         </div>
       </div>
