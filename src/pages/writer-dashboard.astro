@@ -1301,6 +1301,22 @@ const base = '';
       })
       .subscribe();
  
+    supabase.channel('order-status-changes')
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'orders'
+      }, (payload: any) => {
+        const updated = payload.new;
+        if (updated.order_status !== 'open_for_bids') {
+          availableOrders = availableOrders.filter((o: any) => String(o.id) !== String(updated.id));
+          renderAvailableOrders();
+          myBids = myBids.filter((b: any) => String(b.order_id) !== String(updated.id) || updated.writer_id === writerId);
+          renderProposals();
+        }
+      })
+      .subscribe();
+
     document.querySelector('.nav-item[data-view="available"]')?.addEventListener('click', () => {
       newAvailCount = 0;
       const badge = document.getElementById('availBadge');
