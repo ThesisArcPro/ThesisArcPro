@@ -1169,7 +1169,6 @@ const base = '';
 <script>
   import { supabase } from '../lib/supabase.js';
   import { io } from 'socket.io-client';
- 
   const BIDDING_SERVER = 'https://thesisarcpro.onrender.com';
   const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
  
@@ -1846,7 +1845,7 @@ const base = '';
               <span style="color:#046fcd;font-weight:600;">${esc(b.order_number || '')} — ${esc(b.topic || '(no topic)')}</span> 
               has been accepted. Good hunting! 🎉
             </div>
-            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">${b.bid_created_at ? timeAgo(b.bid_created_at) : ''} ${b.seen ? '<span style="color:#4ade80;font-size:0.7rem;">✓ Read</span>' : '<span style="color:#f59e0b;font-size:0.7rem;">● New</span>'}</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;" class="notif-new-indicator">${b.bid_created_at ? timeAgo(b.bid_created_at) : ''} ${b.seen ? '<span style="color:#4ade80;font-size:0.7rem;">✓ Read</span>' : '<span style="color:#f59e0b;font-size:0.7rem;">● New</span>'}</div>
           </div>
         </div>`).join('');
 
@@ -3156,6 +3155,20 @@ const base = '';
     const origHandler = origChatNav.getAttribute('data-view');
     origChatNav.addEventListener('click', () => { setTimeout(() => loadConversations(), 100); });
   }
+
+  document.getElementById('markAllReadBtn')?.addEventListener('click', async () => {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/rpc/mark_notifications_seen`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ p_writer_id: writerId })
+      });
+      await refreshNotifBadge();
+      document.querySelectorAll('.notif-new-indicator').forEach(el => {
+        el.innerHTML = '<span style="color:#4ade80;font-size:0.7rem;">✓ Read</span>';
+      });
+    } catch(e) { console.error(e); }
+  });
 </script>
  
 </body>
