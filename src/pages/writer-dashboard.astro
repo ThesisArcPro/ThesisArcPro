@@ -3041,6 +3041,15 @@ const base = '';
   }
  
   let chatLastDate = '';
+
+  function tickHtml(m: any) {
+    if (m.sender_id !== currentSession.user.id) return '';
+    const seen = Array.isArray(m.read_by) && m.read_by.some((id: string) => id !== currentSession.user.id);
+    return seen
+      ? ' <span class="msg-tick seen" style="color:#60a5fa;font-size:0.72rem;">✓✓</span>'
+      : ' <span class="msg-tick" style="color:#94a3b8;font-size:0.72rem;">✓</span>';
+  }
+
   function renderMessages(messages: any[]) {
     const container = document.getElementById('chatMessages')!;
     if (!messages.length) {
@@ -3057,10 +3066,10 @@ const base = '';
         chatLastDate = dateLabel;
         divider = `<div style="text-align:center;font-size:0.7rem;color:#94a3b8;margin:0.4rem 0;align-self:center;">${dateLabel}</div>`;
       }
-      return divider + `<div class="msg-row ${isMine ? 'mine' : 'theirs'}">
+      return divider + `<div class="msg-row ${isMine ? 'mine' : 'theirs'}" data-msg-id="${esc(m.id)}">
         ${!isMine ? `<div class="msg-sender">${esc(m.sender_name || m.sender_role || 'User')}</div>` : ''}
         <div class="msg-bubble">${esc(m.content)}</div>
-        <div class="msg-time">${time}${isMine ? ' <span style="color:#60a5fa;">✓</span>' : ''}</div>
+        <div class="msg-time">${time}${tickHtml(m)}</div>
       </div>`;
     }).join('');
     container.scrollTop = container.scrollHeight;
@@ -3084,12 +3093,28 @@ const base = '';
             chatLastDate = dateLabel;
             divider = `<div style="text-align:center;font-size:0.7rem;color:#94a3b8;margin:0.4rem 0;align-self:center;">${dateLabel}</div>`;
           }
-          container.insertAdjacentHTML('beforeend', divider + `<div class="msg-row ${isMine ? 'mine' : 'theirs'}">
+          container.insertAdjacentHTML('beforeend', divider + `<div class="msg-row ${isMine ? 'mine' : 'theirs'}" data-msg-id="${esc(msg.id)}">
             ${!isMine ? `<div class="msg-sender">${esc(msg.sender_name || msg.sender_role || 'User')}</div>` : ''}
             <div class="msg-bubble">${esc(msg.content)}</div>
-            <div class="msg-time">${time}${isMine ? ' <span style="color:#60a5fa;">✓</span>' : ''}</div>
+            <div class="msg-time">${time}${tickHtml(msg)}</div>
           </div>`);
           container.scrollTop = container.scrollHeight;
+          // If incoming message, mark as read immediately since conversation is open
+          if (!isMine) markMessagesRead(conversationId);
+        }
+      )
+      // Real-time tick update — when recipient reads messages, update ticks instantly
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` },
+        (payload: any) => {
+          const updated = payload.new;
+          const row = document.querySelector(`.msg-row[data-msg-id="${updated.id}"]`);
+          if (!row) return;
+          const tick = row.querySelector('.msg-tick');
+          if (!tick) return;
+          const seen = Array.isArray(updated.read_by) && updated.read_by.some((id: string) => id !== currentSession.user.id);
+          tick.innerHTML = seen ? '✓✓' : '✓';
+          (tick as HTMLElement).style.color = seen ? '#60a5fa' : '#94a3b8';
+          if (seen) tick.classList.add('seen');
         }
       )
       .subscribe();
