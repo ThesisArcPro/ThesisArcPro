@@ -3137,6 +3137,8 @@ function showModal(order: any) {
   async function openOrderChat(order: any) {
     ocOrder = order;
     ocConvId = null;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) currentSession = session;
     if (ocSub) { ocSub.unsubscribe(); ocSub = null; }
     const c = document.getElementById('ocMessages')!;
     c.innerHTML = '<div class="oc-loading">Loading…</div>';
