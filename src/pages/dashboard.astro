@@ -952,6 +952,10 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       <span class="icon">💬</span> Chats
       <span id="chatsBadge" style="display:none;margin-left:auto;background:#ef4444;color:#fff;font-size:0.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;align-items:center;justify-content:center;">0</span>
     </a>
+    <a class="nav-item" href="#" id="draftsLink" style="position:relative;">
+      <span class="icon">📋</span> Drafts
+      <span id="draftsBadge" style="display:none;margin-left:auto;background:#f59e0b;color:#fff;font-size:0.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;align-items:center;justify-content:center;">0</span>
+    </a>
   </nav>
   <div class="sidebar-divider"></div>
  
@@ -1062,7 +1066,12 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       <div id="ordersList"></div>
     </div>
   </div>
- 
+
+  <!-- DRAFTS PANEL -->
+  <div id="draftsPanelWrap" style="display:none;flex:1;overflow-y:auto;padding:1.5rem 2rem 2rem;flex-direction:column;">
+    <div id="draftsLoadingState" style="text-align:center;padding:3rem;color:#94a3b8;font-size:0.85rem;">Loading drafts…</div>
+    <div id="draftsList"></div>
+  </div>
   <div id="chatsPanelWrap" style="display:none;flex:1;overflow:hidden;height:100%;">
   <div style="display:flex;height:100%;width:100%;">
  
@@ -2114,6 +2123,14 @@ async function openBidChat(writerId: string, writerName: string, writerPhoto: st
         headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
         body: JSON.stringify({ conversation_id: convId, user_id: currentSession.user.id, role: 'client', display_name: currentSession.user.email?.split('@')[0] || 'Client' })
       });
+      // Add this specific writer as participant — isolates conversation from other writers
+      if (writerAuthId && writerAuthId !== '00000000-0000-0000-0000-000000000000') {
+        await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+          body: JSON.stringify({ conversation_id: convId, user_id: writerAuthId, role: 'writer', display_name: writerName })
+        });
+      }
       if (bidNote) {
         const senderId = writerAuthId || '00000000-0000-0000-0000-000000000000';
         await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
@@ -2575,6 +2592,13 @@ try {
     set('count_revision', countFor('revision'));
     set('count_completed', countFor('completed'));
     set('count_cancelled', countFor('cancelled'));
+
+    const draftCount = allOrders.filter((o: any) => o.order_status === 'open_for_bids').length;
+    const draftsBadge = document.getElementById('draftsBadge');
+    if (draftsBadge) {
+      draftsBadge.textContent = String(draftCount);
+      draftsBadge.style.display = draftCount > 0 ? 'inline-flex' : 'none';
+    }
   }
  
   function deadlineInfo(deadline: string) {
@@ -2612,7 +2636,7 @@ try {
  
     let filtered = allOrders.filter((o: any) =>
       currentTab === 'in_progress'
-        ? (o.order_status === 'in_progress' || o.order_status === 'new' || o.order_status === 'open_for_bids')
+        ? (o.order_status === 'in_progress' || o.order_status === 'new')
         : o.order_status === currentTab
     );
  
@@ -3231,6 +3255,106 @@ try {
  
   document.getElementById('searchInput')!.addEventListener('input', renderOrders);
  
+  function loadDraftsPanel() {
+  const list = document.getElementById('draftsList')!;
+  const loading = document.getElementById('draftsLoadingState')!;
+  loading.style.display = 'none';
+  const drafts = allOrders.filter((o: any) => o.order_status === 'open_for_bids');
+  if (!drafts.length) {
+    list.innerHTML = `<div style="text-align:center;padding:4rem 2rem;color:#94a3b8;">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">📋</div>
+      <div style="font-weight:600;color:#64748b;margin-bottom:0.4rem;">No drafts yet</div>
+      <div style="font-size:0.83rem;">Orders waiting for writers appear here.</div>
+    </div>`;
+    return;
+  }
+  list.innerHTML = drafts.map((o: any) => {
+    const dl = deadlineInfo(o.deadline);
+    return `<div class="order-row" data-draft-id="${esc(o.id)}" data-draft-number="${esc(o.order_number||o.id)}">
+      <div class="col-left">
+        <div class="order-title">${esc(o.topic || '(no topic)')}</div>
+        <div class="order-meta">
+          <span class="status-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;font-size:0.72rem;font-weight:700;padding:0.18rem 0.55rem;border-radius:4px;">awaiting writers</span>
+          <span class="meta-dot">·</span>
+          <span>${esc(o.pages||1)} page${o.pages>1?'s':''}</span>
+          <span class="meta-dot">·</span>
+          <span class="order-id">ID ${esc(o.order_number||o.id)}</span>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="col-deadline ${dl.cls}">${dl.text}</div>
+        <div class="col-amount">$${Number(o.total_amount||0).toFixed(2)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('.order-row[data-draft-id]').forEach(row => {
+    row.addEventListener('click', () => {
+      const id = (row as HTMLElement).dataset.draftId!;
+      const number = (row as HTMLElement).dataset.draftNumber!;
+      openDraftOrder(id, number);
+    });
+  });
+}
+
+async function openDraftOrder(orderId: string, orderNumber: string) {
+  openOrderModal();
+  const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'none';
+  const successEl = document.getElementById('wizSuccess'); if (successEl) successEl.style.display = 'block';
+  const priceCard = document.getElementById('wizPriceCard'); if (priceCard) priceCard.style.display = 'none';
+  const infoCard = document.getElementById('wizInfoCard'); if (infoCard) infoCard.style.display = 'none';
+  const bar = document.getElementById('wizProgressBar'); if (bar) bar.style.display = 'none';
+  const ticketEl = document.getElementById('wizSuccessTicket'); if (ticketEl) ticketEl.textContent = orderNumber;
+  wizCurrentOrderDbId = orderId;
+  localStorage.setItem('wizPendingOrderId', orderId);
+  wizPendingBids = [];
+  try {
+    const bRes = await fetch(`${SUPABASE_URL}/rest/v1/bids?order_id=eq.${orderId}&select=id,bid_price,note,writer_id,created_at,status&order=created_at.desc`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` }
+    });
+    const existingBids = await bRes.json();
+    const waiting = document.getElementById('wizBidsWaiting');
+    const box = document.getElementById('wizLiveBids');
+    const countEl = document.getElementById('wizBidCount');
+    if (Array.isArray(existingBids) && existingBids.length > 0) {
+      if (waiting) waiting.style.display = 'none';
+      if (box) {
+        const enriched = await enrichBidsWithWriters(existingBids);
+        box.innerHTML = enriched.map((b: any) => wizRenderBidCard(b, orderId)).join('');
+        attachWizHireBtns(box, orderId);
+      }
+      if (countEl) countEl.textContent = String(existingBids.length);
+    } else {
+      if (waiting) waiting.style.display = 'block';
+      if (countEl) countEl.textContent = '0';
+    }
+  } catch(e) { console.error('openDraftOrder error', e); }
+  socket.emit('bid:join', orderId);
+  socket.off('bid:new');
+  socket.on('bid:new', async (bid: any) => {
+    wizPendingBids.push(bid);
+    const banner = document.getElementById('wizNewBidsBanner')!;
+    const bannerAvatars = document.getElementById('wizBannerAvatars')!;
+    const bannerText = document.getElementById('wizBannerText')!;
+    const w = await fetchWriterProfile(String(bid.writer_id));
+    if (w?.photo_url) bannerAvatars.insertAdjacentHTML('beforeend', `<img src="${esc(w.photo_url)}" style="width:24px;height:24px;border-radius:50%;border:2px solid #1e2536;margin-left:-6px;object-fit:cover;" />`);
+    bannerText.textContent = `Show ${wizPendingBids.length} new proposal${wizPendingBids.length > 1 ? 's' : ''}`;
+    banner.style.display = 'flex';
+  });
+}
+
+document.getElementById('draftsLink')!.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('draftsLink')!.classList.add('active');
+  (document.querySelector('.main-header') as HTMLElement).style.display = 'none';
+  (document.querySelector('.tabs-bar') as HTMLElement).style.display = 'none';
+  (document.querySelector('.controls-bar') as HTMLElement).style.display = 'none';
+  (document.querySelector('.orders-area') as HTMLElement).style.display = 'none';
+  document.getElementById('chatsPanelWrap')!.style.display = 'none';
+  document.getElementById('draftsPanelWrap')!.style.display = 'flex';
+  loadDraftsPanel();
+});
+
   document.getElementById('chatsLink')!.addEventListener('click', (e) => {
   e.preventDefault();
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -3239,6 +3363,7 @@ try {
   (document.querySelector('.tabs-bar') as HTMLElement).style.display = 'none';
   (document.querySelector('.controls-bar') as HTMLElement).style.display = 'none';
   (document.querySelector('.orders-area') as HTMLElement).style.display = 'none';
+  document.getElementById('draftsPanelWrap')!.style.display = 'none';
   document.getElementById('chatsPanelWrap')!.style.display = 'flex';
   loadChatsPanel();
 });
@@ -3247,6 +3372,7 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('myOrdersLink')!.classList.add('active');
   document.getElementById('chatsPanelWrap')!.style.display = 'none';
+  document.getElementById('draftsPanelWrap')!.style.display = 'none';
   (document.querySelector('.main-header') as HTMLElement).style.display = 'flex';
   (document.querySelector('.tabs-bar') as HTMLElement).style.display = 'flex';
   (document.querySelector('.controls-bar') as HTMLElement).style.display = 'flex';
