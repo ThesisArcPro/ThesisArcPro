@@ -419,6 +419,14 @@ const base = '';
   body.dark-mode .star { color: #334155 !important; }
   body.dark-mode #chatsPanelWrap { background: #0f1117; }
   body.dark-mode #convList { border-right-color: rgba(255,255,255,0.06); background: #161b27; }
+  body.dark-mode #convThread { background: #0f1117; }
+  body.dark-mode #convThreadActive { background: #0f1117; }
+  body.dark-mode #convThreadMessages { background: #0f1117; }
+  body.dark-mode #convThreadEmpty { background: #0f1117; }
+  body.dark-mode #convThreadAvatar { background: #2a3244; color: #e2e8f0; }
+  body.dark-mode #convThreadTitle { color: #e2e8f0; }
+  body.dark-mode #convThreadTime { color: #64748b; }
+  body.dark-mode #convViewOrderBtn { border-color: rgba(255,255,255,0.1); color: #60a5fa; }
   body.dark-mode .cp-conv-item { border-bottom-color: rgba(255,255,255,0.04) !important; color: #e2e8f0; }
   body.dark-mode #threadHeader { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
   body.dark-mode #threadTitle { color: #e2e8f0; }
@@ -1077,7 +1085,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
 
     <!-- Left: conversation list -->
     <div id="convList" style="width:320px;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;background:var(--panel-bg);">
-      <div style="padding:1rem 1.2rem;font-size:1.1rem;font-weight:700;color:#0f172a;border-bottom:1px solid #eef2f7;">Chats</div>
+      <div style="padding:1rem 1.2rem;font-size:1.1rem;font-weight:700;color:var(--text);border-bottom:1px solid var(--border);background:var(--panel-bg);">Chats</div>
       <div id="convListItems" style="flex:1;overflow-y:auto;">
         <div style="padding:2rem;text-align:center;color:#94a3b8;font-size:0.85rem;">Loading conversations…</div>
       </div>
