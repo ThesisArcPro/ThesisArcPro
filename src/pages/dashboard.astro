@@ -3127,11 +3127,12 @@ function showModal(order: any) {
  
   async function ocFindConversation(orderId: string) {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/conversations?type=eq.order&order_id=eq.${orderId}&select=id&limit=1`,
+      `${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${currentSession.user.id}&select=conversation_id,conversations(id,order_id,type)`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
     );
     const rows = await res.json();
-    return rows[0]?.id || null;
+    const match = rows.find((r: any) => r.conversations?.order_id === parseInt(orderId) && r.conversations?.type === 'order');
+    return match?.conversation_id || null;
   }
  
   async function openOrderChat(order: any) {
