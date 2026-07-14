@@ -3228,6 +3228,20 @@ try {
       closeModal();
       closeOrderModal();
       await loadOrders(currentSession);
+      // Switch to My Orders → In Progress automatically
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById('myOrdersLink')!.classList.add('active');
+      document.getElementById('chatsPanelWrap')!.style.display = 'none';
+      document.getElementById('draftsPanelWrap')!.style.display = 'none';
+      (document.querySelector('.main-header') as HTMLElement).style.display = 'flex';
+      (document.querySelector('.tabs-bar') as HTMLElement).style.display = 'flex';
+      (document.querySelector('.controls-bar') as HTMLElement).style.display = 'flex';
+      (document.querySelector('.orders-area') as HTMLElement).style.display = 'flex';
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      const ipTab = document.querySelector('.tab[data-tab="in_progress"]') as HTMLElement;
+      if (ipTab) ipTab.classList.add('active');
+      currentTab = 'in_progress';
+      renderOrders();
       alert('✅ Writer hired! Your order is now in progress.');
     } catch (err) {
       console.error(err);
