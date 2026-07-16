@@ -3016,7 +3016,7 @@ const base = '';
     item.addEventListener('click', (e) => {
       e.preventDefault();
       const view = (item as HTMLElement).dataset.view;
-      document.querySelectorAll('.nav-item[data-view]').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.rail-item[data-view]').forEach(n => n.classList.remove('active'));
       item.classList.add('active');
       document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
       const title = document.getElementById('writerName')!;
@@ -3029,12 +3029,12 @@ const base = '';
         document.getElementById('viewAvailable')!.classList.add('active');
         title.textContent = 'Available Orders';
         sub.textContent = 'Browse open orders and place your bid';
-        loadAvailableOrders();
+        if (currentSession) loadAvailableOrders();
       } else if (view === 'proposals') {
         document.getElementById('viewProposals')!.classList.add('active');
         title.textContent = 'My Proposals';
         sub.textContent = 'Bids you have placed';
-        loadMyBids();
+        if (currentSession) loadMyBids();
       } else if (view === 'profile') {
         document.getElementById('viewProfile')!.classList.add('active');
         title.textContent = 'My Profile';
@@ -3048,12 +3048,12 @@ const base = '';
         document.getElementById('viewBalance')!.classList.add('active');
         title.textContent = 'Balance';
         sub.textContent = 'Your earnings from completed orders';
-        loadBalance();
+        if (currentSession) loadBalance();
       } else if (view === 'notifications') {
         document.getElementById('viewNotifications')!.classList.add('active');
         title.textContent = 'Notifications';
         sub.textContent = 'Accepted bids and updates';
-        loadNotifications();
+        if (currentSession) loadNotifications();
       }
     });
   });
@@ -3300,26 +3300,32 @@ const base = '';
           <div class="pm-toggle-group">
             <span class="pm-toggle-label">Show by</span>
             <div class="pm-toggle-set">
-              <button class="pm-toggle-btn ${pmSamplesShowBy==='subject'?'sel':''}" onclick="pmSamplesShowBy='subject';renderPmTab()">Subject</button>
-              <button class="pm-toggle-btn ${pmSamplesShowBy==='type'?'sel':''}" onclick="pmSamplesShowBy='type';renderPmTab()">Assignment type</button>
+              <button class="pm-toggle-btn ${pmSamplesShowBy==='subject'?'sel':''}" onclick="setPmSamplesShowBy('subject')">Subject</button>
+              <button class="pm-toggle-btn ${pmSamplesShowBy==='type'?'sel':''}" onclick="setPmSamplesShowBy('type')">Assignment type</button>
             </div>
             <span class="pm-toggle-label" style="margin-left:10px;">Status</span>
             <div class="pm-toggle-set">
-              <button class="pm-toggle-btn ${pmSamplesStatus==='approved'?'sel':''}" onclick="pmSamplesStatus='approved';renderPmTab()">Approved</button>
-              <button class="pm-toggle-btn ${pmSamplesStatus==='review'?'sel':''}" onclick="pmSamplesStatus='review';renderPmTab()">In Review</button>
-              <button class="pm-toggle-btn ${pmSamplesStatus==='declined'?'sel':''}" onclick="pmSamplesStatus='declined';renderPmTab()">Declined</button>
+              <button class="pm-toggle-btn ${pmSamplesStatus==='approved'?'sel':''}" onclick="setPmSamplesStatus('approved')">Approved</button>
+              <button class="pm-toggle-btn ${pmSamplesStatus==='review'?'sel':''}" onclick="setPmSamplesStatus('review')">In Review</button>
+              <button class="pm-toggle-btn ${pmSamplesStatus==='declined'?'sel':''}" onclick="setPmSamplesStatus('declined')">Declined</button>
             </div>
           </div>
           <button class="pm-add-sample" onclick="alert('Add sample flow.')">Add sample &#65291;</button>
         </div>
         <div>${pmSubjects.map((s,i) => `
-          <div class="pm-sample-row ${pmExpandedSample===i?'expanded':''}" onclick="pmExpandedSample=pmExpandedSample===${i}?null:${i};renderPmTab()">
+          <div class="pm-sample-row ${pmExpandedSample===i?'expanded':''}" onclick="togglePmSample(${i})">
             <span class="pm-sample-name">${s}</span><span class="pm-sample-chev">&#8250;</span>
           </div>
           <div class="pm-sample-detail ${pmExpandedSample===i?'show':''}">No ${pmSamplesStatus} samples for ${s}.</div>`).join('')}
         </div>`;
     }
   }
+
+  (window as any).setPmTab = setPmTab;
+  (window as any).renderPmTab = renderPmTab;
+  (window as any).setPmSamplesShowBy = (v: string) => { pmSamplesShowBy = v; renderPmTab(); };
+  (window as any).setPmSamplesStatus = (v: string) => { pmSamplesStatus = v; renderPmTab(); };
+  (window as any).togglePmSample = (i: number) => { pmExpandedSample = pmExpandedSample === i ? null : i; renderPmTab(); };
 
   // ── ACCOUNT SETTINGS MODAL ──
   let smActiveTab = 'general';
@@ -3418,6 +3424,9 @@ const base = '';
         <div class="sm-section-title">Chat</div>${smGroupCard('chat',smNotif.chat)}`;
     }
   }
+
+  (window as any).setSmTab = setSmTab;
+  (window as any).smOnToggle = smOnToggle;
 
   // ── RULES MODAL ──
   function openRlModal() { document.getElementById('rlOverlay')!.classList.add('open'); }
