@@ -7,7 +7,7 @@ const base = '';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Writer Dashboard — ThesisArcPro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
  
@@ -278,7 +278,287 @@ const base = '';
   body.dark-mode ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
   body.dark-mode ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
  
-  /* Sidebar bottom */
+  /* ═══════════════════════════════════════
+     NEW DARK RAIL SIDEBAR
+  ═══════════════════════════════════════ */
+  .rail {
+    width: 250px; flex-shrink: 0; background: #0E1116;
+    border-right: 1px solid #1D2029; display: flex; flex-direction: column;
+    padding: 16px 14px; position: relative; font-family: 'Sora', sans-serif;
+  }
+  .profile-pill {
+    display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+    border: 1px solid #23262E; border-radius: 12px; cursor: pointer;
+    transition: border-color .15s, background .15s; margin-bottom: 22px; flex-shrink: 0;
+  }
+  .profile-pill:hover { border-color: #3A3E48; background: #12151C; }
+  .profile-pill.open { border-color: #D6B36A; background: #12151C; }
+  .pp-avatar {
+    width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+    background: #1B1E26; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #8A90A0;
+  }
+  .pp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .pp-name { font-size: 13.5px; font-weight: 600; color: #E7E9EE; }
+
+  .rail-nav { display: flex; flex-direction: column; gap: 3px; }
+  .rail-item {
+    display: flex; align-items: center; gap: 12px; padding: 11px 12px;
+    border-radius: 9px; font-size: 13.5px; font-weight: 500; color: #8A90A0;
+    cursor: pointer; transition: background .12s, color .12s; user-select: none;
+  }
+  .rail-item:hover { background: #181B22; color: #C6CAD3; }
+  .rail-item.active { background: #181B22; color: #E7E9EE; }
+  .rail-item .ic { width: 18px; text-align: center; font-size: 15px; flex-shrink: 0; }
+  .rail-badge {
+    margin-left: auto; background: #23262E; color: #8A90A0; font-size: 11px;
+    font-weight: 600; padding: 2px 9px; border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    display: inline-flex; align-items: center; justify-content: center; min-width: 22px;
+  }
+  .rail-item.active .rail-badge { background: #3A3016; color: #D6B36A; }
+  .rail-balance-val {
+    margin-left: auto; font-size: 12.5px; font-weight: 600; color: #3DDC84;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .rail-spacer { flex: 1; }
+  .rail-bottom {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding-top: 14px; border-top: 1px solid #1D2029; margin-top: 10px;
+  }
+  .rail-bottom-btn {
+    width: 38px; height: 38px; border-radius: 10px; background: #141821;
+    border: 1px solid #23262E; color: #8A90A0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; cursor: pointer; transition: all .12s;
+  }
+  .rail-bottom-btn:hover { border-color: #3A3E48; color: #C6CAD3; }
+
+  /* Profile popover */
+  .profile-popover {
+    position: absolute; top: 72px; left: 14px; width: 222px;
+    background: #161A22; border: 1px solid #23262E; border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.55); z-index: 200;
+    display: none; overflow: hidden; font-family: 'Sora', sans-serif;
+  }
+  .profile-popover.open { display: block; }
+  .pop-pill { display: flex; align-items: center; gap: 10px; padding: 14px 14px 12px; }
+  .pop-avatar {
+    width: 34px; height: 34px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+    background: #1B1E26; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #8A90A0;
+  }
+  .pop-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .pop-name { font-size: 13.5px; font-weight: 600; color: #E7E9EE; }
+  .pop-status-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-top: 1px solid #23262E; border-bottom: 1px solid #23262E;
+    margin-bottom: 6px;
+  }
+  .pop-status-label { font-size: 12px; color: #8A90A0; }
+  .pop-status-val { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; color: #3DDC84; }
+  .pop-status-dot { width: 7px; height: 7px; border-radius: 50%; background: #3DDC84; }
+  .pop-menu { padding: 4px 8px 8px; display: flex; flex-direction: column; }
+  .pop-item {
+    display: flex; align-items: center; gap: 11px; padding: 9px 8px;
+    border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500;
+    color: #C6CAD3; transition: background .12s;
+  }
+  .pop-item:hover { background: #1D2029; }
+  .pop-item .ic { width: 16px; text-align: center; font-size: 13.5px; color: #8A90A0; }
+  .pop-item.logout { color: #E4685C; margin-top: 2px; border-top: 1px solid #23262E; padding-top: 11px; border-radius: 0 0 8px 8px; }
+  .pop-item.logout .ic { color: #E4685C; }
+  .pop-item.logout:hover { background: #1F1214; }
+
+  /* ═══ PUBLIC PROFILE MODAL ═══ */
+  .pm-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none;
+    z-index: 300; align-items: center; justify-content: center; font-family: 'Sora', sans-serif;
+  }
+  .pm-overlay.open { display: flex; }
+  .pm-modal {
+    width: 92%; max-width: 640px; max-height: 86vh; background: #0E1116;
+    border: 1px solid #23262E; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .pm-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 26px 4px; flex-shrink: 0; }
+  .pm-head h2 { font-size: 17px; font-weight: 600; margin: 0; color: #E7E9EE; }
+  .pm-close { background: none; border: none; color: #5B6270; font-size: 17px; cursor: pointer; }
+  .pm-close:hover { color: #C6CAD3; }
+  .pm-body { padding: 16px 26px 32px; overflow-y: auto; }
+  .pm-id-card { background: #141821; border: 1px solid #23262E; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+  .pm-id-top { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
+  .pm-avatar {
+    width: 38px; height: 38px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+    background: #1B1E26; position: relative; display: flex; align-items: center;
+    justify-content: center; font-size: 16px; color: #8A90A0;
+  }
+  .pm-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .pm-avatar .presence {
+    width: 9px; height: 9px; border-radius: 50%; background: #3DDC84;
+    border: 2px solid #141821; position: absolute; bottom: -1px; right: -1px;
+  }
+  .pm-name { font-size: 14px; font-weight: 600; color: #E7E9EE; }
+  .pm-sub { font-size: 11px; color: #3DDC84; margin-top: 1px; }
+  .pm-stats-row { display: flex; border-top: 1px solid #23262E; padding-top: 14px; }
+  .pm-stat { flex: 1; text-align: center; }
+  .pm-stat + .pm-stat { border-left: 1px solid #23262E; }
+  .pm-stat-top { font-size: 14px; font-weight: 600; color: #E7E9EE; display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .pm-stat-top .star { color: #D6B36A; font-size: 13px; }
+  .pm-stat-sub { font-size: 10.5px; color: #6B7280; margin-top: 3px; }
+  .pm-tabs { display: flex; gap: 4px; margin-bottom: 20px; background: #141821; border-radius: 9px; padding: 3px; width: fit-content; }
+  .pm-tab { padding: 8px 18px; background: none; border: none; color: #8A90A0; font-size: 12px; font-weight: 500; border-radius: 7px; cursor: pointer; }
+  .pm-tab.active { background: #23262E; color: #E7E9EE; }
+  .pm-section-title { font-size: 13.5px; font-weight: 600; color: #E7E9EE; margin: 0 0 14px; }
+  .pm-comm-row { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; flex-wrap: wrap; }
+  .pm-comm-ring { width: 56px; height: 56px; position: relative; flex-shrink: 0; }
+  .pm-comm-ring svg { transform: rotate(-90deg); }
+  .pm-comm-ring .bg { fill: none; stroke: #23262E; stroke-width: 4; }
+  .pm-comm-ring .fg { fill: none; stroke: #4A6FD6; stroke-width: 4; stroke-linecap: round; }
+  .pm-comm-ring-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .pm-comm-label { font-size: 11px; color: #6B7280; margin-bottom: 2px; }
+  .pm-comm-value { font-size: 14px; font-weight: 600; color: #E7E9EE; }
+  .pm-mini-stat { display: flex; align-items: center; gap: 10px; }
+  .pm-mini-icon { width: 34px; height: 34px; border-radius: 50%; background: #181B22; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .pm-mini-label { font-size: 11px; color: #6B7280; }
+  .pm-mini-value { font-size: 13px; font-weight: 600; color: #E7E9EE; }
+  .pm-mini-sub { font-size: 10.5px; color: #5B6270; }
+  .pm-subject-row { display: flex; gap: 10px; margin-bottom: 22px; }
+  .pm-subject-select { flex: 1; background: #141821; border: 1px solid #23262E; border-radius: 9px; padding: 11px 14px; font-size: 12.5px; color: #E7E9EE; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .pm-subject-metrics { flex: 1.4; background: #141821; border: 1px solid #23262E; border-radius: 9px; padding: 11px 16px; display: flex; align-items: center; justify-content: space-around; font-size: 12px; }
+  .pm-subject-metrics .m-lbl { color: #8A90A0; margin-right: 5px; }
+  .pm-subject-metrics .m-val { color: #D6B36A; font-weight: 600; }
+  .pm-subject-metrics .m-val.blue { color: #7FA8F5; }
+  .pm-reviews-grid { display: grid; grid-template-columns: 180px 1fr; gap: 20px; }
+  .pm-rating-card { background: #141821; border: 1px solid #23262E; border-radius: 10px; padding: 16px; height: fit-content; }
+  .pm-rating-top { display: flex; align-items: baseline; gap: 6px; margin-bottom: 2px; }
+  .pm-rating-num { font-size: 18px; font-weight: 600; color: #E7E9EE; }
+  .pm-rating-star { color: #D6B36A; font-size: 14px; }
+  .pm-rating-based { font-size: 10.5px; color: #5B6270; margin-bottom: 14px; }
+  .pm-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+  .pm-bar-label { font-size: 11px; color: #8A90A0; width: 36px; flex-shrink: 0; }
+  .pm-bar-track { flex: 1; height: 5px; background: #23262E; border-radius: 3px; overflow: hidden; }
+  .pm-bar-fill { height: 100%; background: #D6B36A; border-radius: 3px; }
+  .pm-bar-pct { font-size: 10.5px; color: #5B6270; width: 30px; text-align: right; flex-shrink: 0; }
+  .pm-review-item { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid #1D2029; }
+  .pm-review-item:last-child { border-bottom: none; margin-bottom: 0; }
+  .pm-review-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 10px; }
+  .pm-review-who { display: flex; align-items: center; gap: 9px; }
+  .pm-review-avatar { width: 26px; height: 26px; border-radius: 50%; background: #1B1E26; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #8A90A0; }
+  .pm-review-name { font-size: 12.5px; font-weight: 500; color: #E7E9EE; }
+  .pm-review-meta { font-size: 10.5px; color: #5B6270; }
+  .pm-review-stars { color: #D6B36A; font-size: 11px; flex-shrink: 0; }
+  .pm-review-text { font-size: 12.5px; color: #9CA1AC; line-height: 1.55; }
+  .pm-about-text { font-size: 13px; color: #9CA1AC; line-height: 1.75; margin-bottom: 24px; }
+  .pm-tag-group-title { font-size: 13.5px; font-weight: 600; color: #E7E9EE; margin: 0 0 12px; }
+  .pm-tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .pm-tag { padding: 7px 15px; border-radius: 20px; background: #141821; border: 1px solid #23262E; font-size: 12px; color: #C6CAD3; }
+  .pm-samples-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 14px; }
+  .pm-toggle-group { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .pm-toggle-label { font-size: 11px; color: #5B6270; margin-right: 2px; }
+  .pm-toggle-set { display: flex; gap: 4px; }
+  .pm-toggle-btn { padding: 7px 13px; border-radius: 8px; border: 1px solid #23262E; background: #141821; color: #8A90A0; font-size: 11.5px; font-weight: 500; cursor: pointer; transition: all .12s; }
+  .pm-toggle-btn:hover { border-color: #3A3E48; color: #C6CAD3; }
+  .pm-toggle-btn.sel { background: #23262E; color: #E7E9EE; border-color: #3A3E48; }
+  .pm-add-sample { background: #4A6FD6; color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .pm-add-sample:hover { background: #5C7DE0; }
+  .pm-sample-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 4px; border-bottom: 1px solid #1D2029; cursor: pointer; }
+  .pm-sample-row:hover { background: #12151C; }
+  .pm-sample-name { font-size: 13px; color: #C6CAD3; font-weight: 500; }
+  .pm-sample-chev { color: #5B6270; font-size: 13px; transition: transform .15s; }
+  .pm-sample-row.expanded .pm-sample-chev { transform: rotate(90deg); color: #D6B36A; }
+  .pm-sample-detail { font-size: 11.5px; color: #5B6270; padding: 0 4px 12px; display: none; }
+  .pm-sample-detail.show { display: block; }
+
+  /* ═══ ACCOUNT SETTINGS MODAL ═══ */
+  .sm-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none;
+    z-index: 300; align-items: center; justify-content: center; font-family: 'Sora', sans-serif;
+  }
+  .sm-overlay.open { display: flex; }
+  .sm-modal {
+    width: 92%; max-width: 660px; max-height: 86vh; background: #0E1116;
+    border: 1px solid #23262E; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .sm-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 26px 16px; flex-shrink: 0; }
+  .sm-head h2 { font-size: 18px; font-weight: 600; margin: 0; color: #E7E9EE; }
+  .sm-head-right { display: flex; align-items: center; gap: 10px; }
+  .sm-logout-btn { background: #141821; border: 1px solid #23262E; color: #C6CAD3; font-size: 12px; font-weight: 500; padding: 8px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: 'Sora', sans-serif; }
+  .sm-logout-btn:hover { border-color: #5C2A26; color: #E4685C; }
+  .sm-close { width: 30px; height: 30px; border-radius: 9px; background: #141821; border: 1px solid #23262E; color: #8A90A0; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .sm-close:hover { color: #C6CAD3; border-color: #3A3E48; }
+  .sm-tabs { display: flex; gap: 6px; padding: 0 26px 18px; flex-shrink: 0; }
+  .sm-tab { display: flex; align-items: center; gap: 7px; padding: 8px 15px; border-radius: 8px; border: none; background: #141821; color: #8A90A0; font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all .12s; font-family: 'Sora', sans-serif; }
+  .sm-tab:hover { color: #C6CAD3; }
+  .sm-tab.active { background: #23262E; color: #E7E9EE; }
+  .sm-body { padding: 6px 26px 32px; overflow-y: auto; }
+  .sm-section-title { font-size: 14px; font-weight: 600; color: #E7E9EE; margin: 20px 0 12px; }
+  .sm-section-title:first-child { margin-top: 0; }
+  .sm-card { background: #141821; border: 1px solid #23262E; border-radius: 12px; padding: 16px; margin-bottom: 6px; }
+  .sm-id-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .sm-id-avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: #1B1E26; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #8A90A0; }
+  .sm-id-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .sm-id-label { font-size: 10.5px; color: #6B7280; margin-bottom: 2px; }
+  .sm-id-value { font-size: 13.5px; font-weight: 600; color: #E7E9EE; }
+  .sm-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .sm-field { background: #0E1116; border: 1px solid #23262E; border-radius: 9px; padding: 10px 13px; }
+  .sm-field .lbl { font-size: 10.5px; color: #6B7280; margin-bottom: 3px; }
+  .sm-field .val { font-size: 13px; color: #E7E9EE; font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
+  .sm-field .val .chev { color: #5B6270; font-size: 11px; }
+  .sm-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 0; }
+  .sm-row + .sm-row { border-top: 1px solid #23262E; }
+  .sm-row-left { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .sm-row-icon { width: 30px; height: 30px; border-radius: 8px; background: #0E1116; border: 1px solid #23262E; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8A90A0; flex-shrink: 0; }
+  .sm-row-label { font-size: 12.5px; font-weight: 500; color: #E7E9EE; }
+  .sm-row-sub { font-size: 11.5px; color: #6B7280; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sm-badge { font-size: 10.5px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+  .sm-badge.verified { background: #12241A; color: #3DDC84; }
+  .sm-badge.unverified { background: #241213; color: #E4685C; }
+  .sm-badge.enabled { background: #12241A; color: #3DDC84; }
+  .sm-btn { background: #0E1116; border: 1px solid #23262E; color: #C6CAD3; font-size: 11.5px; font-weight: 500; padding: 7px 13px; border-radius: 7px; cursor: pointer; white-space: nowrap; font-family: 'Sora', sans-serif; }
+  .sm-btn:hover { border-color: #3A3E48; }
+  .sm-btn.primary { background: #4A6FD6; border: none; color: #fff; }
+  .sm-btn.primary:hover { background: #5A7FE6; }
+  .sm-btn.icon { width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sm-btn.danger-text { background: none; border: none; color: #E4685C; padding: 6px 4px; cursor: pointer; font-family: 'Sora', sans-serif; }
+  .sm-verify-group { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .sm-toggle { position: relative; width: 38px; height: 22px; flex-shrink: 0; cursor: pointer; }
+  .sm-toggle input { opacity: 0; width: 0; height: 0; }
+  .sm-toggle-track { position: absolute; inset: 0; background: #23262E; border-radius: 20px; transition: background .15s; }
+  .sm-toggle-thumb { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #5B6270; transition: all .15s; }
+  .sm-toggle input:checked + .sm-toggle-track { background: #4A6FD6; }
+  .sm-toggle input:checked + .sm-toggle-track .sm-toggle-thumb { transform: translateX(16px); background: #fff; }
+  .sm-toggle input:disabled + .sm-toggle-track { opacity: 0.4; cursor: not-allowed; }
+  .sm-sound-icon { width: 26px; height: 26px; border-radius: 6px; background: #0E1116; border: 1px solid #23262E; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #8A90A0; margin-left: 6px; cursor: pointer; flex-shrink: 0; }
+
+  /* ═══ RULES MODAL ═══ */
+  .rl-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none;
+    z-index: 300; align-items: center; justify-content: center; font-family: 'Sora', sans-serif;
+  }
+  .rl-overlay.open { display: flex; }
+  .rl-modal {
+    width: 92%; max-width: 640px; max-height: 86vh; background: #0E1116;
+    border: 1px solid #23262E; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .rl-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 26px 18px; flex-shrink: 0; }
+  .rl-head h2 { font-size: 18px; font-weight: 600; margin: 0; color: #E7E9EE; }
+  .rl-close { width: 30px; height: 30px; border-radius: 9px; background: #141821; border: 1px solid #23262E; color: #8A90A0; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .rl-close:hover { color: #C6CAD3; border-color: #3A3E48; }
+  .rl-body { padding: 0 26px 30px; overflow-y: auto; }
+  .rl-guide-card { background: #141821; border: 1px solid #23262E; border-radius: 12px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 26px; }
+  .rl-guide-text { font-size: 13px; font-weight: 500; color: #E7E9EE; }
+  .rl-guide-btn { background: #4A6FD6; border: none; color: #fff; font-size: 12.5px; font-weight: 600; padding: 9px 18px; border-radius: 8px; cursor: pointer; flex-shrink: 0; font-family: 'Sora', sans-serif; }
+  .rl-guide-btn:hover { background: #5A7FE6; }
+  .rl-section-title { font-size: 14.5px; font-weight: 600; color: #E7E9EE; margin: 0 0 12px; }
+  .rl-agreement-text { font-size: 12.5px; color: #9CA1AC; line-height: 1.7; margin-bottom: 16px; }
+  .rl-file-row { background: #141821; border: 1px solid #23262E; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+  .rl-file-icon { width: 28px; height: 28px; border-radius: 6px; background: #B91C1C; color: #fff; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rl-file-name { flex: 1; font-size: 12.5px; color: #E7E9EE; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rl-file-actions { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  .rl-file-actions button { background: none; border: none; color: #8A90A0; font-size: 14px; cursor: pointer; }
+  .rl-file-actions button:hover { color: #E7E9EE; }
+
+  /* ── Sidebar bottom (original, kept for theme popup) ── */
   .sidebar-bottom { margin-top: auto; padding: 0.8rem 1rem; }
   .theme-icon-btn {
     width: 40px; height: 40px; border-radius: 12px;
@@ -952,7 +1232,78 @@ const base = '';
       </div>
     </div>
   </nav>
-</aside>
+<!-- NEW RAIL SIDEBAR -->
+<div class="rail">
+
+  <div class="profile-pill" id="profilePill">
+    <div class="pp-avatar" id="ppAvatarWrap"><span id="ppAvatarInitial">?</span></div>
+    <div class="pp-name" id="ppName">Loading…</div>
+  </div>
+
+  <div class="profile-popover" id="profilePopover">
+    <div class="pop-pill">
+      <div class="pop-avatar" id="popAvatarWrap"><span id="popAvatarInitial">?</span></div>
+      <div class="pop-name" id="popName">Loading…</div>
+    </div>
+    <div class="pop-status-row">
+      <span class="pop-status-label">Status</span>
+      <span class="pop-status-val"><span class="pop-status-dot"></span>Active</span>
+    </div>
+    <div class="pop-menu">
+      <div class="pop-item" id="popMyProfile"><span class="ic">&#128100;</span>My profile</div>
+      <div class="pop-item" id="popSettings"><span class="ic">&#9881;</span>Settings</div>
+      <div class="pop-item" id="popRules"><span class="ic">&#128220;</span>Rules and tips</div>
+      <div class="pop-item logout" id="popLogout"><span class="ic">&#8674;</span>Log out</div>
+    </div>
+  </div>
+
+  <nav class="rail-nav">
+    <div class="rail-item active" data-view="orders">
+      <span class="ic">&#128193;</span>My orders
+      <span class="rail-badge" id="ordersCount" style="display:none;">0</span>
+    </div>
+    <div class="rail-item" data-view="available">
+      <span class="ic">&#128196;</span>Available orders
+      <span class="rail-badge" id="availBadge" style="display:none;">0</span>
+    </div>
+    <div class="rail-item" data-view="proposals">
+      <span class="ic">&#128221;</span>My proposals
+      <span class="rail-badge" id="proposalsCount" style="display:none;">0</span>
+    </div>
+    <div class="rail-item" data-view="chat">
+      <span class="ic">&#128172;</span>Chats
+      <span class="rail-badge" id="chatNavBadge" style="display:none;">0</span>
+    </div>
+    <div class="rail-item" data-view="balance">
+      <span class="ic">&#128176;</span>Balance
+      <span class="rail-balance-val" id="balanceNavAmt">$0.00</span>
+    </div>
+    <div class="rail-item" data-view="notifications">
+      <span class="ic">&#128276;</span>Notifications
+      <span class="rail-badge" id="notifBadge" style="display:none;">0</span>
+    </div>
+  </nav>
+
+  <div class="rail-spacer"></div>
+
+  <div class="rail-bottom">
+    <button class="rail-bottom-btn" id="railSupportBtn" title="Support">&#127911;</button>
+    <button class="rail-bottom-btn" id="railRulesBtn" title="Writing guide">&#128161;</button>
+    <button class="rail-bottom-btn" id="themeIconBtn" title="Theme">
+      <span class="theme-icon-current" id="themeIconCurrent">🌙</span>
+    </button>
+  </div>
+
+  <div class="theme-popup" id="themePopup">
+    <div class="theme-popup__overlay" id="themePopupOverlay"></div>
+    <div class="theme-popup__card">
+      <p class="theme-popup__title">Theme</p>
+      <button class="theme-popup__opt" data-theme="dark"><span class="theme-popup__icon">🌙</span><span>Dark mode</span></button>
+      <button class="theme-popup__opt" data-theme="light"><span class="theme-popup__icon">☀️</span><span>Light mode</span></button>
+      <button class="theme-popup__opt" data-theme="system"><span class="theme-popup__icon">💻</span><span>System mode</span></button>
+    </div>
+  </div>
+</div>
  
 <!-- MAIN -->
 <main class="main">
@@ -1158,8 +1509,79 @@ const base = '';
  
 </main>
  
-<!-- ORDER DETAIL MODAL -->
-<div class="modal" id="detailModal">
+<!-- PUBLIC PROFILE MODAL -->
+<div class="pm-overlay" id="pmOverlay">
+  <div class="pm-modal">
+    <div class="pm-head">
+      <h2>My public profile</h2>
+      <button class="pm-close" id="pmClose">&#10005;</button>
+    </div>
+    <div class="pm-body">
+      <div class="pm-id-card">
+        <div class="pm-id-top">
+          <div class="pm-avatar" id="pmAvatar"><span id="pmAvatarInitial">?</span><span class="presence"></span></div>
+          <div><div class="pm-name" id="pmName">Loading…</div><div class="pm-sub">&#9679; Online</div></div>
+        </div>
+        <div class="pm-stats-row">
+          <div class="pm-stat"><div class="pm-stat-top"><span class="star">&#9733;</span><span id="pmRatingVal">—</span></div><div class="pm-stat-sub" id="pmReviewCount">0 reviews</div></div>
+          <div class="pm-stat"><div class="pm-stat-top" id="pmCompletedVal">0</div><div class="pm-stat-sub">Completed orders</div></div>
+          <div class="pm-stat"><div class="pm-stat-top" id="pmSuccessVal">—</div><div class="pm-stat-sub">Success rate</div></div>
+        </div>
+      </div>
+      <div class="pm-tabs">
+        <button class="pm-tab active" id="pmTabStatistics" onclick="setPmTab('statistics')">Statistics</button>
+        <button class="pm-tab" id="pmTabAbout" onclick="setPmTab('about')">About</button>
+        <button class="pm-tab" id="pmTabSamples" onclick="setPmTab('samples')">Samples</button>
+      </div>
+      <div id="pmTabBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ACCOUNT SETTINGS MODAL -->
+<div class="sm-overlay" id="smOverlay">
+  <div class="sm-modal">
+    <div class="sm-head">
+      <h2>Account settings</h2>
+      <div class="sm-head-right">
+        <button class="sm-logout-btn" id="smLogoutBtn">Log out &#8674;</button>
+        <button class="sm-close" id="smClose">&#10005;</button>
+      </div>
+    </div>
+    <div class="sm-tabs">
+      <button class="sm-tab active" id="smTabGeneral" onclick="setSmTab('general')">&#128736; General</button>
+      <button class="sm-tab" id="smTabSecurity" onclick="setSmTab('security')">&#128100; Sign in &amp; security</button>
+      <button class="sm-tab" id="smTabNotifications" onclick="setSmTab('notifications')">&#128276; Notifications</button>
+    </div>
+    <div class="sm-body" id="smBody"></div>
+  </div>
+</div>
+
+<!-- RULES AND TIPS MODAL -->
+<div class="rl-overlay" id="rlOverlay">
+  <div class="rl-modal">
+    <div class="rl-head">
+      <h2>Writing guide</h2>
+      <button class="rl-close" id="rlClose">&#10005;</button>
+    </div>
+    <div class="rl-body">
+      <div class="rl-guide-card">
+        <div class="rl-guide-text">Approach to work, clients, essay structures and more</div>
+        <button class="rl-guide-btn">Open guide</button>
+      </div>
+      <div class="rl-section-title">User agreements</div>
+      <div class="rl-agreement-text">This User Agreement ("Agreement") is a legal contract between the author, engaged to provide services to the customers ("Expert"), and Online Academic Services Ltd ("Company"). By using services of the Company, Expert acknowledges and agrees to be bound by the terms outlined in this Agreement.</div>
+      <div class="rl-file-row">
+        <div class="rl-file-icon">PDF</div>
+        <div class="rl-file-name">User_Agreement_(for_old_experts)_writerpro.com_2023.pdf</div>
+        <div class="rl-file-actions">
+          <button title="Preview">&#128065;</button>
+          <button title="Download">&#8681;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   <div class="modal-overlay" id="modalOverlay"></div>
   <div class="modal-box">
     <button class="modal-close" id="modalClose">✕</button>
@@ -1317,7 +1739,7 @@ const base = '';
       })
       .subscribe();
 
-    document.querySelector('.nav-item[data-view="available"]')?.addEventListener('click', () => {
+    document.querySelector('.rail-item[data-view="available"]')?.addEventListener('click', () => {
       newAvailCount = 0;
       const badge = document.getElementById('availBadge');
       if (badge) badge.style.display = 'none';
@@ -1326,6 +1748,7 @@ const base = '';
     const subEl = document.getElementById('writerSub');
     if (nameEl) nameEl.textContent = 'My Orders';
     if (subEl) subEl.textContent = `Welcome back, ${writerData.full_name}`;
+    updateSidebarWriter(writerData);
  
     await loadOrders();
     await loadWriterReviews();
@@ -2645,7 +3068,7 @@ const base = '';
   document.getElementById('searchInput')!.addEventListener('input', renderOrders);
  
   // ═══ VIEW SWITCHING ═══
-  document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+  document.querySelectorAll('.rail-item[data-view]').forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       const view = (item as HTMLElement).dataset.view;
@@ -2804,7 +3227,259 @@ const base = '';
       </div></div>`;
   }
  
-  init();
+  // ══ SIDEBAR INTERACTIONS ══
+  function updateSidebarWriter(wd: any) {
+    const name = wd.full_name || 'Writer';
+    const initial = name.charAt(0).toUpperCase();
+    const photo = wd.photo_url || null;
+    document.getElementById('ppName')!.textContent = name;
+    document.getElementById('popName')!.textContent = name;
+    document.getElementById('pmName')!.textContent = name;
+    if (photo) {
+      document.getElementById('ppAvatarWrap')!.innerHTML = `<img src="${photo}" alt="">`;
+      document.getElementById('popAvatarWrap')!.innerHTML = `<img src="${photo}" alt="">`;
+      document.getElementById('pmAvatar')!.innerHTML = `<img src="${photo}" alt=""><span class="presence"></span>`;
+    } else {
+      document.getElementById('ppAvatarInitial')!.textContent = initial;
+      document.getElementById('popAvatarInitial')!.textContent = initial;
+      document.getElementById('pmAvatarInitial')!.textContent = initial;
+    }
+  }
+
+  // Profile pill
+  const _pill = document.getElementById('profilePill')!;
+  const _pop  = document.getElementById('profilePopover')!;
+  _pill.addEventListener('click', (e) => { e.stopPropagation(); _pop.classList.toggle('open'); _pill.classList.toggle('open'); });
+  document.addEventListener('click', (e) => {
+    if (!_pill.contains(e.target as Node) && !_pop.contains(e.target as Node)) {
+      _pop.classList.remove('open'); _pill.classList.remove('open');
+    }
+  });
+  function _closePopover() { _pop.classList.remove('open'); _pill.classList.remove('open'); }
+
+  document.getElementById('popMyProfile')!.addEventListener('click', () => { _closePopover(); openPmModal(); });
+  document.getElementById('popSettings')!.addEventListener('click',   () => { _closePopover(); openSmModal(); });
+  document.getElementById('popRules')!.addEventListener('click',      () => { _closePopover(); openRlModal(); });
+  document.getElementById('popLogout')!.addEventListener('click', async () => {
+    _closePopover();
+    await supabase.auth.signOut();
+    window.location.replace(`${base}/writer-login/`);
+  });
+  document.getElementById('railSupportBtn')!.addEventListener('click', () => {
+    document.querySelector('.rail-item[data-view="chat"]')?.dispatchEvent(new MouseEvent('click'));
+  });
+  document.getElementById('railRulesBtn')!.addEventListener('click', () => openRlModal());
+
+  // ── PUBLIC PROFILE MODAL ──
+  let pmActiveTab = 'statistics';
+  let pmSamplesShowBy = 'subject';
+  let pmSamplesStatus = 'approved';
+  let pmExpandedSample: number | null = null;
+  const pmSubjects = ['Business and management','Education','English','Environmental science','Healthcare','History','Information technology (IT)','Philosophy','Social science'];
+
+  function openPmModal() {
+    document.getElementById('pmOverlay')!.classList.add('open');
+    const completed = allOrders.filter((o: any) => o.order_status === 'completed').length;
+    const avg = writerReviews.length ? (writerReviews.reduce((s: number, r: any) => s + (r.rating||0), 0) / writerReviews.length).toFixed(1) : '—';
+    (document.getElementById('pmRatingVal') as HTMLElement).textContent = avg;
+    (document.getElementById('pmReviewCount') as HTMLElement).textContent = writerReviews.length + ' reviews';
+    (document.getElementById('pmCompletedVal') as HTMLElement).textContent = String(completed);
+    (document.getElementById('pmSuccessVal') as HTMLElement).textContent = completed > 0 ? '99.0%' : '—';
+    renderPmTab();
+  }
+  function closePmModal() { document.getElementById('pmOverlay')!.classList.remove('open'); }
+  document.getElementById('pmClose')!.addEventListener('click', closePmModal);
+  document.getElementById('pmOverlay')!.addEventListener('click', (e) => { if (e.target === document.getElementById('pmOverlay')) closePmModal(); });
+
+  function setPmTab(tab: string) {
+    pmActiveTab = tab;
+    ['Statistics','About','Samples'].forEach(t => {
+      document.getElementById('pmTab'+t)?.classList.toggle('active', t.toLowerCase() === tab);
+    });
+    renderPmTab();
+  }
+  function renderPmTab() {
+    const body = document.getElementById('pmTabBody')!;
+    if (pmActiveTab === 'statistics') {
+      const reviews = writerReviews.slice(0,5);
+      body.innerHTML = `
+        <div class="pm-section-title">Communication</div>
+        <div class="pm-comm-row">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="pm-comm-ring">
+              <svg width="56" height="56"><circle class="bg" cx="28" cy="28" r="24"></circle><circle class="fg" cx="28" cy="28" r="24" stroke-dasharray="150" stroke-dashoffset="18"></circle></svg>
+              <div class="pm-comm-ring-icon">&#128522;</div>
+            </div>
+            <div><div class="pm-comm-label">Communication rate</div><div class="pm-comm-value">Excellent</div></div>
+          </div>
+          <div class="pm-mini-stat"><div class="pm-mini-icon">&#128522;</div><div><div class="pm-mini-label">Writer selection</div><div class="pm-mini-value">4.7 (Excellent)</div><div class="pm-mini-sub">3 reviews</div></div></div>
+          <div class="pm-mini-stat"><div class="pm-mini-icon">&#128522;</div><div><div class="pm-mini-label">In progress</div><div class="pm-mini-value">4.6 (Excellent)</div><div class="pm-mini-sub">157 reviews</div></div></div>
+        </div>
+        <div class="pm-section-title">Data and reviews by subjects</div>
+        <div class="pm-subject-row">
+          <div class="pm-subject-select">All Subjects <span>&#9662;</span></div>
+          <div class="pm-subject-metrics"><span><span class="m-val">99.0%</span> <span class="m-lbl">Success</span></span><span><span class="m-val blue">96.3%</span> <span class="m-lbl">Finish on time</span></span></div>
+        </div>
+        <div class="pm-reviews-grid">
+          <div class="pm-rating-card">
+            <div class="pm-rating-top"><span class="pm-rating-num">5.0</span><span class="pm-rating-star">&#9733;</span></div>
+            <div class="pm-rating-based">Based on ${reviews.length} reviews</div>
+            <div class="pm-bar-row"><span class="pm-bar-label">5 star</span><div class="pm-bar-track"><div class="pm-bar-fill" style="width:100%"></div></div><span class="pm-bar-pct">100%</span></div>
+            <div class="pm-bar-row"><span class="pm-bar-label">4 star</span><div class="pm-bar-track"><div class="pm-bar-fill" style="width:0%"></div></div><span class="pm-bar-pct">0%</span></div>
+            <div class="pm-bar-row"><span class="pm-bar-label">3 star</span><div class="pm-bar-track"><div class="pm-bar-fill" style="width:0%"></div></div><span class="pm-bar-pct">0%</span></div>
+            <div class="pm-bar-row"><span class="pm-bar-label">2 star</span><div class="pm-bar-track"><div class="pm-bar-fill" style="width:0%"></div></div><span class="pm-bar-pct">0%</span></div>
+            <div class="pm-bar-row"><span class="pm-bar-label">1 star</span><div class="pm-bar-track"><div class="pm-bar-fill" style="width:0%"></div></div><span class="pm-bar-pct">0%</span></div>
+          </div>
+          <div>${reviews.length ? reviews.map((r: any) => `
+            <div class="pm-review-item">
+              <div class="pm-review-top">
+                <div class="pm-review-who"><div class="pm-review-avatar">&#128100;</div><div><div class="pm-review-name">Customer #${esc(r.client_id||'—')}</div><div class="pm-review-meta">Order ${esc(r.order_number||'')}</div></div></div>
+                <div class="pm-review-stars">${'&#9733;'.repeat(r.rating||5)}</div>
+              </div>
+              <div class="pm-review-text">${esc(r.review_text||'')}</div>
+            </div>`).join('') : '<p style="color:#5B6270;font-size:12px;">No reviews yet.</p>'}</div>
+        </div>`;
+    } else if (pmActiveTab === 'about') {
+      const bio = writerData?.bio || 'No bio set.';
+      const specs = (writerData?.specialties||'').split(',').map((s: string)=>s.trim()).filter(Boolean);
+      body.innerHTML = `
+        <div class="pm-about-text">${esc(bio)}</div>
+        <div class="pm-tag-group-title">Languages</div>
+        <div class="pm-tag-row"><span class="pm-tag">English (US)</span><span class="pm-tag">English (UK)</span></div>
+        <div class="pm-tag-group-title">Skills &amp; Specialties</div>
+        <div class="pm-tag-row">${specs.length ? specs.map((s: string)=>`<span class="pm-tag">${esc(s)}</span>`).join('') : '<span style="color:#5B6270;font-size:12px;">None set</span>'}</div>
+        <div class="pm-tag-group-title">Services</div>
+        <div class="pm-tag-row"><span class="pm-tag">Writing</span><span class="pm-tag">Rewriting</span><span class="pm-tag">Editing</span><span class="pm-tag">Proofreading</span></div>`;
+    } else {
+      body.innerHTML = `
+        <div class="pm-samples-controls">
+          <div class="pm-toggle-group">
+            <span class="pm-toggle-label">Show by</span>
+            <div class="pm-toggle-set">
+              <button class="pm-toggle-btn ${pmSamplesShowBy==='subject'?'sel':''}" onclick="pmSamplesShowBy='subject';renderPmTab()">Subject</button>
+              <button class="pm-toggle-btn ${pmSamplesShowBy==='type'?'sel':''}" onclick="pmSamplesShowBy='type';renderPmTab()">Assignment type</button>
+            </div>
+            <span class="pm-toggle-label" style="margin-left:10px;">Status</span>
+            <div class="pm-toggle-set">
+              <button class="pm-toggle-btn ${pmSamplesStatus==='approved'?'sel':''}" onclick="pmSamplesStatus='approved';renderPmTab()">Approved</button>
+              <button class="pm-toggle-btn ${pmSamplesStatus==='review'?'sel':''}" onclick="pmSamplesStatus='review';renderPmTab()">In Review</button>
+              <button class="pm-toggle-btn ${pmSamplesStatus==='declined'?'sel':''}" onclick="pmSamplesStatus='declined';renderPmTab()">Declined</button>
+            </div>
+          </div>
+          <button class="pm-add-sample" onclick="alert('Add sample flow.')">Add sample &#65291;</button>
+        </div>
+        <div>${pmSubjects.map((s,i) => `
+          <div class="pm-sample-row ${pmExpandedSample===i?'expanded':''}" onclick="pmExpandedSample=pmExpandedSample===${i}?null:${i};renderPmTab()">
+            <span class="pm-sample-name">${s}</span><span class="pm-sample-chev">&#8250;</span>
+          </div>
+          <div class="pm-sample-detail ${pmExpandedSample===i?'show':''}">No ${pmSamplesStatus} samples for ${s}.</div>`).join('')}
+        </div>`;
+    }
+  }
+
+  // ── ACCOUNT SETTINGS MODAL ──
+  let smActiveTab = 'general';
+  const smNotif = {
+    masterSound: true,
+    orders:  { email:true, sms:false, popup:true, inapp:true, sound:true },
+    chat:    { email:true, sms:false, popup:true, inapp:true, sound:true },
+    billing: { email:true, sms:false, popup:true, inapp:true, sound:true },
+  };
+
+  function openSmModal() { document.getElementById('smOverlay')!.classList.add('open'); renderSmBody(); }
+  function closeSmModal() { document.getElementById('smOverlay')!.classList.remove('open'); }
+  document.getElementById('smClose')!.addEventListener('click', closeSmModal);
+  document.getElementById('smOverlay')!.addEventListener('click', (e) => { if (e.target === document.getElementById('smOverlay')) closeSmModal(); });
+  document.getElementById('smLogoutBtn')!.addEventListener('click', async () => { await supabase.auth.signOut(); window.location.replace(`${base}/writer-login/`); });
+
+  function setSmTab(tab: string) {
+    smActiveTab = tab;
+    ['General','Security','Notifications'].forEach(t => document.getElementById('smTab'+t)?.classList.toggle('active', t.toLowerCase()===tab));
+    renderSmBody();
+  }
+  function smToggle(id: string, checked: boolean, disabled: boolean) {
+    return `<label class="sm-toggle"><input type="checkbox" id="${id}" ${checked?'checked':''} ${disabled?'disabled':''} onchange="smOnToggle('${id}')"><span class="sm-toggle-track"><span class="sm-toggle-thumb"></span></span></label>`;
+  }
+  function smOnToggle(id: string) {
+    const el = document.getElementById(id) as HTMLInputElement;
+    if (!el) return;
+    const p = id.split('_');
+    if (p[1]==='master') { smNotif.masterSound = el.checked; return; }
+    (smNotif as any)[p[1]][p[2]] = el.checked;
+  }
+  function smGroupCard(key: string, g: any) {
+    return `<div class="sm-card">
+      <div class="sm-row" style="border-top:none;padding-top:0;"><div class="sm-row-left"><span class="sm-row-label">Email</span></div>${smToggle('snt_'+key+'_email',g.email,false)}</div>
+      <div class="sm-row"><div class="sm-row-left"><span class="sm-row-label" style="color:#5B6270;">SMS</span></div>${smToggle('snt_'+key+'_sms',g.sms,true)}</div>
+      <div class="sm-row"><div class="sm-row-left"><span class="sm-row-label">Pop-up</span></div>${smToggle('snt_'+key+'_popup',g.popup,false)}</div>
+      <div class="sm-row"><div class="sm-row-left"><span class="sm-row-label">In-app</span></div>${smToggle('snt_'+key+'_inapp',g.inapp,false)}</div>
+      <div class="sm-row"><div class="sm-row-left"><span class="sm-row-label">In-app sounds</span></div>${smToggle('snt_'+key+'_sound',g.sound,false)}</div>
+    </div>`;
+  }
+  function renderSmBody() {
+    const body = document.getElementById('smBody')!;
+    const email = currentSession?.user?.email || '';
+    const name = writerData?.full_name || 'Writer';
+    const photo = writerData?.photo_url;
+    const avatarHtml = photo ? `<img src="${esc(photo)}" alt="">` : name.charAt(0).toUpperCase();
+    if (smActiveTab === 'general') {
+      body.innerHTML = `
+        <div class="sm-section-title">General information</div>
+        <div class="sm-card">
+          <div class="sm-id-row"><div class="sm-id-avatar">${avatarHtml}</div><div><div class="sm-id-label">Nickname</div><div class="sm-id-value">${esc(name)}</div></div></div>
+          <div class="sm-field-grid">
+            <div class="sm-field"><div class="lbl">First name</div><div class="val">${esc(name.split(' ')[0]||'—')}</div></div>
+            <div class="sm-field"><div class="lbl">Last name</div><div class="val">${esc(name.split(' ').slice(1).join(' ')||'—')}</div></div>
+            <div class="sm-field"><div class="lbl">Date of birth</div><div class="val">—</div></div>
+            <div class="sm-field" style="cursor:pointer;"><div class="lbl">Time format</div><div class="val">24 hours <span class="chev">&#9662;</span></div></div>
+          </div>
+        </div>
+        <div class="sm-section-title">Verification</div>
+        <div class="sm-card">
+          <div class="sm-row" style="border-top:none;padding-top:0;">
+            <div class="sm-row-left"><div class="sm-row-icon">&#128737;</div><span class="sm-row-label">KYC Verification</span></div>
+            <div class="sm-verify-group"><span class="sm-badge verified">Verified</span><button class="sm-btn icon">&#9432;</button></div>
+          </div>
+        </div>
+        <div class="sm-section-title">Contacts</div>
+        <div class="sm-card">
+          <div class="sm-row" style="border-top:none;padding-top:0;">
+            <div class="sm-row-left"><div class="sm-row-icon">&#9993;</div><span class="sm-row-label" style="font-size:12px;">${esc(email)}</span></div>
+            <div class="sm-verify-group"><span class="sm-badge verified">Verified</span><button class="sm-btn icon">&#9998;</button></div>
+          </div>
+        </div>`;
+    } else if (smActiveTab === 'security') {
+      body.innerHTML = `
+        <div class="sm-section-title" style="display:flex;align-items:center;justify-content:space-between;"><span>Account</span><button class="sm-btn danger-text">Deactivate account</button></div>
+        <div class="sm-card">
+          <div class="sm-row" style="border-top:none;padding-top:0;"><div class="sm-row-left"><div class="sm-row-icon">&#128100;</div><div><div class="sm-row-label">Login</div><div class="sm-row-sub">${esc(email)}</div></div></div></div>
+          <div class="sm-row"><div class="sm-row-left"><div class="sm-row-icon">&#128274;</div><div><div class="sm-row-label">Password</div><div class="sm-row-sub">••••••••••••</div></div></div><button class="sm-btn">Change</button></div>
+          <div class="sm-row"><div class="sm-row-left"><div class="sm-row-icon">&#128737;</div><div><div class="sm-row-label">Two-factor authentication</div></div></div><div class="sm-verify-group"><span class="sm-badge enabled">Enabled</span><button class="sm-btn">Manage</button></div></div>
+        </div>
+        <div class="sm-section-title">Social accounts</div>
+        <div class="sm-card">
+          <div class="sm-row" style="border-top:none;padding-top:0;"><div class="sm-row-left"><div class="sm-row-icon" style="color:#EA4335;font-weight:700;">G</div><div class="sm-row-label">Google</div></div><button class="sm-btn primary">Link Google</button></div>
+        </div>
+        <div class="sm-section-title" style="display:flex;align-items:center;justify-content:space-between;"><span>Sessions</span><button class="sm-btn">Log out on other devices</button></div>
+        <div class="sm-card">
+          <div class="sm-row" style="border-top:none;padding-top:0;"><div class="sm-row-left"><div class="sm-row-icon">&#128421;</div><div><div class="sm-row-label">Current browser (Current)</div><div class="sm-row-sub">Last activity: just now</div></div></div></div>
+        </div>`;
+    } else {
+      body.innerHTML = `
+        <div class="sm-card" style="margin-bottom:20px;">
+          <div class="sm-row" style="border-top:none;padding-top:0;"><div class="sm-row-left"><span class="sm-row-label">In-app sounds</span><span class="sm-sound-icon">&#128266;</span></div>${smToggle('snt_master_sound',smNotif.masterSound,false)}</div>
+        </div>
+        <div class="sm-section-title">Billing</div>${smGroupCard('billing',smNotif.billing)}
+        <div class="sm-section-title">Orders</div>${smGroupCard('orders',smNotif.orders)}
+        <div class="sm-section-title">Chat</div>${smGroupCard('chat',smNotif.chat)}`;
+    }
+  }
+
+  // ── RULES MODAL ──
+  function openRlModal() { document.getElementById('rlOverlay')!.classList.add('open'); }
+  function closeRlModal() { document.getElementById('rlOverlay')!.classList.remove('open'); }
+  document.getElementById('rlClose')!.addEventListener('click', closeRlModal);
+  document.getElementById('rlOverlay')!.addEventListener('click', (e) => { if (e.target === document.getElementById('rlOverlay')) closeRlModal(); });
  
   // ── THEME TOGGLE ──
   const THEME_KEY = 'dashboard-theme';
@@ -3215,7 +3890,7 @@ const base = '';
   }
  
   // Load chats when switching to chat view
-  const origChatNav = document.querySelector('.nav-item[data-view="chat"]');
+  const origChatNav = document.querySelector('.rail-item[data-view="chat"]');
   if (origChatNav) {
     const origHandler = origChatNav.getAttribute('data-view');
     origChatNav.addEventListener('click', () => { setTimeout(() => loadConversations(), 100); });
