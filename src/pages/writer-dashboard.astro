@@ -43,6 +43,7 @@ const base = '';
     padding: 1.2rem 0;
     border-right: 1px solid #eef2f7;
     flex-shrink: 0;
+    position: relative;
   }
  
   .sidebar-nav { display: flex; flex-direction: column; gap: 0.2rem; padding: 0 0.5rem; }
@@ -65,6 +66,56 @@ const base = '';
   .nav-item.active { background: #eef6fb; color: #046fcd; font-weight: 600; }
   .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
   .sidebar-divider { height: 1px; background: #eef2f7; margin: 1rem 0.9rem; }
+
+  .sidebar-profile-pill {
+    display: flex; align-items: center; gap: 0.65rem;
+    margin: 0 0.5rem 1rem; padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border); border-radius: 12px;
+    cursor: pointer; transition: 0.2s; background: var(--panel-bg);
+    width: calc(100% - 1rem); text-align: left; font-family: inherit;
+  }
+  .sidebar-profile-pill:hover { border-color: #046fcd; background: var(--main-bg); }
+  .sidebar-profile-pill-avatar {
+    width: 30px; height: 30px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+    background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+  }
+  .sidebar-profile-pill-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .sidebar-profile-pill-name { font-size: 0.86rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .sidebar-profile-popover {
+    display: none; position: absolute; top: 62px; left: 12px; width: 216px; z-index: 50;
+    background: var(--panel-bg); border: 1px solid var(--border); border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.18); overflow: hidden;
+  }
+  .sidebar-profile-popover.open { display: block; }
+  .sp-pop-pill { display: flex; align-items: center; gap: 0.6rem; padding: 0.85rem 0.85rem 0.7rem; }
+  .sp-pop-status-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.55rem 0.85rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .sp-pop-status-label { font-size: 0.76rem; color: var(--text-muted); }
+  .sp-pop-status-val { display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 600; color: #16a34a; }
+  .sp-pop-status-val.offline { color: #94a3b8; }
+  .sp-pop-status-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; }
+  .sp-pop-status-val.offline .sp-pop-status-dot { background: #94a3b8; }
+  .sp-pop-menu { padding: 0.4rem 0.5rem 0.5rem; display: flex; flex-direction: column; }
+  .sp-pop-item {
+    display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.5rem; border-radius: 8px;
+    background: none; border: none; font-size: 0.82rem; font-weight: 600; color: var(--text);
+    cursor: pointer; text-align: left; font-family: inherit; transition: 0.15s;
+  }
+  .sp-pop-item:hover { background: var(--main-bg); }
+  .sp-pop-item .sp-pop-ic { font-size: 0.85rem; width: 16px; text-align: center; }
+  .sp-pop-item.sp-pop-logout { color: #dc2626; border-top: 1px solid var(--border); margin-top: 0.2rem; padding-top: 0.65rem; border-radius: 0 0 8px 8px; }
+  .sp-pop-item.sp-pop-logout:hover { background: #fef2f2; }
+  body.dark-mode .sidebar-profile-pill { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
+  body.dark-mode .sidebar-profile-pill:hover { border-color: #60a5fa; background: #1e2536; }
+  body.dark-mode .sidebar-profile-pill-avatar { background: #2a3244; }
+  body.dark-mode .sidebar-profile-popover { background: #1a1f2e; border-color: rgba(255,255,255,0.08); box-shadow: 0 20px 50px rgba(0,0,0,0.45); }
+  body.dark-mode .sp-pop-status-row { border-color: rgba(255,255,255,0.06); }
+  body.dark-mode .sp-pop-item:hover { background: rgba(255,255,255,0.05); }
+  body.dark-mode .sp-pop-item.sp-pop-logout { border-color: rgba(255,255,255,0.06); color: #f87171; }
+  body.dark-mode .sp-pop-item.sp-pop-logout:hover { background: rgba(239,68,68,0.08); }
  
   .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
  
@@ -270,6 +321,28 @@ const base = '';
   }
  
   .modal-close:hover { color: var(--text); }
+
+  .pp-stats-strip { display: flex; background: var(--main-bg); border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 1rem; }
+  .pp-stat { flex: 1; text-align: center; }
+  .pp-stat .pp-stat-val { font-size: 0.95rem; font-weight: 800; color: var(--text); }
+  .pp-stat .pp-stat-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; }
+  .pp-tabs { display: flex; gap: 0.3rem; background: var(--main-bg); padding: 4px; border-radius: 10px; width: fit-content; margin-bottom: 1.1rem; }
+  .pp-tab { background: none; border: none; color: var(--text-muted); padding: 0.4rem 0.95rem; font-size: 0.82rem; font-weight: 600; border-radius: 8px; cursor: pointer; font-family: inherit; }
+  .pp-tab.active { background: var(--panel-bg); color: #046fcd; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .pp-section-title { font-size: 0.82rem; font-weight: 700; color: var(--text); margin: 0 0 0.7rem; }
+  .pp-rating-card { background: var(--main-bg); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+  .pp-rating-top { display: flex; align-items: baseline; gap: 0.3rem; }
+  .pp-rating-num { font-size: 1.15rem; font-weight: 800; color: var(--text); }
+  .pp-rating-star { color: #f59e0b; }
+  .pp-rating-based { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.7rem; }
+  .pp-bar-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .pp-bar-label { font-size: 0.72rem; color: var(--text-muted); width: 38px; flex-shrink: 0; }
+  .pp-bar-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .pp-bar-fill { height: 100%; background: #f59e0b; border-radius: 3px; }
+  .pp-bar-pct { font-size: 0.7rem; color: var(--text-muted); width: 28px; text-align: right; flex-shrink: 0; }
+  .pp-pill-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+  .pp-pill { background: var(--main-bg); border-radius: 20px; padding: 0.3rem 0.75rem; font-size: 0.76rem; color: var(--text); }
+  .pp-about-text { font-size: 0.85rem; color: var(--text); line-height: 1.7; margin-bottom: 1.2rem; }
  
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -1184,6 +1257,18 @@ const base = '';
     <div id="modalContent" style="display:flex;flex:1;min-width:0;overflow:hidden;"></div>
   </div>
 </div>
+
+<!-- MY PUBLIC PROFILE MODAL -->
+<div class="modal" id="publicProfileModal">
+  <div class="modal-overlay" id="publicProfileOverlay"></div>
+  <div class="modal-box" style="max-width:600px;height:auto;max-height:86vh;flex-direction:column;">
+    <button class="modal-close" id="publicProfileClose">✕</button>
+    <div style="padding:1.8rem 1.8rem 0;flex-shrink:0;">
+      <h2 style="font-size:1.15rem;font-weight:800;color:var(--text);margin-bottom:1rem;">My public profile</h2>
+    </div>
+    <div id="publicProfileBody" style="padding:0 1.8rem 1.8rem;overflow-y:auto;flex:1;"></div>
+  </div>
+</div>
  
 <script>
   import { supabase } from '../lib/supabase.js';
@@ -1249,6 +1334,24 @@ const base = '';
  
     writerData = data[0];
     writerId = writerData.id;
+
+    const pillName = document.getElementById('sidebarProfileName');
+    const popName = document.getElementById('sidebarPopName');
+    const pillAvatar = document.getElementById('sidebarProfileAvatar');
+    const popAvatar = document.getElementById('sidebarPopAvatar');
+    const popStatus = document.getElementById('sidebarPopStatus');
+    const shortName = (writerData.full_name || '').trim();
+    if (pillName) pillName.textContent = shortName || 'Writer';
+    if (popName) popName.textContent = shortName || 'Writer';
+    if (writerData.photo_url) {
+      const avatarHtml = `<img src="${writerData.photo_url}" alt="" />`;
+      if (pillAvatar) pillAvatar.innerHTML = avatarHtml;
+      if (popAvatar) popAvatar.innerHTML = avatarHtml;
+    }
+    if (popStatus) {
+      popStatus.innerHTML = `<span class="sp-pop-status-dot"></span>${writerData.is_active ? 'Active' : 'Offline'}`;
+      popStatus.classList.toggle('offline', !writerData.is_active);
+    }
  
     socket.emit('writer:online', String(writerId));
  
@@ -2686,11 +2789,6 @@ const base = '';
         title.textContent = 'My Proposals';
         sub.textContent = 'Bids you have placed';
         loadMyBids();
-      } else if (view === 'profile') {
-        document.getElementById('viewProfile')!.classList.add('active');
-        title.textContent = 'My Profile';
-        sub.textContent = 'Manage your profile and settings';
-        renderProfileTab();
       } else if (view === 'chat') {
         document.getElementById('viewChat')!.classList.add('active');
         title.textContent = 'Chat';
@@ -2708,6 +2806,18 @@ const base = '';
       }
     });
   });
+  function goToProfileView(tab: string) {
+    document.querySelectorAll('.nav-item[data-view]').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('viewProfile')!.classList.add('active');
+    const title = document.getElementById('writerName')!;
+    const sub = document.getElementById('writerSub')!;
+    title.textContent = 'My Profile';
+    sub.textContent = 'Manage your profile and settings';
+    document.querySelectorAll('[data-ptab]').forEach(t => t.classList.toggle('active', (t as HTMLElement).dataset.ptab === tab));
+    currentProfileTab = tab;
+    renderProfileTab();
+  }
  
   // ═══ PROFILE TABS ═══
   document.querySelectorAll('[data-ptab]').forEach(tab => {
@@ -2821,6 +2931,104 @@ const base = '';
         <h3>Account & Payment</h3><ul><li>Payment processed after client confirms completion.</li><li>Your rating affects order assignment priority.</li><li>Violations may result in warnings, suspension, or termination.</li></ul>
       </div></div>`;
   }
+  let ppActiveTab = 'statistics';
+
+  function ppRatingBreakdown() {
+    const counts = [0, 0, 0, 0, 0];
+    writerReviews.forEach((r: any) => {
+      const rating = Math.round(r.rating || 0);
+      if (rating >= 1 && rating <= 5) counts[5 - rating]++;
+    });
+    const total = writerReviews.length || 1;
+    return [5, 4, 3, 2, 1].map((star, i) => ({ star, pct: Math.round((counts[i] / total) * 100) }));
+  }
+
+  function renderPpStatistics() {
+    const avgRating = writerReviews.length
+      ? (writerReviews.reduce((s: number, r: any) => s + (r.rating || 0), 0) / writerReviews.length).toFixed(1)
+      : '—';
+    const breakdown = ppRatingBreakdown();
+    return `
+      <div class="pp-rating-card">
+        <div class="pp-rating-top"><span class="pp-rating-num">${avgRating}</span><span class="pp-rating-star">★</span></div>
+        <div class="pp-rating-based">Based on ${writerReviews.length} review${writerReviews.length === 1 ? '' : 's'}</div>
+        ${breakdown.map(b => `
+          <div class="pp-bar-row">
+            <span class="pp-bar-label">${b.star} star</span>
+            <div class="pp-bar-track"><div class="pp-bar-fill" style="width:${b.pct}%;"></div></div>
+            <span class="pp-bar-pct">${b.pct}%</span>
+          </div>`).join('')}
+      </div>
+      <div class="pp-section-title">Client Reviews</div>
+      ${writerReviews.length ? `<div class="reviews-list">${writerReviews.map((r: any) => `
+        <div class="review-item">
+          <div class="review-header"><div class="review-stars">${'★'.repeat(r.rating || 0)}${'☆'.repeat(5 - (r.rating || 0))}</div><div class="review-date">${r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}</div></div>
+          ${r.review_text ? `<div class="review-text">${esc(r.review_text)}</div>` : ''}
+          <div class="review-order">Order ${esc(r.order_number)} · Client #${esc(r.client_id || '—')}</div>
+        </div>`).join('')}</div>` : '<p style="color:var(--text-muted);font-size:0.85rem;">No reviews yet.</p>'}
+    `;
+  }
+
+  function renderPpAbout() {
+    const skills = (writerData.specialties || '').split(',').map((s: string) => s.trim()).filter(Boolean);
+    return `
+      <div class="pp-about-text">${esc(writerData.bio || 'No bio set.')}</div>
+      <div class="pp-section-title">Specialties</div>
+      <div class="pp-pill-row">${skills.length ? skills.map((s: string) => `<span class="pp-pill">${esc(s)}</span>`).join('') : '<span style="color:var(--text-muted);font-size:0.82rem;">None set.</span>'}</div>
+      <div class="pp-section-title">Credentials</div>
+      <div class="pp-about-text" style="margin-bottom:1rem;">${esc(writerData.credentials || 'Not set')}</div>
+      <div class="pp-section-title">Education & Experience</div>
+      <div class="pp-about-text" style="margin-bottom:0;">${esc(writerData.education_level || 'Not set')}${writerData.years_experience ? ` · ${esc(String(writerData.years_experience))} years experience` : ''}</div>
+    `;
+  }
+
+  function renderPpSamples() {
+    if (!writerData.sample_url) return '<p style="color:var(--text-muted);font-size:0.85rem;">No writing sample uploaded yet.</p>';
+    return `<div class="file-attached">📄 <a href="${esc(writerData.sample_url)}" target="_blank">${esc(writerData.sample_name || 'View Sample')}</a></div>`;
+  }
+
+  function renderPublicProfileModal() {
+    const completedCount = allOrders.filter(o => o.order_status === 'completed').length;
+    const avgRating = writerReviews.length
+      ? (writerReviews.reduce((s: number, r: any) => s + (r.rating || 0), 0) / writerReviews.length).toFixed(1)
+      : '—';
+    const totalAssigned = allOrders.length || 1;
+    const successRate = allOrders.length ? Math.round((completedCount / totalAssigned) * 100) : 0;
+
+    const body = document.getElementById('publicProfileBody')!;
+    body.innerHTML = `
+      <div class="pp-stats-strip">
+        <div class="pp-stat"><div class="pp-stat-val">${avgRating} ★</div><div class="pp-stat-sub">${writerReviews.length} reviews</div></div>
+        <div class="pp-stat"><div class="pp-stat-val">${completedCount}</div><div class="pp-stat-sub">Completed orders</div></div>
+        <div class="pp-stat"><div class="pp-stat-val">${successRate}%</div><div class="pp-stat-sub">Success rate</div></div>
+      </div>
+      <div class="pp-tabs">
+        <button class="pp-tab ${ppActiveTab === 'statistics' ? 'active' : ''}" data-pptab="statistics">Statistics</button>
+        <button class="pp-tab ${ppActiveTab === 'about' ? 'active' : ''}" data-pptab="about">About</button>
+        <button class="pp-tab ${ppActiveTab === 'samples' ? 'active' : ''}" data-pptab="samples">Samples</button>
+      </div>
+      <div id="ppTabBody">
+        ${ppActiveTab === 'statistics' ? renderPpStatistics() : ppActiveTab === 'about' ? renderPpAbout() : renderPpSamples()}
+      </div>
+    `;
+    body.querySelectorAll('[data-pptab]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        ppActiveTab = (tab as HTMLElement).dataset.pptab || 'statistics';
+        renderPublicProfileModal();
+      });
+    });
+  }
+
+  function openPublicProfileModal() {
+    ppActiveTab = 'statistics';
+    renderPublicProfileModal();
+    document.getElementById('publicProfileModal')!.classList.add('open');
+  }
+  function closePublicProfileModal() {
+    document.getElementById('publicProfileModal')!.classList.remove('open');
+  }
+  document.getElementById('publicProfileClose')?.addEventListener('click', closePublicProfileModal);
+  document.getElementById('publicProfileOverlay')?.addEventListener('click', closePublicProfileModal);
  
   init();
  
@@ -2862,6 +3070,36 @@ const base = '';
     if (localStorage.getItem(THEME_KEY) === 'system') applyTheme('system');
   });
   applyTheme(localStorage.getItem(THEME_KEY) || 'light');
+
+  const profilePillBtn = document.getElementById('sidebarProfilePill');
+  const profilePopoverEl = document.getElementById('sidebarProfilePopover');
+  profilePillBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profilePopoverEl?.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!profilePopoverEl?.classList.contains('open')) return;
+    const target = e.target as HTMLElement;
+    if (!profilePopoverEl.contains(target) && target !== profilePillBtn && !profilePillBtn?.contains(target)) {
+      profilePopoverEl.classList.remove('open');
+    }
+  });
+  document.getElementById('popMyProfileBtn')?.addEventListener('click', () => {
+    profilePopoverEl?.classList.remove('open');
+    openPublicProfileModal();
+  });
+  document.getElementById('popSettingsBtn')?.addEventListener('click', () => {
+    profilePopoverEl?.classList.remove('open');
+    goToProfileView('settings');
+  });
+  document.getElementById('popRulesBtn')?.addEventListener('click', () => {
+    profilePopoverEl?.classList.remove('open');
+    goToProfileView('rules');
+  });
+  document.getElementById('popLogoutBtn')?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = `${base}/writer-login/`;
+  });
  
   // ═══ CHAT SYSTEM ═══
   let chatConversations: any[] = [];
