@@ -248,7 +248,7 @@ const base = '';
   .modal-right {
     flex: 0 0 26%;
     background: #f1f5f9;
-    border-left: 1px solid var(--border);
+    border-left: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
     min-width: 180px;
@@ -350,6 +350,7 @@ const base = '';
   body.dark-mode .modal-box { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
   body.dark-mode .modal-close { color: #64748b; }
   body.dark-mode .modal-close:hover { color: #e2e8f0; }
+  body.dark-mode .modal-right { border-left-color: #2d3340; background: #161b27; }
   body.dark-mode ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
   body.dark-mode ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
  
@@ -1426,6 +1427,7 @@ const base = '';
 
       <button style="width:100%;padding:13px;border-radius:10px;background:#c5a059;border:none;color:#14110A;font-size:13.5px;font-weight:600;cursor:pointer;margin-bottom:16px;font-family:inherit;" id="makeProposalTopBtn">Make proposal</button>
 
+      <div id="bidTabsSection">
       <div class="om-tabs">
         <button class="om-tab om-tab--active" data-mtab="instructions">Instructions</button>
         <button class="om-tab" data-mtab="files">Files</button>
@@ -1455,16 +1457,18 @@ const base = '';
       <div class="om-panel" data-mpanel="files">
         <div style="color:var(--text-muted);font-size:0.82rem;padding:1rem 0;">No files attached.</div>
       </div>
+      </div>
 
-      <div class="om-panel" data-mpanel="proposal">
+      <div id="bidProposalSection" style="display:none;">
+        <button style="background:none;border:none;color:#94a3b8;font-size:0.82rem;cursor:pointer;margin-bottom:1.2rem;padding:0;font-family:inherit;" id="backToInstructionsBtn">← Back</button>
         <div style="margin-bottom:1rem;">
           <label class="om-label" style="display:block;margin-bottom:4px;">Your bid price ($) — minimum $${budget}</label>
-          <input type="number" id="bidPrice" min="${budget}" step="0.01" value="${budget}" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:1rem;font-weight:700;outline:none;color:var(--text);" />
+          <input type="number" id="bidPrice" min="${budget}" step="0.01" value="${budget}" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:1rem;font-weight:700;outline:none;color:var(--text);font-family:inherit;" />
           <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.3rem;">You cannot bid below the client's budget.</div>
         </div>
         <div style="margin-bottom:1rem;">
           <label class="om-label" style="display:block;margin-bottom:4px;">Your proposal message *</label>
-          <textarea id="bidNote" rows="4" placeholder="Introduce yourself and explain why you're the best fit for this order…" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.85rem;font-family:inherit;outline:none;resize:vertical;color:var(--text);"></textarea>
+          <textarea id="bidNote" rows="5" placeholder="Introduce yourself and explain why you're the best fit for this order…" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.85rem;font-family:inherit;outline:none;resize:vertical;color:var(--text);"></textarea>
         </div>
         <button class="upload-btn" style="width:100%;background:#046fcd;" id="submitBidBtn">📨 Submit Proposal</button>
         <div class="upload-msg" id="bidMsg" style="display:none;margin-top:0.5rem;"></div>
@@ -1503,9 +1507,16 @@ const base = '';
     });
  
     document.getElementById('makeProposalTopBtn')?.addEventListener('click', () => {
-      document.querySelectorAll('#modalContent .om-tab').forEach(t => t.classList.remove('om-tab--active'));
-      document.querySelectorAll('#modalContent .om-panel').forEach(p => p.classList.remove('om-panel--active'));
-      document.querySelector('#modalContent .om-panel[data-mpanel="proposal"]')?.classList.add('om-panel--active');
+      const t = document.getElementById('bidTabsSection');
+      const p = document.getElementById('bidProposalSection');
+      if (t) t.style.display = 'none';
+      if (p) p.style.display = 'block';
+    });
+    document.getElementById('backToInstructionsBtn')?.addEventListener('click', () => {
+      const t = document.getElementById('bidTabsSection');
+      const p = document.getElementById('bidProposalSection');
+      if (t) t.style.display = 'block';
+      if (p) p.style.display = 'none';
     });
  
     document.getElementById('submitBidBtn')?.addEventListener('click', () => submitBid(order.id, order));
