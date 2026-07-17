@@ -248,7 +248,7 @@ const base = '';
   .modal-right {
     flex: 0 0 26%;
     background: #f1f5f9;
-    border-left: 1.5px solid #94a3b8;
+    border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     min-width: 180px;
@@ -1418,35 +1418,25 @@ const base = '';
  
     document.getElementById('modalContent')!.innerHTML = `
       <div class="modal-left">
-      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
-        <span class="status-badge in_progress" style="background:rgba(34,197,94,0.12);color:#4ade80;font-size:0.72rem;">Available</span>
-        <span style="font-size:0.75rem;color:#94a3b8;">${dueDate} · ${dl.text}</span>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;gap:1rem;">
+        <div class="om-title">${esc(order.topic || '(no topic)')}</div>
+        <div style="display:flex;gap:8px;color:#64748b;font-size:0.9rem;flex-shrink:0;margin-top:4px;">⚠️ 🐒</div>
       </div>
-      <div class="om-title">${esc(order.topic || '(no topic)')}</div>
-      <div class="om-id" style="margin-bottom:1rem;">ID ${esc(order.order_number || order.id)}</div>
- 
-      <div style="display:flex;gap:1rem;background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1.2rem;flex-wrap:wrap;">
-        <div style="text-align:center;flex:1;">
-          <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Min. price</div>
-          <div style="font-size:1rem;font-weight:700;color:var(--text);">$${budget}</div>
-        </div>
-        <div style="text-align:center;flex:1;">
-          <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">My share (80%)</div>
-          <div style="font-size:1rem;font-weight:700;color:#16a34a;">$${myShare}</div>
-        </div>
-        <div style="text-align:center;flex:1;">
-          <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Pages</div>
-          <div style="font-size:1rem;font-weight:700;color:var(--text);">${esc(order.pages||1)}</div>
-        </div>
-      </div>
- 
+      <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:1.2rem;">ID ${esc(order.order_number || order.id)} <span style="cursor:pointer;opacity:0.6;">📋</span></div>
+
+      <button style="width:100%;padding:13px;border-radius:10px;background:#c5a059;border:none;color:#14110A;font-size:13.5px;font-weight:600;cursor:pointer;margin-bottom:16px;font-family:inherit;" id="makeProposalTopBtn">Make proposal</button>
+
       <div class="om-tabs">
         <button class="om-tab om-tab--active" data-mtab="instructions">Instructions</button>
-        <button class="om-tab" data-mtab="proposal">Make Proposal</button>
+        <button class="om-tab" data-mtab="files">Files</button>
       </div>
- 
+
       <div class="om-panel om-panel--active" data-mpanel="instructions">
-        <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem 1rem;">
+        <div style="margin-bottom:14px;">
+          <div style="font-size:0.68rem;color:#c5a059;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;font-weight:700;">Topic</div>
+          <div style="font-size:0.88rem;font-weight:600;color:var(--text);">${esc(order.topic || '(no topic)')}</div>
+        </div>
+        <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:1rem;">
           <div class="om-grid">
             <div><div class="om-label">Type</div><div class="om-value">${esc(order.assignment_type||'—')}</div></div>
             <div><div class="om-label">Subject</div><div class="om-value">${esc(order.subject||'—')}</div></div>
@@ -1456,27 +1446,28 @@ const base = '';
             <div><div class="om-label">Deadline</div><div class="om-value">${dueDate}</div></div>
           </div>
         </div>
-        <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem;">
-          <div class="om-desc-label">Description</div>
+        <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1rem;">
+          <div style="font-size:0.68rem;color:#c5a059;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;font-weight:700;">Description</div>
           <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
         </div>
-        <button class="upload-btn" style="width:calc(100% - 1rem);margin:1.2rem 0.5rem 0;" id="goToProposalBtn">📨 Make Proposal</button>
       </div>
- 
+
+      <div class="om-panel" data-mpanel="files">
+        <div style="color:var(--text-muted);font-size:0.82rem;padding:1rem 0;">No files attached.</div>
+      </div>
+
       <div class="om-panel" data-mpanel="proposal">
-        <div style="margin:0 0.5rem;">
-          <div class="form-group" style="margin-bottom:1rem;">
-            <label class="om-label">Your bid price ($) — minimum $${budget}</label>
-            <input type="number" id="bidPrice" min="${budget}" step="0.01" value="${budget}" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:1rem;font-weight:700;outline:none;color:var(--text);" />
-            <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.3rem;">You cannot bid below the client's budget.</div>
-          </div>
-          <div class="form-group" style="margin-bottom:1rem;">
-            <label class="om-label">Your proposal message *</label>
-            <textarea id="bidNote" rows="4" placeholder="Introduce yourself and explain why you're the best fit for this order…" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.85rem;font-family:inherit;outline:none;resize:vertical;color:var(--text);"></textarea>
-          </div>
-          <button class="upload-btn" style="width:100%;" id="submitBidBtn">📨 Submit Proposal</button>
-          <div class="upload-msg" id="bidMsg" style="display:none;margin-top:0.5rem;"></div>
+        <div style="margin-bottom:1rem;">
+          <label class="om-label" style="display:block;margin-bottom:4px;">Your bid price ($) — minimum $${budget}</label>
+          <input type="number" id="bidPrice" min="${budget}" step="0.01" value="${budget}" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:1rem;font-weight:700;outline:none;color:var(--text);" />
+          <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.3rem;">You cannot bid below the client's budget.</div>
         </div>
+        <div style="margin-bottom:1rem;">
+          <label class="om-label" style="display:block;margin-bottom:4px;">Your proposal message *</label>
+          <textarea id="bidNote" rows="4" placeholder="Introduce yourself and explain why you're the best fit for this order…" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.85rem;font-family:inherit;outline:none;resize:vertical;color:var(--text);"></textarea>
+        </div>
+        <button class="upload-btn" style="width:100%;background:#046fcd;" id="submitBidBtn">📨 Submit Proposal</button>
+        <div class="upload-msg" id="bidMsg" style="display:none;margin-top:0.5rem;"></div>
       </div>
       </div>
       <div class="modal-right" style="display:flex;flex-direction:column;">
@@ -1511,10 +1502,9 @@ const base = '';
       });
     });
  
-    document.getElementById('goToProposalBtn')?.addEventListener('click', () => {
+    document.getElementById('makeProposalTopBtn')?.addEventListener('click', () => {
       document.querySelectorAll('#modalContent .om-tab').forEach(t => t.classList.remove('om-tab--active'));
       document.querySelectorAll('#modalContent .om-panel').forEach(p => p.classList.remove('om-panel--active'));
-      document.querySelector('#modalContent .om-tab[data-mtab="proposal"]')?.classList.add('om-tab--active');
       document.querySelector('#modalContent .om-panel[data-mpanel="proposal"]')?.classList.add('om-panel--active');
     });
  
