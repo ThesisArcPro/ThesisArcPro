@@ -1549,6 +1549,69 @@ const base = '';
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
  
+  let bidChatConvId: string | null = null;
+  let bidChatSubRT: any = null;
+  let bidChatLastDate = '';
+
+  function bidChatRender(messages: any[]) {
+    const c = document.getElementById('bidChatMessages');
+    if (!c) return;
+    if (!messages.length) { c.innerHTML = '<div class="woc-empty">No messages yet.</div>'; return; }
+    bidChatLastDate = '';
+    c.innerHTML = messages.map((m: any) => {
+      const dateLabel = m.created_at ? bidChatDateLabel(m.created_at) : '';
+      let divider = '';
+      if (dateLabel && dateLabel !== bidChatLastDate) {
+        bidChatLastDate = dateLabel;
+        divider = `<div style="text-align:center;font-size:0.7rem;color:#94a3b8;margin:0.4rem 0;">${dateLabel}</div>`;
+      }
+      return divider + bidChatBubble(m);
+    }).join('');
+    c.scrollTop = c.scrollHeight;
+  }
+  function bidChatAppend(m: any) {
+    const c = document.getElementById('bidChatMessages');
+    if (!c) return;
+    const ph = c.querySelector('.woc-empty'); if (ph) c.innerHTML = '';
+    const dateLabel = m.created_at ? bidChatDateLabel(m.created_at) : '';
+    let divider = '';
+    if (dateLabel && dateLabel !== bidChatLastDate) {
+      bidChatLastDate = dateLabel;
+      divider = `<div style="text-align:center;font-size:0.7rem;color:#94a3b8;margin:0.4rem 0;">${dateLabel}</div>`;
+    }
+    c.insertAdjacentHTML('beforeend', divider + bidChatBubble(m));
+    c.scrollTop = c.scrollHeight;
+  }
+  function bidChatBubble(m: any) {
+    const mine = m.sender_id === currentSession.user.id;
+    const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+    const who = m.sender_role === 'support' ? 'Support' : (m.sender_name || 'Client');
+    return `<div class="woc-row ${mine ? 'mine' : 'theirs'}">
+      ${!mine ? `<div class="woc-name">${esc(who)}</div>` : ''}
+      <div class="woc-bubble">${esc(m.content)}</div>
+      <div class="woc-time">${time}${mine ? ' <span style="color:#60a5fa;">✓</span>' : ''}</div>
+    </div>`;
+  }
+  async function bidChatSendMsg() {
+    const input = document.getElementById('bidChatInput') as HTMLInputElement;
+    if (!input || !bidChatConvId) return;
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ conversation_id: bidChatConvId, sender_id: currentSession.user.id, sender_name: writerData?.full_name || 'Writer', sender_role: 'writer', content: text })
+      });
+      await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${bidChatConvId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal' },
+        body: JSON.stringify({ updated_at: new Date().toISOString() })
+      });
+    } catch (e) { console.error(e); }
+  }
+
   // ═══ MY PROPOSALS (bids placed) ═══
   async function loadMyBids() {
     try {
