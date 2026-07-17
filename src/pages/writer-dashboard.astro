@@ -898,7 +898,28 @@ const base = '';
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <nav class="sidebar-nav" style="padding-top: 0.5rem;">
-    <div style="font-size: 1rem; font-weight: 700; padding: 0 0.9rem 1rem; color: var(--text);">✍️ Writer Portal</div>
+    <button class="sidebar-profile-pill" id="sidebarProfilePill" type="button">
+      <span class="sidebar-profile-pill-avatar" id="sidebarProfileAvatar">👤</span>
+      <span class="sidebar-profile-pill-name" id="sidebarProfileName">Loading…</span>
+    </button>
+
+    <div class="sidebar-profile-popover" id="sidebarProfilePopover">
+      <div class="sp-pop-pill">
+        <span class="sidebar-profile-pill-avatar" id="sidebarPopAvatar">👤</span>
+        <span class="sidebar-profile-pill-name" id="sidebarPopName">Loading…</span>
+      </div>
+      <div class="sp-pop-status-row">
+        <span class="sp-pop-status-label">Status</span>
+        <span class="sp-pop-status-val" id="sidebarPopStatus"><span class="sp-pop-status-dot"></span>Active</span>
+      </div>
+      <div class="sp-pop-menu">
+        <button class="sp-pop-item" id="popMyProfileBtn" type="button"><span class="sp-pop-ic">👤</span>My profile</button>
+        <button class="sp-pop-item" id="popSettingsBtn" type="button"><span class="sp-pop-ic">⚙️</span>Settings</button>
+        <button class="sp-pop-item" id="popRulesBtn" type="button"><span class="sp-pop-ic">📋</span>Rules and tips</button>
+        <button class="sp-pop-item sp-pop-logout" id="popLogoutBtn" type="button"><span class="sp-pop-ic">🚪</span>Log out</button>
+      </div>
+    </div>
+
     <a class="nav-item active" href="#" data-view="orders">
       <span class="icon">📁</span> My Orders
     </a>
@@ -908,9 +929,6 @@ const base = '';
     </a>
     <a class="nav-item" href="#" data-view="proposals">
       <span class="icon">📨</span> My Proposals
-    </a>
-    <a class="nav-item" href="#" data-view="profile">
-      <span class="icon">👤</span> My Profile
     </a>
     <a class="nav-item" href="#" data-view="chat">
       <span class="icon">💬</span> Chat
