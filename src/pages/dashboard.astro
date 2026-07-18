@@ -873,6 +873,8 @@ const base = '';
     font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif !important;
   }
   #orderFormModal .modal-box { background: #ffffff; }
+  #orderFormModal .modal-box.wiz-wide { max-width: 1180px; }
+  #wizModalGrid.wiz-chat-layout { grid-template-columns: 1fr 400px; }
   body.dark-mode #orderFormModal .modal-box { background: #161b27 !important; }
   body.dark-mode #orderFormModal h2 { color: #e2e8f0 !important; }
   body.dark-mode #orderFormModal p { color: #94a3b8 !important; }
@@ -1201,7 +1203,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
     </div>
  
     <!-- Grid: steps left, summary right -->
-    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;flex:1;overflow:hidden;padding:1.8rem 2rem 2rem;">
+    <div id="wizModalGrid" style="display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;flex:1;overflow:hidden;padding:1.8rem 2rem 2rem;">
  
       <!-- LEFT: wizard steps -->
       <div style="overflow-y:auto;padding-right:0.5rem;">
@@ -1856,6 +1858,7 @@ function resetWizard() {
   // Reset success/flow
   const success = document.getElementById('wizSuccess'); if (success) success.style.display = 'none';
   const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'block';
+  wizSetChatLayout(false);
   const info = document.getElementById('wizInfoCard'); if (info) info.style.display = 'block';
   const price = document.getElementById('wizPriceCard'); if (price) price.style.display = 'none';
   const bar = document.getElementById('wizProgressBar'); if (bar) bar.style.display = 'block';
@@ -1867,6 +1870,13 @@ function resetWizard() {
 function updateWizBar() {
   const bar = document.getElementById('wizModalBar');
   if (bar) bar.style.width = `${(wsRevealed / 8) * 100}%`;
+}
+
+function wizSetChatLayout(active: boolean) {
+  const box = document.querySelector('#orderFormModal .modal-box');
+  const grid = document.getElementById('wizModalGrid');
+  if (box) box.classList.toggle('wiz-wide', active);
+  if (grid) grid.classList.toggle('wiz-chat-layout', active);
 }
 
 function revealStep(n: number) {
@@ -2477,6 +2487,7 @@ async function wizSubmitOrder() {
  
     const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'none';
     const success = document.getElementById('wizSuccess'); if (success) success.style.display = 'block';
+    wizSetChatLayout(true);
     const ticket = document.getElementById('wizSuccessTicket'); if (ticket) ticket.textContent = `ID ${ticketId}`;
     const priceCard = document.getElementById('wizPriceCard'); if (priceCard) priceCard.style.display = 'none';
     const infoCard = document.getElementById('wizInfoCard'); if (infoCard) infoCard.style.display = 'none';
@@ -2601,6 +2612,7 @@ try {
             openOrderModal();
             const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'none';
             const successEl = document.getElementById('wizSuccess'); if (successEl) successEl.style.display = 'block';
+            wizSetChatLayout(true);
             const priceCard = document.getElementById('wizPriceCard'); if (priceCard) priceCard.style.display = 'none';
             const infoCard = document.getElementById('wizInfoCard'); if (infoCard) infoCard.style.display = 'none';
             const ticketEl = document.getElementById('wizSuccessTicket'); if (ticketEl) ticketEl.textContent = pendingOrder.order_number;
@@ -3435,6 +3447,7 @@ async function openDraftOrder(orderId: string, orderNumber: string) {
   openOrderModal();
   const flow = document.getElementById('wizStepsFlow'); if (flow) flow.style.display = 'none';
   const successEl = document.getElementById('wizSuccess'); if (successEl) successEl.style.display = 'block';
+  wizSetChatLayout(true);
   const priceCard = document.getElementById('wizPriceCard'); if (priceCard) priceCard.style.display = 'none';
   const infoCard = document.getElementById('wizInfoCard'); if (infoCard) infoCard.style.display = 'none';
   const bar = document.getElementById('wizProgressBar'); if (bar) bar.style.display = 'none';
