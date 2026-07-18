@@ -74,16 +74,16 @@ const base = '';
 
   /* Profile pill at top of sidebar */
   .sidebar-profile-pill {
-    display: flex; align-items: center; gap: 0.7rem;
-    margin: 0 0.6rem 1.1rem; padding: 0.65rem 0.8rem;
-    border: 1px solid var(--border); border-radius: 14px;
+    display: flex; align-items: center; gap: 0.65rem;
+    margin: 0 0.5rem 1rem; padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border); border-radius: 12px;
     cursor: pointer; transition: 0.2s; background: var(--panel-bg);
-    width: calc(100% - 1.2rem); text-align: left; font-family: inherit;
+    width: calc(100% - 1rem); text-align: left; font-family: inherit;
   }
   .sidebar-profile-pill:hover { border-color: #046fcd; background: var(--main-bg); }
   .sidebar-profile-pill-avatar {
-    width: 34px; height: 34px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
-    background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;
+    width: 30px; height: 30px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+    background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
   }
   .sidebar-profile-pill-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .sidebar-profile-pill-name { font-size: 0.86rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -514,8 +514,6 @@ const base = '';
 </style>
  
 <style is:global>
-  .sidebar-profile-pill-avatar img,
-  .sp-pop-pill .sidebar-profile-pill-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
   /* ── PROFILE (rendered via innerHTML — must be global for Astro scoping to apply) ── */
   .profile-area { flex: 1; overflow-y: auto; padding: 2rem; }
   .profile-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; margin-bottom: 1.5rem; }
@@ -3116,11 +3114,37 @@ const base = '';
   }
 
   function renderAsGeneral() {
+    const nameParts = (writerData.full_name || '').trim().split(/\s+/);
+    const firstGuess = nameParts[0] || '—';
+    const lastGuess = nameParts.slice(1).join(' ') || '—';
     return `
+      <div class="as-note">First/Last name, Date of birth, Time format, and KYC status aren't stored as separate fields yet — showing best-effort/placeholder values until those columns exist.</div>
       <div class="profile-card">
         <div class="settings-section" style="margin-bottom:0;">
           <h3>General information</h3>
-          <div class="setting-row"><div class="setting-info"><div class="setting-label">Nickname</div><div class="setting-desc">${esc(writerData.full_name || '—')}</div></div></div>
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.2rem;">
+            <div class="profile-avatar" style="width:44px;height:44px;font-size:1.1rem;">${writerData.photo_url ? `<img src="${esc(writerData.photo_url)}" alt="" />` : '👤'}</div>
+            <div><div class="setting-desc" style="margin:0;">Nickname</div><div class="setting-label">${esc(writerData.full_name || '—')}</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+            <div class="setting-form" style="margin:0;display:block;padding:0.75rem;"><div class="setting-desc">First name</div><div class="setting-label">${esc(firstGuess)}</div></div>
+            <div class="setting-form" style="margin:0;display:block;padding:0.75rem;"><div class="setting-desc">Last name</div><div class="setting-label">${esc(lastGuess)}</div></div>
+            <div class="setting-form" style="margin:0;display:block;padding:0.75rem;"><div class="setting-desc">Date of birth</div><div class="setting-label">Not set</div></div>
+            <div class="setting-form" style="margin:0;display:block;padding:0.75rem;"><div class="setting-desc">Time format</div><div class="setting-label">24 hours</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="settings-section" style="margin-bottom:0;">
+          <h3>Verification</h3>
+          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">KYC Verification</div></div><span class="setting-msg success" style="display:inline-block;">Not verified</span></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="settings-section" style="margin-bottom:0;">
+          <h3>Contacts</h3>
+          <div class="setting-row"><div class="setting-info"><div class="setting-label">Email</div><div class="setting-desc">${esc(currentSession?.user?.email || '—')}</div></div><span class="setting-msg success" style="display:inline-block;">Verified</span></div>
+          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">Phone</div><div class="setting-desc">Not set</div></div></div>
         </div>
       </div>`;
   }
@@ -3135,6 +3159,25 @@ const base = '';
           <div class="setting-form" id="asEmailForm"><input type="email" id="asNewEmailInput" placeholder="New email address" /><button class="btn-save" id="asSaveEmailBtn">Update Email</button><div class="setting-msg" id="asEmailMsg"></div></div>
           <div class="setting-row"><div class="setting-info"><div class="setting-label">Password</div><div class="setting-desc">••••••••</div></div><button class="btn-setting" id="asTogglePasswordForm">Change</button></div>
           <div class="setting-form" id="asPasswordForm"><input type="password" id="asNewPasswordInput" placeholder="New password (min 6 chars)" /><input type="password" id="asConfirmPasswordInput" placeholder="Confirm new password" /><button class="btn-save" id="asSavePasswordBtn">Update Password</button><div class="setting-msg" id="asPasswordMsg"></div></div>
+          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">Two-factor authentication</div></div><button class="btn-setting" id="asManage2fa">Set up</button></div>
+        </div>
+      </div>
+      <div class="as-note">Two-factor auth, Google linking, active sessions, and account deactivation aren't wired to real backend logic yet — buttons below are placeholders.</div>
+      <div class="profile-card">
+        <div class="settings-section" style="margin-bottom:0;">
+          <h3>Social accounts</h3>
+          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">Google</div></div><button class="btn-setting" id="asLinkGoogle">Link Google</button></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="settings-section" style="margin-bottom:0;">
+          <h3>Sessions</h3>
+          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">This device</div><div class="setting-desc">Current session</div></div><button class="btn-setting" id="asLogoutOtherDevices">Log out on other devices</button></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="settings-section" style="margin-bottom:0;">
+          <button class="btn-logout-profile" id="asDeactivateBtn">Deactivate account</button>
         </div>
       </div>`;
   }
@@ -3194,6 +3237,10 @@ const base = '';
         if (error) { msg.textContent = error.message; msg.className = 'setting-msg error'; } else { msg.textContent = 'Password updated.'; msg.className = 'setting-msg success'; }
         btn.disabled = false; btn.textContent = 'Update Password';
       });
+      document.getElementById('asManage2fa')?.addEventListener('click', () => alert('Two-factor authentication isn\'t set up yet — this will be wired once we add TOTP support.'));
+      document.getElementById('asLinkGoogle')?.addEventListener('click', () => alert('Google account linking isn\'t wired yet — needs OAuth provider setup in Supabase Auth.'));
+      document.getElementById('asLogoutOtherDevices')?.addEventListener('click', () => alert('Session tracking isn\'t built yet — Supabase Auth doesn\'t expose a session list via this client SDK without extra setup.'));
+      document.getElementById('asDeactivateBtn')?.addEventListener('click', () => alert('Account deactivation isn\'t wired yet — this needs a confirmed backend flow before going live.'));
     } else {
       body.innerHTML = renderAsNotifications();
       body.querySelectorAll('[data-asnotif]').forEach(input => {
