@@ -64,7 +64,7 @@ const base = '';
  
   .nav-item:hover { background: #f1f5f9; color: #0f172a; }
   .nav-item.active { background: #eef6fb; color: #046fcd; font-weight: 600; }
-  .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
+  .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .nav-item .nav-badge {
     margin-left: auto; background: #f1f5f9; color: #94a3b8; font-size: 0.68rem; font-weight: 700;
     padding: 0.1rem 0.5rem; border-radius: 10px;
@@ -1025,31 +1025,34 @@ const base = '';
     </div>
 
     <a class="nav-item active" href="#" data-view="orders">
-      <span class="icon">📁</span> My Orders
+      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5e5e87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11a8 8 0 0 0-8-8"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg></span> My Orders
     </a>
     <a class="nav-item" href="#" data-view="available">
-      <span class="icon">🆕</span> Available Orders
+      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5e5e87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2.5a1.5 1.5 0 0 1 1.2.6l.6.8a1.5 1.5 0 0 0 1.2.6z"/><path d="M3 8.268a2 2 0 0 0-1 1.738V19a2 2 0 0 0 2 2h11a2 2 0 0 0 1.732-1"/></svg></span> Available Orders
       <span id="availBadge" style="display:none;margin-left:auto;background:#ef4444;color:#fff;font-size:0.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;align-items:center;justify-content:center;">0</span>
     </a>
     <a class="nav-item" href="#" data-view="proposals">
-      <span class="icon">📨</span> My Proposals
+      <span class="icon">📁</span> My Proposals
     </a>
     <a class="nav-item" href="#" data-view="chat">
-      <span class="icon">💬</span> Chat
+      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#515152" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/><path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/></svg></span> Chat
       <span id="chatNavBadge" style="display:none;margin-left:auto;background:#046fcd;color:#fff;font-size:0.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;align-items:center;justify-content:center;">0</span>
     </a>
     <a class="nav-item" href="#" data-view="balance">
-      <span class="icon">💰</span> Balance
+      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5e5e87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span> Balance
       <span id="balanceNavAmt" style="margin-left:auto;font-size:0.78rem;font-weight:700;color:#16a34a;">$0.00</span>
     </a>
     <a class="nav-item" href="#" data-view="notifications" style="position:relative;">
-      <span class="icon">🔔</span> Notifications
+      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5e5e87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></span> Notifications
       <span id="notifBadge" style="display:none;margin-left:auto;background:#ef4444;color:#fff;font-size:0.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;align-items:center;justify-content:center;">0</span>
     </a>
   </nav>
   <div class="sidebar-divider"></div>
   <nav class="sidebar-nav">
-    <div class="sidebar-bottom">
+    <div class="sidebar-bottom" style="display:flex;gap:0.5rem;">
+      <button class="theme-icon-btn" id="supportIconBtn" title="Support">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#515152" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/></svg>
+      </button>
       <button class="theme-icon-btn" id="themeIconBtn" title="Theme">
         <span class="theme-icon-current" id="themeIconCurrent">🌙</span>
       </button>
@@ -3282,6 +3285,12 @@ const base = '';
   // ── THEME TOGGLE ──
   const THEME_KEY = 'dashboard-theme';
   const themeIconBtn = document.getElementById('themeIconBtn');
+  document.getElementById('supportIconBtn')?.addEventListener('click', () => {
+    document.querySelector('.nav-item[data-view="chat"]')?.dispatchEvent(new Event('click'));
+    setTimeout(() => {
+      document.querySelector('.new-chat-opt[data-chat-type="support"]')?.dispatchEvent(new Event('click'));
+    }, 150);
+  });
   const themePopup = document.getElementById('themePopup');
   const themePopupOverlay = document.getElementById('themePopupOverlay');
   const themeIconCurrent = document.getElementById('themeIconCurrent');
