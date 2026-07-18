@@ -1426,7 +1426,7 @@ const base = '';
     <div class="upload-msg" id="bmPbMsg" style="display:none;margin-bottom:0.8rem;"></div>
     <div class="bm-pb-actions">
       <button class="bm-pb-cancel" id="bmPbCancelBtn">Cancel</button>
-      <button class="bm-pb-confirm" id="bmPbConfirmBtn">Make proposal</button>
+      <button class="bm-pb-confirm" id="bmPbConfirmBtn">Confirm proposal</button>
     </div>
   </div>
 </div>
@@ -1866,7 +1866,7 @@ const base = '';
     msgEl.style.display = 'none';
     const confirmBtn = document.getElementById('bmPbConfirmBtn') as HTMLButtonElement;
     confirmBtn.disabled = false;
-    confirmBtn.textContent = isEdit ? 'Update proposal' : 'Make proposal';
+    confirmBtn.textContent = isEdit ? 'Update proposal' : 'Confirm proposal';
 
     updateBmProposalDisplay();
     document.getElementById('bmProposalOverlay')!.classList.add('open');
@@ -1942,7 +1942,7 @@ const base = '';
 
     } catch (err: any) {
       msg.textContent = err?.message || 'Could not submit proposal.'; msg.className = 'upload-msg error'; msg.style.display = 'block';
-      btn.disabled = false; btn.textContent = bmPbIsEdit ? 'Update proposal' : 'Make proposal';
+      btn.disabled = false; btn.textContent = bmPbIsEdit ? 'Update proposal' : 'Confirm proposal';
     }
   }
  
