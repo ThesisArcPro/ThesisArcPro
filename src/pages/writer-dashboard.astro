@@ -760,6 +760,27 @@ const base = '';
   .modal-left::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   .bm-chat-body::-webkit-scrollbar-thumb:hover { background: #4a5160; }
 
+  /* ══ MY ORDERS — file upload area (gold theme) ══ */
+  .bm-upload-label { font-size: 0.66rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.35rem; }
+  .bm-upload-select { width: 100%; background: var(--main-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.75rem; font-size: 0.83rem; color: var(--text); font-family: inherit; outline: none; margin-bottom: 1rem; }
+  .bm-upload-select:focus { border-color: #c5a059; }
+  .bm-dropzone { position: relative; border: 1.5px dashed var(--border); border-radius: 10px; padding: 1.4rem 1rem; text-align: center; cursor: pointer; transition: 0.2s; background: var(--main-bg); margin-bottom: 1rem; }
+  .bm-dropzone:hover { border-color: #c5a059; }
+  .bm-dropzone p { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem; }
+  .bm-dropzone .bm-dz-filename { font-size: 0.78rem; color: #c5a059; font-weight: 600; margin-top: 0.4rem; }
+  .bm-dropzone input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+  .bm-upload-btn { background: #c5a059; color: #1a1206; border: none; border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.83rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .bm-upload-btn:hover { background: #d4b473; }
+  .bm-upload-btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+  .bm-files-section { margin-top: 1.2rem; }
+  .bm-files-section h3 { font-size: 0.82rem; font-weight: 700; margin-bottom: 0.6rem; color: var(--text); }
+  .bm-file-row { display: flex; align-items: center; justify-content: space-between; background: var(--main-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.75rem; gap: 0.6rem; margin-bottom: 0.4rem; }
+  .bm-file-type-badge { background: rgba(197,160,89,0.15); color: #c5a059; font-size: 0.66rem; font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 5px; white-space: nowrap; }
+  .bm-file-name { font-size: 0.8rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bm-review-btn { width: 100%; background: #c5a059; color: #1a1206; border: none; border-radius: 8px; padding: 0.8rem 1.2rem; font-size: 0.88rem; font-weight: 700; cursor: pointer; margin-top: 1.2rem; font-family: inherit; }
+  .bm-review-btn:hover { background: #d4b473; }
+  .bm-review-btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+
   /* Fix: the site's thin custom scrollbar is scoped-only, so it never reaches innerHTML-rendered
      modal content (description box, chat body, etc). Duplicating it here as global makes it apply. */
   .bm-instr-desc::-webkit-scrollbar,
@@ -2463,109 +2484,81 @@ const base = '';
     const field = (label: string, value: string) =>
       `<div><div class="om-label">${label}</div><div class="om-value">${value}</div></div>`;
  
-    document.getElementById('modalContent')!.innerHTML = `<div class="modal-left"><div class="om-header">
+    document.getElementById('modalContent')!.innerHTML = `<div class="modal-left">
+      <div class="bm-header">
         <div>
-          <div class="om-title">${esc(order.topic || '(no topic)')}</div>
-          <div class="om-id">ID ${esc(order.order_number || order.id)}</div>
+          <div class="bm-title">${esc(order.topic || '(no topic)')}</div>
         </div>
-        <span class="om-status-badge status-badge ${statusClass(order.order_status)}">${esc((order.order_status||'').replace(/_/g,' '))}</span>
+        <span class="status-badge ${statusClass(order.order_status)}">${esc((order.order_status||'').replace(/_/g,' '))}</span>
       </div>
- 
-      <div class="om-info-row">
-        <div class="om-info-card">
-          <div class="om-info-label">Deadline</div>
-          <div class="om-info-value">${dl.text}</div>
-          <div class="om-info-sub">Due ${esc(dueDate)}</div>
-        </div>
-        <div class="om-info-card">
-          <div class="om-info-label">Started</div>
-          <div class="om-info-value">${esc(startDate)}</div>
-          <div class="om-info-sub">${esc(order.assignment_type || 'Essay')}</div>
-        </div>
+      <div class="bm-id-row"><span>ID ${esc(order.order_number || order.id)}</span></div>
+
+      <div class="bm-stats-strip">
+        <div class="bm-stat"><div class="bm-stat-lbl">Deadline</div><div class="bm-stat-val gold">${dl.text}</div><div style="font-size:0.68rem;color:var(--text-muted);margin-top:0.2rem;">Due ${esc(dueDate)}</div></div>
+        <div class="bm-stat"><div class="bm-stat-lbl">Started</div><div class="bm-stat-val">${esc(startDate)}</div><div style="font-size:0.68rem;color:var(--text-muted);margin-top:0.2rem;">${esc(order.assignment_type || 'Essay')}</div></div>
       </div>
- 
-      <div class="om-tabs">
-        <button class="om-tab om-tab--active" data-mtab="general">General</button>
-        <button class="om-tab" data-mtab="instructions">Instructions</button>
-        <button class="om-tab" data-mtab="files">Files</button>
+
+      <div class="bm-tabs">
+        <button class="bm-tab bm-tab--active" data-mtab="general">General</button>
+        <button class="bm-tab" data-mtab="instructions">Instructions</button>
+        <button class="bm-tab" data-mtab="files">Files</button>
       </div>
- 
+
       <!-- GENERAL: upload completed work -->
-      <div class="om-panel om-panel--active" data-mpanel="general">
-        <p class="upload-order-id">Order: ${esc(activeOrderNumber)} — ${esc(order.topic || '')}</p>
-        <div class="form-group">
-          <label>Submit file as</label>
-          <select id="fileType">
-            <option value="">— Select file type —</option>
-            <option value="Final Copy">Final Copy</option>
-            <option value="Revision">Revision</option>
-            <option value="AI Report">AI Report</option>
-            <option value="Turnitin Report">Turnitin Report</option>
-            <option value="Graphics & Tables">Graphics & Tables</option>
-            <option value="Abstract">Abstract</option>
-            <option value="Early Draft">Early Draft</option>
-            <option value="Outline">Outline</option>
-            <option value="Printable Sources">Printable Sources</option>
-          </select>
+      <div class="bm-panel bm-panel--active" data-mpanel="general">
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1rem;">Order: ${esc(activeOrderNumber)} — ${esc(order.topic || '')}</p>
+        <div class="bm-upload-label">Submit file as</div>
+        <select id="fileType" class="bm-upload-select">
+          <option value="">— Select file type —</option>
+          <option value="Final Copy">Final Copy</option>
+          <option value="Revision">Revision</option>
+          <option value="AI Report">AI Report</option>
+          <option value="Turnitin Report">Turnitin Report</option>
+          <option value="Graphics & Tables">Graphics & Tables</option>
+          <option value="Abstract">Abstract</option>
+          <option value="Early Draft">Early Draft</option>
+          <option value="Outline">Outline</option>
+          <option value="Printable Sources">Printable Sources</option>
+        </select>
+        <div class="bm-upload-label">Upload file</div>
+        <div class="bm-dropzone" id="dropzone">
+          <div id="dzIcon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/></svg></div>
+          <p id="dzText">Browse or drag and drop a file here</p>
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.zip,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg" />
         </div>
-        <div class="form-group">
-          <label>Upload file</label>
-          <div class="dropzone" id="dropzone">
-            <div id="dzIcon">📎</div>
-            <p id="dzText">Browse or drag and drop a file here</p>
-            <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.zip,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg" />
-          </div>
+        <button class="bm-upload-btn" id="uploadBtn" style="display:flex;align-items:center;gap:0.5rem;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg>Upload file</button>
+        <div class="upload-msg" id="uploadMsg" style="display:none;margin-top:0.6rem;"></div>
+        <div class="bm-files-section">
+          <h3>Uploaded files</h3>
+          <div id="filesList"></div>
         </div>
-        <button class="upload-btn" id="uploadBtn">📤 Upload File</button>
-        <div class="upload-msg" id="uploadMsg" style="display:none;"></div>
-        <div class="files-section">
-          <h3>Uploaded Files</h3>
-          <div id="filesList" class="files-list"></div>
-        </div>
-        <div class="review-action" id="reviewActionWrap">
-          <button class="btn-review" id="markReviewBtn">📤 Submit & Mark as In Review</button>
+        <div id="reviewActionWrap">
+          <button class="bm-review-btn" id="markReviewBtn">Submit & mark as in review</button>
           <div class="review-msg" id="reviewMsg"></div>
         </div>
       </div>
- 
+
       <!-- INSTRUCTIONS: order details + description -->
-      <div class="om-panel" data-mpanel="instructions">
-        <div class="om-grid">
-          ${field('Type', esc(order.assignment_type || '—'))}
-          ${field('Subject', esc(order.subject || '—'))}
-          ${field('Education level', esc(order.education_level || '—'))}
-          ${field('Language', esc(order.language || '—'))}
-          ${field('Service', esc(order.service || '—'))}
-          ${field('Deadline', esc(dueDate))}
+      <div class="bm-panel" data-mpanel="instructions">
+        <div class="bm-instr-grid">
+          <div class="bm-instr-field"><div class="bm-lbl">Type</div><div class="bm-val">${esc(order.assignment_type || '—')}</div></div>
+          <div class="bm-instr-field"><div class="bm-lbl">Subject</div><div class="bm-val">${esc(order.subject || '—')}</div></div>
+          <div class="bm-instr-field"><div class="bm-lbl">Education level</div><div class="bm-val">${esc(order.education_level || '—')}</div></div>
+          <div class="bm-instr-field"><div class="bm-lbl">Language</div><div class="bm-val">${esc(order.language || '—')}</div></div>
+          <div class="bm-instr-field"><div class="bm-lbl">Service</div><div class="bm-val">${esc(order.service || '—')}</div></div>
+          <div class="bm-instr-field"><div class="bm-lbl">Deadline</div><div class="bm-val">${esc(dueDate)}</div></div>
         </div>
-        <div>
-          <div class="om-desc-label">Description</div>
-          <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
-        </div>
+        <div class="bm-instr-desc-label">Description</div>
+        <div class="bm-instr-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
       </div>
- 
+
       <!-- FILES: client attachments -->
-      <div class="om-panel" data-mpanel="files">
-        <div id="clientFilesList" class="files-list"><div class="no-files">Loading client files…</div></div>
+      <div class="bm-panel" data-mpanel="files">
+        <div id="clientFilesList"><div class="no-files">Loading client files…</div></div>
       </div>
- 
+
       </div>
-    <div class="modal-right">
-      <div class="oc-header">
-        <div class="oc-header-left">
-          <div class="oc-avatar">👤</div>
-          <div>
-            <div class="oc-name">${esc(order.client_email?.split('@')[0] || 'Client')}</div>
-            <div class="oc-lastseen">Last seen: today</div>
-          </div>
-        </div>
-      </div>
-      <div class="oc-messages" id="ocMessages"><div class="oc-loading">Loading…</div></div>
-      <div class="oc-inputbar">
-        <input type="text" class="oc-input" id="ocInput" placeholder="Type a message…" />
-        <button class="oc-sendbtn" id="ocSend">Send</button>
-      </div>
-    </div>`;
+    <div class="bm-chat-panel" id="bmOrderChatPanel"></div>`;
  
     // Modal tab switching
     const content = document.getElementById('modalContent')!;
@@ -2789,24 +2782,24 @@ const base = '';
     const mine = m.sender_id === currentSession.user.id;
     const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
     const who = m.sender_role === 'support' ? 'Support' : (m.sender_name || 'Client');
-    return `<div class="oc-row ${mine ? 'mine' : 'theirs'}">
-      ${!mine ? `<div class="oc-sender">${esc(who)}</div>` : ''}
-      <div class="oc-bubble">${esc(m.content)}</div>
-      <div class="oc-msgtime">${time}${mine ? ' <span style="color:#60a5fa;">✓</span>' : ''}</div>
+    return `<div class="bm-msg ${mine ? 'mine' : 'theirs'}">
+      ${!mine ? `<div class="bm-msg-sender">${esc(who)}</div>` : ''}
+      <div class="bm-bubble">${esc(m.content)}</div>
+      <div class="bm-msg-meta">${time}${mine ? ' ✓' : ''}</div>
     </div>`;
   }
 
   function ocRender(messages: any[]) {
     const c = document.getElementById('ocMessages');
     if (!c) return;
-    if (!messages.length) { c.innerHTML = '<div class="oc-empty">No messages yet. Say hello to the client!</div>'; return; }
+    if (!messages.length) { c.innerHTML = `<div class="bm-chat-empty"><div class="bm-chat-empty-icon">✉️</div><p>No messages yet. Say hello to the client!</p></div>`; return; }
     ocLastDate = '';
     c.innerHTML = messages.map((m: any) => {
       const dateLabel = m.created_at ? bidChatDateLabel(m.created_at) : '';
       let divider = '';
       if (dateLabel && dateLabel !== ocLastDate) {
         ocLastDate = dateLabel;
-        divider = `<div class="oc-date">${dateLabel}</div>`;
+        divider = `<div style="text-align:center;font-size:0.7rem;color:var(--text-muted);margin:0.4rem 0;">${dateLabel}</div>`;
       }
       return divider + ocBubble(m);
     }).join('');
@@ -2817,8 +2810,24 @@ const base = '';
     ocOrder = order;
     ocConvId = null;
     if (ocSub) { ocSub.unsubscribe(); ocSub = null; }
+    const panel = document.getElementById('bmOrderChatPanel');
+    if (!panel) return;
+    const clientId = bmClientDisplayId(order);
+    panel.innerHTML = `
+      <div class="bm-chat-head">
+        <div class="bm-chat-left">
+          <div class="bm-chat-avatar">${esc((clientId[0] || 'C').toUpperCase())}</div>
+          <div><div class="bm-chat-name">${esc(clientId)}</div></div>
+        </div>
+      </div>
+      <div id="ocMessages" class="bm-chat-body"></div>
+      <div class="bm-chat-input-bar">
+        <input type="text" id="ocInput" class="bm-chat-input" placeholder="Type a message…" />
+        <button id="ocSend" class="bm-chat-send">➤</button>
+      </div>
+    `;
     const c = document.getElementById('ocMessages')!;
-    c.innerHTML = '<div class="oc-loading">Loading…</div>';
+    c.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.82rem;">Loading…</div>';
     try {
       ocConvId = await ocFindConversation(String(order.id));
       if (!ocConvId) { ocRender([]); return; }
@@ -2829,7 +2838,7 @@ const base = '';
       );
       ocRender(await res.json());
       ocSubscribe();
-    } catch (err) { console.error(err); c.innerHTML = '<div class="oc-empty">Could not load chat.</div>'; }
+    } catch (err) { console.error(err); c.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.82rem;">Could not load chat.</div>'; }
   }
 
   function ocSubscribe() {
@@ -2839,12 +2848,12 @@ const base = '';
         (payload: any) => {
           const m = payload.new;
           const c = document.getElementById('ocMessages')!;
-          const ph = c.querySelector('.oc-empty, .oc-loading'); if (ph) c.innerHTML = '';
+          const ph = c.querySelector('.bm-chat-empty'); if (ph) c.innerHTML = '';
           const dateLabel = m.created_at ? bidChatDateLabel(m.created_at) : '';
           let divider = '';
           if (dateLabel && dateLabel !== ocLastDate) {
             ocLastDate = dateLabel;
-            divider = `<div class="oc-date">${dateLabel}</div>`;
+            divider = `<div style="text-align:center;font-size:0.7rem;color:var(--text-muted);margin:0.4rem 0;">${dateLabel}</div>`;
           }
           c.insertAdjacentHTML('beforeend', divider + ocBubble(m));
           c.scrollTop = c.scrollHeight;
