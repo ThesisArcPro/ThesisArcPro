@@ -765,6 +765,10 @@ const base = '';
   body.dark-mode .bm-chat-body::-webkit-scrollbar-thumb:hover,
   body.dark-mode .modal-left::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
+  /* Fix: Available Orders / My Proposals lists were missing the row-spacing that My Orders
+     already applies via JS. This makes spacing consistent across all three lists. */
+  #availList, #propList, #ordersList { display: flex; flex-direction: column; gap: 0.6rem; }
+
   .order-table { display: flex; flex-direction: column; gap: 0.5rem; }
  
   .order-table-head {
@@ -1524,15 +1528,18 @@ const base = '';
     return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
  
+  const CLOCK_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;display:inline-block;"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/><path d="M6.38 18.7 4 21"/><path d="M17.64 18.67 20 21"/></svg>`;
+  const WARNING_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;display:inline-block;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`;
+
   function deadlineInfo(deadline: string) {
     if (!deadline) return { text: 'No deadline', cls: '' };
     const diff = new Date(deadline).getTime() - Date.now();
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
-    if (diff < 0) return { text: `⚠️ ${Math.abs(days)}d overdue`, cls: 'overdue' };
-    if (days === 0 && hours > 0) return { text: `⏰ ${hours}h left`, cls: 'urgent' };
-    if (days <= 2) return { text: `⏰ ${days}d left`, cls: 'urgent' };
-    return { text: `⏰ ${days}d left`, cls: 'ok' };
+    if (diff < 0) return { text: `${WARNING_ICON_SVG} ${Math.abs(days)}d overdue`, cls: 'overdue' };
+    if (days === 0 && hours > 0) return { text: `${CLOCK_ICON_SVG} ${hours}h left`, cls: 'urgent' };
+    if (days <= 2) return { text: `${CLOCK_ICON_SVG} ${days}d left`, cls: 'urgent' };
+    return { text: `${CLOCK_ICON_SVG} ${days}d left`, cls: 'ok' };
   }
  
   function statusClass(status: string) {
@@ -1858,7 +1865,7 @@ const base = '';
     panel.innerHTML = `
       <div class="bm-chat-head">
         <div class="bm-chat-left">
-          <div class="bm-chat-avatar">👤</div>
+          <div class="bm-chat-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.925 20.056a6 6 0 0 0-11.851.001"/><circle cx="12" cy="11" r="4"/><circle cx="12" cy="12" r="10"/></svg></div>
           <div><div class="bm-chat-name">—</div><div class="bm-chat-sub">Place a proposal to chat</div></div>
         </div>
       </div>
