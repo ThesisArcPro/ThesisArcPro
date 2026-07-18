@@ -2562,13 +2562,13 @@ const base = '';
  
     // Modal tab switching
     const content = document.getElementById('modalContent')!;
-    content.querySelectorAll('.om-tab').forEach(tab => {
+    content.querySelectorAll('.bm-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const which = (tab as HTMLElement).dataset.mtab;
-        content.querySelectorAll('.om-tab').forEach(t => t.classList.remove('om-tab--active'));
-        content.querySelectorAll('.om-panel').forEach(p => p.classList.remove('om-panel--active'));
-        tab.classList.add('om-tab--active');
-        content.querySelector(`.om-panel[data-mpanel="${which}"]`)?.classList.add('om-panel--active');
+        content.querySelectorAll('.bm-tab').forEach(t => t.classList.remove('bm-tab--active'));
+        content.querySelectorAll('.bm-panel').forEach(p => p.classList.remove('bm-panel--active'));
+        tab.classList.add('bm-tab--active');
+        content.querySelector(`.bm-panel[data-mpanel="${which}"]`)?.classList.add('bm-panel--active');
         if (which === 'general') { loadOrderFiles(); }
         if (which === 'files') loadClientFiles(order.id);
       });
