@@ -65,8 +65,14 @@ const base = '';
   .nav-item:hover { background: #f1f5f9; color: #0f172a; }
   .nav-item.active { background: #eef6fb; color: #046fcd; font-weight: 600; }
   .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
+  .nav-item .nav-badge {
+    margin-left: auto; background: #f1f5f9; color: #94a3b8; font-size: 0.68rem; font-weight: 700;
+    padding: 0.1rem 0.5rem; border-radius: 10px;
+  }
+  .nav-item.active .nav-badge { background: rgba(4,111,205,0.15); color: #046fcd; }
   .sidebar-divider { height: 1px; background: #eef2f7; margin: 1rem 0.9rem; }
 
+  /* Profile pill at top of sidebar */
   .sidebar-profile-pill {
     display: flex; align-items: center; gap: 0.65rem;
     margin: 0 0.5rem 1rem; padding: 0.55rem 0.7rem;
@@ -82,6 +88,7 @@ const base = '';
   .sidebar-profile-pill-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .sidebar-profile-pill-name { font-size: 0.86rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+  /* Profile popover (opens from the pill) */
   .sidebar-profile-popover {
     display: none; position: absolute; top: 62px; left: 12px; width: 216px; z-index: 50;
     background: var(--panel-bg); border: 1px solid var(--border); border-radius: 14px;
@@ -108,14 +115,60 @@ const base = '';
   .sp-pop-item .sp-pop-ic { font-size: 0.85rem; width: 16px; text-align: center; }
   .sp-pop-item.sp-pop-logout { color: #dc2626; border-top: 1px solid var(--border); margin-top: 0.2rem; padding-top: 0.65rem; border-radius: 0 0 8px 8px; }
   .sp-pop-item.sp-pop-logout:hover { background: #fef2f2; }
-  body.dark-mode .sidebar-profile-pill { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
-  body.dark-mode .sidebar-profile-pill:hover { border-color: #60a5fa; background: #1e2536; }
-  body.dark-mode .sidebar-profile-pill-avatar { background: #2a3244; }
   body.dark-mode .sidebar-profile-popover { background: #1a1f2e; border-color: rgba(255,255,255,0.08); box-shadow: 0 20px 50px rgba(0,0,0,0.45); }
   body.dark-mode .sp-pop-status-row { border-color: rgba(255,255,255,0.06); }
   body.dark-mode .sp-pop-item:hover { background: rgba(255,255,255,0.05); }
   body.dark-mode .sp-pop-item.sp-pop-logout { border-color: rgba(255,255,255,0.06); color: #f87171; }
   body.dark-mode .sp-pop-item.sp-pop-logout:hover { background: rgba(239,68,68,0.08); }
+
+  /* My Public Profile modal */
+  .pp-stats-strip { display: flex; background: var(--main-bg); border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 1rem; }
+  .pp-stat { flex: 1; text-align: center; }
+  .pp-stat .pp-stat-val { font-size: 0.95rem; font-weight: 800; color: var(--text); }
+  .pp-stat .pp-stat-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; }
+  .pp-tabs { display: flex; gap: 0.3rem; background: var(--main-bg); padding: 4px; border-radius: 10px; width: fit-content; margin-bottom: 1.1rem; }
+  .pp-tab { background: none; border: none; color: var(--text-muted); padding: 0.4rem 0.95rem; font-size: 0.82rem; font-weight: 600; border-radius: 8px; cursor: pointer; font-family: inherit; }
+  .pp-tab.active { background: var(--panel-bg); color: #046fcd; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .pp-section-title { font-size: 0.82rem; font-weight: 700; color: var(--text); margin: 0 0 0.7rem; }
+  .pp-rating-card { background: var(--main-bg); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+  .pp-rating-top { display: flex; align-items: baseline; gap: 0.3rem; }
+  .pp-rating-num { font-size: 1.15rem; font-weight: 800; color: var(--text); }
+  .pp-rating-star { color: #f59e0b; }
+  .pp-rating-based { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.7rem; }
+  .pp-bar-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .pp-bar-label { font-size: 0.72rem; color: var(--text-muted); width: 38px; flex-shrink: 0; }
+  .pp-bar-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .pp-bar-fill { height: 100%; background: #f59e0b; border-radius: 3px; }
+  .pp-bar-pct { font-size: 0.7rem; color: var(--text-muted); width: 28px; text-align: right; flex-shrink: 0; }
+  .pp-pill-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+  .pp-pill { background: var(--main-bg); border-radius: 20px; padding: 0.3rem 0.75rem; font-size: 0.76rem; color: var(--text); }
+  .pp-about-text { font-size: 0.85rem; color: var(--text); line-height: 1.7; margin-bottom: 1.2rem; }
+
+  /* Notification toggle (UI only — not yet persisted) */
+  .as-toggle { position: relative; width: 38px; height: 22px; flex-shrink: 0; cursor: pointer; }
+  .as-toggle input { opacity: 0; width: 0; height: 0; }
+  .as-toggle-track { position: absolute; inset: 0; background: var(--border); border-radius: 20px; transition: background 0.15s; }
+  .as-toggle-thumb { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.2); transition: all 0.15s; }
+  .as-toggle input:checked + .as-toggle-track { background: #046fcd; }
+  .as-toggle input:checked + .as-toggle-track .as-toggle-thumb { transform: translateX(16px); }
+  .as-note { font-size: 0.74rem; color: var(--text-muted); background: var(--main-bg); border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 1rem; }
+
+  /* Bottom icon-button row (support / tips / theme) */
+  .sidebar-icon-row { display: flex; gap: 0.5rem; padding: 0 0.5rem; }
+  .sidebar-icon-btn {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--main-bg); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; cursor: pointer; transition: 0.2s;
+  }
+  .sidebar-icon-btn:hover { border-color: #046fcd; background: #eef6fb; }
+  body.dark-mode .sidebar-profile-pill { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
+  body.dark-mode .sidebar-profile-pill:hover { border-color: #60a5fa; background: #1e2536; }
+  body.dark-mode .sidebar-profile-pill-avatar { background: #2a3244; }
+  body.dark-mode .sidebar-icon-btn { background: #161b27; border-color: rgba(255,255,255,0.08); color: #e2e8f0; }
+  body.dark-mode .sidebar-icon-btn:hover { border-color: #60a5fa; background: rgba(96,165,250,0.1); }
+  body.dark-mode .nav-item .nav-badge { background: #1e2536; color: #64748b; }
+  body.dark-mode .nav-item.active .nav-badge { background: rgba(96,165,250,0.15); color: #60a5fa; }
  
   .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
  
@@ -321,28 +374,6 @@ const base = '';
   }
  
   .modal-close:hover { color: var(--text); }
-
-  .pp-stats-strip { display: flex; background: var(--main-bg); border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 1rem; }
-  .pp-stat { flex: 1; text-align: center; }
-  .pp-stat .pp-stat-val { font-size: 0.95rem; font-weight: 800; color: var(--text); }
-  .pp-stat .pp-stat-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; }
-  .pp-tabs { display: flex; gap: 0.3rem; background: var(--main-bg); padding: 4px; border-radius: 10px; width: fit-content; margin-bottom: 1.1rem; }
-  .pp-tab { background: none; border: none; color: var(--text-muted); padding: 0.4rem 0.95rem; font-size: 0.82rem; font-weight: 600; border-radius: 8px; cursor: pointer; font-family: inherit; }
-  .pp-tab.active { background: var(--panel-bg); color: #046fcd; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-  .pp-section-title { font-size: 0.82rem; font-weight: 700; color: var(--text); margin: 0 0 0.7rem; }
-  .pp-rating-card { background: var(--main-bg); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
-  .pp-rating-top { display: flex; align-items: baseline; gap: 0.3rem; }
-  .pp-rating-num { font-size: 1.15rem; font-weight: 800; color: var(--text); }
-  .pp-rating-star { color: #f59e0b; }
-  .pp-rating-based { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.7rem; }
-  .pp-bar-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
-  .pp-bar-label { font-size: 0.72rem; color: var(--text-muted); width: 38px; flex-shrink: 0; }
-  .pp-bar-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-  .pp-bar-fill { height: 100%; background: #f59e0b; border-radius: 3px; }
-  .pp-bar-pct { font-size: 0.7rem; color: var(--text-muted); width: 28px; text-align: right; flex-shrink: 0; }
-  .pp-pill-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
-  .pp-pill { background: var(--main-bg); border-radius: 20px; padding: 0.3rem 0.75rem; font-size: 0.76rem; color: var(--text); }
-  .pp-about-text { font-size: 0.85rem; color: var(--text); line-height: 1.7; margin-bottom: 1.2rem; }
  
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -1269,6 +1300,27 @@ const base = '';
     <div id="publicProfileBody" style="padding:0 1.8rem 1.8rem;overflow-y:auto;flex:1;"></div>
   </div>
 </div>
+
+<!-- ACCOUNT SETTINGS MODAL -->
+<div class="modal" id="accountSettingsModal">
+  <div class="modal-overlay" id="accountSettingsOverlay"></div>
+  <div class="modal-box" style="max-width:600px;height:auto;max-height:86vh;flex-direction:column;">
+    <button class="modal-close" id="accountSettingsClose">✕</button>
+    <div style="padding:1.8rem 1.8rem 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+      <h2 style="font-size:1.15rem;font-weight:800;color:var(--text);margin:0;">Account settings</h2>
+      <button class="btn-logout-profile" id="asLogoutBtn" style="margin:0;padding:0.45rem 1rem;font-size:0.8rem;">🚪 Log out</button>
+    </div>
+    <div style="padding:1.1rem 1.8rem 0;flex-shrink:0;">
+      <div class="pp-tabs">
+        <button class="pp-tab active" id="asTabGeneral" data-astab="general">General</button>
+        <button class="pp-tab" id="asTabSecurity" data-astab="security">Sign in &amp; security</button>
+        <button class="pp-tab" id="asTabNotifications" data-astab="notifications">Notifications</button>
+      </div>
+    </div>
+    <div id="accountSettingsBody" style="padding:0 1.8rem 1.8rem;overflow-y:auto;flex:1;"></div>
+  </div>
+</div>
+
  
 <script>
   import { supabase } from '../lib/supabase.js';
@@ -1335,6 +1387,7 @@ const base = '';
     writerData = data[0];
     writerId = writerData.id;
 
+    // Populate the sidebar profile pill + popover with real data
     const pillName = document.getElementById('sidebarProfileName');
     const popName = document.getElementById('sidebarPopName');
     const pillAvatar = document.getElementById('sidebarProfileAvatar');
@@ -2789,6 +2842,8 @@ const base = '';
         title.textContent = 'My Proposals';
         sub.textContent = 'Bids you have placed';
         loadMyBids();
+      } else if (view === 'profile') {
+        goToProfileView('overview');
       } else if (view === 'chat') {
         document.getElementById('viewChat')!.classList.add('active');
         title.textContent = 'Chat';
@@ -2806,6 +2861,8 @@ const base = '';
       }
     });
   });
+
+  // Jump straight into the My Profile view on a specific tab (used by the profile popover)
   function goToProfileView(tab: string) {
     document.querySelectorAll('.nav-item[data-view]').forEach(n => n.classList.remove('active'));
     document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
@@ -2931,16 +2988,21 @@ const base = '';
         <h3>Account & Payment</h3><ul><li>Payment processed after client confirms completion.</li><li>Your rating affects order assignment priority.</li><li>Violations may result in warnings, suspension, or termination.</li></ul>
       </div></div>`;
   }
+
+  // ═══ MY PUBLIC PROFILE MODAL ═══
   let ppActiveTab = 'statistics';
 
   function ppRatingBreakdown() {
-    const counts = [0, 0, 0, 0, 0];
+    const counts = [0, 0, 0, 0, 0]; // index 0 = 5-star ... index 4 = 1-star
     writerReviews.forEach((r: any) => {
       const rating = Math.round(r.rating || 0);
       if (rating >= 1 && rating <= 5) counts[5 - rating]++;
     });
     const total = writerReviews.length || 1;
-    return [5, 4, 3, 2, 1].map((star, i) => ({ star, pct: Math.round((counts[i] / total) * 100) }));
+    return [5, 4, 3, 2, 1].map((star, i) => ({
+      star,
+      pct: Math.round((counts[i] / total) * 100)
+    }));
   }
 
   function renderPpStatistics() {
@@ -2983,7 +3045,9 @@ const base = '';
   }
 
   function renderPpSamples() {
-    if (!writerData.sample_url) return '<p style="color:var(--text-muted);font-size:0.85rem;">No writing sample uploaded yet.</p>';
+    if (!writerData.sample_url) {
+      return '<p style="color:var(--text-muted);font-size:0.85rem;">No writing sample uploaded yet.</p>';
+    }
     return `<div class="file-attached">📄 <a href="${esc(writerData.sample_url)}" target="_blank">${esc(writerData.sample_name || 'View Sample')}</a></div>`;
   }
 
@@ -2996,7 +3060,15 @@ const base = '';
     const successRate = allOrders.length ? Math.round((completedCount / totalAssigned) * 100) : 0;
 
     const body = document.getElementById('publicProfileBody')!;
+    const avatarHtml = writerData.photo_url ? `<img src="${esc(writerData.photo_url)}" alt="" />` : '👤';
     body.innerHTML = `
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+        <div class="profile-avatar" style="width:44px;height:44px;font-size:1.2rem;">${avatarHtml}</div>
+        <div>
+          <div class="profile-name" style="font-size:1rem;">${esc(writerData.full_name || 'Writer')}</div>
+          <div class="profile-status"><span class="status-dot ${writerData.is_active ? 'online' : 'offline'}"></span> ${writerData.is_active ? 'Online' : 'Offline'}</div>
+        </div>
+      </div>
       <div class="pp-stats-strip">
         <div class="pp-stat"><div class="pp-stat-val">${avgRating} ★</div><div class="pp-stat-sub">${writerReviews.length} reviews</div></div>
         <div class="pp-stat"><div class="pp-stat-val">${completedCount}</div><div class="pp-stat-sub">Completed orders</div></div>
@@ -3020,6 +3092,7 @@ const base = '';
   }
 
   function openPublicProfileModal() {
+    closeAccountSettingsModal();
     ppActiveTab = 'statistics';
     renderPublicProfileModal();
     document.getElementById('publicProfileModal')!.classList.add('open');
@@ -3029,6 +3102,131 @@ const base = '';
   }
   document.getElementById('publicProfileClose')?.addEventListener('click', closePublicProfileModal);
   document.getElementById('publicProfileOverlay')?.addEventListener('click', closePublicProfileModal);
+
+  // ═══ ACCOUNT SETTINGS MODAL (General / Sign in & Security / Notifications) ═══
+  let asActiveTab = 'general';
+  const asNotifState: Record<string, boolean> = {
+    email_orders: true, popup_orders: true, inapp_orders: true,
+    email_chat: true, popup_chat: true, inapp_chat: true,
+  };
+
+  function asToggleHtml(key: string) {
+    const checked = asNotifState[key];
+    return `<label class="as-toggle"><input type="checkbox" data-asnotif="${key}" ${checked ? 'checked' : ''}><span class="as-toggle-track"><span class="as-toggle-thumb"></span></span></label>`;
+  }
+
+  function renderAsGeneral() {
+    return `
+      <div class="profile-card">
+        <div class="settings-section" style="margin-bottom:0;">
+          <h3>General information</h3>
+          <div class="setting-row"><div class="setting-info"><div class="setting-label">Nickname</div><div class="setting-desc">${esc(writerData.full_name || '—')}</div></div></div>
+        </div>
+      </div>`;
+  }
+
+  function renderAsSecurity() {
+    const userEmail = currentSession?.user?.email || '';
+    return `
+      <div class="profile-card">
+        <div class="settings-section" style="margin-bottom:0;">
+          <h3>Sign In &amp; Security</h3>
+          <div class="setting-row"><div class="setting-info"><div class="setting-label">Email</div><div class="setting-desc">${esc(userEmail)}</div></div><button class="btn-setting" id="asToggleEmailForm">Change</button></div>
+          <div class="setting-form" id="asEmailForm"><input type="email" id="asNewEmailInput" placeholder="New email address" /><button class="btn-save" id="asSaveEmailBtn">Update Email</button><div class="setting-msg" id="asEmailMsg"></div></div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-label">Password</div><div class="setting-desc">••••••••</div></div><button class="btn-setting" id="asTogglePasswordForm">Change</button></div>
+          <div class="setting-form" id="asPasswordForm"><input type="password" id="asNewPasswordInput" placeholder="New password (min 6 chars)" /><input type="password" id="asConfirmPasswordInput" placeholder="Confirm new password" /><button class="btn-save" id="asSavePasswordBtn">Update Password</button><div class="setting-msg" id="asPasswordMsg"></div></div>
+        </div>
+      </div>`;
+  }
+
+  function renderAsNotifications() {
+    const row = (label: string, key: string) => `
+      <div class="setting-row"><div class="setting-info"><div class="setting-label">${label}</div></div>${asToggleHtml(key)}</div>`;
+    return `
+      <div class="as-note">Notification preferences aren't saved yet — this panel is ready for wiring once a preferences table exists.</div>
+      <div class="profile-card">
+        <div class="settings-section" style="margin-bottom:0;">
+          <h3>Orders</h3>
+          ${row('Email', 'email_orders')}
+          ${row('Pop-up', 'popup_orders')}
+          ${row('In-app', 'inapp_orders')}
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="settings-section" style="margin-bottom:0;">
+          <h3>Chat</h3>
+          ${row('Email', 'email_chat')}
+          ${row('Pop-up', 'popup_chat')}
+          ${row('In-app', 'inapp_chat')}
+        </div>
+      </div>`;
+  }
+
+  function renderAccountSettingsModal() {
+    const body = document.getElementById('accountSettingsBody')!;
+    ['general', 'security', 'notifications'].forEach(t => {
+      document.getElementById('asTab' + t.charAt(0).toUpperCase() + t.slice(1))?.classList.toggle('active', t === asActiveTab);
+    });
+
+    if (asActiveTab === 'general') {
+      body.innerHTML = renderAsGeneral();
+    } else if (asActiveTab === 'security') {
+      body.innerHTML = renderAsSecurity();
+      document.getElementById('asToggleEmailForm')?.addEventListener('click', () => document.getElementById('asEmailForm')!.classList.toggle('open'));
+      document.getElementById('asTogglePasswordForm')?.addEventListener('click', () => document.getElementById('asPasswordForm')!.classList.toggle('open'));
+      document.getElementById('asSaveEmailBtn')?.addEventListener('click', async () => {
+        const newEmail = (document.getElementById('asNewEmailInput') as HTMLInputElement).value.trim();
+        const msg = document.getElementById('asEmailMsg')!;
+        if (!newEmail) { msg.textContent = 'Please enter an email.'; msg.className = 'setting-msg error'; return; }
+        const btn = document.getElementById('asSaveEmailBtn') as HTMLButtonElement; btn.disabled = true; btn.textContent = 'Updating…';
+        const { error } = await supabase.auth.updateUser({ email: newEmail });
+        if (error) { msg.textContent = error.message; msg.className = 'setting-msg error'; } else { msg.textContent = 'Confirmation email sent.'; msg.className = 'setting-msg success'; }
+        btn.disabled = false; btn.textContent = 'Update Email';
+      });
+      document.getElementById('asSavePasswordBtn')?.addEventListener('click', async () => {
+        const pw = (document.getElementById('asNewPasswordInput') as HTMLInputElement).value;
+        const confirmPw = (document.getElementById('asConfirmPasswordInput') as HTMLInputElement).value;
+        const msg = document.getElementById('asPasswordMsg')!;
+        if (pw.length < 6) { msg.textContent = 'Min 6 characters.'; msg.className = 'setting-msg error'; return; }
+        if (pw !== confirmPw) { msg.textContent = 'Passwords do not match.'; msg.className = 'setting-msg error'; return; }
+        const btn = document.getElementById('asSavePasswordBtn') as HTMLButtonElement; btn.disabled = true; btn.textContent = 'Updating…';
+        const { error } = await supabase.auth.updateUser({ password: pw });
+        if (error) { msg.textContent = error.message; msg.className = 'setting-msg error'; } else { msg.textContent = 'Password updated.'; msg.className = 'setting-msg success'; }
+        btn.disabled = false; btn.textContent = 'Update Password';
+      });
+    } else {
+      body.innerHTML = renderAsNotifications();
+      body.querySelectorAll('[data-asnotif]').forEach(input => {
+        input.addEventListener('change', (e) => {
+          const key = (e.target as HTMLElement).dataset.asnotif!;
+          asNotifState[key] = (e.target as HTMLInputElement).checked;
+        });
+      });
+    }
+  }
+
+  function openAccountSettingsModal() {
+    closePublicProfileModal();
+    asActiveTab = 'general';
+    renderAccountSettingsModal();
+    document.getElementById('accountSettingsModal')!.classList.add('open');
+  }
+  function closeAccountSettingsModal() {
+    document.getElementById('accountSettingsModal')!.classList.remove('open');
+  }
+  document.getElementById('accountSettingsClose')?.addEventListener('click', closeAccountSettingsModal);
+  document.getElementById('accountSettingsOverlay')?.addEventListener('click', closeAccountSettingsModal);
+  document.getElementById('asLogoutBtn')?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = `${base}/writer-login/`;
+  });
+  document.querySelectorAll('[data-astab]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      asActiveTab = (tab as HTMLElement).dataset.astab || 'general';
+      renderAccountSettingsModal();
+    });
+  });
+
  
   init();
  
@@ -3071,6 +3269,7 @@ const base = '';
   });
   applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 
+  // ── PROFILE PILL POPOVER ──
   const profilePillBtn = document.getElementById('sidebarProfilePill');
   const profilePopoverEl = document.getElementById('sidebarProfilePopover');
   profilePillBtn?.addEventListener('click', (e) => {
@@ -3090,7 +3289,7 @@ const base = '';
   });
   document.getElementById('popSettingsBtn')?.addEventListener('click', () => {
     profilePopoverEl?.classList.remove('open');
-    goToProfileView('settings');
+    openAccountSettingsModal();
   });
   document.getElementById('popRulesBtn')?.addEventListener('click', () => {
     profilePopoverEl?.classList.remove('open');
@@ -3494,4 +3693,3 @@ const base = '';
  
 </body>
 </html>
- 
