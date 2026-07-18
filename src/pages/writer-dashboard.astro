@@ -628,6 +628,110 @@ const base = '';
   .as-toggle input:checked + .as-toggle-track .as-toggle-thumb { transform: translateX(16px); }
   .as-note { font-size: 0.74rem; color: var(--text-muted); background: var(--main-bg); border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 1rem; }
 
+  /* ══ BID MODAL (Available Orders) — gold accent redesign ══ */
+  .bm-gold { color: #c5a059; }
+  .bm-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.3rem; }
+  .bm-title { font-size: 1.1rem; font-weight: 700; color: var(--text); line-height: 1.4; }
+  .bm-head-icons { display: flex; gap: 0.6rem; color: var(--text-muted); font-size: 0.95rem; flex-shrink: 0; }
+  .bm-id-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 1.1rem; flex-wrap: wrap; }
+  .bm-status-pill { color: #c5a059; font-weight: 700; }
+
+  /* stats strip (no bid yet) */
+  .bm-stats-strip { display: flex; gap: 1rem; background: var(--main-bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+  .bm-stat { text-align: center; flex: 1; }
+  .bm-stat .bm-stat-lbl { font-size: 0.66rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem; }
+  .bm-stat .bm-stat-val { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+  .bm-stat .bm-stat-val.gold { color: #c5a059; }
+
+  /* bid strip (after proposal placed) */
+  .bm-bid-strip { display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: var(--main-bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+  .bm-bid-col .bm-bid-lbl { font-size: 0.66rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem; }
+  .bm-bid-col .bm-bid-val { font-size: 0.92rem; font-weight: 700; color: var(--text); }
+  .bm-bid-col .bm-bid-val.gold { color: #c5a059; }
+  .bm-bid-col .bm-bid-val.small { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+  .bm-edit-btn { background: var(--panel-bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 0.5rem 0.9rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: 0.2s; }
+  .bm-edit-btn:hover { border-color: #c5a059; color: #c5a059; }
+
+  .bm-make-proposal-btn { width: 100%; padding: 0.85rem; border-radius: 10px; background: #c5a059; border: none; color: #1a1206; font-size: 0.88rem; font-weight: 700; cursor: pointer; margin-bottom: 1.1rem; transition: 0.2s; font-family: inherit; }
+  .bm-make-proposal-btn:hover { background: #d4b473; }
+
+  .bm-tabs { display: flex; gap: 0.3rem; background: var(--main-bg); padding: 4px; border-radius: 10px; width: fit-content; margin-bottom: 1.1rem; }
+  .bm-tab { padding: 0.5rem 1.2rem; background: none; border: none; color: var(--text-muted); font-size: 0.82rem; font-weight: 600; border-radius: 8px; cursor: pointer; font-family: inherit; }
+  .bm-tab.bm-tab--active { background: var(--panel-bg); color: #c5a059; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+
+  .bm-instr-label { font-size: 0.7rem; color: #c5a059; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; font-weight: 700; }
+  .bm-instr-value { font-size: 0.88rem; color: var(--text); font-weight: 600; line-height: 1.5; margin-bottom: 1.2rem; }
+  .bm-instr-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.1rem 1.4rem; margin-bottom: 1.3rem; }
+  .bm-instr-field .bm-lbl { font-size: 0.66rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.25rem; }
+  .bm-instr-field .bm-val { font-size: 0.82rem; color: var(--text); font-weight: 600; }
+  .bm-instr-desc-label { font-size: 0.7rem; color: #c5a059; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; font-weight: 700; }
+  .bm-instr-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.75; max-height: 260px; overflow-y: auto; padding-right: 0.4rem; white-space: pre-wrap; }
+
+  /* chat panel */
+  .bm-chat-panel { flex: 1; min-width: 260px; display: flex; flex-direction: column; height: 100%; }
+  .bm-chat-head { padding: 0.85rem 1.1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .bm-chat-left { display: flex; align-items: center; gap: 0.6rem; }
+  .bm-chat-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--main-bg); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
+  .bm-chat-name { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+  .bm-chat-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.1rem; }
+  .bm-chat-sub.online { color: #22c55e; }
+
+  .bm-chat-body { flex: 1; overflow-y: auto; padding: 1rem 0.9rem; display: flex; flex-direction: column; gap: 0.3rem; background: var(--main-bg); }
+  .bm-chat-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.9rem; text-align: center; }
+  .bm-chat-empty-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--panel-bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--text-muted); }
+  .bm-chat-empty p { color: var(--text-muted); font-size: 0.82rem; margin: 0; }
+
+  .bm-msg { display: flex; flex-direction: column; max-width: 82%; margin-bottom: 0.2rem; }
+  .bm-msg.mine { align-self: flex-end; align-items: flex-end; }
+  .bm-msg.theirs { align-self: flex-start; align-items: flex-start; }
+  .bm-msg-sender { font-size: 0.66rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.15rem; }
+  .bm-bubble { padding: 0.6rem 0.9rem; border-radius: 13px; font-size: 0.83rem; line-height: 1.55; word-wrap: break-word; }
+  .bm-msg.mine .bm-bubble { background: #c5a059; color: #1a1206; border-bottom-right-radius: 4px; }
+  .bm-msg.theirs .bm-bubble { background: var(--panel-bg); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; }
+  .bm-msg-meta { font-size: 0.62rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+  .bm-chat-input-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.7rem 0.85rem; border-top: 1px solid var(--border); background: var(--panel-bg); }
+  .bm-chat-input { flex: 1; background: var(--main-bg); border: 1px solid var(--border); border-radius: 20px; padding: 0.5rem 0.85rem; font-size: 0.8rem; color: var(--text); outline: none; font-family: inherit; }
+  .bm-chat-input:focus { border-color: #c5a059; }
+  .bm-chat-send { width: 32px; height: 32px; border-radius: 50%; background: #c5a059; border: none; color: #1a1206; cursor: pointer; flex-shrink: 0; font-size: 0.85rem; font-family: inherit; }
+  .bm-chat-send:hover { background: #d4b473; }
+  .bm-chat-send:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+
+  /* proposal popup */
+  .bm-proposal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: none; align-items: center; justify-content: center; z-index: 200; }
+  .bm-proposal-overlay.open { display: flex; }
+  .bm-proposal-box { width: 92%; max-width: 380px; background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
+  .bm-pb-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
+  .bm-pb-head h3 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text); }
+  .bm-pb-close { background: none; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; }
+  .bm-pb-close:hover { color: var(--text); }
+
+  .bm-pb-amount-box { border: 1.5px solid #c5a059; border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; background: var(--main-bg); }
+  .bm-pb-amount-left { display: flex; flex-direction: column; }
+  .bm-pb-amount-label { font-size: 0.66rem; color: var(--text-muted); margin-bottom: 0.15rem; }
+  .bm-pb-amount-val { font-size: 1.2rem; font-weight: 700; color: var(--text); display: flex; align-items: baseline; gap: 0.15rem; }
+  .bm-pb-amount-val .bm-cur { font-size: 0.92rem; color: var(--text-muted); }
+  .bm-pb-steppers { display: flex; flex-direction: column; gap: 0.15rem; }
+  .bm-pb-step-btn { width: 22px; height: 18px; border-radius: 4px; border: 1px solid var(--border); background: var(--panel-bg); color: var(--text-muted); cursor: pointer; font-size: 0.62rem; display: flex; align-items: center; justify-content: center; }
+  .bm-pb-step-btn:hover { border-color: #c5a059; color: #c5a059; }
+  .bm-pb-min { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+  .bm-pb-msg-label { font-size: 0.72rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; display: block; }
+  .bm-pb-msg-textarea { width: 100%; background: var(--main-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 0.75rem; font-size: 0.82rem; font-family: inherit; color: var(--text); outline: none; resize: vertical; margin-bottom: 1rem; }
+  .bm-pb-msg-textarea:focus { border-color: #c5a059; }
+
+  .bm-pb-breakdown { display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 1.3rem; }
+  .bm-pb-row { display: flex; justify-content: space-between; font-size: 0.8rem; }
+  .bm-pb-row .bm-lbl { color: var(--text-muted); }
+  .bm-pb-row .bm-val { color: var(--text); font-weight: 600; }
+
+  .bm-pb-actions { display: flex; gap: 0.6rem; }
+  .bm-pb-cancel { flex: 1; padding: 0.65rem; border-radius: 9px; border: 1px solid var(--border); background: var(--main-bg); color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .bm-pb-cancel:hover { border-color: var(--text-muted); }
+  .bm-pb-confirm { flex: 1.4; padding: 0.65rem; border-radius: 9px; border: none; background: #c5a059; color: #1a1206; font-size: 0.82rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .bm-pb-confirm:hover { background: #d4b473; }
+  .bm-pb-confirm:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+
   .order-table { display: flex; flex-direction: column; gap: 0.5rem; }
  
   .order-table-head {
@@ -1587,96 +1691,116 @@ const base = '';
  
   document.getElementById('availSearchInput')?.addEventListener('input', renderAvailableOrders);
  
+  let bmActiveTab = 'instructions';
+  let bmCurrentOrder: any = null;
+
+  function bmClientDisplayId(order: any) {
+    // No real client_id field exists on orders yet — derive an ID-style value from client_email.
+    // If a real client_id column gets added later, swap this one line for: return order.client_id;
+    return (order.client_email || 'client').split('@')[0];
+  }
+
   function showBidModal(order: any) {
+    bmCurrentOrder = order;
+    bmActiveTab = 'instructions';
     const dl = deadlineInfo(order.deadline);
     const dueDate = order.deadline ? new Date(order.deadline).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
     const budget = Number(order.total_amount||0).toFixed(2);
     const myShare = (Number(order.total_amount||0) * 0.8).toFixed(2);
- 
+    const existingBid = myBids.find((b: any) => String(b.order_id) === String(order.id));
+
     document.getElementById('modalContent')!.innerHTML = `
       <div class="modal-left">
-      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
-        <span class="status-badge in_progress" style="background:rgba(34,197,94,0.12);color:#4ade80;font-size:0.72rem;">Available</span>
-        <span style="font-size:0.75rem;color:#94a3b8;">${dueDate} · ${dl.text}</span>
-      </div>
-      <div class="om-title">${esc(order.topic || '(no topic)')}</div>
-      <div class="om-id" style="margin-bottom:1rem;">ID ${esc(order.order_number || order.id)}</div>
- 
-      <div style="display:flex;gap:1rem;background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1.2rem;flex-wrap:wrap;">
-        <div style="text-align:center;flex:1;">
-          <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Min. price</div>
-          <div style="font-size:1rem;font-weight:700;color:var(--text);">$${budget}</div>
-        </div>
-        <div style="text-align:center;flex:1;">
-          <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">My share (80%)</div>
-          <div style="font-size:1rem;font-weight:700;color:#16a34a;">$${myShare}</div>
-        </div>
-        <div style="text-align:center;flex:1;">
-          <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Pages</div>
-          <div style="font-size:1rem;font-weight:700;color:var(--text);">${esc(order.pages||1)}</div>
-        </div>
-      </div>
- 
-      <div class="om-tabs">
-        <button class="om-tab om-tab--active" data-mtab="instructions">Instructions</button>
-        <button class="om-tab" data-mtab="proposal">Make Proposal</button>
-      </div>
- 
-      <div class="om-panel om-panel--active" data-mpanel="instructions">
-        <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem 1rem;">
-          <div class="om-grid">
-            <div><div class="om-label">Type</div><div class="om-value">${esc(order.assignment_type||'—')}</div></div>
-            <div><div class="om-label">Subject</div><div class="om-value">${esc(order.subject||'—')}</div></div>
-            <div><div class="om-label">Education level</div><div class="om-value">${esc(order.education_level||'—')}</div></div>
-            <div><div class="om-label">Language</div><div class="om-value">${esc(order.language||'—')}</div></div>
-            <div><div class="om-label">Service</div><div class="om-value">${esc(order.service||'—')}</div></div>
-            <div><div class="om-label">Deadline</div><div class="om-value">${dueDate}</div></div>
+        <div class="bm-header">
+          <div>
+            <div class="bm-title">${esc(order.topic || '(no topic)')}</div>
           </div>
+          <div class="bm-head-icons"><span>⚠️</span><span>👁️</span></div>
         </div>
-        <div style="background:var(--main-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin:0 0.5rem;">
-          <div class="om-desc-label">Description</div>
-          <div class="om-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
+        <div class="bm-id-row">
+          <span>ID ${esc(order.order_number || order.id)}</span>
+          ${existingBid ? `<span class="bm-status-pill">Open</span><span>·</span><span>⏰ ${dl.text}</span>` : `<span>· ${dueDate} · ${dl.text}</span>`}
         </div>
-        <button class="upload-btn" style="width:calc(100% - 1rem);margin:1.2rem 0.5rem 0;" id="goToProposalBtn">📨 Make Proposal</button>
-      </div>
- 
-      <div class="om-panel" data-mpanel="proposal">
-        <div style="margin:0 0.5rem;">
-          <div class="form-group" style="margin-bottom:1rem;">
-            <label class="om-label">Your bid price ($) — minimum $${budget}</label>
-            <input type="number" id="bidPrice" min="${budget}" step="0.01" value="${budget}" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:1rem;font-weight:700;outline:none;color:var(--text);" />
-            <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.3rem;">You cannot bid below the client's budget.</div>
+
+        ${existingBid ? `
+        <div class="bm-bid-strip">
+          <div class="bm-bid-col"><div class="bm-bid-lbl">My proposal</div><div class="bm-bid-val gold">$${Number(existingBid.bid_price).toFixed(2)}</div></div>
+          <div class="bm-bid-col"><div class="bm-bid-lbl">My share</div><div class="bm-bid-val">$${(Number(existingBid.bid_price)*0.8).toFixed(2)}</div></div>
+          <div class="bm-bid-col"><div class="bm-bid-lbl">Proposal placed</div><div class="bm-bid-val small">${existingBid.created_at ? new Date(existingBid.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'}</div></div>
+          <button class="bm-edit-btn" id="bmEditProposalBtn">Edit proposal</button>
+        </div>` : `
+        <div class="bm-stats-strip">
+          <div class="bm-stat"><div class="bm-stat-lbl">Min. price</div><div class="bm-stat-val">$${budget}</div></div>
+          <div class="bm-stat"><div class="bm-stat-lbl">My share (80%)</div><div class="bm-stat-val gold">$${myShare}</div></div>
+          <div class="bm-stat"><div class="bm-stat-lbl">Pages</div><div class="bm-stat-val">${esc(order.pages||1)}</div></div>
+        </div>
+        <button class="bm-make-proposal-btn" id="bmMakeProposalBtn">Make proposal</button>`}
+
+        <div class="bm-tabs">
+          <button class="bm-tab bm-tab--active" data-bmtab="instructions">Instructions</button>
+          <button class="bm-tab" data-bmtab="files">Files</button>
+        </div>
+
+        <div class="bm-panel bm-panel--active" data-bmpanel="instructions">
+          <div class="bm-instr-label">Topic</div>
+          <div class="bm-instr-value">${esc(order.topic || '(no topic)')}</div>
+          <div class="bm-instr-grid">
+            <div class="bm-instr-field"><div class="bm-lbl">Type</div><div class="bm-val">${esc(order.assignment_type||'—')}</div></div>
+            <div class="bm-instr-field"><div class="bm-lbl">Subject</div><div class="bm-val">${esc(order.subject||'—')}</div></div>
+            <div class="bm-instr-field"><div class="bm-lbl">Education level</div><div class="bm-val">${esc(order.education_level||'—')}</div></div>
+            <div class="bm-instr-field"><div class="bm-lbl">Language</div><div class="bm-val">${esc(order.language||'—')}</div></div>
+            <div class="bm-instr-field"><div class="bm-lbl">Service</div><div class="bm-val">${esc(order.service||'—')}</div></div>
+            <div class="bm-instr-field"><div class="bm-lbl">Deadline</div><div class="bm-val">${dueDate}</div></div>
           </div>
-          <div class="form-group" style="margin-bottom:1rem;">
-            <label class="om-label">Your proposal message *</label>
-            <textarea id="bidNote" rows="4" placeholder="Introduce yourself and explain why you're the best fit for this order…" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.85rem;font-family:inherit;outline:none;resize:vertical;color:var(--text);"></textarea>
-          </div>
-          <button class="upload-btn" style="width:100%;" id="submitBidBtn">📨 Submit Proposal</button>
-          <div class="upload-msg" id="bidMsg" style="display:none;margin-top:0.5rem;"></div>
+          <div class="bm-instr-desc-label">Description</div>
+          <div class="bm-instr-desc">${order.instructions ? esc(order.instructions) : 'No description provided.'}</div>
+        </div>
+        <div class="bm-panel" data-bmpanel="files">
+          <div style="color:var(--text-muted);font-size:0.82rem;padding:1rem 0;">No files attached.</div>
         </div>
       </div>
-      </div>
+      <div class="bm-chat-panel" id="bmChatPanel"></div>
     `;
- 
-    document.getElementById('modalContent')!.querySelectorAll('.om-tab').forEach(tab => {
+
+    // Tab switching (Instructions / Files)
+    document.getElementById('modalContent')!.querySelectorAll('.bm-tab').forEach(tab => {
       tab.addEventListener('click', () => {
-        const which = (tab as HTMLElement).dataset.mtab;
-        document.querySelectorAll('#modalContent .om-tab').forEach(t => t.classList.remove('om-tab--active'));
-        document.querySelectorAll('#modalContent .om-panel').forEach(p => p.classList.remove('om-panel--active'));
-        tab.classList.add('om-tab--active');
-        document.querySelector(`#modalContent .om-panel[data-mpanel="${which}"]`)?.classList.add('om-panel--active');
+        const which = (tab as HTMLElement).dataset.bmtab!;
+        bmActiveTab = which;
+        document.querySelectorAll('#modalContent .bm-tab').forEach(t => t.classList.remove('bm-tab--active'));
+        document.querySelectorAll('#modalContent .bm-panel').forEach(p => p.classList.remove('bm-panel--active'));
+        tab.classList.add('bm-tab--active');
+        document.querySelector(`#modalContent .bm-panel[data-bmpanel="${which}"]`)?.classList.add('bm-panel--active');
       });
     });
- 
-    document.getElementById('goToProposalBtn')?.addEventListener('click', () => {
-      document.querySelectorAll('#modalContent .om-tab').forEach(t => t.classList.remove('om-tab--active'));
-      document.querySelectorAll('#modalContent .om-panel').forEach(p => p.classList.remove('om-panel--active'));
-      document.querySelector('#modalContent .om-tab[data-mtab="proposal"]')?.classList.add('om-tab--active');
-      document.querySelector('#modalContent .om-panel[data-mpanel="proposal"]')?.classList.add('om-panel--active');
-    });
- 
-    document.getElementById('submitBidBtn')?.addEventListener('click', () => submitBid(order.id, order));
+
+    document.getElementById('bmMakeProposalBtn')?.addEventListener('click', () => openBmProposal(false));
+    document.getElementById('bmEditProposalBtn')?.addEventListener('click', () => openBmProposal(true));
+
     document.getElementById('detailModal')!.classList.add('open');
+
+    // Render chat panel: empty state if no bid yet, otherwise starts the real chat (Step 4 wires this fully)
+    if (existingBid) {
+      bidChatStart(order.id, order, existingBid.note || '');
+    } else {
+      renderBmChatEmpty();
+    }
+  }
+
+  function renderBmChatEmpty() {
+    const panel = document.getElementById('bmChatPanel');
+    if (!panel) return;
+    panel.innerHTML = `
+      <div class="bm-chat-head">
+        <div class="bm-chat-left">
+          <div class="bm-chat-avatar">👤</div>
+          <div><div class="bm-chat-name">—</div><div class="bm-chat-sub">Place a proposal to chat</div></div>
+        </div>
+      </div>
+      <div class="bm-chat-empty">
+        <div class="bm-chat-empty-icon">💬</div>
+        <p>Make a proposal to start a conversation</p>
+      </div>`;
   }
  
   let bidChatConvId: string | null = null;
@@ -3308,7 +3432,6 @@ const base = '';
     if (actual === 'dark') {
       document.body.classList.add('dark-mode');
     } else {
-      document.body.classList.remove('dark-mode');
     }
     document.querySelectorAll('.theme-popup__opt').forEach(btn => {
       btn.classList.toggle('active', (btn as HTMLElement).dataset.theme === setting);
