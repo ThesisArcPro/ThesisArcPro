@@ -1396,6 +1396,41 @@ const base = '';
   </div>
 </div>
 
+<!-- MAKE PROPOSAL POPUP (bid modal, gold theme) -->
+<div class="bm-proposal-overlay" id="bmProposalOverlay">
+  <div class="bm-proposal-box">
+    <div class="bm-pb-head">
+      <h3 id="bmPbHeading">Make proposal</h3>
+      <button class="bm-pb-close" id="bmPbCloseBtn">✕</button>
+    </div>
+    <div class="bm-pb-amount-box">
+      <div class="bm-pb-amount-left">
+        <div class="bm-pb-amount-label">My proposal</div>
+        <div class="bm-pb-amount-val"><span class="bm-cur">$</span><span id="bmPbAmountDisplay">0.00</span></div>
+      </div>
+      <div class="bm-pb-steppers">
+        <button class="bm-pb-step-btn" id="bmPbStepUp">▲</button>
+        <button class="bm-pb-step-btn" id="bmPbStepDown">▼</button>
+      </div>
+    </div>
+    <div class="bm-pb-min">min $<span id="bmPbMinDisplay">0.00</span></div>
+
+    <label class="bm-pb-msg-label">Your proposal message *</label>
+    <textarea class="bm-pb-msg-textarea" id="bmPbMsgTextarea" rows="3" placeholder="Introduce yourself and explain why you're the best fit…"></textarea>
+
+    <div class="bm-pb-breakdown">
+      <div class="bm-pb-row"><span class="bm-lbl">Cost per page:</span><span class="bm-val" id="bmPbCostPerPage">$0.00</span></div>
+      <div class="bm-pb-row"><span class="bm-lbl">My share:</span><span class="bm-val" id="bmPbMyShare">$0.00</span></div>
+      <div class="bm-pb-row"><span class="bm-lbl">My cost per page:</span><span class="bm-val" id="bmPbMyCostPerPage">$0.00</span></div>
+    </div>
+    <div class="upload-msg" id="bmPbMsg" style="display:none;margin-bottom:0.8rem;"></div>
+    <div class="bm-pb-actions">
+      <button class="bm-pb-cancel" id="bmPbCancelBtn">Cancel</button>
+      <button class="bm-pb-confirm" id="bmPbConfirmBtn">Make proposal</button>
+    </div>
+  </div>
+</div>
+
 <!-- MY PUBLIC PROFILE MODAL -->
 <div class="modal" id="publicProfileModal">
   <div class="modal-overlay" id="publicProfileOverlay"></div>
@@ -1807,15 +1842,79 @@ const base = '';
   let bidChatSubRT: any = null;
   let bidChatLastDate = '';
  
+  // ═══ PROPOSAL POPUP (Step 3) ═══
+  let bmPbAmount = 0;
+  let bmPbIsEdit = false;
+
+  function bmPbPages(order: any) {
+    return Number(order.pages || 1) || 1;
+  }
+
+  function openBmProposal(isEdit: boolean) {
+    if (!bmCurrentOrder) return;
+    bmPbIsEdit = isEdit;
+    const order = bmCurrentOrder;
+    const budget = Number(order.total_amount || 0);
+    const existingBid = myBids.find((b: any) => String(b.order_id) === String(order.id));
+    bmPbAmount = isEdit && existingBid ? Number(existingBid.bid_price) : budget;
+
+    (document.getElementById('bmPbHeading') as HTMLElement).textContent = isEdit ? 'Edit proposal' : 'Make proposal';
+    (document.getElementById('bmPbMinDisplay') as HTMLElement).textContent = budget.toFixed(2);
+    const msgBox = document.getElementById('bmPbMsgTextarea') as HTMLTextAreaElement;
+    msgBox.value = isEdit && existingBid ? (existingBid.note || '') : '';
+    const msgEl = document.getElementById('bmPbMsg')!;
+    msgEl.style.display = 'none';
+    const confirmBtn = document.getElementById('bmPbConfirmBtn') as HTMLButtonElement;
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = isEdit ? 'Update proposal' : 'Make proposal';
+
+    updateBmProposalDisplay();
+    document.getElementById('bmProposalOverlay')!.classList.add('open');
+  }
+
+  function closeBmProposal() {
+    document.getElementById('bmProposalOverlay')!.classList.remove('open');
+  }
+
+  function bmAdjustAmount(dir: number) {
+    if (!bmCurrentOrder) return;
+    const budget = Number(bmCurrentOrder.total_amount || 0);
+    bmPbAmount = Math.max(budget, bmPbAmount + dir);
+    updateBmProposalDisplay();
+  }
+
+  function updateBmProposalDisplay() {
+    if (!bmCurrentOrder) return;
+    const pages = bmPbPages(bmCurrentOrder);
+    const costPerPage = bmPbAmount / pages;
+    const share = bmPbAmount * 0.8; // real 80% writer-share ratio
+    const myCostPerPage = share / pages;
+    (document.getElementById('bmPbAmountDisplay') as HTMLElement).textContent = bmPbAmount.toFixed(2);
+    (document.getElementById('bmPbCostPerPage') as HTMLElement).textContent = '$' + costPerPage.toFixed(2);
+    (document.getElementById('bmPbMyShare') as HTMLElement).textContent = '$' + share.toFixed(2);
+    (document.getElementById('bmPbMyCostPerPage') as HTMLElement).textContent = '$' + myCostPerPage.toFixed(2);
+  }
+
+  document.getElementById('bmPbCloseBtn')?.addEventListener('click', closeBmProposal);
+  document.getElementById('bmPbCancelBtn')?.addEventListener('click', closeBmProposal);
+  document.getElementById('bmProposalOverlay')?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).id === 'bmProposalOverlay') closeBmProposal();
+  });
+  document.getElementById('bmPbStepUp')?.addEventListener('click', () => bmAdjustAmount(1));
+  document.getElementById('bmPbStepDown')?.addEventListener('click', () => bmAdjustAmount(-1));
+  document.getElementById('bmPbConfirmBtn')?.addEventListener('click', () => {
+    if (bmCurrentOrder) submitBid(bmCurrentOrder.id, bmCurrentOrder);
+  });
+
   async function submitBid(orderId: number, order: any) {
-    const price = parseFloat((document.getElementById('bidPrice') as HTMLInputElement).value);
-    const note = (document.getElementById('bidNote') as HTMLTextAreaElement).value.trim();
-    const msg = document.getElementById('bidMsg')!;
-    const btn = document.getElementById('submitBidBtn') as HTMLButtonElement;
- 
+    const price = bmPbAmount;
+    const note = (document.getElementById('bmPbMsgTextarea') as HTMLTextAreaElement).value.trim();
+    const msg = document.getElementById('bmPbMsg')!;
+    const btn = document.getElementById('bmPbConfirmBtn') as HTMLButtonElement;
+
     if (!price || price <= 0) { msg.textContent = 'Please enter a valid bid price.'; msg.className = 'upload-msg error'; msg.style.display = 'block'; return; }
     if (!note) { msg.textContent = 'Please write a proposal message.'; msg.className = 'upload-msg error'; msg.style.display = 'block'; return; }
- 
+
     btn.disabled = true; btn.textContent = '⏳ Submitting…';
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/place_bid`, {
@@ -1824,7 +1923,7 @@ const base = '';
         body: JSON.stringify({ p_order_id: orderId, p_writer_id: writerId, p_bid_price: price, p_estimated_delivery: null, p_note: note })
       });
       if (!res.ok) throw new Error((await res.json())?.message || 'Failed to place bid');
- 
+
       // Emit bid to client via Socket.io
       socket.emit('bid:submit', {
         orderId: String(orderId),
@@ -1833,20 +1932,17 @@ const base = '';
         amount: price,
         message: note
       });
- 
-      msg.textContent = '✅ Proposal submitted!'; msg.className = 'upload-msg success'; msg.style.display = 'block';
-      btn.style.display = 'none';
-      const priceInput = document.getElementById('bidPrice') as HTMLInputElement; if (priceInput) priceInput.disabled = true;
-      const noteInput = document.getElementById('bidNote') as HTMLTextAreaElement; if (noteInput) noteInput.disabled = true;
+
       await loadAvailableOrders();
       await loadMyBids();
- 
-      // Reveal the chat panel now that a proposal has been placed
-      await bidChatStart(orderId, order, note);
- 
+
+      closeBmProposal();
+      // Re-render the modal so the bid-strip / chat now reflect the placed proposal
+      showBidModal(order);
+
     } catch (err: any) {
       msg.textContent = err?.message || 'Could not submit proposal.'; msg.className = 'upload-msg error'; msg.style.display = 'block';
-      btn.disabled = false; btn.textContent = '📨 Submit Proposal';
+      btn.disabled = false; btn.textContent = bmPbIsEdit ? 'Update proposal' : 'Make proposal';
     }
   }
  
