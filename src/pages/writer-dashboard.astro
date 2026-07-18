@@ -1415,9 +1415,6 @@ const base = '';
     </div>
     <div class="bm-pb-min">min $<span id="bmPbMinDisplay">0.00</span></div>
 
-    <label class="bm-pb-msg-label">Your proposal message *</label>
-    <textarea class="bm-pb-msg-textarea" id="bmPbMsgTextarea" rows="3" placeholder="Introduce yourself and explain why you're the best fit…"></textarea>
-
     <div class="bm-pb-breakdown">
       <div class="bm-pb-row"><span class="bm-lbl">Cost per page:</span><span class="bm-val" id="bmPbCostPerPage">$0.00</span></div>
       <div class="bm-pb-row"><span class="bm-lbl">My share:</span><span class="bm-val" id="bmPbMyShare">$0.00</span></div>
@@ -1860,8 +1857,6 @@ const base = '';
 
     (document.getElementById('bmPbHeading') as HTMLElement).textContent = isEdit ? 'Edit proposal' : 'Make proposal';
     (document.getElementById('bmPbMinDisplay') as HTMLElement).textContent = budget.toFixed(2);
-    const msgBox = document.getElementById('bmPbMsgTextarea') as HTMLTextAreaElement;
-    msgBox.value = isEdit && existingBid ? (existingBid.note || '') : '';
     const msgEl = document.getElementById('bmPbMsg')!;
     msgEl.style.display = 'none';
     const confirmBtn = document.getElementById('bmPbConfirmBtn') as HTMLButtonElement;
@@ -1908,12 +1903,11 @@ const base = '';
 
   async function submitBid(orderId: number, order: any) {
     const price = bmPbAmount;
-    const note = (document.getElementById('bmPbMsgTextarea') as HTMLTextAreaElement).value.trim();
+    const note = ''; // message is no longer collected up front — writer sends it via chat after the proposal is placed
     const msg = document.getElementById('bmPbMsg')!;
     const btn = document.getElementById('bmPbConfirmBtn') as HTMLButtonElement;
 
     if (!price || price <= 0) { msg.textContent = 'Please enter a valid bid price.'; msg.className = 'upload-msg error'; msg.style.display = 'block'; return; }
-    if (!note) { msg.textContent = 'Please write a proposal message.'; msg.className = 'upload-msg error'; msg.style.display = 'block'; return; }
 
     btn.disabled = true; btn.textContent = '⏳ Submitting…';
     try {
@@ -1987,17 +1981,21 @@ const base = '';
       if (!convId) throw new Error('Could not create conversation');
       await ocEnsureSelf(convId);
  
-      const existingRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${convId}&select=id&limit=1`,
-        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
-      );
-      const existing = await existingRes.json();
-      if (!existing.length) {
-        await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
-          body: JSON.stringify({ conversation_id: convId, sender_id: currentSession.user.id, sender_name: writerData?.full_name || 'Writer', sender_role: 'writer', content: note })
-        });
+      // Only seed a first message if a non-empty note was passed in (older bids may still have one;
+      // new proposals no longer collect a note up front, so the chat simply starts empty).
+      if (note && note.trim()) {
+        const existingRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${convId}&select=id&limit=1`,
+          { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+        );
+        const existing = await existingRes.json();
+        if (!existing.length) {
+          await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+            body: JSON.stringify({ conversation_id: convId, sender_id: currentSession.user.id, sender_name: writerData?.full_name || 'Writer', sender_role: 'writer', content: note })
+          });
+        }
       }
  
       bidChatConvId = convId;
