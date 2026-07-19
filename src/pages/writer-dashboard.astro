@@ -760,7 +760,7 @@ const base = '';
   .bm-upload-label { font-size: 0.66rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.35rem; }
   .bm-upload-select { width: 100%; background: var(--main-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.75rem; font-size: 0.83rem; color: var(--text); font-family: inherit; outline: none; margin-bottom: 1rem; }
   .bm-upload-select:focus { border-color: #c5a059; }
-  .bm-dropzone { position: relative; border: 1.5px dashed var(--border); border-radius: 10px; padding: 1.4rem 1rem; text-align: center; cursor: pointer; transition: 0.2s; background: var(--main-bg); margin-bottom: 1rem; }
+  .bm-dropzone { position: relative; border: 1.5px dashed var(--border); border-radius: 10px; padding: 0.7rem 1rem; text-align: center; cursor: pointer; transition: 0.2s; background: var(--main-bg); margin-bottom: 1rem; }
   .bm-dropzone:hover { border-color: #c5a059; }
   .bm-dropzone p { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem; }
   .bm-dropzone .bm-dz-filename { font-size: 0.78rem; color: #c5a059; font-weight: 600; margin-top: 0.4rem; }
@@ -2502,7 +2502,6 @@ const base = '';
 
       <!-- GENERAL: upload completed work -->
       <div class="bm-panel bm-panel--active" data-mpanel="general">
-        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1rem;">Order: ${esc(activeOrderNumber)} — ${esc(order.topic || '')}</p>
         <div class="bm-upload-label">Submit file as</div>
         <select id="fileType" class="bm-upload-select">
           <option value="">— Select file type —</option>
