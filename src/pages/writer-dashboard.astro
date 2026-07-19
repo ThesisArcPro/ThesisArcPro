@@ -737,7 +737,7 @@ const base = '';
   /* Fix: .modal-left/.modal-right are scoped-only in the static <style> block, but modals are
      rendered via innerHTML at runtime, so scoped CSS never reaches them. Duplicating the real
      rules here (global) makes padding/layout actually apply to JS-rendered modal content. */
-  .modal-left { flex: 3; padding: 2.75rem 2.5rem 2rem; overflow-y: auto; min-width: 0; height: 100%; }
+  .modal-left { flex: 3; padding: 2.75rem 2.5rem 2rem; overflow-y: auto; min-width: 0; min-height: 0; height: 100%; }
   .modal-right { flex: 0 0 26%; background: var(--main-bg); border-left: 1.5px solid var(--border); display: flex; flex-direction: column; min-width: 180px; height: 100%; }
   .bm-chat-panel { flex: 0 0 32%; }
 
