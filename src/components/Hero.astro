@@ -3,182 +3,317 @@ const base = '';
 ---
 <section class="hero">
   <div class="container hero__inner">
-    <div class="hero__content">
-      <h1>Expert Academic Writing<br/>& Research Support</h1>
-      <p class="hero__sub">From high school essays to PhD dissertations — we provide expert guidance, writing support, and professional editing at every academic level.</p>
-      <a href="#" class="hero__btn auth-gate">Place your order</a>
-    </div>
-    <div class="hero__visual">
-      <img
-        src="/images/hero.svg"
-        alt="Students receiving expert academic writing and research support"
-        width="500"
-        height="400"
-        loading="eager"
-      />
-    </div>
-  </div>
+    <h1 class="hero__title">Turn the assignment into an A+, without the all-nighter</h1>
+    <p class="hero__sub">Tell us what&rsquo;s due. We match you with a vetted subject-matter writer, a plagiarism &amp; AI report on every order, and delivery as fast as 3 hours out.</p>
 
-  <!-- Navy trust strip (full-width bar) -->
-  <div class="hero__trust-bar">
-    <div class="container hero__trust-inner">
-      <div class="trust-stat">
-        <span class="trust-num">2,000+</span>
-        <span class="trust-lbl">Students Helped</span>
+    <!-- Offer + quote card -->
+    <div class="quote-card">
+      <span class="quote-card__badge">
+        <span class="badge-num">3 hrs</span>
+        <span class="badge-lbl">fastest</span>
+      </span>
+
+      <div class="quote-card__offer">
+        <div class="offer-text">
+          <span class="offer-price">$5/page: Any deadline or complexity</span>
+          <span class="offer-desc">AI-free writing, real writers, at the lowest price on the market</span>
+        </div>
+        <a href="#" class="offer-save auth-gate">Save 50% or even more</a>
       </div>
-      <div class="trust-div"></div>
-      <div class="trust-stat">
-        <span class="trust-num">98%</span>
-        <span class="trust-lbl">Satisfaction Rate</span>
-      </div>
-      <div class="trust-div"></div>
-      <div class="trust-stat">
-        <span class="trust-num">Deadlines from</span>
-        <span class="trust-lbl">3 hours</span>
+
+      <div class="quote-card__form">
+        <label class="form-label" for="assignmentBrief">What&rsquo;s the assignment?</label>
+        <textarea
+          id="assignmentBrief"
+          class="form-input"
+          rows="2"
+          placeholder="e.g. 5-page APA essay on media ethics, due Friday 9am..."
+        ></textarea>
+
+        <div class="form-actions">
+          <label class="form-attach">
+            <input type="file" id="assignmentFile" hidden />
+            <svg class="attach-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+            </svg>
+            <span class="attach-text">Attach a file</span>
+          </label>
+          <a href="#" class="form-quote auth-gate" id="quoteBtn">Get a free price quote</a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Tagline below strip -->
-  <p class="hero__tagline">
-    <span class="tagline-icon">🛡️</span>
-    No AI, no shortcuts — just real writers delivering plagiarism-free essays
-  </p>
+    <!-- Trust row -->
+    <div class="hero__trust">
+      <div class="trust-card">
+        <span class="trust-logo">logo</span>
+        <span class="trust-copy">
+          <span class="trust-strong">200K+ students</span>
+          <span class="trust-muted">trusted us to write their papers</span>
+        </span>
+      </div>
+      <div class="trust-card">
+        <svg class="trust-star" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+          <path fill="#7c4dbc" d="M12 2l2.6 6.9L22 9.2l-5.3 4.8 1.6 7.2L12 17.6 5.7 21.2 7.3 14 2 9.2l7.4-.3z"/>
+        </svg>
+        <span class="trust-copy">
+          <span class="trust-strong">4.7</span>
+          <span class="trust-muted">Sitejabber</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Bottom tagline -->
+    <p class="hero__tagline">No AI &middot; No shortcuts &middot; Real writers</p>
+  </div>
 </section>
 
 <style>
-/* ── Hero section ── */
+/* ── Local accent tokens (scoped to hero) ── */
 .hero {
+  --purple: #6b1e7a;
+  --purple-deep: #5a1668;
+  --purple-tint: #f3e9f7;
+  --maroon: #6a2333;
+  --olive: #7f9c3f;
+  --ink-blue: #2b57c9;
+
   background: var(--bg-body, #ffffff);
-  padding-top: 7rem;
+  padding: 7rem 0 3.5rem;
 }
 
 .hero__inner {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 3rem;
-  align-items: center;
-  padding-bottom: 3rem;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
 }
 
-/* ── Left content ── */
-.hero__content {
-  max-width: 520px;
-}
-
-.hero h1 {
+/* ── Headline + subhead ── */
+.hero__title {
   font-family: var(--font-heading, 'Poppins', sans-serif);
-  font-size: clamp(2rem, 4.5vw, 2.6rem);
-  font-weight: 800;
+  font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+  font-weight: 700;
   color: var(--color-main, #303b4f);
-  line-height: 1.2;
-  margin-bottom: 1.2rem;
+  line-height: 1.25;
+  margin: 0 auto 1rem;
+  max-width: 620px;
 }
 
 .hero__sub {
-  color: var(--color-main-light, #6d7483);
+  color: var(--ink-blue);
   font-size: 0.98rem;
-  line-height: 1.7;
-  margin-bottom: 2rem;
+  line-height: 1.65;
+  margin: 0 auto 2rem;
+  max-width: 560px;
+  opacity: 0.8;
 }
 
-.hero__btn {
-  display: inline-block;
-  background: var(--gold);
-  color: var(--navy);
-  padding: 0.8rem 2.2rem;
-  border-radius: 25px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-.hero__btn:hover {
-  background: #1a2332;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(48,59,79,0.3);
+/* ── Offer + quote card ── */
+.quote-card {
+  position: relative;
+  background: var(--purple);
+  border-radius: 18px;
+  padding: 1.6rem;
+  text-align: left;
+  box-shadow: 0 18px 40px -18px rgba(107,30,122,0.55);
 }
 
-/* ── Right image ── */
-.hero__visual {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.hero__visual img {
-  width: 100%;
-  max-width: 440px;
-  height: auto;
-}
-
-/* ── Navy trust bar (full-width) ── */
-.hero__trust-bar {
-  background: var(--navy, #1B2A4A);
-  padding: 1.2rem 0;
-}
-
-.hero__trust-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5rem;
-  flex-wrap: wrap;
-}
-
-.trust-stat {
+.quote-card__badge {
+  position: absolute;
+  top: -18px;
+  right: 22px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--maroon);
+  color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
+  justify-content: center;
+  line-height: 1.1;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+  transform: rotate(8deg);
 }
-.trust-num {
+.badge-num { font-weight: 700; font-size: 0.9rem; }
+.badge-lbl { font-size: 0.72rem; opacity: 0.9; }
+
+/* Offer row (on purple) */
+.quote-card__offer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-bottom: 1.2rem;
+  padding-right: 3rem;
+}
+.offer-text { display: flex; flex-direction: column; gap: 0.35rem; }
+.offer-price {
   font-family: var(--font-heading, 'Poppins', sans-serif);
-  font-size: 1.3rem;
   font-weight: 700;
-  color: #ffffff;
-  line-height: 1.2;
+  font-size: 1rem;
+  color: #fff;
 }
-.trust-lbl {
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.7);
-  letter-spacing: 0.3px;
+.offer-desc {
+  font-size: 0.86rem;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.5;
+}
+.offer-save {
+  flex-shrink: 0;
+  background: var(--purple-tint);
+  color: var(--purple-deep);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.offer-save:hover { background: #fff; transform: translateY(-1px); }
+
+/* Quote form (light panel inside card) */
+.quote-card__form {
+  background: #f5f6f8;
+  border-radius: 12px;
+  padding: 1.1rem 1.1rem 1.2rem;
+}
+.form-label {
+  display: block;
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-main, #303b4f);
+  margin-bottom: 0.55rem;
+}
+.form-input {
+  width: 100%;
+  border: 1px solid #e2e5ea;
+  border-radius: 9px;
+  background: #fff;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--color-main, #303b4f);
+  resize: vertical;
+  min-height: 2.75rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-input::placeholder { color: #a2a8b4; }
+.form-input:focus {
+  outline: none;
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(107,30,122,0.12);
 }
 
-.trust-div {
-  width: 1px;
-  height: 36px;
-  background: rgba(255,255,255,0.2);
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.9rem;
 }
-
-/* ── Tagline below bar ── */
-.hero__tagline {
-  text-align: center;
-  padding: 1rem 0 0;
+.form-attach {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #fff;
+  border: 1px solid #e2e5ea;
+  border-radius: 20px;
+  padding: 0.55rem 1.05rem;
   font-size: 0.85rem;
-  color: var(--color-main-light, #6d7483);
+  font-weight: 500;
+  color: var(--ink-blue);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.form-attach:hover { border-color: var(--ink-blue); background: #f7f9ff; }
+.attach-icon { flex-shrink: 0; }
+.form-quote {
+  background: var(--gold);
+  color: var(--navy, #1B2A4A);
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 0.62rem 1.4rem;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.form-quote:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(48,59,79,0.22);
+}
+
+/* ── Trust row ── */
+.hero__trust {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.75rem 0 0;
+}
+.trust-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: #f5f6f8;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+.trust-logo {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #e2e5ea;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  background: var(--bg-body, #ffffff);
+  font-size: 0.72rem;
+  color: var(--color-main-light, #6d7483);
 }
-.tagline-icon {
+.trust-star { flex-shrink: 0; }
+.trust-copy { display: flex; flex-direction: column; gap: 0.1rem; text-align: left; }
+.trust-strong {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-weight: 700;
   font-size: 1rem;
+  color: var(--color-main, #303b4f);
+}
+.trust-muted {
+  font-size: 0.82rem;
+  color: var(--color-main-light, #6d7483);
+}
+
+/* ── Bottom tagline ── */
+.hero__tagline {
+  text-align: center;
+  margin: 2rem 0 0;
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: clamp(1.2rem, 2.6vw, 1.5rem);
+  font-weight: 600;
+  color: var(--olive);
+  letter-spacing: 0.2px;
 }
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
   .hero { padding-top: 5.5rem; }
-  .hero__inner {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    text-align: center;
+  .hero__title { font-size: clamp(1.5rem, 6vw, 1.9rem); }
+
+  .quote-card__offer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding-right: 0;
   }
-  .hero__content { max-width: 100%; }
-  .hero__visual { order: -1; }
-  .hero__visual img { max-width: 280px; }
-  .hero__trust-inner { gap: 1.5rem; }
-  .trust-div { display: none; }
+  .offer-save { align-self: stretch; text-align: center; }
+
+  .form-actions { flex-direction: column; align-items: stretch; }
+  .form-attach { justify-content: center; }
+  .form-quote { text-align: center; }
+
+  .hero__trust { grid-template-columns: 1fr; }
 }
 </style>
 
@@ -189,10 +324,26 @@ const base = '';
   const authGateLinks = document.querySelectorAll('.auth-gate');
 
   authGateLinks.forEach(link => {
-    if (session) {
-      link.setAttribute('href', '/contact/');
-    } else {
-      link.setAttribute('href', '/contact/');
-    }
+    // Same destination whether or not signed in; the contact page handles the gate.
+    link.setAttribute('href', '/contact/');
   });
+
+  // Carry the typed assignment brief through to the contact page.
+  const quoteBtn = document.getElementById('quoteBtn');
+  const brief = document.getElementById('assignmentBrief') as HTMLTextAreaElement | null;
+  if (quoteBtn && brief) {
+    quoteBtn.addEventListener('click', () => {
+      const val = brief.value.trim();
+      quoteBtn.setAttribute('href', val ? `/contact/?brief=${encodeURIComponent(val)}` : '/contact/');
+    });
+  }
+
+  // Reflect the chosen filename on the attach button.
+  const fileInput = document.getElementById('assignmentFile') as HTMLInputElement | null;
+  if (fileInput) {
+    fileInput.addEventListener('change', () => {
+      const label = fileInput.closest('.form-attach')?.querySelector('.attach-text');
+      if (label && fileInput.files?.length) label.textContent = fileInput.files[0].name;
+    });
+  }
 </script>
