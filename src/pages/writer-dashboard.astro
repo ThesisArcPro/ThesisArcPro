@@ -2522,15 +2522,17 @@ const base = '';
           <p id="dzText">Browse or drag and drop a file here</p>
           <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.zip,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg" />
         </div>
-        <button class="bm-upload-btn" id="uploadBtn" style="display:flex;align-items:center;gap:0.5rem;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg>Upload file</button>
+        <div style="display:flex;gap:0.6rem;">
+          <button class="bm-upload-btn" id="uploadBtn" style="display:flex;align-items:center;gap:0.5rem;flex:1;justify-content:center;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg>Upload file</button>
+          <button class="bm-review-btn" id="markReviewBtn" style="margin-top:0;flex:1;">Submit & mark as in review</button>
+        </div>
         <div class="upload-msg" id="uploadMsg" style="display:none;margin-top:0.6rem;"></div>
+        <div id="reviewActionWrap">
+          <div class="review-msg" id="reviewMsg"></div>
+        </div>
         <div class="bm-files-section">
           <h3>Uploaded files</h3>
           <div id="filesList"></div>
-        </div>
-        <div id="reviewActionWrap">
-          <button class="bm-review-btn" id="markReviewBtn">Submit & mark as in review</button>
-          <div class="review-msg" id="reviewMsg"></div>
         </div>
       </div>
 
@@ -3518,6 +3520,7 @@ const base = '';
     if (actual === 'dark') {
       document.body.classList.add('dark-mode');
     } else {
+      document.body.classList.remove('dark-mode');
     }
     document.querySelectorAll('.theme-popup__opt').forEach(btn => {
       btn.classList.toggle('active', (btn as HTMLElement).dataset.theme === setting);
