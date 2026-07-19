@@ -733,6 +733,8 @@ const base = '';
   .bm-pb-confirm { flex: 1.4; padding: 0.65rem; border-radius: 9px; border: none; background: #c5a059; color: #1a1206; font-size: 0.82rem; font-weight: 700; cursor: pointer; font-family: inherit; }
   .bm-pb-confirm:hover { background: #d4b473; }
   .bm-pb-confirm:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+  .modal-left { flex: 3; padding: 2.75rem 2.5rem 2rem; overflow-y: auto; min-width: 0; min-height: 0; height: 100%; }
+  .modal-right { flex: 0 0 26%; background: var(--main-bg); border-left: 1.5px solid var(--border); display: flex; flex-direction: column; min-width: 180px; height: 100%; }
   #modalContent { min-height: 0; }
   .bm-chat-panel { flex: 0 0 32%; }
 
@@ -740,9 +742,6 @@ const base = '';
     .modal-left { flex: 1 1 50%; height: auto; padding: 1.2rem; }
     .modal-right, .bm-chat-panel { width: 100%; flex: 1 1 50%; border-left: none; border-top: 1px solid var(--border); height: auto; }
   }
-
-  /* Fix: makes description box + chat body actually scrollable with a slim scrollbar,
-     instead of the browser default (or not scrolling at all) inside JS-rendered modal content. */
   .bm-instr-desc, .bm-chat-body { overflow-y: auto; }
   .bm-instr-desc::-webkit-scrollbar,
   .bm-chat-body::-webkit-scrollbar,
