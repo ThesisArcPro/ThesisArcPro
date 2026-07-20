@@ -1,536 +1,182 @@
 ---
-export interface Props {
-  guestMode?: boolean;
-  embedded?: boolean;
-}
-const { guestMode = false, embedded = false } = Astro.props;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SimpleOrderForm from '../components/SimpleOrderForm.astro';
+const base = '';
 ---
 
-<div class:list={['ofw-root', { 'ofw-embedded': embedded }]} id="ofwRoot">
-
-  <!-- Hidden fields — read by wizSubmitOrder() -->
-  <input type="hidden" id="wizTopic" />
-  <input type="hidden" id="wizType" />
-  <input type="hidden" id="wizSubject" />
-  <input type="hidden" id="wizLanguage" />
-  <input type="hidden" id="wizInstructions" />
-  <input type="hidden" id="wizPages" value="1" />
-  <input type="hidden" id="wizDeadline" />
-  <select id="wizLevel" style="display:none;">
-    <option value="">Select level</option>
-    <option value="HighSchool" data-step-add="0">High School</option>
-    <option value="College" data-step-add="1">College</option>
-    <option value="Bachelor" data-step-add="1">Bachelor's</option>
-    <option value="Masters" data-step-add="2">Master's</option>
-    <option value="PhD" data-step-add="3">PhD / Doctorate</option>
-  </select>
-
-  <!-- Progress bar -->
-  <div id="wizProgressBar" style="margin-bottom:0.9rem;">
-    <div style="height:4px;background:rgba(0,0,0,0.07);border-radius:4px;overflow:hidden;">
-      <div id="wizModalBar" style="height:100%;width:12.5%;background:#c5a059;transition:width 0.3s ease;"></div>
-    </div>
-  </div>
-
-  <div id="ofwGrid" style="display:flex;flex-direction:column;gap:1.2rem;">
-
-    <!-- STEPS -->
-    <div id="wizStepsFlow">
-
-      <!-- STEP 1: SERVICE -->
-      <div class="wiz-stack-step" id="ws1">
-        <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Service</div>
-        <div class="s-chips">
-          <span class="s-chip" data-svc="Writing" data-base="12">Writing</span>
-          <span class="s-chip" data-svc="Rewriting" data-base="9">Rewriting</span>
-          <span class="s-chip" data-svc="Editing" data-base="8">Editing</span>
-          <span class="s-chip" data-svc="Proofreading" data-base="7">Proofreading</span>
-          <span class="s-chip" data-svc="Problem solving" data-base="11">Problem solving</span>
-          <span class="s-chip" data-svc="Calculations" data-base="11">Calculations</span>
-          <span class="s-chip" data-svc="Review my work" data-base="10">Review my work</span>
-        </div>
-      </div>
-
-      <!-- STEP 2: SUBJECT -->
-      <div class="wiz-stack-step" id="ws2" style="display:none;">
-        <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Subject</div>
-        <div class="s-chips">
-          <span class="s-chip" data-sub="English & Literature">English</span>
-          <span class="s-chip" data-sub="Psychology">Psychology</span>
-          <span class="s-chip" data-sub="Nursing & Healthcare">Nursing</span>
-          <span class="s-chip" data-sub="Business Management">Business</span>
-          <span class="s-chip" data-sub="History">History</span>
-          <span class="s-chip" data-sub="Artificial Intelligence">Intelligence</span>
-          <span class="s-chip" data-sub="Healthcare">Healthcare</span>
-          <span class="s-chip" data-sub="Education">Education</span>
-          <span class="s-chip" data-sub="Social Work">Social work</span>
-          <span class="s-chip" data-sub="Science">Science</span>
-          <span class="s-chip" data-sub="Law">Law</span>
-          <span class="s-chip" data-sub="Mathematics">Mathematics</span>
-        </div>
-      </div>
-
-      <!-- STEP 3: ASSIGNMENT TYPE -->
-      <div class="wiz-stack-step" id="ws3" style="display:none;">
-        <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Assignment type</div>
-        <select class="s-dropdown" id="wsTypeDropdown">
-          <option value="">Select assignment</option>
-          <option>Essay (any type)</option>
-          <option>Discussion post</option>
-          <option>Research paper</option>
-          <option>Coursework</option>
-          <option>Case study</option>
-          <option>Report</option>
-          <option>Dissertation / Thesis</option>
-          <option>Research Proposal</option>
-          <option>Literature Review</option>
-          <option>Take Home Exam</option>
-          <option>Other</option>
-        </select>
-        <div class="s-sub-label">Popular:</div>
-        <div class="s-chips">
-          <span class="s-chip" data-asgn="Essay (any type)">Essay (any type)</span>
-          <span class="s-chip" data-asgn="Discussion post">Discussion post</span>
-          <span class="s-chip" data-asgn="Research paper">Research paper</span>
-          <span class="s-chip" data-asgn="Coursework">Coursework</span>
-          <span class="s-chip" data-asgn="Case study">Case study</span>
-        </div>
-      </div>
-
-      <!-- STEP 4: ACADEMIC LEVEL -->
-      <div class="wiz-stack-step" id="ws4" style="display:none;">
-        <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Academic level</div>
-        <div class="s-chips">
-          <span class="s-chip" data-lvl="HighSchool" data-step-add="0">High school</span>
-          <span class="s-chip" data-lvl="College" data-step-add="1">College</span>
-          <span class="s-chip" data-lvl="Bachelor" data-step-add="1">Bachelor's</span>
-          <span class="s-chip" data-lvl="Masters" data-step-add="2">Master's</span>
-          <span class="s-chip" data-lvl="PhD" data-step-add="3">Doctorate</span>
-        </div>
-      </div>
-
-      <!-- STEP 5: LANGUAGE -->
-      <div class="wiz-stack-step" id="ws5" style="display:none;">
-        <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Language</div>
-        <div class="s-chips">
-          <span class="s-chip" data-lang="English (US)">🇺🇸 English (US)</span>
-          <span class="s-chip" data-lang="English (UK)">🇬🇧 English (UK)</span>
-          <span class="s-chip" data-lang="English (AU)">🇦🇺 English (AU)</span>
-          <span class="s-chip" data-lang="Spanish (ES)">🇪🇸 Spanish</span>
-          <span class="s-chip" data-lang="French (FR)">🇫🇷 French</span>
-        </div>
-      </div>
-
-      <!-- STEP 6: SIZE -->
-      <div class="wiz-stack-step" id="ws6" style="display:none;">
-        <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Size</div>
-        <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:12px;">
-          <div>
-            <div class="s-sub-label" style="margin-bottom:6px;">Pages</div>
-            <div class="s-counter-row">
-              <button type="button" id="wsPagesMinus">−</button>
-              <span class="s-cv" id="wsPagesVal">1</span>
-              <button type="button" id="wsPagesPlus">+</button>
-            </div>
-            <div class="s-size-hint" id="wsPagesHint">≈ 275 words</div>
-          </div>
-          <div>
-            <div class="s-sub-label" style="margin-bottom:6px;">Line spacing</div>
-            <div class="s-toggle-row">
-              <button type="button" class="s-toggle-btn s-sel" id="wsDouble">Double</button>
-              <button type="button" class="s-toggle-btn" id="wsSingle">Single</button>
-            </div>
-          </div>
-        </div>
-        <div class="s-next-wrap">
-          <button type="button" class="s-next-btn" id="wsNext6">Next</button>
-        </div>
-      </div>
-
-      <!-- STEP 7: DEADLINE -->
-      <div class="wiz-stack-step" id="ws7" style="display:none;">
-        <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Deadline</div>
-        <div style="display:flex;gap:10px;margin-bottom:10px;">
-          <div class="s-date-box">
-            <span>📅</span>
-            <input type="datetime-local" id="wsDeadline" style="background:none;border:none;outline:none;color:inherit;font-size:12.5px;font-family:inherit;width:100%;cursor:pointer;" />
-          </div>
-        </div>
-        <div class="s-sub-label">Quick pick:</div>
-        <div class="s-chips" style="margin-bottom:14px;">
-          <span class="s-chip" data-dlh="3">3 hours</span>
-          <span class="s-chip" data-dlh="6">6 hours</span>
-          <span class="s-chip" data-dlh="12">12 hours</span>
-          <span class="s-chip" data-dlh="24">1 day</span>
-          <span class="s-chip" data-dlh="48">2 days</span>
-          <span class="s-chip" data-dlh="120">5 days</span>
-        </div>
-        <div class="s-next-wrap">
-          <button type="button" class="s-next-btn" id="wsNext7">Next</button>
-        </div>
-      </div>
-
-      <!-- STEP 8: INSTRUCTIONS -->
-      <div class="wiz-stack-step" id="ws8" style="display:none;">
-        <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Instructions</div>
-        <input type="text" class="s-instr-title" id="wsTitle" placeholder="Name your assignment" />
-        <textarea class="s-instr-area" id="wsInstructions" placeholder="Describe your assignment. Share references, links to articles, and any other instructions."></textarea>
-        <div class="s-warn-bar">⚠️ Do not share personal information — <strong>no name, email, or phone number.</strong></div>
-        <div class="s-next-wrap">
-          <button type="button" class="s-next-btn" id="wsNext8">🚀 {guestMode ? 'Continue' : 'Post Order'}</button>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- SUMMARY: info card (steps 1-5) -->
-    <div id="wizInfoCard" style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:1.3rem;">
-      <div style="color:#0f172a;font-weight:700;font-size:0.92rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(0,0,0,0.07);margin-bottom:0.2rem;">Order info</div>
-      <div style="display:flex;flex-direction:column;">
-        <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Service</div><div id="wizISvc" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
-        <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Type of paper</div><div id="wizIType" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
-        <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Subject</div><div id="wizISubject" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
-        <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Page count</div><div id="wizIPages" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
-        <div style="padding:0.7rem 0;border-bottom:1px solid rgba(0,0,0,0.05);"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Instructions</div><div id="wizIInstr" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
-        <div style="padding:0.7rem 0;"><div style="color:#0f172a;font-weight:700;font-size:0.78rem;">Deadline</div><div id="wizIDeadline" style="color:#64748b;font-size:0.75rem;margin-top:0.12rem;">—</div></div>
-      </div>
-      <div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid rgba(0,0,0,0.07);">
-        <div style="color:#0f172a;font-weight:700;font-size:0.78rem;margin-bottom:0.45rem;">Included with every order</div>
-        <div style="color:#2d6a4f;font-size:0.74rem;margin-bottom:0.18rem;">✔ Free plagiarism & AI report</div>
-        <div style="color:#2d6a4f;font-size:0.74rem;margin-bottom:0.18rem;">✔ Free unlimited revisions</div>
-        <div style="color:#2d6a4f;font-size:0.74rem;margin-bottom:0.18rem;">✔ On-time delivery guaranteed</div>
-        <div style="color:#2d6a4f;font-size:0.74rem;">✔ Money-back guarantee</div>
-      </div>
-    </div>
-
-    <!-- SUMMARY: price card (step 6+) -->
-    <div id="wizPriceCard" style="display:none;background:#0f172a;border-radius:16px;padding:1.5rem;color:#fff;">
-      <div style="text-align:center;margin-bottom:1.1rem;">
-        <div id="wizCalcTotal" style="font-size:2.3rem;font-weight:800;color:#c5a059;line-height:1;">$0.00</div>
-        <div style="color:rgba(255,255,255,0.55);font-size:0.75rem;margin-top:0.3rem;">Estimated total</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:0.48rem;margin-bottom:1rem;">
-        <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span>Service</span><span id="wizSumService">—</span></div>
-        <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span>Level</span><span id="wizSumLevel">—</span></div>
-        <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span>Base price</span><span id="wizSumBase">—</span></div>
-        <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span>Pages</span><span id="wizSumPages">x 1</span></div>
-        <div id="wizSumUrgencyRow" style="display:none;justify-content:space-between;color:rgba(255,255,255,0.78);font-size:0.8rem;"><span id="wizSumUrgencyLabel">Urgency</span><span id="wizSumUrgency">+$0.00</span></div>
-        <div style="height:1px;background:rgba(255,255,255,0.1);margin:0.2rem 0;"></div>
-        <div style="display:flex;justify-content:space-between;color:#fff;font-weight:700;font-size:0.92rem;"><span>Total</span><span id="wizSumTotal">$0.00</span></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:0.32rem;">
-        <div style="color:rgba(255,255,255,0.65);font-size:0.74rem;">✔ Free plagiarism & AI report</div>
-        <div style="color:rgba(255,255,255,0.65);font-size:0.74rem;">✔ Free unlimited revisions</div>
-        <div style="color:rgba(255,255,255,0.65);font-size:0.74rem;">✔ On-time delivery guaranteed</div>
-        <div style="color:rgba(255,255,255,0.65);font-size:0.74rem;">✔ Money-back guarantee</div>
-      </div>
-    </div>
-
-    {guestMode && <p style="font-size:0.72rem;color:#94a3b8;text-align:center;">You'll create your account on the next step</p>}
-  </div>
-</div>
+<BaseLayout title="Get Started — ThesisArcPro" description="Get matched with a vetted academic consultant. Start your order in minutes.">
 
 <style>
-  .wiz-stack-step{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 18px;margin-bottom:10px;transition:opacity .22s;}
-  .wiz-stack-step.s-done{opacity:.55;}
-  .wiz-s-title{font-size:13px;font-weight:600;color:#0f172a;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-  .wiz-s-check{width:17px;height:17px;border-radius:50%;background:#4ade80;display:none;align-items:center;justify-content:center;font-size:9px;color:#0f172a;font-weight:700;flex-shrink:0;}
-  .wiz-stack-step.s-done .wiz-s-check{display:inline-flex;}
-  .s-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2px;}
-  .s-chip{padding:8px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:12.5px;color:#64748b;cursor:pointer;background:#f8fafc;transition:all .12s;user-select:none;font-family:inherit;}
-  .s-chip:hover{border-color:#cbd5e1;color:#475569;}
-  .s-chip.s-sel{border-color:#6366f1;background:#eef2ff;color:#4f46e5;font-weight:500;}
-  .s-sub-label{font-size:11px;color:#94a3b8;margin:8px 0 6px;}
-  .s-dropdown{width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 13px;font-size:12.5px;color:#475569;outline:none;font-family:inherit;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238A90A0'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;margin-bottom:10px;}
-  .s-next-wrap{display:flex;overflow:hidden;border-radius:8px;width:fit-content;margin-top:14px;}
-  .s-next-btn{background:#046fcd;color:#fff;border:none;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
-  .s-next-btn:hover{background:#0361b3;}
-  .s-counter-row{display:flex;align-items:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;width:fit-content;}
-  .s-counter-row button{width:36px;height:36px;background:#fff;border:none;border-right:1px solid #e2e8f0;color:#64748b;font-size:17px;cursor:pointer;}
-  .s-counter-row button:last-child{border-right:none;border-left:1px solid #e2e8f0;}
-  .s-cv{padding:0 18px;font-size:13px;font-weight:600;color:#0f172a;}
-  .s-size-hint{font-size:11px;color:#94a3b8;margin-top:6px;}
-  .s-toggle-row{display:flex;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;width:fit-content;margin-bottom:14px;}
-  .s-toggle-btn{padding:7px 16px;border:none;background:none;color:#94a3b8;font-size:12px;cursor:pointer;font-family:inherit;}
-  .s-toggle-btn.s-sel{background:#fff;color:#0f172a;font-weight:600;}
-  .s-date-box{flex:1;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:9px 13px;display:flex;align-items:center;gap:8px;font-size:12.5px;color:#0f172a;}
-  .s-warn-bar{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:10px 13px;font-size:11.5px;color:#854d0e;display:flex;align-items:flex-start;gap:7px;margin-bottom:10px;line-height:1.5;}
-  .s-instr-title{width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 13px;font-size:13px;color:#0f172a;outline:none;font-family:inherit;margin-bottom:10px;transition:border-color .15s;box-sizing:border-box;}
-  .s-instr-title:focus{border-color:#046fcd;}
-  .s-instr-title::placeholder{color:#94a3b8;}
-  .s-instr-area{width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 13px;font-size:12.5px;color:#0f172a;outline:none;font-family:inherit;min-height:90px;resize:vertical;margin-bottom:10px;transition:border-color .15s;box-sizing:border-box;}
-  .s-instr-area:focus{border-color:#046fcd;}
-  .s-instr-area::placeholder{color:#94a3b8;}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .ofw-embedded #wizInfoCard,
-  .ofw-embedded #wizPriceCard { padding: 1.1rem; }
+  :root {
+    --ink: #0f172a;
+    --muted: #64748b;
+    --faint: #94a3b8;
+    --border: #e2e8f0;
+    --accent: #046fcd;
+    --accent-dark: #0361b3;
+    --surface: #f8fafc;
+  }
+
+  body {
+    font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background: #fff;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  /* ── NAV ── */
+  .lp-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+  }
+  .lp-logo { font-size: 1.15rem; font-weight: 700; }
+  .lp-logo span { color: #c5a059; }
+  .lp-nav-links { display: none; gap: 1.75rem; font-size: 0.88rem; color: var(--muted); }
+  .lp-nav-cta {
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    padding: 0.6rem 1.3rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  }
+  .lp-nav-cta:hover { background: var(--accent-dark); }
+
+  @media (min-width: 860px) {
+    .lp-nav-links { display: flex; }
+  }
+
+  /* ── HERO SECTION ── */
+  .lp-hero {
+    display: grid; grid-template-columns: 1fr; gap: 2.5rem;
+    max-width: 1180px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem;
+  }
+  @media (min-width: 960px) {
+    .lp-hero { grid-template-columns: 1.05fr 1fr; padding: 3.5rem 2rem 5rem; }
+  }
+
+  .lp-badge {
+    display: inline-block; background: #eef6fb; color: var(--accent);
+    font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.85rem;
+    border-radius: 20px; margin-bottom: 1.1rem;
+  }
+  .lp-headline { font-size: 2rem; font-weight: 700; line-height: 1.3; margin-bottom: 1rem; }
+  @media (min-width: 640px) { .lp-headline { font-size: 2.4rem; } }
+  .lp-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.8rem; max-width: 480px; }
+
+  .lp-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.8rem; max-width: 480px; }
+  .lp-stat { border: 1px solid var(--border); border-radius: 12px; padding: 0.85rem; text-align: center; }
+  .lp-stat-num { font-size: 1.25rem; font-weight: 700; }
+  .lp-stat-label { font-size: 0.7rem; color: var(--faint); margin-top: 0.2rem; }
+
+  .lp-testimonial { border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.3rem; max-width: 480px; }
+  .lp-stars { color: #f5b301; font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .lp-quote { font-size: 0.85rem; color: var(--muted); font-style: italic; line-height: 1.65; margin-bottom: 0.6rem; }
+  .lp-author { display: flex; align-items: center; gap: 0.6rem; }
+  .lp-author-badge {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--accent);
+    color: #fff; font-size: 0.75rem; font-weight: 700; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .lp-author-name { font-size: 0.83rem; font-weight: 600; }
+  .lp-author-role { font-size: 0.74rem; color: var(--faint); }
+
+  /* ── ORDER FORM CARD WRAPPER ── */
+  .lp-form-card { align-self: start; }
+
+  /* ── FEATURE STRIP ── */
+  .lp-features {
+    max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 4rem;
+    display: grid; grid-template-columns: 1fr; gap: 0.9rem;
+  }
+  @media (min-width: 720px) { .lp-features { grid-template-columns: repeat(3, 1fr); } }
+  .lp-feature { border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; }
+  .lp-feature-title { font-weight: 700; font-size: 0.92rem; margin-bottom: 0.3rem; }
+  .lp-feature-text { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  .lp-footer {
+    border-top: 1px solid var(--border); padding: 1.5rem 2rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    text-align: center;
+  }
+  .lp-footer-email { font-size: 0.8rem; color: var(--faint); }
+  .lp-footer-email a { color: var(--accent); font-weight: 500; }
+  .lp-footer-copy { font-size: 0.74rem; color: var(--faint); }
 </style>
 
-<script define:vars={{ guestMode }}>
-  const wizState = { service: '', serviceBase: 0, levelAdd: 0, levelLabel: '' };
-  let wizTotal = 0;
-  let wsRevealed = 1;
-  let wsPages = 1;
+<!-- NAV -->
+<nav class="lp-nav">
+  <a href={`${base}/`} class="lp-logo">Thesis<span>Arc</span>Pro</a>
+  <div class="lp-nav-links">
+    <span>Services</span>
+    <span>How It Works</span>
+    <span>Writers</span>
+  </div>
+  <a href={`${base}/login/`}><button class="lp-nav-cta">Log In</button></a>
+</nav>
 
-  function updateWizBar() {
-    const bar = document.getElementById('wizModalBar');
-    if (bar) bar.style.width = `${(wsRevealed / 8) * 100}%`;
-  }
+<!-- HERO + FORM -->
+<section class="lp-hero">
+  <div>
+    <span class="lp-badge">Trusted by 1,200+ graduate students</span>
+    <h1 class="lp-headline">Get expert academic help, matched to your exact assignment</h1>
+    <p class="lp-sub">Tell us what you need — we'll match you with a vetted subject-matter consultant in minutes. Your payment stays protected until you approve the final work.</p>
 
-  function revealStep(n) {
-    const el = document.getElementById(`ws${n}`);
-    if (!el) return;
-    el.style.display = 'block';
-    wsRevealed = Math.max(wsRevealed, n);
-    updateWizBar();
-    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
-    const info = document.getElementById('wizInfoCard');
-    const price = document.getElementById('wizPriceCard');
-    if (n >= 6) {
-      if (info) info.style.display = 'none';
-      if (price) price.style.display = 'block';
-      wizCalc();
-    } else {
-      if (info) info.style.display = 'block';
-      if (price) price.style.display = 'none';
-    }
-  }
+    <div class="lp-stats">
+      <div class="lp-stat">
+        <div class="lp-stat-num">1,200+</div>
+        <div class="lp-stat-label">Papers delivered</div>
+      </div>
+      <div class="lp-stat">
+        <div class="lp-stat-num">48hr</div>
+        <div class="lp-stat-label">Avg turnaround</div>
+      </div>
+      <div class="lp-stat">
+        <div class="lp-stat-num">4.9/5</div>
+        <div class="lp-stat-label">Client rating</div>
+      </div>
+    </div>
 
-  function markDone(n) {
-    const el = document.getElementById(`ws${n}`);
-    if (el) el.classList.add('s-done');
-  }
+    <div class="lp-testimonial">
+      <div class="lp-stars">★★★★★</div>
+      <p class="lp-quote">"Helped me finish my dissertation when I was completely overwhelmed. Passed my defence with distinction."</p>
+      <div class="lp-author">
+        <div class="lp-author-badge">SM</div>
+        <div>
+          <div class="lp-author-name">Sarah M.</div>
+          <div class="lp-author-role">PhD Student</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  function wizRefreshInfo() {
-    const pages = parseInt(document.getElementById('wizPages')?.value || '1');
-    const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-    set('wizISvc', wizState.service || '—');
-    set('wizIType', document.getElementById('wizType')?.value || '—');
-    set('wizISubject', document.getElementById('wizSubject')?.value || '—');
-    set('wizIPages', `${pages} double-spaced page${pages > 1 ? 's' : ''}`);
-    const instr = document.getElementById('wsInstructions')?.value || '';
-    set('wizIInstr', instr.trim() ? (instr.length > 50 ? instr.slice(0, 50) + '…' : instr) : '—');
-    const dl = document.getElementById('wizDeadline')?.value;
-    set('wizIDeadline', dl ? new Date(dl).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }) : '—');
-  }
+  <div class="lp-form-card">
+    <!-- Simplified single-view form. On submit it stores the order
+         in sessionStorage and redirects to /signup/ instead of hitting Supabase -->
+    <SimpleOrderForm />
+  </div>
+</section>
 
-  function wizCalc() {
-    const pages = parseInt(document.getElementById('wizPages')?.value || '1');
-    const rate = wizState.serviceBase ? wizState.serviceBase + (wizState.levelAdd || 0) : 0;
+<!-- FEATURE STRIP -->
+<section class="lp-features">
+  <div class="lp-feature">
+    <div class="lp-feature-title">APA / MLA / Harvard</div>
+    <div class="lp-feature-text">Every major citation style, free and included on every order.</div>
+  </div>
+  <div class="lp-feature">
+    <div class="lp-feature-title">Payment protection</div>
+    <div class="lp-feature-text">Funds held in your account until you approve the delivered work.</div>
+  </div>
+  <div class="lp-feature">
+    <div class="lp-feature-title">Vetted consultants</div>
+    <div class="lp-feature-text">5+ years of academic writing experience, verified before joining.</div>
+  </div>
+</section>
 
-    let urgencyPerPage = 0, urgencyText = '';
-    const dlInput = document.getElementById('wizDeadline');
-    if (dlInput?.value) {
-      const h = (new Date(dlInput.value).getTime() - Date.now()) / 3600000;
-      if (h < 6)       { urgencyPerPage = rate * 0.5; urgencyText = '🔴 RUSH (under 6h): +50%'; }
-      else if (h < 12) { urgencyPerPage = rate * 0.3; urgencyText = '🟠 Urgent (6–12h): +30%'; }
-      else if (h < 24) { urgencyPerPage = rate * 0.2; urgencyText = '🟡 Same day (12–24h): +20%'; }
-      else if (h < 48) { urgencyPerPage = rate * 0.1; urgencyText = '🟢 Standard (1–2 days): +10%'; }
-    }
+<!-- FOOTER -->
+<footer class="lp-footer">
+  <div class="lp-footer-email">Prefer email? <a href="mailto:support@thesisarcpro.com">support@thesisarcpro.com</a></div>
+  <div class="lp-footer-copy">© {new Date().getFullYear()} ThesisArcPro. All rights reserved.</div>
+</footer>
 
-    const baseTotal = rate * pages;
-    const urgencyTotal = urgencyPerPage * pages;
-    wizTotal = baseTotal + urgencyTotal;
-
-    const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-    set('wizSumService', wizState.service || '—');
-    set('wizSumLevel', wizState.levelLabel || '—');
-    set('wizSumBase', rate ? `$${rate.toFixed(2)}/pg` : '—');
-    set('wizSumPages', `x ${pages}`);
-    set('wizCalcTotal', `$${wizTotal.toFixed(2)}`);
-    set('wizSumTotal', `$${wizTotal.toFixed(2)}`);
-    const uRow = document.getElementById('wizSumUrgencyRow');
-    if (uRow) uRow.style.display = urgencyTotal > 0 ? 'flex' : 'none';
-    set('wizSumUrgencyLabel', urgencyText.split(':')[0] || 'Urgency');
-    set('wizSumUrgency', `+$${urgencyTotal.toFixed(2)}`);
-    wizRefreshInfo();
-  }
-
-  // STEP 1: Service
-  document.querySelectorAll('#ws1 .s-chip[data-svc]').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('#ws1 .s-chip[data-svc]').forEach(c => c.classList.remove('s-sel'));
-      chip.classList.add('s-sel');
-      wizState.service = chip.dataset.svc || '';
-      wizState.serviceBase = parseFloat(chip.dataset.base || '0');
-      markDone(1);
-      setTimeout(() => revealStep(2), 220);
-      wizRefreshInfo();
-    });
-  });
-
-  // STEP 2: Subject
-  document.querySelectorAll('#ws2 .s-chip[data-sub]').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('#ws2 .s-chip[data-sub]').forEach(c => c.classList.remove('s-sel'));
-      chip.classList.add('s-sel');
-      const inp = document.getElementById('wizSubject');
-      if (inp) inp.value = chip.dataset.sub || '';
-      markDone(2);
-      setTimeout(() => revealStep(3), 220);
-      wizRefreshInfo();
-    });
-  });
-
-  // STEP 3: Assignment type
-  document.querySelectorAll('#ws3 .s-chip[data-asgn]').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('#ws3 .s-chip[data-asgn]').forEach(c => c.classList.remove('s-sel'));
-      chip.classList.add('s-sel');
-      const inp = document.getElementById('wizType');
-      if (inp) inp.value = chip.dataset.asgn || '';
-      const dd = document.getElementById('wsTypeDropdown');
-      if (dd) dd.value = '';
-      markDone(3);
-      setTimeout(() => revealStep(4), 220);
-      wizRefreshInfo();
-    });
-  });
-  document.getElementById('wsTypeDropdown')?.addEventListener('change', (e) => {
-    const val = e.target.value;
-    if (!val) return;
-    const inp = document.getElementById('wizType');
-    if (inp) inp.value = val;
-    document.querySelectorAll('#ws3 .s-chip[data-asgn]').forEach(c => c.classList.remove('s-sel'));
-    markDone(3);
-    setTimeout(() => revealStep(4), 220);
-    wizRefreshInfo();
-  });
-
-  // STEP 4: Academic level
-  document.querySelectorAll('#ws4 .s-chip[data-lvl]').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('#ws4 .s-chip[data-lvl]').forEach(c => c.classList.remove('s-sel'));
-      chip.classList.add('s-sel');
-      wizState.levelAdd = parseInt(chip.dataset.stepAdd || '0');
-      wizState.levelLabel = chip.textContent?.trim() || '';
-      const sel = document.getElementById('wizLevel');
-      if (sel) {
-        const lvl = chip.dataset.lvl || '';
-        for (let i = 0; i < sel.options.length; i++) {
-          if (sel.options[i].value === lvl) { sel.selectedIndex = i; break; }
-        }
-      }
-      markDone(4);
-      setTimeout(() => revealStep(5), 220);
-      wizCalc();
-    });
-  });
-
-  // STEP 5: Language
-  document.querySelectorAll('#ws5 .s-chip[data-lang]').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('#ws5 .s-chip[data-lang]').forEach(c => c.classList.remove('s-sel'));
-      chip.classList.add('s-sel');
-      const inp = document.getElementById('wizLanguage');
-      if (inp) inp.value = chip.dataset.lang || '';
-      markDone(5);
-      setTimeout(() => revealStep(6), 220);
-      wizRefreshInfo();
-    });
-  });
-
-  // STEP 6: Size
-  document.getElementById('wsPagesMinus')?.addEventListener('click', () => {
-    wsPages = Math.max(1, wsPages - 1);
-    const val = document.getElementById('wsPagesVal'); if (val) val.textContent = String(wsPages);
-    const hint = document.getElementById('wsPagesHint'); if (hint) hint.textContent = `≈ ${wsPages * 275} words`;
-    const inp = document.getElementById('wizPages'); if (inp) inp.value = String(wsPages);
-    wizCalc();
-  });
-  document.getElementById('wsPagesPlus')?.addEventListener('click', () => {
-    wsPages = Math.min(500, wsPages + 1);
-    const val = document.getElementById('wsPagesVal'); if (val) val.textContent = String(wsPages);
-    const hint = document.getElementById('wsPagesHint'); if (hint) hint.textContent = `≈ ${wsPages * 275} words`;
-    const inp = document.getElementById('wizPages'); if (inp) inp.value = String(wsPages);
-    wizCalc();
-  });
-  document.getElementById('wsDouble')?.addEventListener('click', () => {
-    document.getElementById('wsDouble')?.classList.add('s-sel');
-    document.getElementById('wsSingle')?.classList.remove('s-sel');
-  });
-  document.getElementById('wsSingle')?.addEventListener('click', () => {
-    document.getElementById('wsSingle')?.classList.add('s-sel');
-    document.getElementById('wsDouble')?.classList.remove('s-sel');
-  });
-  document.getElementById('wsNext6')?.addEventListener('click', () => {
-    markDone(6);
-    revealStep(7);
-  });
-
-  // STEP 7: Deadline
-  document.querySelectorAll('#ws7 .s-chip[data-dlh]').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('#ws7 .s-chip[data-dlh]').forEach(c => c.classList.remove('s-sel'));
-      chip.classList.add('s-sel');
-      const hours = parseInt(chip.dataset.dlh || '0');
-      const date = new Date(); date.setHours(date.getHours() + hours);
-      const iso = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-      const wsD = document.getElementById('wsDeadline'); if (wsD) wsD.value = iso;
-      const wizD = document.getElementById('wizDeadline'); if (wizD) wizD.value = iso;
-      wizCalc();
-    });
-  });
-  document.getElementById('wsDeadline')?.addEventListener('change', (e) => {
-    const val = e.target.value;
-    const wizD = document.getElementById('wizDeadline'); if (wizD) wizD.value = val;
-    document.querySelectorAll('#ws7 .s-chip[data-dlh]').forEach(c => c.classList.remove('s-sel'));
-    wizCalc();
-  });
-  document.getElementById('wsNext7')?.addEventListener('click', () => {
-    const dl = document.getElementById('wsDeadline')?.value;
-    if (!dl) { alert('Please choose a deadline.'); return; }
-    markDone(7);
-    revealStep(8);
-  });
-
-  // STEP 8: Instructions -> submit
-  document.getElementById('wsTitle')?.addEventListener('input', () => {
-    const val = document.getElementById('wsTitle')?.value || '';
-    const inp = document.getElementById('wizTopic'); if (inp) inp.value = val;
-    wizRefreshInfo();
-  });
-  document.getElementById('wsInstructions')?.addEventListener('input', wizRefreshInfo);
-  document.getElementById('wsNext8')?.addEventListener('click', async () => {
-    const title = document.getElementById('wsTitle')?.value.trim();
-    const instr = document.getElementById('wsInstructions')?.value.trim();
-    if (!title) { alert('Please name your assignment.'); return; }
-    if (!instr) { alert('Please add your instructions.'); return; }
-    const wizInstr = document.getElementById('wizInstructions'); if (wizInstr) wizInstr.value = instr;
-    markDone(8);
-    await wizSubmitOrder();
-  });
-
-  async function wizSubmitOrder() {
-    const orderData = {
-      topic: document.getElementById('wizTopic')?.value || '',
-      type: document.getElementById('wizType')?.value || '',
-      subject: document.getElementById('wizSubject')?.value || '',
-      language: document.getElementById('wizLanguage')?.value || '',
-      level: document.getElementById('wizLevel')?.value || '',
-      levelLabel: wizState.levelLabel,
-      pages: document.getElementById('wizPages')?.value || '1',
-      deadline: document.getElementById('wizDeadline')?.value || '',
-      instructions: document.getElementById('wizInstructions')?.value || '',
-      service: wizState.service,
-      serviceBase: wizState.serviceBase,
-      total: wizTotal
-    };
-
-    if (guestMode) {
-      // Not authenticated yet — stash the order and send to signup.
-      // Signup's post-login handler checks sessionStorage for 'pendingOrder'
-      // and creates the order automatically once the account exists.
-      sessionStorage.setItem('pendingOrder', JSON.stringify(orderData));
-      window.location.href = '/signup/';
-      return;
-    }
-
-    // Logged-in path: dispatch a custom event that the host page (dashboard)
-    // listens for, so this component stays decoupled from Supabase/session logic.
-    document.dispatchEvent(new CustomEvent('ofw:submit', { detail: orderData }));
-  }
-
-  updateWizBar();
-  wizRefreshInfo();
-</script>
+</BaseLayout>
