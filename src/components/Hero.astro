@@ -46,7 +46,7 @@ const base = '';
     <!-- Trust row -->
     <div class="hero__trust">
       <div class="trust-card">
-        <span class="trust-logo">logo</span>
+        <img class="trust-logo" src="/favicon.svg" alt="ThesisArcPro logo" width="32" height="32" />
         <span class="trust-copy">
           <span class="trust-strong">200K+ students</span>
           <span class="trust-muted">trusted us to write their papers</span>
@@ -340,6 +340,12 @@ const base = '';
 }
 .hero .stjr-badge * {
   max-width: 100%;
+}
+/* Favicon as logo in trust card */
+img.trust-logo {
+  object-fit: contain;
+  padding: 4px;
+  background: #fff;
 }
 </style>
 
