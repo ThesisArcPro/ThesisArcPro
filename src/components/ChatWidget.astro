@@ -490,7 +490,7 @@ const agents = [
 
   async function loadCwConversations() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${cwUserId}&select=conversation_id,conversations(id,type,title,updated_at)`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${cwUserId}&select=conversation_id,conversations!inner(id,type,title,updated_at,status)&conversations.status=eq.open`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
       const data = await res.json();
       cwConversations = data.map((d: any) => d.conversations).filter(Boolean).sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
       renderCwConvoList();
