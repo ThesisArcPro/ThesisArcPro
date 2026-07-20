@@ -328,6 +328,19 @@ const base = '';
   background: #dcdcdc !important;
   padding: 1.4rem 1.6rem 1.6rem !important;
 }
+/* Let the Sitejabber badge lay out normally inside its card */
+.hero__trust .trust-card:has(.stjr-badge) {
+  display: block;
+  padding: 0.5rem;
+  overflow: hidden;
+}
+.hero .stjr-badge {
+  width: 100%;
+  display: block;
+}
+.hero .stjr-badge * {
+  max-width: 100%;
+}
 </style>
 
 <script>
