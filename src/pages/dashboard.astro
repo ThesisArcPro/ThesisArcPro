@@ -1557,7 +1557,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
 
         <label style="display:flex;align-items:flex-start;gap:0.6rem;margin-bottom:1.5rem;cursor:pointer;">
           <input type="checkbox" id="addFundsAgree" style="margin-top:0.2rem;" />
-          <span style="font-size:0.8rem;color:#9CA1AC;line-height:1.5;">Yes, I understand and agree to the <a href="/terms" target="_blank" style="color:#5B8FFF;">Terms of Service</a>, including the <a href="/privacy" target="_blank" style="color:#5B8FFF;">Privacy Policy</a> and <a href="#" id="addFundsRefundPolicyLink" style="color:#5B8FFF;">Refund Policy</a>.</span>
+          <span style="font-size:0.8rem;color:#9CA1AC;line-height:1.5;">Yes, I understand and agree to the <a href="/terms" target="_blank" style="color:#5B8FFF;">Terms of Service</a>, including the <a href="/privacy" target="_blank" style="color:#5B8FFF;">Privacy Policy</a> and <a href="/payment-policy" target="_blank" style="color:#5B8FFF;">Payment Policy</a>.</span>
         </label>
 
         <button id="addFundsProceedBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">Proceed →</button>
@@ -1593,7 +1593,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
 <!-- REFUND POLICY SUMMARY MODAL -->
 <div class="modal" id="refundPolicyModal">
   <div class="modal-overlay" id="refundPolicyModalOverlay"></div>
-  <div class="modal-box" style="max-width:500px;padding:1.8rem;background:#181B22;border:1px solid #23262E;">
+  <div class="modal-box" style="max-width:500px;width:90%;padding:1.8rem;background:#181B22;border:1px solid #23262E;flex-direction:column;align-items:stretch;overflow-y:auto;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
       <h2 style="font-size:1.05rem;font-weight:700;color:#E7E9EE;">Refund policy summary</h2>
       <button class="modal-close" id="refundPolicyModalClose" style="position:static;color:#5B6270;">✕</button>
@@ -1842,6 +1842,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   document.getElementById('addFundsModalClose')?.addEventListener('click', () => document.getElementById('addFundsModal')!.classList.remove('open'));
 
   function openRefundPolicyModal() {
+    document.getElementById('walletModal')!.classList.remove('open');
     document.getElementById('refundPolicyModal')!.classList.add('open');
   }
   document.getElementById('refundPolicyBtn')?.addEventListener('click', openRefundPolicyModal);
