@@ -1002,10 +1002,24 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
  
   <!-- Client ID -->
   <div class="client-id-box">
-    <div class="client-id-box__label">🔒 Your Client ID</div>
+    <div class="client-id-box__label" style="display:flex;align-items:center;gap:0.35rem;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Your Client ID
+    </div>
     <div class="client-id-box__number" id="clientIdDisplay">—</div>
     <div class="client-id-box__copy">Use this ID for all order references & reviews — no personal info needed.</div>
-    <div class="client-id-box__privacy">🛡️ Your identity stays private. We never share your details.</div>
+    <div class="client-id-box__privacy" style="display:flex;align-items:flex-start;gap:0.35rem;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:0.1rem;"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg>
+      <span>Your identity stays private. We never share your details.</span>
+    </div>
+  </div>
+
+  <!-- Wallet Balance (click to open wallet modal) -->
+  <div id="addFundsBtn" style="margin:0.6rem 1rem 0;background:#1e293b;border-radius:12px;padding:0.7rem 0.9rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;transition:background 0.15s;">
+    <div style="width:34px;height:34px;border-radius:8px;background:rgba(4,111,205,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+    </div>
+    <div id="walletBalanceDisplay" style="font-size:1.05rem;font-weight:700;color:#FFFFFF;">$0.00</div>
   </div>
  
   <div class="sidebar-divider"></div>
@@ -1515,6 +1529,137 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   </div>
 </div>
  
+<!-- ADD FUNDS MODAL -->
+<div class="modal" id="addFundsModal">
+  <div class="modal-overlay" id="addFundsModalOverlay"></div>
+  <div class="modal-box" style="max-width:900px;width:95%;max-height:88vh;padding:0;overflow:hidden;background:#0E1116;">
+    <button class="modal-close" id="addFundsModalClose" style="color:#5B6270;z-index:210;">✕</button>
+    <div style="display:flex;height:100%;">
+      <!-- LEFT: form -->
+      <div style="flex:1.2;padding:2rem;overflow-y:auto;">
+        <h2 style="font-size:1.4rem;font-weight:700;color:#E7E9EE;margin-bottom:1.5rem;">Add funds to your account</h2>
+
+        <label style="font-size:0.85rem;color:#9CA1AC;display:block;margin-bottom:0.5rem;">Amount in USD (minimum $5.00):</label>
+        <div style="background:#181B22;border:1px solid #23262E;border-radius:10px;padding:0.8rem 1rem;display:flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem;">
+          <span style="color:#9CA1AC;font-size:1.3rem;">$</span>
+          <input type="number" id="addFundsAmount" min="5" step="0.01" placeholder="0.00" style="flex:1;background:none;border:none;outline:none;color:#E7E9EE;font-size:1.3rem;font-weight:700;" />
+        </div>
+
+        <label style="font-size:0.85rem;color:#9CA1AC;display:block;margin-bottom:0.6rem;">Payment method:</label>
+        <div style="background:#181B22;border:1.5px solid #5B8FFF;border-radius:10px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.7rem;margin-bottom:1.5rem;">
+          <span style="width:16px;height:16px;border-radius:50%;background:#5B8FFF;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#0E1116;"></span>
+          </span>
+          <span style="color:#E7E9EE;font-weight:600;font-size:0.9rem;flex:1;">PayPal</span>
+          <span style="background:#FFC439;color:#003087;font-weight:700;font-size:0.72rem;padding:0.25rem 0.5rem;border-radius:4px;">PayPal</span>
+        </div>
+        <p style="font-size:0.76rem;color:#5B6270;margin-top:-1rem;margin-bottom:1.5rem;">More payment methods (card, Apple Pay, Google Pay) coming soon.</p>
+
+        <label style="display:flex;align-items:flex-start;gap:0.6rem;margin-bottom:1.5rem;cursor:pointer;">
+          <input type="checkbox" id="addFundsAgree" style="margin-top:0.2rem;" />
+          <span style="font-size:0.8rem;color:#9CA1AC;line-height:1.5;">Yes, I understand and agree to the <a href="#" style="color:#5B8FFF;">Terms of Service</a>, including the <a href="#" style="color:#5B8FFF;">Privacy Policy</a> and <a href="#" id="addFundsRefundPolicyLink" style="color:#5B8FFF;">Refund Policy</a>.</span>
+        </label>
+
+        <button id="addFundsProceedBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">Proceed →</button>
+      </div>
+
+      <!-- RIGHT: trust panel -->
+      <div style="flex:1;background:#141821;padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-left:1px solid #23262E;">
+        <div style="width:90px;height:90px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;margin-bottom:1.3rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        </div>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#E7E9EE;margin-bottom:0.6rem;">Make a secure payment</h3>
+        <p style="font-size:0.85rem;color:#9CA1AC;line-height:1.6;max-width:280px;">We use PayPal's secure, encrypted checkout to protect your information and process all transactions.</p>
+      </div>
+    </div>
+
+    <!-- PAYPAL CONFIRM STEP (hidden until Proceed clicked) -->
+    <div id="addFundsPayPalStep" style="display:none;padding:2rem;">
+      <h2 style="font-size:1.3rem;font-weight:700;color:#E7E9EE;margin-bottom:1rem;">Complete your PayPal payment</h2>
+      <div id="addFundsAmountSummary" style="background:#181B22;border:1px solid #23262E;border-radius:10px;padding:1rem;margin-bottom:1.2rem;color:#E7E9EE;font-size:0.9rem;"></div>
+      <a id="addFundsPayPalLink" href="https://www.paypal.com/ncp/payment/X4GBU659AGXGQ" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:0.7rem;background:#FFC439;color:#003087;font-weight:700;font-size:1rem;padding:0.9rem 2rem;border-radius:8px;text-decoration:none;margin-bottom:1.2rem;">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19c-.988 0-1.829.722-1.974 1.699l-1.12 7.106-.313 1.983h3.293l.742-4.713.048-.306c.145-.977.986-1.699 1.974-1.699h1.245c3.863 0 6.637-1.57 7.49-6.114.333-1.726.163-3.168-.734-4.312z"/></svg>
+        Pay with PayPal
+      </a>
+      <label style="display:block;font-weight:600;color:#E7E9EE;font-size:0.88rem;margin-bottom:0.4rem;">Enter PayPal Transaction ID *</label>
+      <input type="text" id="addFundsTxnId" placeholder="e.g. 7GH123456789" style="width:100%;padding:0.75rem 1rem;background:#181B22;border:1.5px solid #23262E;border-radius:8px;color:#E7E9EE;font-size:0.92rem;outline:none;box-sizing:border-box;margin-bottom:0.3rem;" />
+      <p style="font-size:0.74rem;color:#5B6270;margin-bottom:1.2rem;">Find it in your PayPal confirmation email.</p>
+      <button id="addFundsConfirmBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">✅ I Have Paid — Credit My Wallet</button>
+      <div id="addFundsMsg" style="margin-top:0.8rem;font-size:0.85rem;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- REFUND POLICY SUMMARY MODAL -->
+<div class="modal" id="refundPolicyModal">
+  <div class="modal-overlay" id="refundPolicyModalOverlay"></div>
+  <div class="modal-box" style="max-width:500px;padding:1.8rem;background:#181B22;border:1px solid #23262E;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+      <h2 style="font-size:1.05rem;font-weight:700;color:#E7E9EE;">Refund policy summary</h2>
+      <button class="modal-close" id="refundPolicyModalClose" style="position:static;color:#5B6270;">✕</button>
+    </div>
+    <ul style="margin:0 0 1.3rem 1.1rem;padding:0;font-size:0.85rem;color:#C6CAD3;line-height:2;">
+      <li>Refund requests take up to <strong style="color:#E7E9EE;">5 business days</strong> to process.</li>
+      <li>Refunds are issued to the card(s) used for the purchase.</li>
+      <li>Refunds cannot be issued more than <strong style="color:#E7E9EE;">6 months</strong> after the purchase date.</li>
+    </ul>
+    <p style="font-size:0.85rem;color:#9CA1AC;margin-bottom:1.3rem;">For more details, refer to our <a href="/refund-policy/" target="_blank" style="color:#5B8FFF;">Refund Policy</a>.</p>
+    <div style="display:flex;justify-content:flex-end;">
+      <button id="refundPolicyGotItBtn" style="background:#6366f1;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.3rem;font-size:0.85rem;font-weight:600;cursor:pointer;">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- WALLET MODAL -->
+<div class="modal" id="walletModal">
+  <div class="modal-overlay" id="walletModalOverlay"></div>
+  <div class="modal-box" style="max-width:900px;width:95%;max-height:85vh;padding:0;overflow:hidden;display:flex;flex-direction:column;background:#141821;">
+    <button class="modal-close" id="walletModalClose" style="color:#5B6270;">✕</button>
+    <div style="padding:1.5rem 2rem 0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+        <h2 style="font-size:1.4rem;font-weight:700;color:#E7E9EE;">My balance: <span id="walletModalBalance">$0.00</span></h2>
+        <button id="walletModalAddFunds" style="background:#22c55e;color:#0f172a;border:none;border-radius:8px;padding:0.6rem 1.1rem;font-size:0.88rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:0.4rem;">Add funds
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        </button>
+      </div>
+      <div style="display:flex;gap:1.8rem;border-bottom:1px solid #23262E;">
+        <button class="wallet-tab wallet-tab--active" data-wtab="transactions" style="background:none;border:none;color:#5B8FFF;padding:0.7rem 0;font-size:0.88rem;font-weight:600;cursor:pointer;border-bottom:2px solid #5B8FFF;display:flex;align-items:center;gap:0.4rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+          Transactions
+        </button>
+        <button class="wallet-tab" data-wtab="refunds" style="background:none;border:none;color:#6B7280;padding:0.7rem 0;font-size:0.88rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;gap:0.4rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Refund requests
+        </button>
+        <button class="wallet-tab" data-wtab="methods" style="background:none;border:none;color:#6B7280;padding:0.7rem 0;font-size:0.88rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;gap:0.4rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          Payment methods
+        </button>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:1.5rem 2rem 2rem;">
+      <div id="walletPanelTransactions" class="wallet-panel">
+        <div id="walletTxnList" style="display:flex;flex-direction:column;gap:0.6rem;">
+          <div style="text-align:center;color:#5B6270;padding:2rem;">Loading…</div>
+        </div>
+      </div>
+      <div id="walletPanelRefunds" class="wallet-panel" style="display:none;">
+        <div style="display:flex;justify-content:flex-end;gap:0.6rem;margin-bottom:1rem;">
+          <button id="refundPolicyBtn" style="background:#181B22;color:#E7E9EE;border:1px solid #23262E;border-radius:8px;padding:0.55rem 1rem;font-size:0.85rem;font-weight:600;cursor:pointer;">Refund policy</button>
+          <button id="requestRefundBtn" style="background:#6366f1;color:#fff;border:none;border-radius:8px;padding:0.55rem 1rem;font-size:0.85rem;font-weight:600;cursor:pointer;">Request a refund</button>
+        </div>
+        <div id="walletRefundsList" style="text-align:center;color:#5B6270;padding:2rem;">You have no refund requests</div>
+      </div>
+      <div id="walletPanelMethods" class="wallet-panel" style="display:none;">
+        <div style="background:#181B22;border:1px solid #23262E;border-radius:10px;padding:1rem 1.2rem;display:flex;align-items:center;gap:0.75rem;">
+          <span style="background:#FFC439;color:#003087;font-weight:700;font-size:0.78rem;padding:0.3rem 0.6rem;border-radius:5px;">PayPal</span>
+          <span style="color:#9CA1AC;font-size:0.85rem;">Used to add funds to your wallet balance.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- WRITER PROFILE MODAL -->
 <div class="modal" id="writerProfileModal">
   <div class="modal-overlay" id="writerProfileOverlay"></div>
@@ -1566,6 +1711,178 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   let currentTab = 'in_progress';
   let currentSession: any = null;
   let myClientId: string | null = null;
+  let walletBalance = 0;
+
+  async function openWalletModal() {
+    document.getElementById('walletModal')!.classList.add('open');
+    const balEl = document.getElementById('walletModalBalance');
+    if (balEl) balEl.textContent = `$${walletBalance.toFixed(2)}`;
+    await loadWalletTransactions();
+  }
+
+  async function loadWalletTransactions() {
+    const box = document.getElementById('walletTxnList')!;
+    box.innerHTML = '<div style="text-align:center;color:#5B6270;padding:2rem;">Loading…</div>';
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/wallet_transactions?user_id=eq.${currentSession.user.id}&select=*&order=created_at.desc&limit=50`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+      );
+      const txns = await res.json();
+      if (!Array.isArray(txns) || !txns.length) {
+        box.innerHTML = `<div style="text-align:center;color:#5B6270;padding:3rem 1rem;">
+          <div style="font-size:0.95rem;font-weight:600;color:#9CA1AC;margin-bottom:0.3rem;">You haven't made any transactions</div>
+          <div style="font-size:0.82rem;">Depositing funds, paying for an order, and other transactions will appear here.</div>
+        </div>`;
+        return;
+      }
+      const typeLabel: Record<string, string> = { deposit: 'Deposit', hold: 'Order payment', release: 'Released to writer', refund: 'Refund', adjustment: 'Adjustment' };
+      const typeColor: Record<string, string> = { deposit: '#4ade80', hold: '#f87171', release: '#94a3b8', refund: '#60a5fa', adjustment: '#fbbf24' };
+      box.innerHTML = txns.map((t: any) => {
+        const amt = Number(t.amount);
+        const sign = amt >= 0 ? '+' : '';
+        const date = t.created_at ? new Date(t.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+        return `<div style="display:flex;align-items:center;justify-content:space-between;background:#181B22;border:1px solid #23262E;border-radius:10px;padding:0.9rem 1.1rem;">
+          <div>
+            <div style="font-size:0.86rem;font-weight:600;color:#E7E9EE;">${typeLabel[t.type] || t.type}</div>
+            <div style="font-size:0.74rem;color:#5B6270;margin-top:0.2rem;">${date}${t.note ? ' · ' + esc(t.note) : ''}</div>
+          </div>
+          <div style="font-size:0.95rem;font-weight:700;color:${typeColor[t.type] || '#9CA1AC'};">${sign}$${Math.abs(amt).toFixed(2)}</div>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      console.error('loadWalletTransactions error', e);
+      box.innerHTML = '<div style="text-align:center;color:#f87171;padding:2rem;">Could not load transactions.</div>';
+    }
+  }
+
+  document.getElementById('addFundsBtn')?.addEventListener('click', openWalletModal);
+
+  document.getElementById('walletModalAddFunds')?.addEventListener('click', () => {
+    document.getElementById('walletModal')!.classList.remove('open');
+    openAddFundsModal();
+  });
+
+  function openAddFundsModal() {
+    (document.getElementById('addFundsAmount') as HTMLInputElement).value = '';
+    (document.getElementById('addFundsAgree') as HTMLInputElement).checked = false;
+    (document.getElementById('addFundsTxnId') as HTMLInputElement).value = '';
+    document.getElementById('addFundsPayPalStep')!.style.display = 'none';
+    document.getElementById('addFundsMsg')!.textContent = '';
+    updateProceedBtn();
+    document.getElementById('addFundsModal')!.classList.add('open');
+  }
+
+  function updateProceedBtn() {
+    const amt = parseFloat((document.getElementById('addFundsAmount') as HTMLInputElement).value || '0');
+    const agreed = (document.getElementById('addFundsAgree') as HTMLInputElement).checked;
+    const btn = document.getElementById('addFundsProceedBtn') as HTMLButtonElement;
+    const valid = amt >= 5 && agreed;
+    btn.disabled = !valid;
+    btn.style.background = valid ? '#046fcd' : '#334155';
+    btn.style.color = valid ? '#fff' : '#94a3b8';
+    btn.style.cursor = valid ? 'pointer' : 'not-allowed';
+  }
+
+  document.getElementById('addFundsAmount')?.addEventListener('input', updateProceedBtn);
+  document.getElementById('addFundsAgree')?.addEventListener('change', updateProceedBtn);
+
+  document.getElementById('addFundsProceedBtn')?.addEventListener('click', () => {
+    const amt = parseFloat((document.getElementById('addFundsAmount') as HTMLInputElement).value || '0');
+    if (amt < 5) return;
+    document.getElementById('addFundsAmountSummary')!.textContent = `Amount to add: $${amt.toFixed(2)}`;
+    document.getElementById('addFundsPayPalStep')!.style.display = 'block';
+  });
+
+  document.getElementById('addFundsTxnId')?.addEventListener('input', (e) => {
+    const v = (e.target as HTMLInputElement).value.trim();
+    const btn = document.getElementById('addFundsConfirmBtn') as HTMLButtonElement;
+    const valid = v.length >= 5;
+    btn.disabled = !valid;
+    btn.style.background = valid ? '#22c55e' : '#334155';
+    btn.style.color = valid ? '#0f172a' : '#94a3b8';
+    btn.style.cursor = valid ? 'pointer' : 'not-allowed';
+  });
+
+  document.getElementById('addFundsConfirmBtn')?.addEventListener('click', async () => {
+    const txnId = (document.getElementById('addFundsTxnId') as HTMLInputElement).value.trim();
+    const amt = parseFloat((document.getElementById('addFundsAmount') as HTMLInputElement).value || '0');
+    const msg = document.getElementById('addFundsMsg')!;
+    if (!/^[A-Z0-9]{8,20}$/i.test(txnId)) {
+      msg.textContent = '❌ Invalid Transaction ID format.';
+      msg.style.color = '#f87171';
+      return;
+    }
+    const btn = document.getElementById('addFundsConfirmBtn') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = '⏳ Verifying…';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/add_wallet_funds`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ p_user_id: currentSession.user.id, p_amount: amt, p_paypal_txn_id: txnId })
+      });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.message || 'Could not credit wallet');
+      }
+      await refreshWalletBalance();
+      msg.textContent = '✅ Funds added successfully!';
+      msg.style.color = '#4ade80';
+      setTimeout(() => {
+        document.getElementById('addFundsModal')!.classList.remove('open');
+      }, 1200);
+    } catch (err: any) {
+      console.error(err);
+      msg.textContent = `❌ ${err.message || 'Something went wrong. Please try again.'}`;
+      msg.style.color = '#f87171';
+      btn.disabled = false; btn.textContent = '✅ I Have Paid — Credit My Wallet';
+    }
+  });
+
+  document.getElementById('addFundsModalClose')?.addEventListener('click', () => document.getElementById('addFundsModal')!.classList.remove('open'));
+
+  function openRefundPolicyModal() {
+    document.getElementById('refundPolicyModal')!.classList.add('open');
+  }
+  document.getElementById('refundPolicyBtn')?.addEventListener('click', openRefundPolicyModal);
+  document.getElementById('addFundsRefundPolicyLink')?.addEventListener('click', (e) => { e.preventDefault(); openRefundPolicyModal(); });
+  document.getElementById('refundPolicyModalClose')?.addEventListener('click', () => document.getElementById('refundPolicyModal')!.classList.remove('open'));
+  document.getElementById('refundPolicyGotItBtn')?.addEventListener('click', () => document.getElementById('refundPolicyModal')!.classList.remove('open'));
+  document.getElementById('refundPolicyModalOverlay')?.addEventListener('click', () => document.getElementById('refundPolicyModal')!.classList.remove('open'));
+  document.getElementById('addFundsModalOverlay')?.addEventListener('click', () => document.getElementById('addFundsModal')!.classList.remove('open'));
+  document.getElementById('walletModalClose')?.addEventListener('click', () => document.getElementById('walletModal')!.classList.remove('open'));
+  document.getElementById('walletModalOverlay')?.addEventListener('click', () => document.getElementById('walletModal')!.classList.remove('open'));
+
+  document.querySelectorAll('.wallet-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.wallet-tab').forEach(t => {
+        t.classList.remove('wallet-tab--active');
+        (t as HTMLElement).style.color = '#6B7280';
+        (t as HTMLElement).style.borderBottomColor = 'transparent';
+      });
+      tab.classList.add('wallet-tab--active');
+      (tab as HTMLElement).style.color = '#5B8FFF';
+      (tab as HTMLElement).style.borderBottomColor = '#5B8FFF';
+      const which = (tab as HTMLElement).dataset.wtab;
+      document.getElementById('walletPanelTransactions')!.style.display = which === 'transactions' ? 'block' : 'none';
+      document.getElementById('walletPanelRefunds')!.style.display = which === 'refunds' ? 'block' : 'none';
+      document.getElementById('walletPanelMethods')!.style.display = which === 'methods' ? 'block' : 'none';
+    });
+  });
+
+  async function refreshWalletBalance() {
+    if (!currentSession) return;
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/wallets?user_id=eq.${currentSession.user.id}&select=available_balance`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+      );
+      const data = await res.json();
+      walletBalance = data[0]?.available_balance ? Number(data[0].available_balance) : 0;
+      const el = document.getElementById('walletBalanceDisplay');
+      if (el) el.textContent = `$${walletBalance.toFixed(2)}`;
+    } catch (e) { console.error('refreshWalletBalance error', e); }
+  }
  
   // Track the review popup state
   let reviewOrderNumber = '';
@@ -2600,6 +2917,7 @@ try {
         socket.emit('client:online', myClientId);       
       } catch (e) { console.warn('Could not load client_id', e); }
       await loadOrders(session);
+      await refreshWalletBalance();
  
       // Reopen pending order modal if client refreshed while waiting for bids
       const pendingId = localStorage.getItem('wizPendingOrderId');
