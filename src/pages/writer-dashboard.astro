@@ -2263,22 +2263,70 @@ const base = '';
   async function loadBalance() {
     try {
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders?writer_id=eq.${writerId}&order_status=eq.completed&select=order_number,topic,amount_paid,status_updated_at&order=status_updated_at.desc`,
+        `${SUPABASE_URL}/rest/v1/writer_earnings?writer_id=eq.${writerId}&select=*,orders(order_number,topic)&order=created_at.desc`,
         { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
       );
-      const completed = await res.json();
-      const total = completed.reduce((sum: number, o: any) => sum + Number(o.amount_paid || 0), 0);
-      const amtEl = document.getElementById('balanceAmt'); if (amtEl) amtEl.textContent = `$${total.toFixed(2)}`;
-      const navEl = document.getElementById('balanceNavAmt'); if (navEl) navEl.textContent = `$${total.toFixed(2)}`;
+      const earnings = await res.json();
+      const available = (Array.isArray(earnings) ? earnings : []).filter((e: any) => e.status === 'available');
+      const withdrawn = (Array.isArray(earnings) ? earnings : []).filter((e: any) => e.status === 'withdrawn');
+      const availableTotal = available.reduce((sum: number, e: any) => sum + Number(e.amount || 0), 0);
+
+      const amtEl = document.getElementById('balanceAmt'); if (amtEl) amtEl.textContent = `$${availableTotal.toFixed(2)}`;
+      const navEl = document.getElementById('balanceNavAmt'); if (navEl) navEl.textContent = `$${availableTotal.toFixed(2)}`;
+
+      // Request Payout button (inserted once, above the list)
+      let payoutBtnWrap = document.getElementById('requestPayoutWrap');
+      if (!payoutBtnWrap) {
+        const card = document.querySelector('#viewBalance .profile-card:first-child');
+        if (card) {
+          card.insertAdjacentHTML('beforeend', `
+            <div id="requestPayoutWrap" style="margin-top:1rem;text-align:center;">
+              <button id="requestPayoutBtn" style="background:#046fcd;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:0.88rem;font-weight:700;cursor:pointer;" ${availableTotal <= 0 ? 'disabled' : ''}>Request Payout</button>
+              <div id="payoutMsg" style="margin-top:0.6rem;font-size:0.82rem;"></div>
+            </div>`);
+          document.getElementById('requestPayoutBtn')?.addEventListener('click', () => requestPayout(availableTotal));
+        }
+      } else {
+        const btn = document.getElementById('requestPayoutBtn') as HTMLButtonElement;
+        if (btn) btn.disabled = availableTotal <= 0;
+      }
+
       const listEl = document.getElementById('balanceList');
       if (listEl) {
-        listEl.innerHTML = completed.length ? completed.map((o: any) => `
+        const rows = [
+          ...available.map((e: any) => ({ ...e, label: 'Available' })),
+          ...withdrawn.map((e: any) => ({ ...e, label: 'Paid out' }))
+        ];
+        listEl.innerHTML = rows.length ? rows.map((e: any) => `
           <div class="file-row">
-            <div class="file-info"><span class="file-type-badge">Paid</span><div class="file-name">${esc(o.topic || o.order_number)}</div></div>
-            <span style="font-weight:700;color:#16a34a;">$${Number(o.amount_paid||0).toFixed(2)}</span>
-          </div>`).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">No completed orders yet.</p>';
+            <div class="file-info"><span class="file-type-badge" style="${e.label === 'Available' ? '' : 'background:rgba(148,163,184,0.15);color:#94a3b8;'}">${e.label}</span><div class="file-name">${esc(e.orders?.topic || e.orders?.order_number || 'Order')}</div></div>
+            <span style="font-weight:700;color:${e.label === 'Available' ? '#16a34a' : '#94a3b8'};">$${Number(e.amount||0).toFixed(2)}</span>
+          </div>`).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">No earnings yet.</p>';
       }
     } catch (err) { console.error(err); }
+  }
+
+  async function requestPayout(amount: number) {
+    const msg = document.getElementById('payoutMsg')!;
+    const btn = document.getElementById('requestPayoutBtn') as HTMLButtonElement;
+    if (amount <= 0) return;
+    btn.disabled = true; btn.textContent = '⏳ Submitting…';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/payout_requests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ writer_id: writerId, amount })
+      });
+      if (!res.ok) throw new Error('Could not submit payout request');
+      msg.textContent = '✅ Payout request submitted. We\'ll process it within a few business days.';
+      msg.style.color = '#16a34a';
+      btn.textContent = 'Request Payout';
+    } catch (e) {
+      msg.textContent = '❌ Could not submit request. Please try again.';
+      msg.style.color = '#dc2626';
+      btn.disabled = false;
+      btn.textContent = 'Request Payout';
+    }
   }
  
   function timeAgo(dateStr: string) {
