@@ -1479,14 +1479,8 @@ const base = '';
   </div><!-- /viewBalance -->
  
   <div class="view-panel" id="viewNotifications">
-    <div class="profile-area">
-      <div class="profile-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-          <h3 style="font-size:0.9rem;font-weight:700;">Notifications</h3>
-          <button id="markAllReadBtn" style="background:var(--main-bg);border:1px solid var(--border);color:var(--text-muted);border-radius:8px;padding:0.35rem 0.85rem;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:inherit;">Mark all as read ✓</button>
-        </div>
-        <div id="notifList"><p style="color:var(--text-muted);font-size:0.85rem;">Loading…</p></div>
-      </div>
+    <div class="profile-area" style="padding-top:0;">
+      <div id="notifList"><p style="color:var(--text-muted);font-size:0.85rem;">Loading…</p></div>
     </div>
   </div><!-- /viewNotifications -->
  
@@ -3141,6 +3135,8 @@ const base = '';
       const title = document.getElementById('writerName')!;
       const sub = document.getElementById('writerSub')!;
       (document.querySelector('.main-header') as HTMLElement).style.display = 'flex';
+      const existingMarkBtn = document.getElementById('markAllReadBtn');
+      if (existingMarkBtn) (existingMarkBtn as HTMLElement).style.display = 'none';
       if (view === 'orders') {
         document.getElementById('viewOrders')!.classList.add('active');
         title.textContent = 'My Orders';
@@ -3169,6 +3165,25 @@ const base = '';
         document.getElementById('viewNotifications')!.classList.add('active');
         title.textContent = 'Notifications';
         sub.textContent = 'Accepted bids and updates';
+        let markBtn = document.getElementById('markAllReadBtn');
+        if (!markBtn) {
+          document.querySelector('.main-header')!.insertAdjacentHTML('beforeend', `<button id="markAllReadBtn" style="background:var(--main-bg);border:1px solid var(--border);color:var(--text-muted);border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:inherit;">Mark all as read</button>`);
+          document.getElementById('markAllReadBtn')!.addEventListener('click', async () => {
+            try {
+              await fetch(`${SUPABASE_URL}/rest/v1/rpc/mark_notifications_seen`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
+                body: JSON.stringify({ p_writer_id: writerId })
+              });
+              await refreshNotifBadge();
+              document.querySelectorAll('.notif-new-indicator').forEach(el => {
+                el.innerHTML = '<span style="color:#4ade80;font-size:0.7rem;">✓ Read</span>';
+              });
+            } catch(e) { console.error(e); }
+          });
+        }
+        markBtn = document.getElementById('markAllReadBtn');
+        (markBtn as HTMLElement).style.display = 'block';
         loadNotifications();
       }
     });
@@ -4045,20 +4060,6 @@ const base = '';
     const origHandler = origChatNav.getAttribute('data-view');
     origChatNav.addEventListener('click', () => { setTimeout(() => loadConversations(), 100); });
   }
-
-  document.getElementById('markAllReadBtn')?.addEventListener('click', async () => {
-    try {
-      await fetch(`${SUPABASE_URL}/rest/v1/rpc/mark_notifications_seen`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
-        body: JSON.stringify({ p_writer_id: writerId })
-      });
-      await refreshNotifBadge();
-      document.querySelectorAll('.notif-new-indicator').forEach(el => {
-        el.innerHTML = '<span style="color:#4ade80;font-size:0.7rem;">✓ Read</span>';
-      });
-    } catch(e) { console.error(e); }
-  });
 </script>
  
 </body>
