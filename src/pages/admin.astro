@@ -76,21 +76,27 @@ const base = '';
 
         <!-- ═══ ADMIN FINANCE ═══ -->
         <div id="financePanel" style="display:none;">
-          <div class="stat-tiles" style="margin-bottom:1.2rem;">
+          <div class="stat-tiles" style="margin-bottom:1.5rem;">
             <div class="stat-tile"><div class="stat-label">Pending Payouts</div><div class="stat-value" id="finPendingPayouts">$0.00</div></div>
             <div class="stat-tile"><div class="stat-label">Held in Escrow</div><div class="stat-value" id="finEscrowHeld">$0.00</div></div>
             <div class="stat-tile"><div class="stat-label">Platform Revenue</div><div class="stat-value" id="finPlatformRevenue" style="color:#16a34a;">$0.00</div></div>
             <div class="stat-tile"><div class="stat-label">Wallets Funded</div><div class="stat-value" id="finWalletsFunded">$0.00</div></div>
           </div>
 
-          <h3 style="font-size:0.85rem;font-weight:700;color:#0f172a;margin-bottom:0.5rem;">Payout Requests</h3>
-          <div id="payoutRequestsList" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.5rem;">
-            <div class="loading-state"><div class="spinner"></div></div>
+          <h3 class="fin-heading">Payout requests</h3>
+          <div class="fin-table">
+            <div class="fin-table-head">
+              <span>Writer</span><span>Requested</span><span>Amount</span><span>Action</span>
+            </div>
+            <div id="payoutRequestsList"><div class="loading-state"><div class="spinner"></div></div></div>
           </div>
 
-          <h3 style="font-size:0.85rem;font-weight:700;color:#0f172a;margin-bottom:0.5rem;">Escrow Holds</h3>
-          <div id="escrowHoldsList" style="display:flex;flex-direction:column;gap:0.4rem;">
-            <div class="loading-state"><div class="spinner"></div></div>
+          <h3 class="fin-heading" style="margin-top:1.5rem;">Escrow holds</h3>
+          <div class="fin-table">
+            <div class="fin-table-head">
+              <span>Order</span><span>Amount</span><span>Status</span>
+            </div>
+            <div id="escrowHoldsList"><div class="loading-state"><div class="spinner"></div></div></div>
           </div>
         </div>
 
@@ -267,6 +273,36 @@ body.dark-mode .tt-btn { color: #64748b; }
 body.dark-mode .tt-btn:hover { background: #2a3244; }
 body.dark-mode .tt-btn.active { background: #2a3244; color: #e2e8f0; box-shadow: none; }
 body.dark-mode .stat-tile { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
+
+.fin-heading { font-size: 0.85rem; font-weight: 700; color: #0f172a; margin-bottom: 0.6rem; }
+body.dark-mode .fin-heading { color: #e2e8f0; }
+
+.fin-table { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+body.dark-mode .fin-table { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
+
+.fin-table-head { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; padding: 0.6rem 0.9rem; font-size: 0.68rem; color: #94a3b8; border-bottom: 1px solid #e2e8f0; text-transform: uppercase; letter-spacing: 0.4px; }
+.fin-table-head:has(+ #escrowHoldsList) { grid-template-columns: 1.3fr 0.8fr 1fr; }
+body.dark-mode .fin-table-head { border-bottom-color: rgba(255,255,255,0.08); }
+
+.fin-row { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; align-items: center; padding: 0.7rem 0.9rem; font-size: 0.8rem; border-bottom: 1px solid #f1f5f9; }
+.fin-row:last-child { border-bottom: none; }
+.fin-row.fin-row-3col { grid-template-columns: 1.3fr 0.8fr 1fr; }
+body.dark-mode .fin-row { border-bottom-color: rgba(255,255,255,0.05); color: #e2e8f0; }
+
+.fin-row-label { font-weight: 600; color: #0f172a; }
+body.dark-mode .fin-row-label { color: #e2e8f0; }
+.fin-row-sub { font-size: 0.68rem; color: #94a3b8; margin-top: 0.1rem; }
+
+.fin-badge { display: inline-block; padding: 0.18rem 0.5rem; border-radius: 5px; font-size: 0.65rem; font-weight: 700; text-transform: capitalize; width: fit-content; }
+.fin-badge.pending { background: rgba(251,191,36,0.15); color: #d97706; }
+.fin-badge.paid, .fin-badge.released { background: rgba(34,197,94,0.15); color: #16a34a; }
+.fin-badge.denied, .fin-badge.refunded { background: rgba(239,68,68,0.14); color: #dc2626; }
+.fin-badge.held { background: rgba(251,191,36,0.15); color: #d97706; }
+
+.fin-action-btn { border: 1px solid #e2e8f0; background: #fff; border-radius: 6px; padding: 0.3rem 0.65rem; font-size: 0.72rem; font-weight: 600; cursor: pointer; margin-right: 0.4rem; }
+.fin-action-btn.approve { color: #16a34a; border-color: #bbf7d0; }
+.fin-action-btn.deny { color: #dc2626; border-color: #fecaca; }
+body.dark-mode .fin-action-btn { background: #161b27; border-color: rgba(255,255,255,0.1); }
 body.dark-mode #financePanel h3 { color: #e2e8f0; }
 body.dark-mode .fin-row { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
 body.dark-mode .fin-row-label { color: #e2e8f0; }
@@ -634,23 +670,17 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
         payoutBox.innerHTML = '<div class="input-note">No payout requests yet.</div>';
       } else {
         payoutBox.innerHTML = payouts.map((p: any) => {
-          const statusBadge = p.status === 'pending'
-            ? `<span class="status-badge status-in_progress">Pending</span>`
-            : p.status === 'paid'
-            ? `<span class="status-badge status-completed">Paid</span>`
-            : `<span class="status-badge status-cancelled">Denied</span>`;
+          const badge = p.status === 'pending' ? '<span class="fin-badge pending">Pending</span>'
+            : p.status === 'paid' ? '<span class="fin-badge paid">Paid</span>'
+            : '<span class="fin-badge denied">Denied</span>';
           const actions = p.status === 'pending'
-            ? `<button class="btn-update-order" data-approve="${p.id}" style="color:#16a34a;">Approve</button>
-               <button class="btn-update-order" data-deny="${p.id}" style="color:#dc2626;">Deny</button>`
-            : '';
-          return `<div class="fin-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.6rem 0.9rem;">
-            <div style="flex:1;min-width:0;">
-              <div class="fin-row-label" style="font-size:0.8rem;font-weight:600;color:#0f172a;">${finEsc(p.writers?.full_name || 'Writer #' + p.writer_id)}</div>
-              <div style="font-size:0.68rem;color:#94a3b8;">${p.created_at ? new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : ''}</div>
-            </div>
-            <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">$${Number(p.amount || 0).toFixed(2)}</div>
-            ${statusBadge}
-            <div style="display:flex;gap:0.4rem;">${actions}</div>
+            ? `<button class="fin-action-btn approve" data-approve="${p.id}">Approve</button><button class="fin-action-btn deny" data-deny="${p.id}">Deny</button>`
+            : badge;
+          return `<div class="fin-row">
+            <div class="fin-row-label">${finEsc(p.writers?.full_name || 'Writer #' + p.writer_id)}</div>
+            <div style="color:#94a3b8;">${p.created_at ? new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : ''}</div>
+            <div style="font-weight:700;">$${Number(p.amount || 0).toFixed(2)}</div>
+            <div>${actions}</div>
           </div>`;
         }).join('');
 
@@ -693,15 +723,13 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
         escrowBox.innerHTML = '<div class="input-note">No escrow activity yet.</div>';
       } else {
         escrowBox.innerHTML = escrow.map((e: any) => {
-          const badge = e.status === 'held' ? '<span class="status-badge status-in_progress">Held</span>'
-            : e.status === 'released' ? '<span class="status-badge status-completed">Released</span>'
-            : '<span class="status-badge status-cancelled">Refunded</span>';
-          return `<div class="fin-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.6rem 0.9rem;">
-            <div style="flex:1;min-width:0;">
-              <div class="fin-row-label" style="font-size:0.8rem;font-weight:600;color:#0f172a;">${finEsc(e.orders?.topic || e.orders?.order_number || 'Order')}</div>
-            </div>
-            <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">$${Number(e.amount || 0).toFixed(2)}</div>
-            ${badge}
+          const badge = e.status === 'held' ? '<span class="fin-badge held">Held</span>'
+            : e.status === 'released' ? '<span class="fin-badge released">Released</span>'
+            : '<span class="fin-badge refunded">Refunded</span>';
+          return `<div class="fin-row fin-row-3col">
+            <div class="fin-row-label">${finEsc(e.orders?.topic || e.orders?.order_number || 'Order')}</div>
+            <div style="font-weight:700;">$${Number(e.amount || 0).toFixed(2)}</div>
+            <div>${badge}</div>
           </div>`;
         }).join('');
       }
