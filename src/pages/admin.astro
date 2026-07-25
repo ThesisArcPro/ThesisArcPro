@@ -460,16 +460,13 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
   .orders-grid { display: flex; flex-direction: column; gap: 0.7rem; }
 
   /* Finance panel rows — also injected via innerHTML, must be global too */
-  .fin-table { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
-  body.dark-mode .fin-table { background: #1a1f2e; border-color: rgba(255,255,255,0.08); }
+  .fin-table { background: transparent; border: none; }
 
-  .fin-table-head { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; padding: 0.6rem 0.9rem; font-size: 0.68rem; color: #94a3b8; border-bottom: 1px solid #e2e8f0; text-transform: uppercase; letter-spacing: 0.4px; }
-  body.dark-mode .fin-table-head { border-bottom-color: rgba(255,255,255,0.08); }
+  .fin-table-head { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; padding: 0.5rem 0.9rem; font-size: 0.68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
 
-  .fin-row { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; align-items: center; padding: 0.7rem 0.9rem; font-size: 0.8rem; border-bottom: 1px solid #f1f5f9; }
-  .fin-row:last-child { border-bottom: none; }
+  .fin-row { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; align-items: center; padding: 0.7rem 0.9rem; font-size: 0.8rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 4px; }
   .fin-row.fin-row-3col { grid-template-columns: 1.3fr 0.8fr 1fr; }
-  body.dark-mode .fin-row { border-bottom-color: rgba(255,255,255,0.05); color: #e2e8f0; }
+  body.dark-mode .fin-row { background: #1a1f2e; border-color: rgba(255,255,255,0.06); color: #e2e8f0; }
 
   .fin-row-label { font-weight: 600; color: #0f172a; }
   body.dark-mode .fin-row-label { color: #e2e8f0; }
