@@ -1811,7 +1811,7 @@ const base = '';
     const dl = deadlineInfo(order.deadline);
     const dueDate = order.deadline ? new Date(order.deadline).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
     const budget = Number(order.total_amount||0).toFixed(2);
-    const myShare = (Number(order.total_amount||0) * 0.8).toFixed(2);
+    const myShare = (Number(order.total_amount||0) * 0.2).toFixed(2);
     const existingBid = myBids.find((b: any) => String(b.order_id) === String(order.id));
 
     document.getElementById('modalContent')!.innerHTML = `
@@ -1830,13 +1830,13 @@ const base = '';
         ${existingBid ? `
         <div class="bm-bid-strip">
           <div class="bm-bid-col"><div class="bm-bid-lbl">My proposal</div><div class="bm-bid-val gold">$${Number(existingBid.bid_price).toFixed(2)}</div></div>
-          <div class="bm-bid-col"><div class="bm-bid-lbl">My share</div><div class="bm-bid-val">$${(Number(existingBid.bid_price)*0.8).toFixed(2)}</div></div>
+          <div class="bm-bid-col"><div class="bm-bid-lbl">My share</div><div class="bm-bid-val">$${(Number(existingBid.bid_price)*0.2).toFixed(2)}</div></div>
           <div class="bm-bid-col"><div class="bm-bid-lbl">Proposal placed</div><div class="bm-bid-val small">${existingBid.created_at ? new Date(existingBid.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'}</div></div>
           <button class="bm-edit-btn" id="bmEditProposalBtn">Edit proposal</button>
         </div>` : `
         <div class="bm-stats-strip">
           <div class="bm-stat"><div class="bm-stat-lbl">Min. price</div><div class="bm-stat-val">$${budget}</div></div>
-          <div class="bm-stat"><div class="bm-stat-lbl">My share (80%)</div><div class="bm-stat-val gold">$${myShare}</div></div>
+          <div class="bm-stat"><div class="bm-stat-lbl">My share</div><div class="bm-stat-val gold">$${myShare}</div></div>
           <div class="bm-stat"><div class="bm-stat-lbl">Pages</div><div class="bm-stat-val">${esc(order.pages||1)}</div></div>
         </div>
         <button class="bm-make-proposal-btn" id="bmMakeProposalBtn">Make proposal</button>`}
@@ -1955,7 +1955,7 @@ const base = '';
     if (!bmCurrentOrder) return;
     const pages = bmPbPages(bmCurrentOrder);
     const costPerPage = bmPbAmount / pages;
-    const share = bmPbAmount * 0.8; // real 80% writer-share ratio
+    const share = bmPbAmount * 0.2; // writer gets 20%, platform keeps 80%
     const myCostPerPage = share / pages;
     (document.getElementById('bmPbAmountDisplay') as HTMLElement).textContent = bmPbAmount.toFixed(2);
     (document.getElementById('bmPbCostPerPage') as HTMLElement).textContent = '$' + costPerPage.toFixed(2);
