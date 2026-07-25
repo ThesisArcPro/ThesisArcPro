@@ -54,6 +54,7 @@ const base = '';
             <button class="tab" data-tab="completed">Completed</button>
             <button class="tab" data-tab="cancelled">Cancelled</button>
             <button class="tab" data-tab="inbox">💬 Inbox</button>
+            <button class="tab" data-tab="finance">💰 Finance</button>
           </div>
           <div class="search-wrap">
             <span class="search-icon">🔍</span>
@@ -72,6 +73,26 @@ const base = '';
         </div>
 
         <div id="ordersGrid" class="orders-grid" style="display:none;"></div>
+
+        <!-- ═══ ADMIN FINANCE ═══ -->
+        <div id="financePanel" style="display:none;">
+          <div class="stat-tiles" style="margin-bottom:1.2rem;">
+            <div class="stat-tile"><div class="stat-label">Pending Payouts</div><div class="stat-value" id="finPendingPayouts">$0.00</div></div>
+            <div class="stat-tile"><div class="stat-label">Held in Escrow</div><div class="stat-value" id="finEscrowHeld">$0.00</div></div>
+            <div class="stat-tile"><div class="stat-label">Platform Revenue</div><div class="stat-value" id="finPlatformRevenue" style="color:#16a34a;">$0.00</div></div>
+            <div class="stat-tile"><div class="stat-label">Wallets Funded</div><div class="stat-value" id="finWalletsFunded">$0.00</div></div>
+          </div>
+
+          <h3 style="font-size:0.85rem;font-weight:700;color:#0f172a;margin-bottom:0.5rem;">Payout Requests</h3>
+          <div id="payoutRequestsList" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.5rem;">
+            <div class="loading-state"><div class="spinner"></div></div>
+          </div>
+
+          <h3 style="font-size:0.85rem;font-weight:700;color:#0f172a;margin-bottom:0.5rem;">Escrow Holds</h3>
+          <div id="escrowHoldsList" style="display:flex;flex-direction:column;gap:0.4rem;">
+            <div class="loading-state"><div class="spinner"></div></div>
+          </div>
+        </div>
 
         <!-- ═══ ADMIN INBOX ═══ -->
         <div id="inboxPanel" style="display:none;">
@@ -183,18 +204,18 @@ const base = '';
 .tt-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
 /* Stat tiles */
-.stat-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
-.stat-tile { background: #ffffff; border: 1px solid #eef2f7; border-radius: 14px; padding: 1.1rem 1.3rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-.stat-label { color: #94a3b8; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-.stat-value { color: #0f172a; font-size: 1.7rem; font-weight: 800; margin-top: 0.3rem; }
+.stat-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.2rem; }
+.stat-tile { background: #ffffff; border: 1px solid #eef2f7; border-radius: 10px; padding: 0.65rem 0.85rem; }
+.stat-label { color: #94a3b8; font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+.stat-value { color: #0f172a; font-size: 1.2rem; font-weight: 700; margin-top: 0.15rem; }
 .stat-value.stat-new { color: #046fcd; }
 .stat-value.stat-progress { color: #f59e0b; }
 .stat-value.stat-money { color: #16a34a; }
 @media (max-width: 768px) { .stat-tiles { grid-template-columns: repeat(2, 1fr); } }
 
-.controls-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; border-bottom: 1px solid #eef2f7; padding-bottom: 1rem; }
-.admin__tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-.tab { background: none; border: none; color: #94a3b8; padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.controls-row { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; border-bottom: 1px solid #eef2f7; padding-bottom: 0.7rem; }
+.admin__tabs { display: flex; gap: 0.2rem; flex-wrap: wrap; }
+.tab { background: none; border: none; color: #94a3b8; padding: 0.35rem 0.7rem; border-radius: 7px; font-size: 0.76rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
 .tab.active { background: #046fcd; color: #ffffff; }
 .tab:hover:not(.active) { color: #303b4f; background: #eef2f7; }
 
@@ -246,6 +267,9 @@ body.dark-mode .tt-btn { color: #64748b; }
 body.dark-mode .tt-btn:hover { background: #2a3244; }
 body.dark-mode .tt-btn.active { background: #2a3244; color: #e2e8f0; box-shadow: none; }
 body.dark-mode .stat-tile { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
+body.dark-mode #financePanel h3 { color: #e2e8f0; }
+body.dark-mode .fin-row { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
+body.dark-mode .fin-row-label { color: #e2e8f0; }
 body.dark-mode .stat-label { color: #4a5568; }
 body.dark-mode .stat-value { color: #e2e8f0; }
 body.dark-mode .controls-row { border-bottom-color: rgba(255,255,255,0.06); }
@@ -574,6 +598,114 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
     } catch (err) {
       console.error('Could not load writers', err);
     }
+  }
+
+  function finEsc(v: any) {
+    return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  async function loadFinance() {
+    const hdr = { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` };
+    try {
+      const [payoutsRes, escrowRes, revenueRes, walletsRes] = await Promise.all([
+        fetch(`${SUPABASE_URL}/rest/v1/payout_requests?select=*,writers(full_name)&order=created_at.desc`, { headers: hdr }),
+        fetch(`${SUPABASE_URL}/rest/v1/escrow_holds?select=*,orders(order_number,topic)&order=created_at.desc`, { headers: hdr }),
+        fetch(`${SUPABASE_URL}/rest/v1/platform_revenue?select=amount`, { headers: hdr }),
+        fetch(`${SUPABASE_URL}/rest/v1/wallet_transactions?type=eq.deposit&select=amount`, { headers: hdr })
+      ]);
+      const payouts = await payoutsRes.json();
+      const escrow = await escrowRes.json();
+      const revenue = await revenueRes.json();
+      const wallets = await walletsRes.json();
+
+      const pendingTotal = (Array.isArray(payouts) ? payouts : []).filter((p: any) => p.status === 'pending').reduce((s: number, p: any) => s + Number(p.amount || 0), 0);
+      const escrowHeldTotal = (Array.isArray(escrow) ? escrow : []).filter((e: any) => e.status === 'held').reduce((s: number, e: any) => s + Number(e.amount || 0), 0);
+      const revenueTotal = (Array.isArray(revenue) ? revenue : []).reduce((s: number, r: any) => s + Number(r.amount || 0), 0);
+      const walletsTotal = (Array.isArray(wallets) ? wallets : []).reduce((s: number, w: any) => s + Number(w.amount || 0), 0);
+
+      const set = (id: string, v: string) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      set('finPendingPayouts', `$${pendingTotal.toFixed(2)}`);
+      set('finEscrowHeld', `$${escrowHeldTotal.toFixed(2)}`);
+      set('finPlatformRevenue', `$${revenueTotal.toFixed(2)}`);
+      set('finWalletsFunded', `$${walletsTotal.toFixed(2)}`);
+
+      const payoutBox = document.getElementById('payoutRequestsList')!;
+      if (!Array.isArray(payouts) || !payouts.length) {
+        payoutBox.innerHTML = '<div class="input-note">No payout requests yet.</div>';
+      } else {
+        payoutBox.innerHTML = payouts.map((p: any) => {
+          const statusBadge = p.status === 'pending'
+            ? `<span class="status-badge status-in_progress">Pending</span>`
+            : p.status === 'paid'
+            ? `<span class="status-badge status-completed">Paid</span>`
+            : `<span class="status-badge status-cancelled">Denied</span>`;
+          const actions = p.status === 'pending'
+            ? `<button class="btn-update-order" data-approve="${p.id}" style="color:#16a34a;">Approve</button>
+               <button class="btn-update-order" data-deny="${p.id}" style="color:#dc2626;">Deny</button>`
+            : '';
+          return `<div class="fin-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.6rem 0.9rem;">
+            <div style="flex:1;min-width:0;">
+              <div class="fin-row-label" style="font-size:0.8rem;font-weight:600;color:#0f172a;">${finEsc(p.writers?.full_name || 'Writer #' + p.writer_id)}</div>
+              <div style="font-size:0.68rem;color:#94a3b8;">${p.created_at ? new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : ''}</div>
+            </div>
+            <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">$${Number(p.amount || 0).toFixed(2)}</div>
+            ${statusBadge}
+            <div style="display:flex;gap:0.4rem;">${actions}</div>
+          </div>`;
+        }).join('');
+
+        payoutBox.querySelectorAll('[data-approve]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = (btn as HTMLElement).dataset.approve;
+            if (!confirm('Mark this payout as paid? This confirms you have sent the funds.')) return;
+            (btn as HTMLButtonElement).disabled = true;
+            try {
+              const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/admin_approve_payout`, {
+                method: 'POST',
+                headers: { ...hdr, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ p_request_id: id })
+              });
+              if (!res.ok) throw new Error((await res.json())?.message || 'Failed');
+              await loadFinance();
+            } catch (e: any) { alert(e.message || 'Could not approve payout.'); (btn as HTMLButtonElement).disabled = false; }
+          });
+        });
+        payoutBox.querySelectorAll('[data-deny]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = (btn as HTMLElement).dataset.deny;
+            const note = prompt('Reason for denying this payout (optional):') || '';
+            (btn as HTMLButtonElement).disabled = true;
+            try {
+              const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/admin_deny_payout`, {
+                method: 'POST',
+                headers: { ...hdr, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ p_request_id: id, p_note: note })
+              });
+              if (!res.ok) throw new Error((await res.json())?.message || 'Failed');
+              await loadFinance();
+            } catch (e: any) { alert(e.message || 'Could not deny payout.'); (btn as HTMLButtonElement).disabled = false; }
+          });
+        });
+      }
+
+      const escrowBox = document.getElementById('escrowHoldsList')!;
+      if (!Array.isArray(escrow) || !escrow.length) {
+        escrowBox.innerHTML = '<div class="input-note">No escrow activity yet.</div>';
+      } else {
+        escrowBox.innerHTML = escrow.map((e: any) => {
+          const badge = e.status === 'held' ? '<span class="status-badge status-in_progress">Held</span>'
+            : e.status === 'released' ? '<span class="status-badge status-completed">Released</span>'
+            : '<span class="status-badge status-cancelled">Refunded</span>';
+          return `<div class="fin-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.6rem 0.9rem;">
+            <div style="flex:1;min-width:0;">
+              <div class="fin-row-label" style="font-size:0.8rem;font-weight:600;color:#0f172a;">${finEsc(e.orders?.topic || e.orders?.order_number || 'Order')}</div>
+            </div>
+            <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">$${Number(e.amount || 0).toFixed(2)}</div>
+            ${badge}
+          </div>`;
+        }).join('');
+      }
+    } catch (err) { console.error('loadFinance error', err); }
   }
 
   async function checkAuth() {
@@ -1161,16 +1293,29 @@ async function archiveConversation(conv: any) {
         document.getElementById('emptyState')!.style.display = 'none';
         document.getElementById('ordersGrid')!.style.display = 'none';
         document.getElementById('inboxPanel')!.style.display = 'block';
+        document.getElementById('financePanel')!.style.display = 'none';
         loadInbox();
+      });
+    }
+    if ((tab as HTMLElement).dataset.tab === 'finance') {
+      tab.addEventListener('click', () => {
+        document.getElementById('loadingState')!.style.display = 'none';
+        document.getElementById('emptyState')!.style.display = 'none';
+        document.getElementById('ordersGrid')!.style.display = 'none';
+        document.getElementById('inboxPanel')!.style.display = 'none';
+        document.getElementById('financePanel')!.style.display = 'block';
+        loadFinance();
       });
     }
   });
 
-  // Make sure switching away from inbox hides it
+  // Make sure switching away from inbox/finance hides them
   document.querySelectorAll('.tab').forEach(tab => {
-    if ((tab as HTMLElement).dataset.tab !== 'inbox') {
+    const t = (tab as HTMLElement).dataset.tab;
+    if (t !== 'inbox' && t !== 'finance') {
       tab.addEventListener('click', () => {
         document.getElementById('inboxPanel')!.style.display = 'none';
+        document.getElementById('financePanel')!.style.display = 'none';
       });
     }
   });
