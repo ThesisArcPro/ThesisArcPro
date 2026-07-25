@@ -798,9 +798,35 @@ const base = '';
   body.dark-mode .bm-chat-body::-webkit-scrollbar-thumb:hover,
   body.dark-mode .modal-left::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
-  /* Fix: Available Orders / My Proposals lists were missing the row-spacing that My Orders
-     already applies via JS. This makes spacing consistent across all three lists. */
-  #availList, #propList, #ordersList { display: flex; flex-direction: column; gap: 0.6rem; }
+  /* ══ WRITER BALANCE (wallet-style) ══ */
+  .wal-wrap { padding: 0; }
+  .wal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
+  .wal-header h1 { font-size: 1.35rem; font-weight: 700; color: var(--text); }
+  .wal-withdraw-btn { background: #046fcd; color: #fff; border: none; border-radius: 8px; padding: 0.55rem 1.1rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+  .wal-withdraw-btn:hover { background: #0361b3; }
+  .wal-tabs { display: flex; gap: 1.3rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+  .wal-tab { background: none; border: none; color: var(--text-muted); padding: 0.6rem 0; font-size: 0.82rem; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+  .wal-tab--active { color: #046fcd; border-bottom-color: #046fcd; }
+
+  .wal-head { display: grid; padding: 0.4rem 0.9rem; font-size: 0.66rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+  .wal-head-txn { grid-template-columns: 1fr 0.8fr 0.8fr 1.2fr 0.8fr; }
+  .wal-head-wd { grid-template-columns: 1fr 0.8fr 0.8fr; }
+
+  .wal-row { display: grid; align-items: center; padding: 0.6rem 0.9rem; font-size: 0.78rem; background: #181818; border-radius: 6px; margin-bottom: 4px; color: #e5e5e5; }
+  .wal-row-txn { grid-template-columns: 1fr 0.8fr 0.8fr 1.2fr 0.8fr; }
+  .wal-row-wd { grid-template-columns: 1fr 0.8fr 0.8fr; }
+  .wal-amt-credit { color: #4ade80; font-weight: 600; }
+  .wal-amt-debit { color: #f87171; font-weight: 600; }
+  .wal-status { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 5px; font-size: 0.65rem; font-weight: 700; width: fit-content; }
+  .wal-status.available { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .wal-status.withdrawn { background: rgba(148,163,184,0.15); color: #94a3b8; }
+  .wal-status.pending { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .wal-status.paid { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .wal-status.denied { background: rgba(239,68,68,0.14); color: #f87171; }
+  .wal-note { font-size: 0.82rem; color: var(--text-muted); background: #181818; border-radius: 8px; padding: 1rem; }
+
+  body.dark-mode .wal-header h1 { color: #e2e8f0; }
+  body.dark-mode #viewBalance { background: #000000; margin: -2rem; padding: 2rem; }
 
   .order-table { display: flex; flex-direction: column; gap: 0.5rem; }
  
@@ -1427,18 +1453,26 @@ const base = '';
   </div>
  
   <div class="view-panel" id="viewBalance">
-    <div class="profile-area">
-      <div class="profile-card">
-        <div class="stats-grid" style="grid-template-columns:1fr;">
-          <div class="stat-card">
-            <div class="stat-value gold" id="balanceAmt">$0.00</div>
-            <div class="stat-label">Available Balance (from completed orders)</div>
-          </div>
-        </div>
+    <div class="wal-wrap">
+      <div class="wal-header">
+        <h1>My Balance: <span id="walBalanceAmt">$0.00</span></h1>
+        <button id="walWithdrawBtn" class="wal-withdraw-btn">Withdraw</button>
       </div>
-      <div class="profile-card">
-        <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;">Completed Order Payouts</h3>
-        <div id="balanceList"><p style="color:var(--text-muted);font-size:0.85rem;">Loading…</p></div>
+      <div class="wal-tabs">
+        <button class="wal-tab wal-tab--active" data-waltab="transactions">Transactions</button>
+        <button class="wal-tab" data-waltab="withdrawals">Withdrawal requests</button>
+        <button class="wal-tab" data-waltab="methods">Payment methods</button>
+      </div>
+      <div id="walPanelTransactions" class="wal-panel">
+        <div class="wal-head wal-head-txn"><span>Date</span><span>Amount</span><span>Status</span><span>Order</span><span>Balance</span></div>
+        <div id="walTxnList"></div>
+      </div>
+      <div id="walPanelWithdrawals" class="wal-panel" style="display:none;">
+        <div class="wal-head wal-head-wd"><span>Requested</span><span>Amount</span><span>Status</span></div>
+        <div id="walWdList"></div>
+      </div>
+      <div id="walPanelMethods" class="wal-panel" style="display:none;">
+        <div class="wal-note">Payment methods aren't stored yet — payouts are currently arranged manually with admin.</div>
       </div>
     </div>
   </div><!-- /viewBalance -->
@@ -2260,74 +2294,89 @@ const base = '';
     } catch (err) { console.error(err); return []; }
   }
  
+  let walAvailableTotal = 0;
+
   async function loadBalance() {
+    const hdr = { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` };
     try {
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/writer_earnings?writer_id=eq.${writerId}&select=*,orders(order_number,topic)&order=created_at.desc`,
-        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+        `${SUPABASE_URL}/rest/v1/writer_earnings?writer_id=eq.${writerId}&select=*,orders(order_number,topic)&order=created_at.asc`,
+        { headers: hdr }
       );
       const earnings = await res.json();
-      const available = (Array.isArray(earnings) ? earnings : []).filter((e: any) => e.status === 'available');
-      const withdrawn = (Array.isArray(earnings) ? earnings : []).filter((e: any) => e.status === 'withdrawn');
-      const availableTotal = available.reduce((sum: number, e: any) => sum + Number(e.amount || 0), 0);
+      const list = Array.isArray(earnings) ? earnings : [];
 
-      const amtEl = document.getElementById('balanceAmt'); if (amtEl) amtEl.textContent = `$${availableTotal.toFixed(2)}`;
-      const navEl = document.getElementById('balanceNavAmt'); if (navEl) navEl.textContent = `$${availableTotal.toFixed(2)}`;
+      let running = 0;
+      const withBalance = list.map((e: any) => { running += Number(e.amount || 0); return { ...e, runningBalance: running }; });
+      walAvailableTotal = list.filter((e: any) => e.status === 'available').reduce((s: number, e: any) => s + Number(e.amount || 0), 0);
 
-      // Request Payout button (inserted once, above the list)
-      let payoutBtnWrap = document.getElementById('requestPayoutWrap');
-      if (!payoutBtnWrap) {
-        const card = document.querySelector('#viewBalance .profile-card:first-child');
-        if (card) {
-          card.insertAdjacentHTML('beforeend', `
-            <div id="requestPayoutWrap" style="margin-top:1rem;text-align:center;">
-              <button id="requestPayoutBtn" style="background:#046fcd;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:0.88rem;font-weight:700;cursor:pointer;" ${availableTotal <= 0 ? 'disabled' : ''}>Request Payout</button>
-              <div id="payoutMsg" style="margin-top:0.6rem;font-size:0.82rem;"></div>
-            </div>`);
-          document.getElementById('requestPayoutBtn')?.addEventListener('click', () => requestPayout(availableTotal));
-        }
-      } else {
-        const btn = document.getElementById('requestPayoutBtn') as HTMLButtonElement;
-        if (btn) btn.disabled = availableTotal <= 0;
+      const set = (id: string, v: string) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      set('walBalanceAmt', `$${walAvailableTotal.toFixed(2)}`);
+      set('balanceNavAmt', `$${walAvailableTotal.toFixed(2)}`);
+
+      const txnList = document.getElementById('walTxnList');
+      if (txnList) {
+        const reversed = [...withBalance].reverse();
+        txnList.innerHTML = reversed.length ? reversed.map((e: any) => {
+          const date = e.created_at ? new Date(e.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+          return `<div class="wal-row wal-row-txn">
+            <div>${date}</div>
+            <div class="wal-amt-credit">+$${Number(e.amount || 0).toFixed(2)}</div>
+            <div><span class="wal-status ${e.status}">${e.status === 'available' ? 'Available' : 'Withdrawn'}</span></div>
+            <div>${esc(e.orders?.topic || e.orders?.order_number || 'Order')}</div>
+            <div>$${e.runningBalance.toFixed(2)}</div>
+          </div>`;
+        }).join('') : '<div class="wal-note">No transactions yet.</div>';
       }
 
-      const listEl = document.getElementById('balanceList');
-      if (listEl) {
-        const rows = [
-          ...available.map((e: any) => ({ ...e, label: 'Available' })),
-          ...withdrawn.map((e: any) => ({ ...e, label: 'Paid out' }))
-        ];
-        listEl.innerHTML = rows.length ? rows.map((e: any) => `
-          <div class="file-row">
-            <div class="file-info"><span class="file-type-badge" style="${e.label === 'Available' ? '' : 'background:rgba(148,163,184,0.15);color:#94a3b8;'}">${e.label}</span><div class="file-name">${esc(e.orders?.topic || e.orders?.order_number || 'Order')}</div></div>
-            <span style="font-weight:700;color:${e.label === 'Available' ? '#16a34a' : '#94a3b8'};">$${Number(e.amount||0).toFixed(2)}</span>
-          </div>`).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">No earnings yet.</p>';
-      }
+      await loadWithdrawals();
     } catch (err) { console.error(err); }
   }
 
-  async function requestPayout(amount: number) {
-    const msg = document.getElementById('payoutMsg')!;
-    const btn = document.getElementById('requestPayoutBtn') as HTMLButtonElement;
-    if (amount <= 0) return;
-    btn.disabled = true; btn.textContent = '⏳ Submitting…';
+  async function loadWithdrawals() {
+    const hdr = { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` };
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/payout_requests?writer_id=eq.${writerId}&select=*&order=created_at.desc`, { headers: hdr });
+      const requests = await res.json();
+      const wdList = document.getElementById('walWdList');
+      if (!wdList) return;
+      if (!Array.isArray(requests) || !requests.length) { wdList.innerHTML = '<div class="wal-note">No withdrawal requests yet.</div>'; return; }
+      wdList.innerHTML = requests.map((r: any) => {
+        const date = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+        return `<div class="wal-row wal-row-wd">
+          <div>${date}</div>
+          <div>$${Number(r.amount || 0).toFixed(2)}</div>
+          <div><span class="wal-status ${r.status}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span></div>
+        </div>`;
+      }).join('');
+    } catch (err) { console.error(err); }
+  }
+
+  document.getElementById('walWithdrawBtn')?.addEventListener('click', async () => {
+    if (walAvailableTotal <= 0) { alert('You have no available balance to withdraw.'); return; }
+    if (!confirm(`Request a withdrawal of $${walAvailableTotal.toFixed(2)}?`)) return;
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/payout_requests`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
-        body: JSON.stringify({ writer_id: writerId, amount })
+        body: JSON.stringify({ writer_id: writerId, amount: walAvailableTotal })
       });
-      if (!res.ok) throw new Error('Could not submit payout request');
-      msg.textContent = '✅ Payout request submitted. We\'ll process it within a few business days.';
-      msg.style.color = '#16a34a';
-      btn.textContent = 'Request Payout';
-    } catch (e) {
-      msg.textContent = '❌ Could not submit request. Please try again.';
-      msg.style.color = '#dc2626';
-      btn.disabled = false;
-      btn.textContent = 'Request Payout';
-    }
-  }
+      if (!res.ok) throw new Error('Could not submit request');
+      alert('Withdrawal request submitted.');
+      await loadWithdrawals();
+    } catch (e) { alert('Could not submit withdrawal request. Please try again.'); }
+  });
+
+  document.querySelectorAll('.wal-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.wal-tab').forEach(t => t.classList.remove('wal-tab--active'));
+      tab.classList.add('wal-tab--active');
+      const which = (tab as HTMLElement).dataset.waltab;
+      document.getElementById('walPanelTransactions')!.style.display = which === 'transactions' ? 'block' : 'none';
+      document.getElementById('walPanelWithdrawals')!.style.display = which === 'withdrawals' ? 'block' : 'none';
+      document.getElementById('walPanelMethods')!.style.display = which === 'methods' ? 'block' : 'none';
+    });
+  });
  
   function timeAgo(dateStr: string) {
     const diff = Date.now() - new Date(dateStr).getTime();
