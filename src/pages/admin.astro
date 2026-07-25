@@ -432,34 +432,33 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
   .order-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 1rem 1.3rem;
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    transition: all 0.18s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    gap: 0.75rem;
+    transition: all 0.15s ease;
   }
-  .order-card:hover { border-color: rgba(197,160,89,0.55); background: #fafafa; }
+  .order-card:hover { border-color: rgba(4,111,205,0.4); background: #fafafa; }
 
   .order-card__left { flex: 1; min-width: 0; }
-  .order-card__title { color: #0f172a; font-weight: 700; font-size: 0.93rem; margin-bottom: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .order-card__email { color: #b8893a; font-size: 0.8rem; margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .order-card__meta { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
-  .meta-dot { color: #cbd5e1; }
-  .meta-item { color: #64748b; font-size: 0.78rem; }
+  .order-card__title { color: #0f172a; font-weight: 600; font-size: 0.83rem; margin-bottom: 0.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .order-card__email { display: none; }
+  .order-card__meta { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; }
+  .meta-dot { color: #cbd5e1; font-size: 0.7rem; }
+  .meta-item { color: #94a3b8; font-size: 0.7rem; }
 
-  .order-card__right { display: flex; align-items: center; gap: 1.4rem; flex-shrink: 0; }
-  .order-card__deadline { font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+  .order-card__right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+  .order-card__deadline { font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
   .order-card__deadline.ok { color: #34d399; }
   .order-card__deadline.urgent { color: #fb923c; }
   .order-card__deadline.overdue { color: #f87171; }
-  .order-card__deadline.none { color: rgba(255,255,255,0.4); }
-  .order-card__amount { color: #0f172a; font-weight: 700; font-size: 0.92rem; white-space: nowrap; }
-  .amount-paid { color: #94a3b8; font-weight: 400; font-size: 0.8rem; }
+  .order-card__deadline.none { color: #cbd5e1; }
+  .order-card__amount { color: #0f172a; font-weight: 700; font-size: 0.78rem; white-space: nowrap; }
+  .amount-paid { color: #94a3b8; font-weight: 400; font-size: 0.68rem; }
 
-  .status-badge { padding: 0.18rem 0.55rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+  .status-badge { padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; }
   .status-new { background: rgba(99,102,241,0.18); color: #818cf8; }
   .status-in_progress { background: rgba(251,191,36,0.15); color: #fbbf24; }
   .status-in_review { background: rgba(56,138,221,0.18); color: #60a5fa; }
@@ -467,11 +466,11 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
   .status-revision { background: rgba(168,85,247,0.18); color: #c084fc; }
   .status-cancelled { background: rgba(239,68,68,0.16); color: #f87171; }
 
-  .btn-update-order { background: #f8fafc; color: #046fcd; border: 1.5px solid #e2e8f0; padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+  .btn-update-order { background: #f8fafc; color: #046fcd; border: 1px solid #e2e8f0; padding: 0.32rem 0.7rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; white-space: nowrap; }
   .btn-update-order:hover { background: #eef6fb; border-color: #046fcd; }
   
   /* ══ DARK MODE: order cards ══ */
-  body.dark-mode .order-card { background: #1a1f2e; border-color: rgba(255,255,255,0.06); box-shadow: none; }
+  body.dark-mode .order-card { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
   body.dark-mode .order-card:hover { background: #1e2536; border-color: rgba(96,165,250,0.3); }
   body.dark-mode .order-card__title { color: #e2e8f0; }
   body.dark-mode .order-card__email { color: #60a5fa; }
@@ -655,12 +654,12 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
 
   function getStatusBadge(status: string) {
     const labels: Record<string, string> = {
-      'new': '🆕 New',
-      'in_progress': '⚙️ In Progress',
-      'in_review': '🔍 In Review',
-      'completed': '✅ Completed',
-      'revision': '🔄 Revision',
-      'cancelled': '❌ Cancelled',
+      'new': 'New',
+      'in_progress': 'In Progress',
+      'in_review': 'In Review',
+      'completed': 'Completed',
+      'revision': 'Revision',
+      'cancelled': 'Cancelled',
     };
     const cls = ['new','in_progress','in_review','completed','revision','cancelled'].includes(status) ? status : 'new';
     const label = labels[status] || status;
@@ -672,9 +671,9 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
     const diff = new Date(deadline).getTime() - Date.now();
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
-    if (diff < 0) return { text: '⚠️ Overdue', cls: 'overdue' };
-    if (days === 0 && hours > 0) return { text: `⏰ ${hours}h left`, cls: 'urgent' };
-    if (days <= 2) return { text: `⏰ ${days}d left`, cls: 'urgent' };
+    if (diff < 0) return { text: 'Overdue', cls: 'overdue' };
+    if (days === 0 && hours > 0) return { text: `${hours}h left`, cls: 'urgent' };
+    if (days <= 2) return { text: `${days}d left`, cls: 'urgent' };
     return { text: `⏰ ${days}d left`, cls: 'ok' };
   }
 
