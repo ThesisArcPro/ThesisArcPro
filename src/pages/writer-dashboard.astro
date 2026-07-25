@@ -392,10 +392,10 @@ const base = '';
  
   /* ══ DARK MODE ══ */
   body.dark-mode { --main-bg: #000000; --panel-bg: #1e1e1e; --border: rgba(255,255,255,0.08); --text: #e2e8f0; --text-muted: #94a3b8; background: #000000; color: #e2e8f0; }
-  body.dark-mode .sidebar { background: #181818; border-right-color: rgba(255,255,255,0.06); }
+  body.dark-mode .sidebar { background: #000000; border-right-color: rgba(255,255,255,0.06); }
   body.dark-mode .nav-item { color: #94a3b8; }
   body.dark-mode .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
-  body.dark-mode .nav-item.active { background: rgba(4,111,205,0.15); color: #60a5fa; }
+  body.dark-mode .nav-item.active { background: #1e1e1e; color: #60a5fa; }
   body.dark-mode .sidebar-divider { background: rgba(255,255,255,0.06); }
   body.dark-mode .theme-icon-btn { background: #1e1e1e; }
   body.dark-mode .theme-icon-btn:hover { background: #2a2a2a; }
@@ -2324,7 +2324,7 @@ const base = '';
             <div>${date}</div>
             <div class="wal-amt-credit">+$${Number(e.amount || 0).toFixed(2)}</div>
             <div><span class="wal-status success">Success</span></div>
-            <div>${esc(e.orders?.topic || e.orders?.order_number || 'Order')}</div>
+            <div>Payment completed for order ${esc(e.orders?.order_number || e.order_id)}</div>
             <div>$${e.runningBalance.toFixed(2)}</div>
           </div>`;
         }).join('') : '<div class="wal-note">No transactions yet.</div>';
