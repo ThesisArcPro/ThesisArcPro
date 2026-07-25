@@ -3139,6 +3139,7 @@ const base = '';
       document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
       const title = document.getElementById('writerName')!;
       const sub = document.getElementById('writerSub')!;
+      (document.querySelector('.main-header') as HTMLElement).style.display = 'flex';
       if (view === 'orders') {
         document.getElementById('viewOrders')!.classList.add('active');
         title.textContent = 'My Orders';
@@ -3161,8 +3162,7 @@ const base = '';
         sub.textContent = 'Messages and support';
       } else if (view === 'balance') {
         document.getElementById('viewBalance')!.classList.add('active');
-        title.textContent = 'Balance';
-        sub.textContent = 'Your earnings from completed orders';
+        (document.querySelector('.main-header') as HTMLElement).style.display = 'none';
         loadBalance();
       } else if (view === 'notifications') {
         document.getElementById('viewNotifications')!.classList.add('active');
