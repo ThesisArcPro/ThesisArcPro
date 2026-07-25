@@ -7,135 +7,237 @@ const base = '';
 
   <main>
     <section class="admin">
-      <div class="container">
+      <div class="admin-shell">
 
-        <div class="admin__header">
-          <div>
-            <h1>Admin Dashboard</h1>
-            <p id="statsText">Loading orders...</p>
+        <!-- ═══ SIDEBAR ═══ -->
+        <aside class="sidenav">
+          <div class="sidenav-brand">
+            <div class="sidenav-brand-icon">A</div>
+            <span>Admin panel</span>
           </div>
-          <div class="admin__actions">
-            <div class="theme-switcher" id="themeToggle">
-              <button class="tt-btn active" data-theme="light">☀️ Light</button>
-              <button class="tt-btn" data-theme="dark">🌙 Dark</button>
-              <button class="tt-btn" data-theme="system">💻 System</button>
-            </div>
-            <button id="logoutBtn" class="btn-logout">Log Out</button>
-          </div>
-        </div>
+          <nav class="sidenav-list">
+            <button class="sidenav-item active" data-section="dashboard"><span class="sidenav-icon">▦</span>Dashboard</button>
+            <button class="sidenav-item" data-section="orders"><span class="sidenav-icon">🗂</span>Orders</button>
+            <button class="sidenav-item" data-section="tickets"><span class="sidenav-icon">🎫</span>Tickets<span class="sidenav-badge" id="ticketsBadge" style="display:none;">0</span></button>
+            <button class="sidenav-item" data-section="messages"><span class="sidenav-icon">💬</span>Messages</button>
+            <button class="sidenav-item" data-section="payments"><span class="sidenav-icon">💰</span>Payments</button>
+            <div class="sidenav-divider"></div>
+            <button class="sidenav-item" data-section="settings"><span class="sidenav-icon">⚙️</span>Settings</button>
+          </nav>
+          <button id="logoutBtn" class="btn-logout-side">Log out</button>
+        </aside>
 
-        <!-- Stat tiles -->
-        <div class="stat-tiles">
-          <div class="stat-tile">
-            <div class="stat-label">Total</div>
-            <div class="stat-value" id="statTotal">0</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">New</div>
-            <div class="stat-value stat-new" id="statNew">0</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">In Progress</div>
-            <div class="stat-value stat-progress" id="statProgress">0</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">Collected</div>
-            <div class="stat-value stat-money" id="statCollected">$0</div>
-          </div>
-        </div>
+        <!-- ═══ MAIN CONTENT ═══ -->
+        <div class="admin-content">
+          <div class="container">
 
-        <div class="controls-row">
-          <div class="admin__tabs">
-            <button class="tab active" data-tab="all">All Orders</button>
-            <button class="tab" data-tab="new">New</button>
-            <button class="tab" data-tab="in_progress">In Progress</button>
-            <button class="tab" data-tab="in_review">In Review</button>
-            <button class="tab" data-tab="revision">In Revision</button>
-            <button class="tab" data-tab="completed">Completed</button>
-            <button class="tab" data-tab="cancelled">Cancelled</button>
-            <button class="tab" data-tab="inbox">💬 Inbox</button>
-            <button class="tab" data-tab="finance">💰 Finance</button>
-          </div>
-          <div class="search-wrap">
-            <span class="search-icon">🔍</span>
-            <input class="search-input" type="text" id="searchInput" placeholder="Search topic, email, ticket" />
-          </div>
-        </div>
-
-        <div id="loadingState" class="loading-state">
-          <div class="spinner"></div>
-          <p>Loading orders...</p>
-        </div>
-
-        <div id="emptyState" class="empty-state" style="display:none;">
-          <div class="empty-icon">📋</div>
-          <h3>No orders match this view</h3>
-        </div>
-
-        <div id="ordersGrid" class="orders-grid" style="display:none;"></div>
-
-        <!-- ═══ ADMIN FINANCE ═══ -->
-        <div id="financePanel" style="display:none;">
-          <div class="stat-tiles" style="margin-bottom:1.5rem;">
-            <div class="stat-tile"><div class="stat-label">Pending Payouts</div><div class="stat-value" id="finPendingPayouts">$0.00</div></div>
-            <div class="stat-tile"><div class="stat-label">Held in Escrow</div><div class="stat-value" id="finEscrowHeld">$0.00</div></div>
-            <div class="stat-tile"><div class="stat-label">Platform Revenue</div><div class="stat-value" id="finPlatformRevenue" style="color:#16a34a;">$0.00</div></div>
-            <div class="stat-tile"><div class="stat-label">Wallets Funded</div><div class="stat-value" id="finWalletsFunded">$0.00</div></div>
-          </div>
-
-          <h3 class="fin-heading">Payout requests</h3>
-          <div class="fin-table">
-            <div class="fin-table-head">
-              <span>Writer</span><span>Requested</span><span>Amount</span><span>Action</span>
-            </div>
-            <div id="payoutRequestsList"><div class="loading-state"><div class="spinner"></div></div></div>
-          </div>
-
-          <h3 class="fin-heading" style="margin-top:1.5rem;">Escrow holds</h3>
-          <div class="fin-table">
-            <div class="fin-table-head">
-              <span>Order</span><span>Amount</span><span>Status</span>
-            </div>
-            <div id="escrowHoldsList"><div class="loading-state"><div class="spinner"></div></div></div>
-          </div>
-        </div>
-
-        <!-- ═══ ADMIN INBOX ═══ -->
-        <div id="inboxPanel" style="display:none;">
-          <div class="inbox-layout">
-            <div class="inbox-sidebar">
-              <div class="inbox-sidebar-header">
-                <h3>All Conversations</h3>
-                <span class="inbox-count" id="inboxCount">0</span>
+            <div class="admin__header">
+              <div>
+                <h1 id="sectionTitle">Dashboard</h1>
+                <p id="statsText">Loading orders...</p>
               </div>
-              <div class="inbox-filter-row">
-                <button class="inbox-filter active" data-filter="all">All</button>
-                <button class="inbox-filter" data-filter="support">Support</button>
-                <button class="inbox-filter" data-filter="order">Orders</button>
-                <button class="inbox-filter" data-filter="archived">Archived</button>
-              </div>
-              <div class="inbox-list" id="inboxList">
-                <div class="inbox-loading">Loading…</div>
-              </div>
-            </div>
-            <div class="inbox-main">
-              <div class="inbox-empty" id="inboxEmpty">
-                <div style="font-size:2.5rem;margin-bottom:0.75rem;">💬</div>
-                <h3>Select a conversation</h3>
-                <p>All support and order chats appear here</p>
-              </div>
-              <div class="inbox-thread" id="inboxThread" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
-                <div class="inbox-thread-header" id="inboxThreadHeader"></div>
-                <div class="inbox-messages" id="inboxMessages"></div>
-                <div class="inbox-input-bar">
-                  <input type="text" class="inbox-input" id="inboxInput" placeholder="Reply as Support…" />
-                  <button class="inbox-send-btn" id="inboxSendBtn">Send</button>
+              <div class="admin__actions">
+                <div class="theme-switcher" id="themeToggle">
+                  <button class="tt-btn active" data-theme="light">☀️ Light</button>
+                  <button class="tt-btn" data-theme="dark">🌙 Dark</button>
+                  <button class="tt-btn" data-theme="system">💻 System</button>
                 </div>
               </div>
             </div>
+
+            <!-- ═══ DASHBOARD SECTION ═══ -->
+            <div id="dashboardSection" class="section-panel">
+              <div class="stat-tiles">
+                <div class="stat-tile">
+                  <div class="stat-label">Total</div>
+                  <div class="stat-value" id="statTotal">0</div>
+                </div>
+                <div class="stat-tile">
+                  <div class="stat-label">New</div>
+                  <div class="stat-value stat-new" id="statNew">0</div>
+                </div>
+                <div class="stat-tile">
+                  <div class="stat-label">In Progress</div>
+                  <div class="stat-value stat-progress" id="statProgress">0</div>
+                </div>
+                <div class="stat-tile">
+                  <div class="stat-label">Collected</div>
+                  <div class="stat-value stat-money" id="statCollected">$0</div>
+                </div>
+              </div>
+              <h3 class="section-subheading">Recent orders</h3>
+              <div id="recentOrdersGrid" class="orders-grid"></div>
+            </div>
+
+            <!-- ═══ ORDERS SECTION ═══ -->
+            <div id="ordersSection" class="section-panel" style="display:none;">
+              <div class="controls-row">
+                <div class="admin__tabs" id="orderStatusTabs">
+                  <button class="tab active" data-tab="all">All Orders</button>
+                  <button class="tab" data-tab="new">New</button>
+                  <button class="tab" data-tab="in_progress">In Progress</button>
+                  <button class="tab" data-tab="in_review">In Review</button>
+                  <button class="tab" data-tab="revision">In Revision</button>
+                  <button class="tab" data-tab="completed">Completed</button>
+                  <button class="tab" data-tab="cancelled">Cancelled</button>
+                </div>
+                <div class="search-wrap">
+                  <span class="search-icon">🔍</span>
+                  <input class="search-input" type="text" id="searchInput" placeholder="Search topic, email, ticket" />
+                </div>
+              </div>
+
+              <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading orders...</p>
+              </div>
+
+              <div id="emptyState" class="empty-state" style="display:none;">
+                <div class="empty-icon">📋</div>
+                <h3>No orders match this view</h3>
+              </div>
+
+              <div id="ordersGrid" class="orders-grid" style="display:none;"></div>
+            </div>
+
+            <!-- ═══ TICKETS SECTION (support conversations) ═══ -->
+            <div id="ticketsSection" class="section-panel" style="display:none;">
+              <div class="inbox-layout">
+                <div class="inbox-sidebar">
+                  <div class="inbox-sidebar-header">
+                    <h3>Support tickets</h3>
+                    <span class="inbox-count" id="ticketsCount">0</span>
+                  </div>
+                  <div class="inbox-filter-row">
+                    <button class="inbox-filter active" data-tstatus="all">All</button>
+                    <button class="inbox-filter" data-tstatus="open">Open</button>
+                    <button class="inbox-filter" data-tstatus="resolved">Resolved</button>
+                    <button class="inbox-filter" data-tstatus="closed">Closed</button>
+                  </div>
+                  <div class="inbox-list" id="ticketsList"><div class="inbox-loading">Loading…</div></div>
+                </div>
+                <div class="inbox-main">
+                  <div class="inbox-empty" id="ticketsEmpty">
+                    <div style="font-size:2.5rem;margin-bottom:0.75rem;">🎫</div>
+                    <h3>Select a ticket</h3>
+                    <p>Support conversations appear here</p>
+                  </div>
+                  <div class="inbox-thread" id="ticketsThread" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
+                    <div class="inbox-thread-header" id="ticketsThreadHeader"></div>
+                    <div class="inbox-messages" id="ticketsMessages"></div>
+                    <div class="inbox-input-bar">
+                      <input type="text" class="inbox-input" id="ticketsInput" placeholder="Reply to ticket…" />
+                      <button class="inbox-send-btn" id="ticketsSendBtn">Send</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ MESSAGES SECTION (order conversations) ═══ -->
+            <div id="messagesSection" class="section-panel" style="display:none;">
+              <div class="inbox-layout">
+                <div class="inbox-sidebar">
+                  <div class="inbox-sidebar-header">
+                    <h3>Order chats</h3>
+                    <span class="inbox-count" id="messagesCount">0</span>
+                  </div>
+                  <div class="inbox-list" id="messagesList"><div class="inbox-loading">Loading…</div></div>
+                </div>
+                <div class="inbox-main">
+                  <div class="inbox-empty" id="messagesEmpty">
+                    <div style="font-size:2.5rem;margin-bottom:0.75rem;">💬</div>
+                    <h3>Select a conversation</h3>
+                    <p>Order chats with clients and writers appear here</p>
+                  </div>
+                  <div class="inbox-thread" id="messagesThread" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
+                    <div class="inbox-thread-header" id="messagesThreadHeader"></div>
+                    <div class="inbox-messages" id="messagesMessages"></div>
+                    <div class="inbox-input-bar">
+                      <input type="text" class="inbox-input" id="messagesInput" placeholder="Reply as Support…" />
+                      <button class="inbox-send-btn" id="messagesSendBtn">Send</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ PAYMENTS SECTION ═══ -->
+            <div id="paymentsSection" class="section-panel" style="display:none;">
+              <div class="stat-tiles" style="margin-bottom:1.5rem;">
+                <div class="stat-tile"><div class="stat-label">Pending Payouts</div><div class="stat-value" id="finPendingPayouts">$0.00</div></div>
+                <div class="stat-tile"><div class="stat-label">Held in Escrow</div><div class="stat-value" id="finEscrowHeld">$0.00</div></div>
+                <div class="stat-tile"><div class="stat-label">Platform Revenue</div><div class="stat-value" id="finPlatformRevenue" style="color:#16a34a;">$0.00</div></div>
+                <div class="stat-tile"><div class="stat-label">Wallets Funded</div><div class="stat-value" id="finWalletsFunded">$0.00</div></div>
+              </div>
+
+              <h3 class="fin-heading">Payout requests</h3>
+              <div class="fin-table">
+                <div class="fin-table-head">
+                  <span>Writer</span><span>Requested</span><span>Amount</span><span>Action</span>
+                </div>
+                <div id="payoutRequestsList"><div class="loading-state"><div class="spinner"></div></div></div>
+              </div>
+
+              <h3 class="fin-heading" style="margin-top:1.5rem;">Escrow holds</h3>
+              <div class="fin-table">
+                <div class="fin-table-head">
+                  <span>Order</span><span>Amount</span><span>Status</span>
+                </div>
+                <div id="escrowHoldsList"><div class="loading-state"><div class="spinner"></div></div></div>
+              </div>
+            </div>
+
+            <!-- ═══ SETTINGS SECTION ═══ -->
+            <div id="settingsSection" class="section-panel" style="display:none;">
+
+              <div class="settings-card">
+                <h3 class="settings-card-title">Change password</h3>
+                <p class="settings-card-sub">Update the password for your admin account.</p>
+                <div class="form-group">
+                  <label>New password</label>
+                  <input type="password" id="newPasswordInput" placeholder="At least 8 characters" />
+                </div>
+                <div class="form-group">
+                  <label>Confirm new password</label>
+                  <input type="password" id="confirmPasswordInput" placeholder="Repeat new password" />
+                </div>
+                <button class="btn-update" id="savePasswordBtn" style="width:auto;padding:0.7rem 1.4rem;">Update password</button>
+                <p class="input-note" id="passwordStatusNote"></p>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card-title">Two-factor authentication</h3>
+                <p class="settings-card-sub">Add an authenticator app as a second login step.</p>
+                <div id="mfaStatusRow" class="input-note">Checking status…</div>
+                <button class="btn-update" id="mfaEnrollBtn" style="width:auto;padding:0.7rem 1.4rem;display:none;">Enable 2FA</button>
+                <div id="mfaEnrollBox" style="display:none;margin-top:1rem;">
+                  <p class="input-note">Scan this in your authenticator app, then enter the 6-digit code.</p>
+                  <p id="mfaSecretText" style="font-size:0.8rem;word-break:break-all;color:#046fcd;"></p>
+                  <div class="form-group">
+                    <label>6-digit code</label>
+                    <input type="text" id="mfaCodeInput" placeholder="123456" maxlength="6" />
+                  </div>
+                  <button class="btn-update" id="mfaVerifyBtn" style="width:auto;padding:0.7rem 1.4rem;">Verify and enable</button>
+                </div>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card-title">Staff</h3>
+                <p class="settings-card-sub">Writers who can be assigned to orders. Adding someone here does not create their login — send them an invite separately.</p>
+                <div id="staffList" class="admin-files-list"><span class="input-note">Loading…</span></div>
+                <div class="form-group" style="margin-top:1rem;">
+                  <label>Add staff member</label>
+                  <input type="text" id="staffNameInput" placeholder="Full name" style="margin-bottom:0.5rem;" />
+                  <input type="email" id="staffEmailInput" placeholder="Email address" />
+                </div>
+                <button class="btn-update" id="addStaffBtn" style="width:auto;padding:0.7rem 1.4rem;">Add staff member</button>
+              </div>
+
+            </div>
+
           </div>
         </div>
-
       </div>
     </section>
   </main>
@@ -195,13 +297,31 @@ const base = '';
 </BaseLayout>
 
 <style>
-.admin { background: #f1f5f9; min-height: 100vh; padding: 6rem 0 4rem; font-family: 'Poppins', 'Inter', sans-serif; }
+.admin { background: #f1f5f9; min-height: 100vh; padding: 0; font-family: 'Poppins', 'Inter', sans-serif; }
+
+/* ══ SHELL / SIDEBAR ══ */
+.admin-shell { display: flex; min-height: 100vh; }
+.sidenav { width: 220px; flex-shrink: 0; background: #0f172a; padding: 1.4rem 1rem; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+.sidenav-brand { display: flex; align-items: center; gap: 0.6rem; padding: 0 0.4rem; margin-bottom: 1.8rem; }
+.sidenav-brand-icon { width: 30px; height: 30px; border-radius: 8px; background: #046fcd; color: #fff; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; }
+.sidenav-brand span { color: #e2e8f0; font-weight: 600; font-size: 0.92rem; }
+.sidenav-list { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.sidenav-item { display: flex; align-items: center; gap: 10px; background: none; border: none; color: #94a3b8; padding: 0.6rem 0.7rem; border-radius: 8px; font-size: 0.85rem; font-weight: 500; text-align: left; cursor: pointer; transition: all 0.15s; }
+.sidenav-icon { font-size: 1rem; width: 18px; text-align: center; }
+.sidenav-item:hover:not(.active) { background: rgba(255,255,255,0.06); color: #e2e8f0; }
+.sidenav-item.active { background: #046fcd; color: #fff; }
+.sidenav-badge { margin-left: auto; background: #dc2626; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 0.05rem 0.4rem; border-radius: 8px; }
+.sidenav-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 0.6rem 0.5rem; }
+.btn-logout-side { background: none; border: 1px solid rgba(255,255,255,0.12); color: #94a3b8; padding: 0.55rem 0.8rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-logout-side:hover { border-color: #dc2626; color: #dc2626; }
+
+.admin-content { flex: 1; min-width: 0; padding: 2.2rem 0 4rem; }
+.section-subheading { color: #303b4f; font-size: 0.95rem; font-weight: 700; margin: 1.4rem 0 0.7rem; }
+
 .admin__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
 .admin__header h1 { color: #0f172a; font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 700; margin-bottom: 0.3rem; }
 .admin__header p { color: #64748b; font-size: 0.9rem; }
 .admin__actions { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
-.btn-logout { background: none; border: 1.5px solid #e2e8f0; color: #64748b; padding: 0.55rem 1.1rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-.btn-logout:hover { background: #f8fafc; border-color: #dc2626; color: #dc2626; }
 
 /* Theme toggle */
 .theme-switcher { display: flex; background: #eef2f7; border-radius: 10px; padding: 3px; gap: 2px; }
@@ -217,7 +337,7 @@ const base = '';
 .stat-value.stat-new { color: #046fcd; }
 .stat-value.stat-progress { color: #f59e0b; }
 .stat-value.stat-money { color: #16a34a; }
-@media (max-width: 768px) { .stat-tiles { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) { .stat-tiles { grid-template-columns: repeat(2, 1fr); } .sidenav { width: 72px; } .sidenav-item span:not(.sidenav-icon):not(.sidenav-badge) { display: none; } .sidenav-brand span { display: none; } }
 
 .controls-row { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; border-bottom: 1px solid #eef2f7; padding-bottom: 0.7rem; }
 .admin__tabs { display: flex; gap: 0.2rem; flex-wrap: wrap; }
@@ -238,10 +358,15 @@ const base = '';
 .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
 .empty-state h3 { color: #0f172a; }
 
+/* Settings */
+.settings-card { background: #ffffff; border: 1px solid #eef2f7; border-radius: 14px; padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; }
+.settings-card-title { color: #0f172a; font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+.settings-card-sub { color: #64748b; font-size: 0.82rem; margin-bottom: 1rem; }
+
 /* Modal */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 20000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
 .modal-overlay.active { display: flex; }
-.modal-card { background: white; border-radius: 16px; padding: 2rem; max-width: 480px; width: 90%; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+.modal-card { background: white; border-radius: 16px; padding: 2rem; max-width: 480px; width: 90%; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.15); max-height: 88vh; overflow-y: auto; }
 .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #94a3b8; }
 .modal-close:hover { color: #0f172a; }
 .modal-card h2 { color: #0f172a; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
@@ -264,20 +389,20 @@ const base = '';
 
 /* ══ DARK MODE ══ */
 body.dark-mode .admin { background: #0f1117; }
+body.dark-mode .sidenav { background: #0a0c12; border-right: 1px solid rgba(255,255,255,0.06); }
 body.dark-mode .admin__header h1 { color: #e2e8f0; }
 body.dark-mode .admin__header p { color: #64748b; }
-body.dark-mode .btn-logout { border-color: rgba(255,255,255,0.1); color: #94a3b8; }
-body.dark-mode .btn-logout:hover { background: #1e2536; border-color: #dc2626; color: #dc2626; }
 body.dark-mode .theme-switcher { background: #1e2536; }
 body.dark-mode .tt-btn { color: #64748b; }
 body.dark-mode .tt-btn:hover { background: #2a3244; }
 body.dark-mode .tt-btn.active { background: #2a3244; color: #e2e8f0; box-shadow: none; }
 body.dark-mode .stat-tile { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
-body.dark-mode #financePanel h3 { color: #e2e8f0; }
+body.dark-mode #paymentsSection h3 { color: #e2e8f0; }
 body.dark-mode .fin-row { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
 body.dark-mode .fin-row-label { color: #e2e8f0; }
 body.dark-mode .stat-label { color: #4a5568; }
 body.dark-mode .stat-value { color: #e2e8f0; }
+body.dark-mode .section-subheading { color: #e2e8f0; }
 body.dark-mode .controls-row { border-bottom-color: rgba(255,255,255,0.06); }
 body.dark-mode .tab { color: #64748b; }
 body.dark-mode .tab.active { background: #046fcd; color: #ffffff; }
@@ -289,6 +414,8 @@ body.dark-mode .loading-state { color: #64748b; }
 body.dark-mode .spinner { border-color: rgba(255,255,255,0.06); border-top-color: #60a5fa; }
 body.dark-mode .empty-state { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
 body.dark-mode .empty-state h3 { color: #e2e8f0; }
+body.dark-mode .settings-card { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
+body.dark-mode .settings-card-title { color: #e2e8f0; }
 body.dark-mode .modal-card { background: #1a1f2e; }
 body.dark-mode .modal-close { color: #64748b; }
 body.dark-mode .modal-card h2 { color: #e2e8f0; }
@@ -303,19 +430,19 @@ body.dark-mode .btn-update:hover { background: #1d4ed8; }
 body.dark-mode .revision-note-box { background: #1e1536; border-color: rgba(124,58,237,0.2); }
 body.dark-mode .current-file { background: #0f2a1a; color: #4ade80; }
 
-/* ── ADMIN INBOX ── */
+/* ── INBOX (Tickets / Messages) ── */
 .inbox-layout { display: flex; height: calc(100vh - 260px); min-height: 520px; background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
 .inbox-sidebar { width: 300px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; flex-shrink: 0; background: #f8fafc; }
 .inbox-sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.2rem 0.9rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
 .inbox-sidebar-header h3 { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0; }
 .inbox-count { background: #046fcd; color: #fff; font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 10px; }
-.inbox-filter-row { display: flex; gap: 0.4rem; padding: 0.65rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+.inbox-filter-row { display: flex; gap: 0.4rem; padding: 0.65rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; flex-wrap: wrap; }
 .inbox-filter { background: none; border: 1px solid #e2e8f0; border-radius: 20px; padding: 0.28rem 0.75rem; font-size: 0.75rem; font-weight: 600; color: #64748b; cursor: pointer; transition: 0.15s; font-family: inherit; }
 .inbox-filter.active { background: #046fcd; color: #fff; border-color: #046fcd; }
 .inbox-filter:hover:not(.active) { border-color: #046fcd; color: #046fcd; }
 .inbox-list { flex: 1; overflow-y: auto; }
 .inbox-loading { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem; }
-.inbox-item { display: flex; flex-direction: row; align-items: center; gap: 0.75rem; padding: 0.85rem 1.1rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f1f5f9; min-height: 0; }
+.inbox-item { display: flex; flex-direction: row; align-items: center; gap: 0.75rem; padding: 0.85rem 1.1rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f1f5f9; }
 .inbox-item:hover { background: #f1f5f9; }
 .inbox-item.active { background: #eef6fb; border-left: 3px solid #046fcd; padding-left: calc(1.1rem - 3px); }
 .inbox-item-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; letter-spacing: 0.03em; }
@@ -354,8 +481,11 @@ body.dark-mode .current-file { background: #0f2a1a; color: #4ade80; }
 .inbox-send-btn { background: #046fcd; color: #fff; border: none; border-radius: 24px; padding: 0.6rem 1.4rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: inherit; white-space: nowrap; }
 .inbox-send-btn:hover { background: #0361b3; }
 .inbox-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ticket-status-pill { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; padding: 0.1rem 0.45rem; border-radius: 5px; margin-left: 0.4rem; }
+.ticket-status-pill.open { background: rgba(99,102,241,0.15); color: #4f46e5; }
+.ticket-status-pill.resolved { background: rgba(34,197,94,0.15); color: #16a34a; }
+.ticket-status-pill.closed { background: rgba(148,163,184,0.2); color: #64748b; }
 
-/* Dark mode: inbox */
 body.dark-mode .inbox-layout { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
 body.dark-mode .inbox-sidebar { background: #161b27; border-right-color: rgba(255,255,255,0.06); }
 body.dark-mode .inbox-sidebar-header { background: #1a1f2e; border-bottom-color: rgba(255,255,255,0.06); }
@@ -376,132 +506,45 @@ body.dark-mode .inbox-input-bar { background: #161b27; border-top-color: rgba(25
 body.dark-mode .inbox-input { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
 body.dark-mode .inbox-input:focus { border-color: #60a5fa; }
 body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
-.inbox-sidebar { width: 300px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; flex-shrink: 0; background: #fff; }
-.inbox-sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.2rem; border-bottom: 1px solid #e2e8f0; }
-.inbox-sidebar-header h3 { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
-.inbox-count { background: #046fcd; color: #fff; font-size: 0.68rem; font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 10px; }
-.inbox-filter-row { display: flex; gap: 0.3rem; padding: 0.6rem 1rem; border-bottom: 1px solid #e2e8f0; }
-.inbox-filter { background: none; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.3rem 0.65rem; font-size: 0.75rem; font-weight: 600; color: #64748b; cursor: pointer; transition: 0.15s; font-family: inherit; }
-.inbox-filter.active { background: #046fcd; color: #fff; border-color: #046fcd; }
-.inbox-filter:hover:not(.active) { border-color: #046fcd; color: #046fcd; }
-.inbox-list { flex: 1; overflow-y: auto; }
-.inbox-loading { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem; }
-.inbox-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.8rem 1.2rem; cursor: pointer; transition: 0.15s; border-bottom: 1px solid #f1f5f9; }
-.inbox-item:hover { background: #f8fafc; }
-.inbox-item.active { background: #eef6fb; border-left: 3px solid #046fcd; }
-.inbox-item-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; letter-spacing: 0.03em; }
-.avatar-support { background: #dbeafe; color: #1d4ed8; }
-.avatar-order { background: #dcfce7; color: #15803d; }
-.inbox-item-info { flex: 1; min-width: 0; }
-.inbox-item-name { font-size: 0.84rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.inbox-item-type { font-size: 0.72rem; color: #94a3b8; margin-top: 0.1rem; }
-.inbox-item-time { font-size: 0.68rem; color: #94a3b8; flex-shrink: 0; }
-.inbox-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.inbox-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; color: #94a3b8; }
-.inbox-empty h3 { font-size: 1rem; font-weight: 600; color: #0f172a; margin-bottom: 0.3rem; }
-.inbox-empty p { font-size: 0.85rem; }
-.inbox-thread-header { padding: 0.9rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
-.inbox-thread-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
-.inbox-thread-sub { font-size: 0.75rem; color: #94a3b8; margin-top: 0.1rem; }
-.inbox-messages { flex: 1; overflow-y: auto; padding: 1.2rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; background: #f8fafc; }
-.imsg-row { display: flex; flex-direction: column; max-width: 72%; }
-.imsg-row.mine { align-self: flex-end; }
-.imsg-row.theirs { align-self: flex-start; }
-.imsg-sender { font-size: 0.68rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.15rem; }
-.imsg-bubble { padding: 0.55rem 0.85rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.5; word-wrap: break-word; }
-.imsg-row.mine .imsg-bubble { background: #046fcd; color: #fff; border-bottom-right-radius: 3px; }
-.imsg-row.theirs .imsg-bubble { background: #fff; color: #0f172a; border: 1px solid #e2e8f0; border-bottom-left-radius: 3px; }
-.imsg-time { font-size: 0.62rem; color: #94a3b8; margin-top: 0.15rem; }
-.imsg-row.mine .imsg-time { text-align: right; }
-.inbox-input-bar { display: flex; gap: 0.5rem; padding: 0.8rem 1.2rem; border-top: 1px solid #e2e8f0; background: #fff; }
-.inbox-input { flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #0f172a; outline: none; font-family: inherit; }
-.inbox-input:focus { border-color: #046fcd; background: #fff; }
-.inbox-input::placeholder { color: #94a3b8; }
-.inbox-send-btn { background: #046fcd; color: #fff; border: none; border-radius: 10px; padding: 0.55rem 1.2rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: inherit; }
-.inbox-send-btn:hover { background: #0361b3; }
-.inbox-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* Dark mode: inbox */
-body.dark-mode .inbox-layout { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
-body.dark-mode .inbox-sidebar { background: #161b27; border-right-color: rgba(255,255,255,0.06); }
-body.dark-mode .inbox-sidebar-header { border-bottom-color: rgba(255,255,255,0.06); }
-body.dark-mode .inbox-sidebar-header h3 { color: #e2e8f0; }
-body.dark-mode .inbox-filter-row { border-bottom-color: rgba(255,255,255,0.06); }
-body.dark-mode .inbox-filter { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #94a3b8; }
-body.dark-mode .inbox-filter.active { background: #046fcd; border-color: #046fcd; color: #fff; }
-body.dark-mode .inbox-item { border-bottom-color: rgba(255,255,255,0.04); }
-body.dark-mode .inbox-item:hover { background: rgba(255,255,255,0.03); }
-body.dark-mode .inbox-item.active { background: rgba(4,111,205,0.15); border-left-color: #60a5fa; }
-body.dark-mode .inbox-item-name { color: #e2e8f0; }
-body.dark-mode .inbox-thread-header { background: #161b27; border-bottom-color: rgba(255,255,255,0.06); }
-body.dark-mode .inbox-thread-title { color: #e2e8f0; }
-body.dark-mode .inbox-messages { background: #0f1117; }
-body.dark-mode .imsg-row.theirs .imsg-bubble { background: #1e2536; color: #e2e8f0; border-color: rgba(255,255,255,0.06); }
-body.dark-mode .inbox-input-bar { background: #161b27; border-top-color: rgba(255,255,255,0.06); }
-body.dark-mode .inbox-input { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
-body.dark-mode .inbox-input:focus { border-color: #60a5fa; background: #1a1f2e; }
-body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
 
 .admin-files-list { display: flex; flex-direction: column; gap: 0.4rem; }
-  .afile-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.55rem 0.75rem; }
-  .afile-info { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
-  .afile-type { font-size: 0.66rem; font-weight: 700; color: #046fcd; text-transform: uppercase; white-space: nowrap; }
-  .afile-name { font-size: 0.82rem; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .afile-by { font-size: 0.66rem; color: #94a3b8; text-transform: capitalize; }
-  .afile-dl { background: #046fcd; color: #fff; border: none; border-radius: 6px; padding: 0.35rem 0.6rem; cursor: pointer; flex-shrink: 0; }
-  .afile-dl:hover { background: #0361b3; }
-  body.dark-mode .afile-row { background: #161b27; border-color: rgba(255,255,255,0.06); }
-  body.dark-mode .afile-name { color: #e2e8f0; }
+.afile-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.55rem 0.75rem; }
+.afile-info { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+.afile-type { font-size: 0.66rem; font-weight: 700; color: #046fcd; text-transform: uppercase; white-space: nowrap; }
+.afile-name { font-size: 0.82rem; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.afile-by { font-size: 0.66rem; color: #94a3b8; text-transform: capitalize; }
+.afile-dl { background: #046fcd; color: #fff; border: none; border-radius: 6px; padding: 0.35rem 0.6rem; cursor: pointer; flex-shrink: 0; }
+.afile-dl:hover { background: #0361b3; }
+body.dark-mode .afile-row { background: #161b27; border-color: rgba(255,255,255,0.06); }
+body.dark-mode .afile-name { color: #e2e8f0; }
 </style>
 
 <style is:global>
-  /* Order cards are injected via innerHTML, so these must be global and use
-     explicit colors (CSS variables don't resolve in injected content). */
   .orders-grid { display: flex; flex-direction: column; gap: 0.7rem; }
-
-  /* Finance panel rows — also injected via innerHTML, must be global too */
   .fin-table { background: transparent; border: none; }
-
   .fin-table-head { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; padding: 0.5rem 0.9rem; font-size: 0.68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
-
   .fin-row { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; align-items: center; padding: 0.7rem 0.9rem; font-size: 0.8rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 4px; }
   .fin-row.fin-row-3col { grid-template-columns: 1.3fr 0.8fr 1fr; }
   body.dark-mode .fin-row { background: #1a1f2e; border-color: rgba(255,255,255,0.06); color: #e2e8f0; }
-
   .fin-row-label { font-weight: 600; color: #0f172a; }
   body.dark-mode .fin-row-label { color: #e2e8f0; }
-
   .fin-badge { display: inline-block; padding: 0.18rem 0.5rem; border-radius: 5px; font-size: 0.65rem; font-weight: 700; text-transform: capitalize; width: fit-content; }
   .fin-badge.pending { background: rgba(251,191,36,0.15); color: #d97706; }
   .fin-badge.paid, .fin-badge.released { background: rgba(34,197,94,0.15); color: #16a34a; }
   .fin-badge.denied, .fin-badge.refunded { background: rgba(239,68,68,0.14); color: #dc2626; }
   .fin-badge.held { background: rgba(251,191,36,0.15); color: #d97706; }
-
   .fin-action-btn { border: 1px solid #e2e8f0; background: #fff; border-radius: 6px; padding: 0.3rem 0.65rem; font-size: 0.72rem; font-weight: 600; cursor: pointer; margin-right: 0.4rem; }
   .fin-action-btn.approve { color: #16a34a; border-color: #bbf7d0; }
   .fin-action-btn.deny { color: #dc2626; border-color: #fecaca; }
   body.dark-mode .fin-action-btn { background: #161b27; border-color: rgba(255,255,255,0.1); }
 
-  .order-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 0.6rem 0.9rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.75rem;
-    transition: all 0.15s ease;
-  }
+  .order-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.6rem 0.9rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; transition: all 0.15s ease; }
   .order-card:hover { border-color: rgba(4,111,205,0.4); background: #fafafa; }
-
   .order-card__left { flex: 1; min-width: 0; }
   .order-card__title { color: #0f172a; font-weight: 600; font-size: 0.83rem; margin-bottom: 0.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .order-card__email { display: none; }
   .order-card__meta { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; }
   .meta-dot { color: #cbd5e1; font-size: 0.7rem; }
   .meta-item { color: #94a3b8; font-size: 0.7rem; }
-
   .order-card__right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
   .order-card__deadline { font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
   .order-card__deadline.ok { color: #34d399; }
@@ -510,7 +553,6 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
   .order-card__deadline.none { color: #cbd5e1; }
   .order-card__amount { color: #0f172a; font-weight: 700; font-size: 0.78rem; white-space: nowrap; }
   .amount-paid { color: #94a3b8; font-weight: 400; font-size: 0.68rem; }
-
   .status-badge { padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; }
   .status-new { background: rgba(99,102,241,0.18); color: #818cf8; }
   .status-in_progress { background: rgba(251,191,36,0.15); color: #fbbf24; }
@@ -518,84 +560,18 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
   .status-completed { background: rgba(34,197,94,0.15); color: #4ade80; }
   .status-revision { background: rgba(168,85,247,0.18); color: #c084fc; }
   .status-cancelled { background: rgba(239,68,68,0.16); color: #f87171; }
-
   .btn-update-order { background: #f8fafc; color: #046fcd; border: 1px solid #e2e8f0; padding: 0.32rem 0.7rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; white-space: nowrap; }
   .btn-update-order:hover { background: #eef6fb; border-color: #046fcd; }
-  
-  /* ══ DARK MODE: order cards ══ */
   body.dark-mode .order-card { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
   body.dark-mode .order-card:hover { background: #1e2536; border-color: rgba(96,165,250,0.3); }
   body.dark-mode .order-card__title { color: #e2e8f0; }
-  body.dark-mode .order-card__email { color: #60a5fa; }
   body.dark-mode .meta-item { color: #64748b; }
   body.dark-mode .meta-dot { color: rgba(255,255,255,0.15); }
   body.dark-mode .order-card__amount { color: #e2e8f0; }
   body.dark-mode .amount-paid { color: #4a5568; }
   body.dark-mode .btn-update-order { background: #1e2536; color: #60a5fa; border: 1px solid rgba(96,165,250,0.2); }
   body.dark-mode .btn-update-order:hover { background: #2a3244; }
-  body.dark-mode .sort-select { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
-  body.dark-mode .sort-label { color: #4a5568; }
-
-  @media (max-width: 768px) {
-    .order-card { flex-direction: column; align-items: flex-start; }
-    .order-card__right { width: 100%; justify-content: space-between; }
-  }
-
-  /* ── INBOX rows + messages are injected via innerHTML, so they MUST be
-     global — scoped styles never match runtime-injected HTML. ── */
-  .inbox-loading { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem; }
-  .inbox-item { display: flex; flex-direction: row; align-items: center; gap: 0.75rem; padding: 0.85rem 1.1rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f1f5f9; }
-  .inbox-item:hover { background: #f1f5f9; }
-  .inbox-item.active { background: #eef6fb; border-left: 3px solid #046fcd; padding-left: calc(1.1rem - 3px); }
-  .inbox-item-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; letter-spacing: 0.03em; }
-  .avatar-support { background: #dbeafe; color: #1d4ed8; }
-  .avatar-order { background: #dcfce7; color: #15803d; }
-  .inbox-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-  .inbox-item-name { font-size: 0.84rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .inbox-item-type { font-size: 0.71rem; color: #94a3b8; margin-top: 0.12rem; }
-  .inbox-item-time { font-size: 0.68rem; color: #94a3b8; flex-shrink: 0; }
-
-  .inbox-thread-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
-  .inbox-thread-sub { font-size: 0.75rem; color: #94a3b8; margin-left: 0.1rem; }
-
-  .imsg-row { display: flex; flex-direction: column; max-width: 68%; gap: 0.2rem; }
-  .imsg-row.mine { align-self: flex-end; align-items: flex-end; }
-  .imsg-row.theirs { align-self: flex-start; align-items: flex-start; }
-  .imsg-meta { display: flex; align-items: center; gap: 0.4rem; }
-  .imsg-meta-right { display: flex; align-items: center; gap: 0.4rem; justify-content: flex-end; }
-  .imsg-avatar { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; flex-shrink: 0; }
-  .mine-avatar { background: #046fcd; color: #fff; }
-  .theirs-avatar { background: #e2e8f0; color: #475569; }
-  .imsg-sender-name { font-size: 0.68rem; font-weight: 600; color: #94a3b8; }
-  .imsg-sender { font-size: 0.68rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.15rem; }
-  .imsg-bubble { padding: 0.6rem 0.95rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.55; word-wrap: break-word; }
-  .imsg-row.mine .imsg-bubble { background: #046fcd; color: #fff; border-bottom-right-radius: 4px; }
-  .imsg-row.theirs .imsg-bubble { background: #fff; color: #0f172a; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
-  .imsg-time { font-size: 0.62rem; color: #94a3b8; }
-  .imsg-row.mine .imsg-time { text-align: right; }
-
-  body.dark-mode .inbox-loading { color: #4a5568; }
-  body.dark-mode .inbox-item { border-bottom-color: rgba(255,255,255,0.04); }
-  body.dark-mode .inbox-item:hover { background: rgba(255,255,255,0.03); }
-  body.dark-mode .inbox-item.active { background: rgba(4,111,205,0.15); border-left-color: #60a5fa; }
-  body.dark-mode .inbox-item-name { color: #e2e8f0; }
-  body.dark-mode .inbox-thread-title { color: #e2e8f0; }
-  body.dark-mode .imsg-row.theirs .imsg-bubble { background: #1e2536; color: #e2e8f0; border-color: rgba(255,255,255,0.06); }
-  body.dark-mode .theirs-avatar { background: #2a3244; color: #cbd5e1; }
-
-  .inbox-addwriter-btn { background: #eef6fb; color: #046fcd; border: 1px solid #cfe3f5; border-radius: 8px; padding: 0.4rem 0.8rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.15s; font-family: inherit; }
-  .inbox-addwriter-btn:hover { background: #046fcd; color: #fff; border-color: #046fcd; }
-  body.dark-mode .inbox-addwriter-btn { background: rgba(4,111,205,0.15); color: #60a5fa; border-color: rgba(96,165,250,0.25); }
-  body.dark-mode .inbox-addwriter-btn:hover { background: #046fcd; color: #fff; }
-
-  .inbox-clear-btn { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.4rem 0.7rem; font-size: 0.76rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.15s; font-family: inherit; }
-  .inbox-clear-btn:hover { background: #e2e8f0; }
-  .inbox-clear-btn.danger { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
-  .inbox-clear-btn.danger:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
-  body.dark-mode .inbox-clear-btn { background: #1e2536; color: #94a3b8; border-color: rgba(255,255,255,0.1); }
-  body.dark-mode .inbox-clear-btn:hover { background: #2a3244; }
-  body.dark-mode .inbox-clear-btn.danger { background: rgba(239,68,68,0.12); color: #f87171; border-color: rgba(239,68,68,0.3); }
-  body.dark-mode .inbox-clear-btn.danger:hover { background: #dc2626; color: #fff; }
+  @media (max-width: 768px) { .order-card { flex-direction: column; align-items: flex-start; } .order-card__right { width: 100%; justify-content: space-between; } }
 </style>
 
 <script>
@@ -611,36 +587,65 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
   let currentOrder: any = null;
   let currentSession: any = null;
   let currentTab = 'all';
+  let currentSection = 'dashboard';
+
+  function hdr() {
+    return { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` };
+  }
+
+  function esc(v: any) {
+    return String(v ?? '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // ═══ SECTION SWITCHING ═══
+  const SECTION_TITLES: Record<string, string> = {
+    dashboard: 'Dashboard', orders: 'Orders', tickets: 'Tickets',
+    messages: 'Messages', payments: 'Payments', settings: 'Settings'
+  };
+
+  function showSection(name: string) {
+    currentSection = name;
+    document.querySelectorAll('.section-panel').forEach(p => (p as HTMLElement).style.display = 'none');
+    const panel = document.getElementById(`${name}Section`);
+    if (panel) panel.style.display = 'block';
+    document.querySelectorAll('.sidenav-item').forEach(item => {
+      item.classList.toggle('active', (item as HTMLElement).dataset.section === name);
+    });
+    const title = document.getElementById('sectionTitle');
+    if (title) title.textContent = SECTION_TITLES[name] || 'Dashboard';
+
+    if (name === 'dashboard') renderRecentOrders();
+    if (name === 'orders') renderOrders();
+    if (name === 'tickets') ticketsController.load();
+    if (name === 'messages') messagesController.load();
+    if (name === 'payments') loadFinance();
+    if (name === 'settings') loadSettings();
+  }
+
+  document.querySelectorAll('.sidenav-item[data-section]').forEach(item => {
+    item.addEventListener('click', () => showSection((item as HTMLElement).dataset.section!));
+  });
 
   async function loadWriters() {
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/writers?order=full_name.asc`,
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
-      );
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/writers?order=full_name.asc`, { headers: hdr() });
       allWriters = await res.json();
       const sel = document.getElementById('writerSelect') as HTMLSelectElement;
       if (sel) {
         sel.innerHTML = '<option value="">— No writer assigned —</option>' +
-          allWriters.map(w => `<option value="${w.id}">${(w.full_name || '').replace(/</g,'&lt;')}</option>`).join('');
+          allWriters.map(w => `<option value="${w.id}">${esc(w.full_name || '')}</option>`).join('');
       }
-    } catch (err) {
-      console.error('Could not load writers', err);
-    }
-  }
-
-  function finEsc(v: any) {
-    return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    } catch (err) { console.error('Could not load writers', err); }
   }
 
   async function loadFinance() {
-    const hdr = { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` };
     try {
       const [payoutsRes, escrowRes, revenueRes, walletsRes] = await Promise.all([
-        fetch(`${SUPABASE_URL}/rest/v1/payout_requests?select=*,writers(full_name)&order=created_at.desc`, { headers: hdr }),
-        fetch(`${SUPABASE_URL}/rest/v1/escrow_holds?select=*,orders(order_number,topic)&order=created_at.desc`, { headers: hdr }),
-        fetch(`${SUPABASE_URL}/rest/v1/platform_revenue?select=amount`, { headers: hdr }),
-        fetch(`${SUPABASE_URL}/rest/v1/wallet_transactions?type=eq.deposit&select=amount`, { headers: hdr })
+        fetch(`${SUPABASE_URL}/rest/v1/payout_requests?select=*,writers(full_name)&order=created_at.desc`, { headers: hdr() }),
+        fetch(`${SUPABASE_URL}/rest/v1/escrow_holds?select=*,orders(order_number,topic)&order=created_at.desc`, { headers: hdr() }),
+        fetch(`${SUPABASE_URL}/rest/v1/platform_revenue?select=amount`, { headers: hdr() }),
+        fetch(`${SUPABASE_URL}/rest/v1/wallet_transactions?type=eq.deposit&select=amount`, { headers: hdr() })
       ]);
       const payouts = await payoutsRes.json();
       const escrow = await escrowRes.json();
@@ -670,7 +675,7 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
             ? `<button class="fin-action-btn approve" data-approve="${p.id}">Approve</button><button class="fin-action-btn deny" data-deny="${p.id}">Deny</button>`
             : badge;
           return `<div class="fin-row">
-            <div class="fin-row-label">${finEsc(p.writers?.full_name || 'Writer #' + p.writer_id)}</div>
+            <div class="fin-row-label">${esc(p.writers?.full_name || 'Writer #' + p.writer_id)}</div>
             <div style="color:#94a3b8;">${p.created_at ? new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : ''}</div>
             <div style="font-weight:700;">$${Number(p.amount || 0).toFixed(2)}</div>
             <div>${actions}</div>
@@ -684,8 +689,7 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
             (btn as HTMLButtonElement).disabled = true;
             try {
               const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/admin_approve_payout`, {
-                method: 'POST',
-                headers: { ...hdr, 'Content-Type': 'application/json' },
+                method: 'POST', headers: { ...hdr(), 'Content-Type': 'application/json' },
                 body: JSON.stringify({ p_request_id: id })
               });
               if (!res.ok) throw new Error((await res.json())?.message || 'Failed');
@@ -700,8 +704,7 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
             (btn as HTMLButtonElement).disabled = true;
             try {
               const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/admin_deny_payout`, {
-                method: 'POST',
-                headers: { ...hdr, 'Content-Type': 'application/json' },
+                method: 'POST', headers: { ...hdr(), 'Content-Type': 'application/json' },
                 body: JSON.stringify({ p_request_id: id, p_note: note })
               });
               if (!res.ok) throw new Error((await res.json())?.message || 'Failed');
@@ -720,7 +723,7 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
             : e.status === 'released' ? '<span class="fin-badge released">Released</span>'
             : '<span class="fin-badge refunded">Refunded</span>';
           return `<div class="fin-row fin-row-3col">
-            <div class="fin-row-label">${finEsc(e.orders?.topic || e.orders?.order_number || 'Order')}</div>
+            <div class="fin-row-label">${esc(e.orders?.topic || e.orders?.order_number || 'Order')}</div>
             <div style="font-weight:700;">$${Number(e.amount || 0).toFixed(2)}</div>
             <div>${badge}</div>
           </div>`;
@@ -731,50 +734,26 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
 
   async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      window.location.replace(`${base}/login/`);
-      return;
-    }
+    if (!session) { window.location.replace(`${base}/login/`); return; }
     currentSession = session;
 
-    // Check if admin
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/profiles?email=eq.${session.user.email}&select=is_admin`,
-      {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${session.access_token}`
-        }
-      }
-    );
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?email=eq.${session.user.email}&select=is_admin`, { headers: hdr() });
     const data = await res.json();
-
-    if (!data[0]?.is_admin) {
-      window.location.replace(`${base}/dashboard/`);
-      return;
-    }
+    if (!data[0]?.is_admin) { window.location.replace(`${base}/dashboard/`); return; }
 
     await loadOrders();
     await loadWriters();
+    showSection('dashboard');
   }
 
   async function loadOrders() {
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders?order=created_at.desc`,
-        {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${currentSession.access_token}`
-          }
-        }
-      );
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?order=created_at.desc`, { headers: hdr() });
       allOrders = await res.json();
       updateStats();
-      renderOrders();
-    } catch (err) {
-      console.error('Error:', err);
-    }
+      if (currentSection === 'orders') renderOrders();
+      if (currentSection === 'dashboard') renderRecentOrders();
+    } catch (err) { console.error('Error:', err); }
   }
 
   function updateStats() {
@@ -782,41 +761,19 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
     const newOrders = allOrders.filter(o => o.order_status === 'new').length;
     const inProgress = allOrders.filter(o => o.order_status === 'in_progress').length;
     const collected = allOrders.reduce((sum, o) => sum + Number(o.amount_paid || 0), 0);
-
-    const set = (id: string, val: string) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = val;
-    };
+    const set = (id: string, val: string) => { const el = document.getElementById(id); if (el) el.textContent = val; };
     set('statTotal', String(total));
     set('statNew', String(newOrders));
     set('statProgress', String(inProgress));
     set('statCollected', '$' + collected.toFixed(0));
-
     const statsText = document.getElementById('statsText');
     if (statsText) statsText.textContent = `${total} orders · managing all clients`;
   }
 
-  // Escape values before injecting into innerHTML
-  function esc(v: any) {
-    return String(v ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
   function getStatusBadge(status: string) {
-    const labels: Record<string, string> = {
-      'new': 'New',
-      'in_progress': 'In Progress',
-      'in_review': 'In Review',
-      'completed': 'Completed',
-      'revision': 'Revision',
-      'cancelled': 'Cancelled',
-    };
+    const labels: Record<string, string> = { 'new': 'New', 'in_progress': 'In Progress', 'in_review': 'In Review', 'completed': 'Completed', 'revision': 'Revision', 'cancelled': 'Cancelled' };
     const cls = ['new','in_progress','in_review','completed','revision','cancelled'].includes(status) ? status : 'new';
-    const label = labels[status] || status;
-    return `<span class="status-badge status-${cls}">${esc(label)}</span>`;
+    return `<span class="status-badge status-${cls}">${esc(labels[status] || status)}</span>`;
   }
 
   function deadlineInfo(deadline: string) {
@@ -830,18 +787,57 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
     return { text: `⏰ ${days}d left`, cls: 'ok' };
   }
 
+  function orderCardHTML(order: any) {
+    const dl = deadlineInfo(order.deadline);
+    return `
+      <div class="order-card">
+        <div class="order-card__left">
+          <div class="order-card__title">${esc(order.topic || 'N/A')}</div>
+          <div class="order-card__meta">
+            ${getStatusBadge(order.order_status || 'new')}
+            <span class="meta-dot">·</span>
+            <span class="meta-item">${esc(order.order_number || order.id)}</span>
+            <span class="meta-dot">·</span>
+            <span class="meta-item">${esc(order.pages || 1)} pages</span>
+            <span class="meta-dot">·</span>
+            <span class="meta-item">${esc(order.assignment_type || 'N/A')}</span>
+          </div>
+        </div>
+        <div class="order-card__right">
+          <div class="order-card__deadline ${dl.cls}">${dl.text}</div>
+          <div class="order-card__amount">$${Number(order.total_amount || 0).toFixed(2)} <span class="amount-paid">($${Number(order.amount_paid || 0).toFixed(2)})</span></div>
+          <button class="btn-update-order" data-id="${esc(order.id)}">✏️ Update</button>
+        </div>
+      </div>`;
+  }
+
+  function attachUpdateButtons(container: HTMLElement) {
+    container.querySelectorAll('.btn-update-order').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id;
+        const order = allOrders.find(o => String(o.id) === id);
+        if (order) openUpdateModal(order);
+      });
+    });
+  }
+
+  function renderRecentOrders() {
+    const grid = document.getElementById('recentOrdersGrid');
+    if (!grid) return;
+    const recent = allOrders.slice(0, 5);
+    if (!recent.length) { grid.innerHTML = '<div class="input-note">No orders yet.</div>'; return; }
+    grid.innerHTML = recent.map(orderCardHTML).join('');
+    attachUpdateButtons(grid);
+  }
+
   function renderOrders() {
     const loading = document.getElementById('loadingState');
     const empty = document.getElementById('emptyState');
     const grid = document.getElementById('ordersGrid');
     const search = (document.getElementById('searchInput') as HTMLInputElement)?.value.toLowerCase() || '';
-
     if (loading) loading.style.display = 'none';
 
-    let filtered = currentTab === 'all'
-      ? allOrders
-      : allOrders.filter(o => o.order_status === currentTab);
-
+    let filtered = currentTab === 'all' ? allOrders : allOrders.filter(o => o.order_status === currentTab);
     if (search) {
       filtered = filtered.filter(o =>
         (o.topic || '').toLowerCase().includes(search) ||
@@ -855,59 +851,25 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
       if (grid) grid.style.display = 'none';
       return;
     }
-
     if (empty) empty.style.display = 'none';
     if (grid) {
       grid.style.display = 'flex';
-      grid.innerHTML = filtered.map(order => {
-        const dl = deadlineInfo(order.deadline);
-        return `
-        <div class="order-card">
-          <div class="order-card__left">
-            <div class="order-card__title">${esc(order.topic || 'N/A')}</div>
-            <div class="order-card__email">${esc(order.order_number || order.id)}</div>
-            <div class="order-card__meta">
-              ${getStatusBadge(order.order_status || 'new')}
-              <span class="meta-dot">·</span>
-              <span class="meta-item">${esc(order.pages || 1)} pages</span>
-              <span class="meta-dot">·</span>
-              <span class="meta-item">${esc(order.assignment_type || 'N/A')}</span>
-            </div>
-          </div>
-          <div class="order-card__right">
-            <div class="order-card__deadline ${dl.cls}">${dl.text}</div>
-            <div class="order-card__amount">$${Number(order.total_amount || 0).toFixed(2)} <span class="amount-paid">($${Number(order.amount_paid || 0).toFixed(2)})</span></div>
-            <button class="btn-update-order" data-id="${esc(order.id)}">✏️ Update</button>
-          </div>
-        </div>
-      `;
-      }).join('');
-
-      // Attach click listeners (safer than inline onclick with quoted values)
-      grid.querySelectorAll('.btn-update-order').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = (btn as HTMLElement).dataset.id;
-          const order = allOrders.find(o => String(o.id) === id);
-          if (order) openUpdateModal(order);
-        });
-      });
+      grid.innerHTML = filtered.map(orderCardHTML).join('');
+      attachUpdateButtons(grid);
     }
   }
 
-  // Tabs
-  document.querySelectorAll('.tab').forEach(tab => {
+  document.querySelectorAll('#orderStatusTabs .tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('#orderStatusTabs .tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       currentTab = (tab as HTMLElement).dataset.tab || 'all';
       renderOrders();
     });
   });
 
-  // Search
   document.getElementById('searchInput')?.addEventListener('input', renderOrders);
 
-  // Open update modal
   function openUpdateModal(order: any) {
     currentOrder = order;
     const modal = document.getElementById('updateModal');
@@ -925,27 +887,21 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
     if (writerSelect) writerSelect.value = order.writer_id ? String(order.writer_id) : '';
     if (fileInput) fileInput.value = '';
 
-    // Show the client's revision note if one exists
     const revisionNoteBox = document.getElementById('revisionNoteBox');
     const revisionNoteText = document.getElementById('revisionNoteText');
     if (revisionNoteBox && revisionNoteText) {
       if (order.revision_note && String(order.revision_note).trim()) {
         revisionNoteText.textContent = order.revision_note;
         revisionNoteBox.style.display = 'block';
-      } else {
-        revisionNoteBox.style.display = 'none';
-      }
+      } else { revisionNoteBox.style.display = 'none'; }
     }
 
-    // Show whether a file is already attached
     if (currentFile && currentFileName) {
       if (order.file_url) {
         const parts = String(order.file_url).split('/');
         currentFileName.textContent = '📎 Attached: ' + parts[parts.length - 1];
         currentFile.style.display = 'block';
-      } else {
-        currentFile.style.display = 'none';
-      }
+      } else { currentFile.style.display = 'none'; }
     }
 
     loadAdminFiles(order.id);
@@ -957,15 +913,9 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
     if (!box) return;
     box.innerHTML = '<span class="input-note">Loading…</span>';
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/order_files?order_id=eq.${orderId}&order=created_at.desc`,
-        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
-      );
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/order_files?order_id=eq.${orderId}&order=created_at.desc`, { headers: hdr() });
       const files = await res.json();
-      if (!Array.isArray(files) || !files.length) {
-        box.innerHTML = '<span class="input-note">No files uploaded yet.</span>';
-        return;
-      }
+      if (!Array.isArray(files) || !files.length) { box.innerHTML = '<span class="input-note">No files uploaded yet.</span>'; return; }
       box.innerHTML = files.map((f: any) => `
         <div class="afile-row">
           <div class="afile-info"><span class="afile-type">${esc(f.file_type || 'File')}</span><span class="afile-name">${esc(f.file_name || 'file')}</span><span class="afile-by">${esc(f.uploaded_by || '')}</span></div>
@@ -986,67 +936,45 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
     } catch (err) { console.error(err); box.innerHTML = '<span class="input-note">Could not load files.</span>'; }
   }
 
-  // Close modal
   document.getElementById('modalClose')?.addEventListener('click', () => {
     document.getElementById('updateModal')?.classList.remove('active');
   });
 
-  // Save update — uploads file to Storage if one is chosen
   document.getElementById('saveUpdateBtn')?.addEventListener('click', async () => {
     if (!currentOrder) return;
     const status = (document.getElementById('statusSelect') as HTMLSelectElement).value;
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     const btn = document.getElementById('saveUpdateBtn') as HTMLButtonElement;
     const progress = document.getElementById('uploadProgress');
-
     btn.disabled = true;
-
-    // Keep existing file path unless a new file is uploaded
     let filePath = currentOrder.file_url || null;
-
     try {
       const file = fileInput.files && fileInput.files[0];
       if (file) {
         if (progress) progress.style.display = 'block';
         btn.textContent = '⏳ Uploading…';
-
         const ticket = currentOrder.order_number || String(currentOrder.id);
-        // Sanitize the filename and store under the ticket folder
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
         const path = `${ticket}/${safeName}`;
-
-        const { error: uploadError } = await supabase
-          .storage
-          .from(BUCKET)
-          .upload(path, file, { upsert: true });
-
+        const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true });
         if (uploadError) throw uploadError;
         filePath = path;
         if (progress) progress.style.display = 'none';
       }
-
       btn.textContent = '⏳ Saving…';
-
       await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${currentOrder.id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${currentSession.access_token}`
-        },
+        headers: { 'Content-Type': 'application/json', ...hdr() },
         body: JSON.stringify({
-          order_status: status,
-          file_url: filePath,
+          order_status: status, file_url: filePath,
           writer_id: (document.getElementById('writerSelect') as HTMLSelectElement)?.value || null,
           status_updated_at: new Date().toISOString()
         })
       });
-
       document.getElementById('updateModal')?.classList.remove('active');
       btn.textContent = '💾 Save Changes';
       btn.disabled = false;
       await loadOrders();
-
     } catch (err) {
       console.error(err);
       if (progress) progress.style.display = 'none';
@@ -1055,289 +983,376 @@ body.dark-mode .inbox-empty h3 { color: #e2e8f0; }
     }
   });
 
-  // Logout
   document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await supabase.auth.signOut();
     window.location.replace(`${base}/login/`);
   });
 
-  checkAuth();
-
   // ── THEME TOGGLE ──
   const THEME_KEY = 'admin-theme';
-
-  function getSystemPref() {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-
+  function getSystemPref() { return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
   function applyTheme(setting: string) {
     const actual = setting === 'system' ? getSystemPref() : setting;
-    if (actual === 'dark') {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
-    document.querySelectorAll('.tt-btn').forEach(btn => {
-      btn.classList.toggle('active', (btn as HTMLElement).dataset.theme === setting);
-    });
+    document.body.classList.toggle('dark-mode', actual === 'dark');
+    document.querySelectorAll('.tt-btn').forEach(btn => btn.classList.toggle('active', (btn as HTMLElement).dataset.theme === setting));
     localStorage.setItem(THEME_KEY, setting);
   }
-
-  document.querySelectorAll('.tt-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      applyTheme((btn as HTMLElement).dataset.theme || 'light');
-    });
-  });
-
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (localStorage.getItem(THEME_KEY) === 'system') applyTheme('system');
-  });
-
+  document.querySelectorAll('.tt-btn').forEach(btn => btn.addEventListener('click', () => applyTheme((btn as HTMLElement).dataset.theme || 'light')));
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (localStorage.getItem(THEME_KEY) === 'system') applyTheme('system'); });
   applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 
-  // ═══ ADMIN INBOX ═══
-  let inboxConversations: any[] = [];
-  let inboxActiveId: string | null = null;
-  let inboxSub: any = null;
-  let inboxFilter = 'all';
+  // ═══ INBOX CONTROLLER FACTORY (shared by Tickets + Messages) ═══
+  function makeInboxController(opts: {
+    kind: 'support' | 'order';
+    idPrefix: string;
+    withStatus: boolean;
+  }) {
+    let conversations: any[] = [];
+    let activeId: string | null = null;
+    let sub: any = null;
+    let statusFilter = 'all';
 
-  async function loadInbox() {
-    const list = document.getElementById('inboxList')!;
-    list.innerHTML = '<div class="inbox-loading">Loading…</div>';
-    try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/conversations?order=updated_at.desc`,
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
-      );
-      inboxConversations = await res.json();
-      renderInboxList();
-    } catch (err) { console.error(err); list.innerHTML = '<div class="inbox-loading">Could not load</div>'; }
-  }
+    const ids = {
+      list: `${opts.idPrefix}List`,
+      count: `${opts.idPrefix}Count`,
+      empty: `${opts.idPrefix}Empty`,
+      thread: `${opts.idPrefix}Thread`,
+      header: `${opts.idPrefix}ThreadHeader`,
+      messages: `${opts.idPrefix}Messages`,
+      input: `${opts.idPrefix}Input`,
+      send: `${opts.idPrefix}SendBtn`
+    };
 
-  function renderInboxList() {
-    const list = document.getElementById('inboxList')!;
-    const count = document.getElementById('inboxCount')!;
-    let filtered;
-    if (inboxFilter === 'archived') {
-      filtered = inboxConversations.filter((c: any) => c.archived);
-    } else if (inboxFilter === 'all') {
-      filtered = inboxConversations.filter((c: any) => !c.archived);
-    } else {
-      filtered = inboxConversations.filter((c: any) => c.type === inboxFilter && !c.archived);
-    }
-    count.textContent = String(filtered.length);
-    if (!filtered.length) { list.innerHTML = '<div class="inbox-loading">No conversations yet</div>'; return; }
-    list.innerHTML = filtered.map((c: any) => {
-      const isSupport = c.type === 'support';
-      const initials = isSupport ? 'SP' : 'OR';
-      const time = c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
-      const isActive = c.id === inboxActiveId;
-      const label = c.title || (isSupport ? 'Support Chat' : 'Order Chat');
-      return `<div class="inbox-item ${isActive ? 'active' : ''}" data-cid="${c.id}">
-        <div class="inbox-item-avatar ${isSupport ? 'avatar-support' : 'avatar-order'}">${initials}</div>
-        <div class="inbox-item-info">
-          <div class="inbox-item-name">${esc(label)}</div>
-          <div class="inbox-item-type">${isSupport ? 'Support' : 'Order chat'}</div>
-        </div>
-        <div class="inbox-item-time">${time}</div>
-      </div>`;
-    }).join('');
-    list.querySelectorAll('.inbox-item').forEach(item => {
-      item.addEventListener('click', () => openInboxThread((item as HTMLElement).dataset.cid!));
-    });
-  }
-
-  // Ensure the order's assigned writer is a participant in this order chat.
-  // Silent on auto-run; pass notify=true for the manual button.
-  async function ensureOrderWriter(conv: any, notify = false) {
-    if (!conv || conv.type !== 'order' || !conv.order_id) { if (notify) alert('This is not an order chat.'); return; }
-    const hdr = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` };
-    try {
-      const order = (await (await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${conv.order_id}&select=writer_id`, { headers: hdr })).json())[0];
-      if (!order?.writer_id) { if (notify) alert('No writer is assigned to this order yet. Assign one in the order Update modal first.'); return; }
-      const writer = (await (await fetch(`${SUPABASE_URL}/rest/v1/writers?id=eq.${order.writer_id}&select=auth_user_id,full_name`, { headers: hdr })).json())[0];
-      if (!writer?.auth_user_id) { if (notify) alert('That writer has no linked account.'); return; }
-      const existing = await (await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?conversation_id=eq.${conv.id}&user_id=eq.${writer.auth_user_id}&select=id`, { headers: hdr })).json();
-      if (existing.length) { if (notify) alert(`${writer.full_name || 'Writer'} is already in this chat.`); return; }
-      await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants`, {
-        method: 'POST',
-        headers: { ...hdr, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ conversation_id: conv.id, user_id: writer.auth_user_id, role: 'writer', display_name: writer.full_name || 'Writer' })
-      });
-      if (notify) alert(`✅ ${writer.full_name || 'Writer'} added to this chat.`);
-    } catch (err) { console.error('ensureOrderWriter', err); if (notify) alert('Could not add writer — check console.'); }
-  }
-
-  async function openInboxThread(conversationId: string) {
-    inboxActiveId = conversationId;
-    const conv = inboxConversations.find((c: any) => c.id === conversationId);
-    document.getElementById('inboxEmpty')!.style.display = 'none';
-    const thread = document.getElementById('inboxThread')!;
-    thread.style.display = 'flex';
-    const header = document.getElementById('inboxThreadHeader')!;
-    const icon = conv?.type === 'support' ? '🛟' : '📋';
-    const typeLabel = conv?.type === 'support' ? 'Support conversation' : 'Order chat';
-    const writerBtn = conv?.type === 'order' ? `<button class="inbox-addwriter-btn" id="inboxAddWriterBtn">➕ Add writer</button>` : '';
-    const archiveBtn = conv?.archived
-      ? `<button class="inbox-clear-btn" id="inboxArchiveBtn" data-archived="true">♻️ Restore</button>`
-      : `<button class="inbox-clear-btn" id="inboxArchiveBtn" data-archived="false">🗄️ Archive</button>`;
-    const deleteBtn = `<button class="inbox-clear-btn danger" id="inboxDeleteBtn">🗑️ Delete</button>`;
-    header.innerHTML = `<div style="flex:1;min-width:0;"><div class="inbox-thread-title">${icon} ${esc(conv?.title || 'Chat')}</div><div class="inbox-thread-sub">${typeLabel}</div></div>${writerBtn}${archiveBtn}${deleteBtn}`;
-    if (conv?.type === 'order') {
-      ensureOrderWriter(conv);  // auto-link the assigned writer
-      document.getElementById('inboxAddWriterBtn')?.addEventListener('click', () => ensureOrderWriter(conv, true));
-    }
-    document.getElementById('inboxArchiveBtn')?.addEventListener('click', () => archiveConversation(conv));
-    document.getElementById('inboxDeleteBtn')?.addEventListener('click', () => deleteConversation(conv));
-    renderInboxList();
-    const container = document.getElementById('inboxMessages')!;
-    container.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:2rem;font-size:0.85rem;">Loading…</div>';
-    try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${conversationId}&order=created_at.asc`,
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
-      );
-      renderInboxMessages(await res.json());
-    } catch (err) { container.innerHTML = '<div style="text-align:center;color:#94a3b8;">Could not load messages</div>'; }
-    if (inboxSub) { inboxSub.unsubscribe(); inboxSub = null; }
-    inboxSub = supabase.channel(`admin-inbox-${conversationId}`)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` },
-        (payload: any) => {
-          const msg = payload.new;
-          const c = document.getElementById('inboxMessages')!;
-          const ph = c.querySelector('div[style*="text-align:center"]');
-          if (ph) c.innerHTML = '';
-          const isMine = msg.sender_role === 'support' || msg.sender_id === currentSession.user.id;
-          const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
-          c.insertAdjacentHTML('beforeend', `<div class="imsg-row ${isMine ? 'mine' : 'theirs'}">
-            ${!isMine ? `<div class="imsg-sender">${esc(msg.sender_name || msg.sender_role || 'User')}</div>` : ''}
-            <div class="imsg-bubble">${esc(msg.content)}</div>
-            <div class="imsg-time">${time}</div>
-          </div>`);
-          c.scrollTop = c.scrollHeight;
+    async function load() {
+      const list = document.getElementById(ids.list);
+      if (!list) return;
+      list.innerHTML = '<div class="inbox-loading">Loading…</div>';
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/conversations?type=eq.${opts.kind}&order=updated_at.desc`, { headers: hdr() });
+        conversations = await res.json();
+        if (opts.idPrefix === 'tickets') {
+          const openCount = conversations.filter((c: any) => (c.status || 'open') === 'open').length;
+          const badge = document.getElementById('ticketsBadge');
+          if (badge) { badge.style.display = openCount ? 'inline-block' : 'none'; badge.textContent = String(openCount); }
         }
-      ).subscribe();
-  }
+        renderList();
+      } catch (err) { console.error(err); list.innerHTML = '<div class="inbox-loading">Could not load</div>'; }
+    }
 
-  function renderInboxMessages(messages: any[]) {
-    const container = document.getElementById('inboxMessages')!;
-    if (!messages.length) { container.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:2rem;font-size:0.85rem;">No messages yet.</div>'; return; }
-    container.innerHTML = messages.map((m: any) => {
-      const isSupport = m.sender_role === 'support' || m.sender_id === currentSession.user.id;
-      const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
-      const senderLabel = isSupport ? 'Support' : (m.sender_name || 'User');
-      const avatarInitial = isSupport ? 'S' : (m.sender_name?.[0]?.toUpperCase() || 'U');
-      return `<div class="imsg-row ${isSupport ? 'mine' : 'theirs'}">
-        ${!isSupport ? `<div class="imsg-meta"><div class="imsg-avatar theirs-avatar">${avatarInitial}</div><div class="imsg-sender-name">${esc(senderLabel)}</div></div>` : ''}
-        <div class="imsg-bubble">${esc(m.content)}</div>
-        ${isSupport ? `<div class="imsg-meta-right"><div class="imsg-sender-name" style="text-align:right">You</div><div class="imsg-avatar mine-avatar">S</div></div>` : ''}
-        <div class="imsg-time">${time}</div>
-      </div>`;
-    }).join('');
-    container.scrollTop = container.scrollHeight;
-  }
-async function archiveConversation(conv: any) {
-    if (!conv) return;
-    const newVal = !conv.archived;
-    try {
-      await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${conv.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}`, 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ archived: newVal })
-      });
-      conv.archived = newVal;
-      const local = inboxConversations.find((c: any) => c.id === conv.id);
-      if (local) local.archived = newVal;
-      // Close the thread and refresh the list
-      document.getElementById('inboxThread')!.style.display = 'none';
-      document.getElementById('inboxEmpty')!.style.display = 'flex';
-      inboxActiveId = null;
-      renderInboxList();
-    } catch (err) { console.error(err); alert('Could not archive. Please try again.'); }
-  }
-
-  async function deleteConversation(conv: any) {
-    if (!conv) return;
-    if (!confirm('Permanently delete this conversation and ALL its messages? This cannot be undone.')) return;
-    try {
-      await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${conv.id}`, {
-        method: 'DELETE',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}`, 'Prefer': 'return=minimal' }
-      });
-      inboxConversations = inboxConversations.filter((c: any) => c.id !== conv.id);
-      document.getElementById('inboxThread')!.style.display = 'none';
-      document.getElementById('inboxEmpty')!.style.display = 'flex';
-      inboxActiveId = null;
-      renderInboxList();
-    } catch (err) { console.error(err); alert('Could not delete. Please try again.'); }
-  }
-
-  async function inboxSend() {
-    const input = document.getElementById('inboxInput') as HTMLInputElement;
-    const content = input.value.trim();
-    if (!content || !inboxActiveId) return;
-    const btn = document.getElementById('inboxSendBtn') as HTMLButtonElement;
-    btn.disabled = true; input.value = '';
-    try {
-      await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` },
-        body: JSON.stringify({ conversation_id: inboxActiveId, sender_id: currentSession.user.id, sender_name: 'Support', sender_role: 'support', content })
-      });
-      await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${inboxActiveId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}`, 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ updated_at: new Date().toISOString() })
-      });
-    } catch (err) { console.error(err); }
-    btn.disabled = false; input.focus();
-  }
-
-  document.getElementById('inboxSendBtn')?.addEventListener('click', inboxSend);
-  document.getElementById('inboxInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); inboxSend(); } });
-
-  // Filter buttons
-  document.querySelectorAll('.inbox-filter').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.inbox-filter').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      inboxFilter = (btn as HTMLElement).dataset.filter || 'all';
-      renderInboxList();
-    });
-  });
-
-  // Hook into the Inbox tab click
-  document.querySelectorAll('.tab').forEach(tab => {
-    if ((tab as HTMLElement).dataset.tab === 'inbox') {
-      tab.addEventListener('click', () => {
-        document.getElementById('loadingState')!.style.display = 'none';
-        document.getElementById('emptyState')!.style.display = 'none';
-        document.getElementById('ordersGrid')!.style.display = 'none';
-        document.getElementById('inboxPanel')!.style.display = 'block';
-        document.getElementById('financePanel')!.style.display = 'none';
-        loadInbox();
+    function renderList() {
+      const list = document.getElementById(ids.list)!;
+      const count = document.getElementById(ids.count)!;
+      let filtered = conversations.filter((c: any) => !c.archived);
+      if (opts.withStatus && statusFilter !== 'all') {
+        filtered = filtered.filter((c: any) => (c.status || 'open') === statusFilter);
+      }
+      count.textContent = String(filtered.length);
+      if (!filtered.length) { list.innerHTML = '<div class="inbox-loading">Nothing here</div>'; return; }
+      list.innerHTML = filtered.map((c: any) => {
+        const initials = opts.kind === 'support' ? 'SP' : 'OR';
+        const avatarCls = opts.kind === 'support' ? 'avatar-support' : 'avatar-order';
+        const time = c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+        const isActive = c.id === activeId;
+        const label = c.title || (opts.kind === 'support' ? 'Support Chat' : 'Order Chat');
+        const statusPill = opts.withStatus ? `<span class="ticket-status-pill ${c.status || 'open'}">${esc(c.status || 'open')}</span>` : '';
+        return `<div class="inbox-item ${isActive ? 'active' : ''}" data-cid="${c.id}">
+          <div class="inbox-item-avatar ${avatarCls}">${initials}</div>
+          <div class="inbox-item-info">
+            <div class="inbox-item-name">${esc(label)}${statusPill}</div>
+            <div class="inbox-item-type">${opts.kind === 'support' ? 'Support' : 'Order chat'}</div>
+          </div>
+          <div class="inbox-item-time">${time}</div>
+        </div>`;
+      }).join('');
+      list.querySelectorAll('.inbox-item').forEach(item => {
+        item.addEventListener('click', () => openThread((item as HTMLElement).dataset.cid!));
       });
     }
-    if ((tab as HTMLElement).dataset.tab === 'finance') {
-      tab.addEventListener('click', () => {
-        document.getElementById('loadingState')!.style.display = 'none';
-        document.getElementById('emptyState')!.style.display = 'none';
-        document.getElementById('ordersGrid')!.style.display = 'none';
-        document.getElementById('inboxPanel')!.style.display = 'none';
-        document.getElementById('financePanel')!.style.display = 'block';
-        loadFinance();
+
+    async function ensureOrderWriter(conv: any, notify = false) {
+      if (!conv || conv.type !== 'order' || !conv.order_id) { if (notify) alert('This is not an order chat.'); return; }
+      try {
+        const order = (await (await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${conv.order_id}&select=writer_id`, { headers: hdr() })).json())[0];
+        if (!order?.writer_id) { if (notify) alert('No writer is assigned to this order yet.'); return; }
+        const writer = (await (await fetch(`${SUPABASE_URL}/rest/v1/writers?id=eq.${order.writer_id}&select=auth_user_id,full_name`, { headers: hdr() })).json())[0];
+        if (!writer?.auth_user_id) { if (notify) alert('That writer has no linked account.'); return; }
+        const existing = await (await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?conversation_id=eq.${conv.id}&user_id=eq.${writer.auth_user_id}&select=id`, { headers: hdr() })).json();
+        if (existing.length) { if (notify) alert(`${writer.full_name || 'Writer'} is already in this chat.`); return; }
+        await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants`, {
+          method: 'POST', headers: { ...hdr(), 'Content-Type': 'application/json' },
+          body: JSON.stringify({ conversation_id: conv.id, user_id: writer.auth_user_id, role: 'writer', display_name: writer.full_name || 'Writer' })
+        });
+        if (notify) alert(`✅ ${writer.full_name || 'Writer'} added to this chat.`);
+      } catch (err) { console.error('ensureOrderWriter', err); if (notify) alert('Could not add writer.'); }
+    }
+
+    async function setTicketStatus(conv: any, status: string) {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${conv.id}`, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json', ...hdr(), 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ status })
+        });
+        conv.status = status;
+        renderList();
+        openThread(conv.id);
+      } catch (err) { console.error(err); alert('Could not update ticket status.'); }
+    }
+
+    async function archiveConversation(conv: any) {
+      if (!conv) return;
+      const newVal = !conv.archived;
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${conv.id}`, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json', ...hdr(), 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ archived: newVal })
+        });
+        conv.archived = newVal;
+        document.getElementById(ids.thread)!.style.display = 'none';
+        document.getElementById(ids.empty)!.style.display = 'flex';
+        activeId = null;
+        renderList();
+      } catch (err) { console.error(err); alert('Could not archive.'); }
+    }
+
+    async function deleteConversation(conv: any) {
+      if (!conv) return;
+      if (!confirm('Permanently delete this conversation and ALL its messages? This cannot be undone.')) return;
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${conv.id}`, {
+          method: 'DELETE', headers: { ...hdr(), 'Prefer': 'return=minimal' }
+        });
+        conversations = conversations.filter((c: any) => c.id !== conv.id);
+        document.getElementById(ids.thread)!.style.display = 'none';
+        document.getElementById(ids.empty)!.style.display = 'flex';
+        activeId = null;
+        renderList();
+      } catch (err) { console.error(err); alert('Could not delete.'); }
+    }
+
+    async function openThread(conversationId: string) {
+      activeId = conversationId;
+      const conv = conversations.find((c: any) => c.id === conversationId);
+      document.getElementById(ids.empty)!.style.display = 'none';
+      const thread = document.getElementById(ids.thread)!;
+      thread.style.display = 'flex';
+      const header = document.getElementById(ids.header)!;
+      const icon = opts.kind === 'support' ? '🎫' : '📋';
+      const typeLabel = opts.kind === 'support' ? 'Support ticket' : 'Order chat';
+
+      let statusControls = '';
+      if (opts.withStatus) {
+        const current = conv?.status || 'open';
+        statusControls = `<select class="ticket-status-select" id="${opts.idPrefix}StatusSelect" style="padding:0.35rem 0.6rem;border-radius:8px;border:1px solid #e2e8f0;font-size:0.75rem;">
+          <option value="open" ${current === 'open' ? 'selected' : ''}>Open</option>
+          <option value="resolved" ${current === 'resolved' ? 'selected' : ''}>Resolved</option>
+          <option value="closed" ${current === 'closed' ? 'selected' : ''}>Closed</option>
+        </select>`;
+      }
+      const writerBtn = conv?.type === 'order' ? `<button class="inbox-addwriter-btn" id="${opts.idPrefix}AddWriterBtn">➕ Add writer</button>` : '';
+      const archiveBtn = conv?.archived
+        ? `<button class="inbox-clear-btn" id="${opts.idPrefix}ArchiveBtn">♻️ Restore</button>`
+        : `<button class="inbox-clear-btn" id="${opts.idPrefix}ArchiveBtn">🗄️ Archive</button>`;
+      const deleteBtn = `<button class="inbox-clear-btn danger" id="${opts.idPrefix}DeleteBtn">🗑️ Delete</button>`;
+      header.innerHTML = `<div style="flex:1;min-width:0;"><div class="inbox-thread-title">${icon} ${esc(conv?.title || 'Chat')}</div><div class="inbox-thread-sub">${typeLabel}</div></div>${statusControls}${writerBtn}${archiveBtn}${deleteBtn}`;
+
+      if (conv?.type === 'order') {
+        ensureOrderWriter(conv);
+        document.getElementById(`${opts.idPrefix}AddWriterBtn`)?.addEventListener('click', () => ensureOrderWriter(conv, true));
+      }
+      if (opts.withStatus) {
+        document.getElementById(`${opts.idPrefix}StatusSelect`)?.addEventListener('change', (e) => {
+          setTicketStatus(conv, (e.target as HTMLSelectElement).value);
+        });
+      }
+      document.getElementById(`${opts.idPrefix}ArchiveBtn`)?.addEventListener('click', () => archiveConversation(conv));
+      document.getElementById(`${opts.idPrefix}DeleteBtn`)?.addEventListener('click', () => deleteConversation(conv));
+      renderList();
+
+      const container = document.getElementById(ids.messages)!;
+      container.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:2rem;font-size:0.85rem;">Loading…</div>';
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${conversationId}&order=created_at.asc`, { headers: hdr() });
+        renderMessages(await res.json());
+      } catch { container.innerHTML = '<div style="text-align:center;color:#94a3b8;">Could not load messages</div>'; }
+
+      if (sub) { sub.unsubscribe(); sub = null; }
+      sub = supabase.channel(`admin-${opts.idPrefix}-${conversationId}`)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` },
+          (payload: any) => {
+            const msg = payload.new;
+            const c = document.getElementById(ids.messages)!;
+            const ph = c.querySelector('div[style*="text-align:center"]');
+            if (ph) c.innerHTML = '';
+            const isMine = msg.sender_role === 'support' || msg.sender_id === currentSession.user.id;
+            const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+            c.insertAdjacentHTML('beforeend', `<div class="imsg-row ${isMine ? 'mine' : 'theirs'}">
+              ${!isMine ? `<div class="imsg-sender-name">${esc(msg.sender_name || msg.sender_role || 'User')}</div>` : ''}
+              <div class="imsg-bubble">${esc(msg.content)}</div>
+              <div class="imsg-time">${time}</div>
+            </div>`);
+            c.scrollTop = c.scrollHeight;
+          }
+        ).subscribe();
+    }
+
+    function renderMessages(messages: any[]) {
+      const container = document.getElementById(ids.messages)!;
+      if (!messages.length) { container.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:2rem;font-size:0.85rem;">No messages yet.</div>'; return; }
+      container.innerHTML = messages.map((m: any) => {
+        const isSupport = m.sender_role === 'support' || m.sender_id === currentSession.user.id;
+        const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+        const senderLabel = isSupport ? 'Support' : (m.sender_name || 'User');
+        const avatarInitial = isSupport ? 'S' : (m.sender_name?.[0]?.toUpperCase() || 'U');
+        return `<div class="imsg-row ${isSupport ? 'mine' : 'theirs'}">
+          ${!isSupport ? `<div class="imsg-meta"><div class="imsg-avatar theirs-avatar">${avatarInitial}</div><div class="imsg-sender-name">${esc(senderLabel)}</div></div>` : ''}
+          <div class="imsg-bubble">${esc(m.content)}</div>
+          ${isSupport ? `<div class="imsg-meta-right"><div class="imsg-sender-name" style="text-align:right">You</div><div class="imsg-avatar mine-avatar">S</div></div>` : ''}
+          <div class="imsg-time">${time}</div>
+        </div>`;
+      }).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function send() {
+      const input = document.getElementById(ids.input) as HTMLInputElement;
+      const content = input.value.trim();
+      if (!content || !activeId) return;
+      const btn = document.getElementById(ids.send) as HTMLButtonElement;
+      btn.disabled = true; input.value = '';
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', ...hdr() },
+          body: JSON.stringify({ conversation_id: activeId, sender_id: currentSession.user.id, sender_name: 'Support', sender_role: 'support', content })
+        });
+        await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${activeId}`, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json', ...hdr(), 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ updated_at: new Date().toISOString() })
+        });
+      } catch (err) { console.error(err); }
+      btn.disabled = false; input.focus();
+    }
+
+    document.getElementById(ids.send)?.addEventListener('click', send);
+    document.getElementById(ids.input)?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
+
+    if (opts.withStatus) {
+      document.querySelectorAll(`#ticketsSection .inbox-filter`).forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll(`#ticketsSection .inbox-filter`).forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          statusFilter = (btn as HTMLElement).dataset.tstatus || 'all';
+          renderList();
+        });
       });
+    }
+
+    return { load };
+  }
+
+  const ticketsController = makeInboxController({ kind: 'support', idPrefix: 'tickets', withStatus: true });
+  const messagesController = makeInboxController({ kind: 'order', idPrefix: 'messages', withStatus: false });
+
+  // ═══ SETTINGS ═══
+  document.getElementById('savePasswordBtn')?.addEventListener('click', async () => {
+    const pw = (document.getElementById('newPasswordInput') as HTMLInputElement).value;
+    const confirm2 = (document.getElementById('confirmPasswordInput') as HTMLInputElement).value;
+    const note = document.getElementById('passwordStatusNote')!;
+    if (!pw || pw.length < 8) { note.textContent = 'Password must be at least 8 characters.'; return; }
+    if (pw !== confirm2) { note.textContent = 'Passwords do not match.'; return; }
+    const btn = document.getElementById('savePasswordBtn') as HTMLButtonElement;
+    btn.disabled = true;
+    const { error } = await supabase.auth.updateUser({ password: pw });
+    btn.disabled = false;
+    note.textContent = error ? (error.message || 'Could not update password.') : 'Password updated.';
+    if (!error) {
+      (document.getElementById('newPasswordInput') as HTMLInputElement).value = '';
+      (document.getElementById('confirmPasswordInput') as HTMLInputElement).value = '';
     }
   });
 
-  // Make sure switching away from inbox/finance hides them
-  document.querySelectorAll('.tab').forEach(tab => {
-    const t = (tab as HTMLElement).dataset.tab;
-    if (t !== 'inbox' && t !== 'finance') {
-      tab.addEventListener('click', () => {
-        document.getElementById('inboxPanel')!.style.display = 'none';
-        document.getElementById('financePanel')!.style.display = 'none';
-      });
+  async function loadMfaStatus() {
+    const row = document.getElementById('mfaStatusRow')!;
+    const enrollBtn = document.getElementById('mfaEnrollBtn') as HTMLButtonElement;
+    try {
+      const { data, error } = await supabase.auth.mfa.listFactors();
+      if (error) throw error;
+      const verified = (data?.totp || []).find((f: any) => f.status === 'verified');
+      if (verified) {
+        row.textContent = '2FA is enabled on this account.';
+        enrollBtn.style.display = 'none';
+      } else {
+        row.textContent = '2FA is not enabled.';
+        enrollBtn.style.display = 'inline-block';
+      }
+    } catch (err) {
+      row.textContent = 'Could not check 2FA status.';
     }
+  }
+
+  document.getElementById('mfaEnrollBtn')?.addEventListener('click', async () => {
+    const box = document.getElementById('mfaEnrollBox')!;
+    const secretText = document.getElementById('mfaSecretText')!;
+    try {
+      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' });
+      if (error) throw error;
+      secretText.textContent = data?.totp?.uri || data?.totp?.secret || '';
+      (box as HTMLElement).dataset.factorId = data?.id || '';
+      box.style.display = 'block';
+    } catch (err: any) { alert(err.message || 'Could not start 2FA enrollment.'); }
   });
+
+  document.getElementById('mfaVerifyBtn')?.addEventListener('click', async () => {
+    const box = document.getElementById('mfaEnrollBox') as HTMLElement;
+    const factorId = box.dataset.factorId || '';
+    const code = (document.getElementById('mfaCodeInput') as HTMLInputElement).value.trim();
+    if (!factorId || !code) return;
+    try {
+      const { data: challenge, error: chErr } = await supabase.auth.mfa.challenge({ factorId });
+      if (chErr) throw chErr;
+      const { error: verErr } = await supabase.auth.mfa.verify({ factorId, challengeId: challenge.id, code });
+      if (verErr) throw verErr;
+      box.style.display = 'none';
+      await loadMfaStatus();
+    } catch (err: any) { alert(err.message || 'Invalid code — try again.'); }
+  });
+
+  async function loadStaff() {
+    const box = document.getElementById('staffList')!;
+    box.innerHTML = '<span class="input-note">Loading…</span>';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/writers?order=full_name.asc`, { headers: hdr() });
+      const staff = await res.json();
+      if (!Array.isArray(staff) || !staff.length) { box.innerHTML = '<span class="input-note">No staff added yet.</span>'; return; }
+      box.innerHTML = staff.map((w: any) => `
+        <div class="afile-row">
+          <div class="afile-info"><span class="afile-name">${esc(w.full_name || 'Unnamed')}</span><span class="afile-by">${esc(w.email || '')}</span></div>
+        </div>`).join('');
+    } catch (err) { console.error(err); box.innerHTML = '<span class="input-note">Could not load staff.</span>'; }
+  }
+
+  document.getElementById('addStaffBtn')?.addEventListener('click', async () => {
+    const name = (document.getElementById('staffNameInput') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('staffEmailInput') as HTMLInputElement).value.trim();
+    if (!name || !email) { alert('Enter a name and email.'); return; }
+    const btn = document.getElementById('addStaffBtn') as HTMLButtonElement;
+    btn.disabled = true;
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/writers`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', ...hdr(), 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ full_name: name, email })
+      });
+      (document.getElementById('staffNameInput') as HTMLInputElement).value = '';
+      (document.getElementById('staffEmailInput') as HTMLInputElement).value = '';
+      await loadStaff();
+      await loadWriters();
+    } catch (err) { console.error(err); alert('Could not add staff member.'); }
+    btn.disabled = false;
+  });
+
+  function loadSettings() {
+    loadMfaStatus();
+    loadStaff();
+  }
+
+  checkAuth();
 </script>
