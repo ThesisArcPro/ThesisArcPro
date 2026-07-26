@@ -2,167 +2,207 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-const base = '/ThesisArcPro';
+const base = '';
 ---
 
 <BaseLayout 
   title="About Us" 
   description="Learn about ThesisArcPro — our mission, our team, and our commitment to providing expert academic writing support for students worldwide."
-  url="https://thesisarcpro.github.io/ThesisArcPro/about">
+  url="https://thesisarcpro.github.io/about">
   <Header />
 
   <main>
-    <section class="page-hero">
-      <div class="container">
-        <p class="page-hero__eyebrow">Our Story</p>
-        <h1>About ThesisArcPro</h1>
-        <p class="page-hero__sub">We are a team of academic experts, researchers, and writers dedicated to helping students achieve their full potential.</p>
+
+    <!-- 1. HERO -->
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <p class="hero__eyebrow">NOT JUST WRITERS, YOUR ACADEMIC PARTNERS</p>
+          <h1 class="hero__heading">We exist so you can finally have time to</h1>
+          <div class="hero__slider">
+            <div class="hero__slider-track" id="sliderTrack">
+              <span>finish your sales report</span>
+              <span>use your yoga studio membership</span>
+              <span>get an ice cream with your child</span>
+              <span>spend time with your family</span>
+              <span>complete your dissertation</span>
+              <span>write your research paper</span>
+              <span>catch up on your favourite show</span>
+              <span>take a well deserved nap</span>
+              <span>attend your friend's birthday</span>
+              <span>focus on what matters most</span>
+            </div>
+          </div>
+          <p class="hero__sub">We are a team of academic experts, researchers, and writers dedicated to helping students achieve their full potential.</p>
+          <a href="#" class="btn-gold auth-gate-page">Get started</a>
+        </div>
+        <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/hero-image.png" alt="Student studying" class="hero__image" />
       </div>
     </section>
 
-    <section class="mission">
-      <div class="container mission__inner">
-        <div class="mission__content">
-          <p class="mission__eyebrow">Our Mission</p>
-          <h2>Empowering Every Student To Succeed</h2>
-          <hr class="gold-line" style="margin: 1rem 0 1.5rem;" />
-          <p>ThesisArcPro was founded with a single mission — to make high quality academic support accessible to every student, regardless of their level or background.</p>
-          <p>We believe every student deserves access to expert guidance. Whether you are a high school student struggling with your first essay or a PhD candidate working on your dissertation — we are here to help you succeed.</p>
-          <p>Our team of over 50 qualified academic experts brings decades of combined experience across all disciplines and academic levels.</p>
-          <div class="mission__illustration">
-            <img
-              src="/ThesisArcPro/images/about.svg"
-              alt="ThesisArcPro team of academic experts and writers helping students succeed"
-              width="480"
-              height="320"
-              loading="lazy"
-            />
-          </div>
-        </div>
-        <div class="mission__stats">
-          <div class="mission__stat">
+    <!-- 2. STATS BAR -->
+    <section class="stats-bar-wrap">
+      <div class="container">
+        <div class="stats-bar">
+          <div class="stat">
             <span class="stat__number">2,000+</span>
             <span class="stat__label">Students Helped</span>
           </div>
-          <div class="mission__stat">
-            <span class="stat__number">50+</span>
-            <span class="stat__label">Expert Writers</span>
-          </div>
-          <div class="mission__stat">
+          <div class="stat">
             <span class="stat__number">98%</span>
             <span class="stat__label">Satisfaction Rate</span>
           </div>
-          <div class="mission__stat">
-            <span class="stat__number">4.9/5</span>
-            <span class="stat__label">Average Rating</span>
+          <div class="stat">
+            <span class="stat__label-only">Deadlines from</span>
+            <span class="stat__hours">3 Hours</span>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="values">
-      <div class="container">
-        <p class="values__eyebrow">What We Stand For</p>
-        <h2 class="section-title">Our Core Values</h2>
-        <hr class="gold-line" />
-        <div class="values__grid">
-          <div class="value-card">
-            <div class="value-card__icon">🎯</div>
-            <h3>Excellence</h3>
-            <p>We hold ourselves to the highest academic standards. Every piece of work we produce reflects our commitment to quality and excellence.</p>
+    <!-- 3. OUR MISSION -->
+    <section class="mission">
+      <div class="container mission__inner">
+        <div class="mission__left">
+          <h2 class="mission__title">Our Mission</h2>
+          <h3 class="mission__subtitle">Empowering Every Student To Succeed</h3>
+          <p>ThesisArcPro was founded with a single mission — to make high quality academic support accessible to every student, regardless of their level or background.</p>
+          <p>We believe every student deserves access to expert guidance. Whether you are a high school student struggling with your first essay or a PhD candidate working on your dissertation — we are here to help you succeed.</p>
+          <p>Our team of over 50 qualified academic experts brings decades of combined experience across all disciplines and academic levels.</p>
+        </div>
+
+        <div class="mission__right">
+          <div class="mission__value">
+            <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/icon-students.png" alt="Students" class="mission__icon" />
+            <div>
+              <h4 class="mission__value-title">Students</h4>
+              <p class="mission__value-text">We help and support 24/7</p>
+            </div>
           </div>
-          <div class="value-card">
-            <div class="value-card__icon">🤝</div>
-            <h3>Integrity</h3>
-            <p>We operate with complete transparency and honesty. Our ethical commitment to responsible academic support is at the heart of everything we do.</p>
+          <div class="mission__value">
+            <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/icon-confidentiality.png" alt="Confidentiality" class="mission__icon" />
+            <div>
+              <h4 class="mission__value-title">Confidentiality</h4>
+              <p class="mission__value-text">Your privacy is sacred to us. We never share your personal information or order details with any third party under any circumstances.</p>
+            </div>
           </div>
-          <div class="value-card">
-            <div class="value-card__icon">🔒</div>
-            <h3>Confidentiality</h3>
-            <p>Your privacy is sacred to us. We never share your personal information or order details with any third party under any circumstances.</p>
+          <div class="mission__value">
+            <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/icon-excellence.png" alt="Excellence" class="mission__icon" />
+            <div>
+              <h4 class="mission__value-title">Excellence</h4>
+              <p class="mission__value-text">We hold ourselves to the highest academic standards. Every piece of work we produce reflects our commitment to quality and excellence.</p>
+            </div>
           </div>
-          <div class="value-card">
-            <div class="value-card__icon">⚡</div>
-            <h3>Reliability</h3>
-            <p>We deliver on our promises every time. On time delivery, plagiarism free work, and unlimited revisions — guaranteed.</p>
-          </div>
-          <div class="value-card">
-            <div class="value-card__icon">🌍</div>
-            <h3>Accessibility</h3>
-            <p>We believe quality academic support should be available to every student worldwide — not just those at elite institutions.</p>
-          </div>
-          <div class="value-card">
-            <div class="value-card__icon">📈</div>
-            <h3>Growth</h3>
-            <p>We are committed to helping students not just complete assignments but to genuinely grow their academic skills and confidence.</p>
+          <div class="mission__value">
+            <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/icon-integrity.png" alt="Integrity" class="mission__icon" />
+            <div>
+              <h4 class="mission__value-title">Integrity</h4>
+              <p class="mission__value-text">We operate with complete transparency and honesty. Our ethical commitment to responsible academic support is at the heart of everything we do.</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- 4. OUR SERVICES -->
+    <section class="services-wrap">
+      <div class="services">
+        <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/services-bg.jpg.jpg" alt="Student studying" class="services__bg-img" />
+        <div class="services__inner">
+          <h2 class="services__title">Our Services</h2>
+          <div class="services__cards">
+            <div class="service-card">
+              <h3 class="service-card__title">Writing</h3>
+              <p class="service-card__text">Our professional experts can write from scratch any type of assignment, following your instructions.</p>
+              <a href="#" class="btn-gold-solid auth-gate-page">WRITE MY PAPER</a>
+            </div>
+            <div class="service-card">
+              <h3 class="service-card__title">Editing</h3>
+              <p class="service-card__text">Our professional experts can edit and proofread any type of text, eliminating all grammar and syntax mistakes.</p>
+              <a href="#" class="btn-gold-solid auth-gate-page">EDIT MY PAPER</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. WHAT MAKES US DIFFERENT -->
     <section class="why-us">
-      <div class="container why-us__inner">
-        <div class="why-us__content">
-          <p class="why-us__eyebrow">Why ThesisArcPro</p>
-          <h2>What Makes Us Different</h2>
-          <hr class="gold-line" style="margin: 1rem 0 1.5rem;" />
-          <div class="why-us__points">
-            <div class="why-point">
-              <div class="why-point__icon">✓</div>
-              <div>
-                <h4>Qualified Academic Experts</h4>
-                <p>All our writers hold Masters or PhD degrees in their respective fields.</p>
-              </div>
+      <div class="container">
+        <p class="why-us__eyebrow">WHY THESISARCPRO</p>
+        <h2 class="why-us__title">What Makes Us Different</h2>
+        <div class="why-us__list">
+          <div class="why-point">
+            <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/icon-qualified.png" alt="Qualified Academic Experts" class="why-point__icon-img" />
+            <div>
+              <h4 class="why-point__title">Qualified Academic Experts</h4>
+              <p class="why-point__text">All our writers hold Masters or PhD degrees in their respective fields.</p>
             </div>
-            <div class="why-point">
-              <div class="why-point__icon">✓</div>
-              <div>
-                <h4>All Academic Levels</h4>
-                <p>From high school to PhD — we support students at every academic level.</p>
-              </div>
+          </div>
+          <div class="why-point">
+            <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/icon-levels.jfif" alt="All Academic Levels" class="why-point__icon-img" />
+            <div>
+              <h4 class="why-point__title">All Academic Levels</h4>
+              <p class="why-point__text">From high school to PhD — we support students at every academic level.</p>
             </div>
-            <div class="why-point">
-              <div class="why-point__icon">✓</div>
-              <div>
-                <h4>Fast Turnaround</h4>
-                <p>Urgent deadlines? We can deliver quality work in as little as 6 hours.</p>
-              </div>
+          </div>
+          <div class="why-point">
+            <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/icon-turnaround.jfif" alt="Fast Turnaround" class="why-point__icon-img" />
+            <div>
+              <h4 class="why-point__title">Fast Turnaround</h4>
+              <p class="why-point__text">Urgent deadlines? We can deliver quality work in as little as 6 hours.</p>
             </div>
-            <div class="why-point">
-              <div class="why-point__icon">✓</div>
-              <div>
-                <h4>Affordable Pricing</h4>
-                <p>Premium quality at student-friendly prices with flexible payment options.</p>
-              </div>
+          </div>
+          <div class="why-point">
+            <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/icon-pricing.jfif" alt="Affordable Pricing" class="why-point__icon-img" />
+            <div>
+              <h4 class="why-point__title">Affordable Pricing</h4>
+              <p class="why-point__text">Premium quality at student-friendly prices with flexible payment options.</p>
             </div>
-            <div class="why-point">
-              <div class="why-point__icon">✓</div>
-              <div>
-                <h4>24/7 Customer Support</h4>
-                <p>Our support team is always available to assist you at any time of day.</p>
-              </div>
-            </div>
-            <div class="why-point">
-              <div class="why-point__icon">✓</div>
-              <div>
-                <h4>Money Back Guarantee</h4>
-                <p>Not satisfied? We offer a full refund — no questions asked.</p>
-              </div>
+          </div>
+          <div class="why-point">
+            <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/icon-moneyback.jfif" alt="Money Back Guarantee" class="why-point__icon-img" />
+            <div>
+              <h4 class="why-point__title">Money Back Guarantee</h4>
+              <p class="why-point__text">Not satisfied? We offer a full refund — no questions asked.</p>
             </div>
           </div>
         </div>
-        <div class="why-us__visual">
-          <div class="why-us__card">
-            <div class="card__icon">✦</div>
-            <h3>Start Your Journey Today</h3>
-            <p>Join over 2,000 students who have achieved academic success with ThesisArcPro.</p>
-            <a href="#" class="btn-primary auth-gate-page" style="width:100%; text-align:center; margin-top:1rem; display:block;">
-              Book Free Consultation
-            </a>
-            <a href={`${base}/services`} class="btn-outline-gold" style="width:100%; text-align:center; margin-top:0.8rem; display:block;">
-              View Our Services
-            </a>
-          </div>
+      </div>
+    </section>
+
+    <!-- 6. FAQ -->
+    <section class="faq">
+      <div class="container faq__inner">
+        <div class="faq__left">
+          <h2 class="faq__title">Frequently Asked Questions</h2>
+          <details class="faq__item" open>
+            <summary class="faq__question">What is ThesisArcPro?</summary>
+            <p class="faq__answer">ThesisArcPro is an academic writing platform where students can work with experienced writers and researchers for essays, dissertations, and coursework support.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__question">How much does ThesisArcPro cost?</summary>
+            <p class="faq__answer">Pricing depends on academic level, deadline, and paper type, with rates starting at student-friendly prices. You get an instant quote before placing an order, and there are no hidden fees.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__question">Is ThesisArcPro free?</summary>
+            <p class="faq__answer">No, ThesisArcPro is a paid service. We connect you with qualified academic experts, and pricing reflects the quality, research, and one-on-one support you receive.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__question">Is ThesisArcPro legit?</summary>
+            <p class="faq__answer">Yes, ThesisArcPro is a registered academic writing service with verified writers, secure payments, and a track record of helping students across the US, UK, UAE, Canada, and Australia.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__question">Is ThesisArcPro safe?</summary>
+            <p class="faq__answer">Yes. Your personal information and order details are kept confidential, payments are processed securely, and every paper is checked for originality before delivery.</p>
+          </details>
+        </div>
+
+        <div class="faq__right">
+          <h3 class="faq__contact-title">Questions?</h3>
+          <p class="faq__contact-sub">Contact our Support Team.<br/>We'll respond within a minute</p>
+          <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/Support.jpg" alt="Support Agent" class="faq__avatar-img" />
+          <a href={`${base}/contact/`} class="btn-contact">Contact Support</a>
         </div>
       </div>
     </section>
@@ -173,60 +213,438 @@ const base = '/ThesisArcPro';
 </BaseLayout>
 
 <style>
-.page-hero { background-color: var(--navy); padding: 10rem 0 5rem; text-align: center; }
-.page-hero__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
-.page-hero h1 { color: var(--white); margin-bottom: 1.5rem; }
-.page-hero__sub { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
-.mission { padding: var(--section-padding); background-color: var(--white); }
-.mission__inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: center; }
-.mission__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
-.mission__content h2 { color: var(--navy); margin-bottom: 0.5rem; }
-.mission__content p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1rem; }
-.mission__illustration { margin-top: 2rem; }
-.mission__illustration img { width: 100%; height: auto; }
-.mission__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background-color: var(--navy); border-radius: 16px; padding: 2.5rem; }
-.mission__stat { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.3rem; }
-.stat__number { color: var(--gold); font-family: var(--font-heading); font-size: 2rem; font-weight: 700; line-height: 1; }
-.stat__label { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
-.values { padding: var(--section-padding); background-color: var(--off-white); }
-.values__eyebrow { text-align: center; color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
-.values__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-.value-card { background-color: var(--white); border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; padding: 2rem; transition: all 0.3s ease; }
-.value-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(27,42,74,0.1); border-color: var(--gold); }
-.value-card__icon { font-size: 2rem; margin-bottom: 1rem; }
-.value-card h3 { color: var(--navy); font-size: 1.1rem; margin-bottom: 0.8rem; }
-.value-card p { color: var(--text-mid); font-size: 0.9rem; line-height: 1.7; }
-.why-us { padding: var(--section-padding); background-color: var(--navy); }
-.why-us__inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: center; }
-.why-us__eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
-.why-us__content h2 { color: var(--white); margin-bottom: 0.5rem; }
-.why-us__points { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem; }
-.why-point { display: flex; gap: 1rem; align-items: flex-start; }
-.why-point__icon { color: var(--gold); font-weight: 700; font-size: 1.1rem; flex-shrink: 0; margin-top: 0.2rem; }
-.why-point h4 { color: var(--white); font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
-.why-point p { color: rgba(255,255,255,0.6); font-size: 0.85rem; line-height: 1.6; }
-.why-us__card { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; }
-.why-us__card .card__icon { color: var(--gold); font-size: 2rem; margin-bottom: 1rem; }
-.why-us__card h3 { color: var(--white); font-size: 1.3rem; margin-bottom: 1rem; }
-.why-us__card p { color: rgba(255,255,255,0.65); font-size: 0.95rem; line-height: 1.7; }
-.btn-outline-gold { display: inline-block; background-color: transparent; color: var(--gold); padding: 0.85rem 2rem; border-radius: 4px; font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; border: 2px solid var(--gold); transition: all 0.3s ease; }
-.btn-outline-gold:hover { background-color: var(--gold); color: var(--navy); transform: translateY(-2px); }
-@media (max-width: 768px) {
-  .mission__inner, .why-us__inner { grid-template-columns: 1fr; gap: 3rem; }
-  .values__grid { grid-template-columns: repeat(2, 1fr); }
+
+/* ── GLOBAL ── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+/* ── 1. HERO ── */
+.hero {
+  background-color: #0D1B3E;
+  padding: 7rem 0 4rem;
+}
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.hero__eyebrow {
+  color: #C8A951;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+.hero__heading {
+  color: #ffffff;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.8rem;
+}
+.hero__slider {
+  overflow: hidden;
+  border: 2px solid #4A90D9;
+  border-radius: 4px;
+  background-color: #ffffff;
+  margin-bottom: 1.5rem;
+  width: fit-content;
+  max-width: 100%;
+  height: 2.5rem;
+}
+.hero__slider-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s ease-in-out;
+}
+.hero__slider-track span {
+  color: #1B3A6B;
+  font-size: 0.95rem;
+  font-weight: 600;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  white-space: nowrap;
+  display: block;
+  text-align: center;
+  padding: 0 1rem;
+}
+.hero__sub {
+  color: rgba(255,255,255,0.72);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  max-width: 440px;
+}
+.btn-gold {
+  display: inline-block;
+  background-color: #C8A951;
+  color: #0D1B3E;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.btn-gold:hover { opacity: 0.88; }
+.hero__image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+/* ── 2. STATS BAR ── */
+.stats-bar-wrap {
+  background-color: #0D1B3E;
+  padding-bottom: 2.5rem;
+}
+.stats-bar {
+  background-color: #ffffff;
+  border: 1.5px solid #dce3f0;
+  border-radius: 8px;
+  padding: 1.8rem 3rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.stat { display: flex; flex-direction: column; align-items: center; }
+.stat__number {
+  color: #C8A951;
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.stat__label {
+  color: #333;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+.stat__label-only {
+  color: #333;
+  font-size: 0.85rem;
+  text-align: center;
+}
+.stat__hours {
+  color: #C8A951;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ── 3. OUR MISSION ── */
+.mission {
+  background-color: #ffffff;
+  padding: 5rem 0;
+}
+.mission__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+.mission__title {
+  color: #1B3A6B;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.mission__subtitle {
+  color: #0D1B3E;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.mission__left p {
+  color: #555;
+  font-size: 0.92rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+.mission__right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+.mission__value {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.mission__icon {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.mission__value-title {
+  color: #C8A951;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.mission__value-text {
+  color: #555;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* ── 4. OUR SERVICES ── */
+.services-wrap {
+  background-color: #0D1B3E;
+  padding: 2.5rem;
+}
+.services {
+  position: relative;
+  border-radius: 300px;
+  overflow: hidden;
+  min-height: 420px;
+  max-width: 850px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.services__bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.55);
+}
+.services__inner {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.services__title {
+  text-align: center;
+  color: #4A90D9;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+}
+.services__cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 560px;
+}
+.service-card {
+  background-color: #1B2A4A;
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.service-card__title {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.service-card__text {
+  color: rgba(255,255,255,0.75);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  flex: 1;
+}
+.btn-gold-solid {
+  display: inline-block;
+  background-color: #C8A951;
+  color: #0D1B3E;
+  padding: 0.55rem 1.3rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: none;
+  align-self: flex-start;
+  transition: opacity 0.2s;
+}
+.btn-gold-solid:hover { opacity: 0.88; }
+
+/* ── 5. WHAT MAKES US DIFFERENT ── */
+.why-us {
+  background-color: #ffffff;
+  padding: 5rem 0;
+  border-top: 1px solid #eee;
+}
+.why-us__eyebrow {
+  color: #C8A951;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.why-us__title {
+  color: #0D1B3E;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+}
+.why-us__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+.why-point {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+}
+.why-point__icon-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.why-point__title {
+  color: #0D1B3E;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.why-point__text {
+  color: #555;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* ── 6. FAQ ── */
+.faq {
+  background-color: #ffffff;
+  padding: 5rem 0;
+  border-top: 1px solid #eee;
+}
+.faq__inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+.faq__title {
+  color: #1B3A6B;
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.faq__item {
+  border-bottom: 1px solid #e8e8e8;
+  padding: 1rem 0;
+}
+.faq__item:first-of-type { border-top: 1px solid #e8e8e8; }
+.faq__question {
+  color: #1B3A6B;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.faq__question::-webkit-details-marker { display: none; }
+.faq__question::after {
+  content: '+';
+  font-size: 1.2rem;
+  color: #aaa;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+details[open] .faq__question::after { content: '−'; }
+.faq__answer {
+  color: #555;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-top: 0.75rem;
+}
+.faq__right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  background-color: #f7f9fc;
+  border: 1px solid #dce3f0;
+  border-radius: 12px;
+}
+.faq__contact-title {
+  color: #1B3A6B;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.faq__contact-sub {
+  color: #777;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+.faq__avatar-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1.5rem;
+  border: 3px solid #1B3A6B;
+}
+.btn-contact {
+  display: inline-block;
+  background-color: #1B3A6B;
+  color: #ffffff;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  width: 100%;
+  text-align: center;
+}
+.btn-contact:hover { opacity: 0.88; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .hero__inner,
+  .mission__inner,
+  .faq__inner { grid-template-columns: 1fr; gap: 3rem; }
+  .services__cards { grid-template-columns: 1fr; }
+  .stats-bar { gap: 2rem; flex-wrap: wrap; justify-content: center; }
+  .hero__image { height: 220px; object-fit: contain; }
 }
 @media (max-width: 480px) {
-  .values__grid { grid-template-columns: 1fr; }
+  .hero__heading { font-size: 1.9rem; }
+  .stats-bar { padding: 1.5rem; }
 }
 </style>
 
 <script>
   import { supabase } from '../lib/supabase.js';
-  const base = '/ThesisArcPro';
-  
+  const base = '';
+
   const { data: { session } } = await supabase.auth.getSession();
   const btns = document.querySelectorAll('.auth-gate-page');
   btns.forEach(btn => {
     btn.setAttribute('href', session ? `${base}/contact/` : `${base}/login/`);
   });
+
+  const track = document.getElementById('sliderTrack');
+  if (track) {
+    const spans = track.querySelectorAll('span');
+    let current = 0;
+    setInterval(() => {
+      current = (current + 1) % spans.length;
+      (track as HTMLElement).style.transform = `translateY(-${current * 2.5}rem)`;
+    }, 2000);
+  }
 </script>

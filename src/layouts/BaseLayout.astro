@@ -4,7 +4,7 @@ import ChatWidget from '../components/ChatWidget.astro';
 const { 
   title = 'ThesisArcPro', 
   description = 'Expert academic writing and research support for high school, college, Masters and PhD students. Essays, dissertations, research papers, editing and more.',
-  image = 'https://thesisarcpro.github.io/ThesisArcPro/og-image.jpg',
+  image = 'https://thesisarcpro.github.io/og-image.jpg',
   url = Astro.url.href
 } = Astro.props;
 const fullTitle = title.includes('ThesisArcPro') ? title : `${title} | ThesisArcPro`;
@@ -46,8 +46,8 @@ const fullTitle = title.includes('ThesisArcPro') ? title : `${title} | ThesisArc
       "@type": "ProfessionalService",
       "name": "ThesisArcPro",
       "description": "Expert academic writing and research support for students at all levels",
-      "url": "https://thesisarcpro.github.io/ThesisArcPro/",
-      "logo": "https://thesisarcpro.github.io/ThesisArcPro/favicon.svg",
+      "url": "https://thesisarcpro.com/",
+      "logo": "https://thesisarcpro.com/favicon.svg",
       "serviceType": [
         "Essay Writing",
         "Dissertation Support",
@@ -68,13 +68,23 @@ const fullTitle = title.includes('ThesisArcPro') ? title : `${title} | ThesisArc
     }
     </script>
     <!-- ✅ Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/ThesisArcPro/favicon.svg" />
-    <link rel="apple-touch-icon" href="/ThesisArcPro/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#1B2A4A" />
+  <!-- ✅ Trustpilot JS Integration -->
+    <script is:inline>
+      (function(w,d,s,r,n){w.TrustpilotObject=n;w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};
+        a=d.createElement(s);a.async=1;a.src=r;a.type='text/java'+s;f=d.getElementsByTagName(s)[0];
+        f.parentNode.insertBefore(a,f)})(window,document,'script','https://invitejs.trustpilot.com/tp.min.js','tp');
+        tp('register', 'YBMSgrpD20dfnUuK');
+    </script>
   </head>
   <body>
     <slot />
     <!-- Chat Widget -->
     <ChatWidget />
+    <!-- Sitejabber reviews badge loader -->
+    <script src="https://widgets.smartcustomer.com/js/v2/widgets.js" data-id="cddc1636b3af829bd776281ec825b28c18524037b9112bb4cbca2dade56bac3c" defer></script>
   </body>
 </html>

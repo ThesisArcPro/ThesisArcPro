@@ -1,5 +1,5 @@
 ---
-const base = '/ThesisArcPro';
+const base = '';
 
 // Support agent photos from Supabase Storage (public bucket)
 const agents = [
@@ -94,19 +94,22 @@ const agents = [
       </nav>
     </div>
 
-    <!-- Help screen -->
+    <!-- HELP: collections screen (top level of Help tab) -->
     <div class="cw-screen" id="cwHelp">
       <div class="cw-subhead">
-        <button class="cw-back-btn" id="cwBackFromHelp">‹</button>
         <h3>Help</h3>
       </div>
-      <div class="cw-help-body">
-        <p class="cw-help-lead">Need a hand? Start a chat and our team will get back to you fast.</p>
-        <button class="cw-action-card" id="cwHelpStart">
+      <div class="cw-help-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="cwHelpSearch" placeholder="Search for help" />
+      </div>
+      <div class="cw-help-scroll">
+        <button class="cw-action-card cw-help-contact" id="cwHelpStart">
           <span class="cw-action-text"><strong>Contact support</strong><small>Average reply: under a minute</small></span>
           <span class="cw-action-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </button>
-        <a class="cw-help-link" href={`${base}/faq/`}>📚 Browse FAQ</a>
+        <p class="cw-collections-count" id="cwCollectionsCount"></p>
+        <div class="cw-collection-list" id="cwCollectionList"></div>
       </div>
       <nav class="cw-nav">
         <button class="cw-nav-btn" data-cwscreen="home">
@@ -122,6 +125,27 @@ const agents = [
           <span>Help</span>
         </button>
       </nav>
+    </div>
+
+    <!-- HELP: articles-within-a-collection screen -->
+    <div class="cw-screen" id="cwHelpCollection">
+      <div class="cw-subhead">
+        <button class="cw-back-btn" id="cwBackFromHelpCollection">‹</button>
+        <h3 id="cwHelpCollectionTitle">Collection</h3>
+      </div>
+      <div class="cw-help-scroll">
+        <div class="cw-collection-meta" id="cwHelpCollectionMeta"></div>
+        <div class="cw-article-list" id="cwHelpArticleList"></div>
+      </div>
+    </div>
+
+    <!-- HELP: single article screen -->
+    <div class="cw-screen" id="cwHelpArticle">
+      <div class="cw-subhead">
+        <button class="cw-back-btn" id="cwBackFromHelpArticle">‹</button>
+        <h3>Article</h3>
+      </div>
+      <div class="cw-help-scroll" id="cwHelpArticleBody"></div>
     </div>
 
     <!-- Chat thread screen -->
@@ -142,134 +166,168 @@ const agents = [
 </div>
 
 <style is:global>
-  .cw-wrap { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 50000; font-family: 'Poppins','Inter','Segoe UI',sans-serif; }
+  .cw-wrap { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 50000; font-family: 'Inter','Segoe UI',sans-serif; }
 
-  /* ── LAUNCHER PILL ── */
+  /* ── LAUNCHER PILL — flat, one accent, no shadow/gradient ── */
   .cw-launcher {
     display: inline-flex; align-items: center; gap: 0.55rem;
-    height: 48px; padding: 0 1rem 0 0.5rem; border: none; cursor: pointer;
+    height: 46px; padding: 0 1rem 0 0.4rem; cursor: pointer;
     background: #fff; color: #0f172a; border-radius: 999px;
-    box-shadow: 0 6px 22px rgba(15,23,42,0.18); transition: all 0.25s ease;
-    font-family: inherit; font-size: 0.9rem; font-weight: 600;
+    border: 1px solid #e2e8f0; transition: border-color 0.15s ease;
+    font-family: inherit; font-size: 0.88rem; font-weight: 500;
   }
-  .cw-launcher:hover { box-shadow: 0 8px 28px rgba(15,23,42,0.24); transform: translateY(-1px); }
+  .cw-launcher:hover { border-color: #1d4ed8; }
   .cw-launcher-closed { display: inline-flex; align-items: center; gap: 0.55rem; }
-  .cw-launcher-ava { position: relative; width: 38px; height: 38px; flex-shrink: 0; }
+  .cw-launcher-ava { position: relative; width: 34px; height: 34px; flex-shrink: 0; }
   .cw-launcher-ava img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
-  .cw-launcher-dot { position: absolute; bottom: 1px; right: 1px; width: 11px; height: 11px; background: #22c55e; border: 2px solid #fff; border-radius: 50%; }
+  .cw-launcher-dot { position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #16a34a; border: 2px solid #fff; border-radius: 50%; }
   .cw-launcher-open { display: none; align-items: center; gap: 0.4rem; }
 
-  .cw-launcher.open { background: #ffcc00; color: #1a1a1a; padding: 0 1.3rem; }
+  .cw-launcher.open { background: #1d4ed8; color: #fff; border-color: #1d4ed8; padding: 0 1.2rem; }
   .cw-launcher.open .cw-launcher-closed { display: none; }
   .cw-launcher.open .cw-launcher-open { display: inline-flex; }
 
   /* ── PANEL ── */
   .cw-panel {
-    position: absolute; bottom: 64px; right: 0;
-    width: 380px; height: 560px; background: #fff; border-radius: 18px;
-    box-shadow: 0 12px 48px rgba(15,23,42,0.22);
+    position: absolute; bottom: 60px; right: 0;
+    width: 380px; height: 580px; background: #fff; border-radius: 14px;
+    border: 1px solid #e2e8f0; box-shadow: 0 8px 30px rgba(15,23,42,0.12);
     display: none; flex-direction: column; overflow: hidden;
-    transform: translateY(12px) scale(0.98); opacity: 0; transition: all 0.22s ease;
+    transform: translateY(8px); opacity: 0; transition: transform 0.18s ease, opacity 0.18s ease;
   }
-  .cw-panel.open { display: flex; transform: translateY(0) scale(1); opacity: 1; }
+  .cw-panel.open { display: flex; transform: translateY(0); opacity: 1; }
 
   .cw-screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
   .cw-screen.active { display: flex; }
 
-  /* ── HEADER ── */
-  .cw-header { background: linear-gradient(160deg, #2563eb 0%, #1233a0 100%); padding: 1.3rem 1.4rem 1.6rem; color: #fff; }
-  .cw-header-top { margin-bottom: 1.6rem; }
+  /* ── HEADER (Home) — flat, single accent colour, no gradient ── */
+  .cw-header { background: #1d4ed8; padding: 1.3rem 1.4rem 1.5rem; color: #fff; }
+  .cw-header-top { margin-bottom: 1.4rem; }
   .cw-avatars { display: flex; }
-  .cw-avatars img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.85); margin-left: -10px; background: #cbd5e1; }
+  .cw-avatars img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.9); margin-left: -10px; background: #cbd5e1; }
   .cw-avatars img:first-child { margin-left: 0; }
-  .cw-greeting-sub { font-size: 1.4rem; font-weight: 400; color: rgba(255,255,255,0.55); line-height: 1.2; }
-  .cw-greeting-main { font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
+  .cw-greeting-sub { font-size: 1.3rem; font-weight: 400; color: rgba(255,255,255,0.65); line-height: 1.2; margin: 0; }
+  .cw-greeting-main { font-size: 1.45rem; font-weight: 600; line-height: 1.25; margin: 0.15rem 0 0; }
 
   /* ── BODY ── */
   .cw-body { flex: 1; overflow-y: auto; padding: 1.1rem 1.2rem; background: #f8fafc; }
   .cw-action-card {
     width: 100%; display: flex; align-items: center; gap: 0.75rem;
-    padding: 1rem 1.1rem; background: #fff; border: 1px solid #e8edf3;
-    border-radius: 14px; cursor: pointer; transition: 0.18s; text-align: left;
-    box-shadow: 0 2px 10px rgba(15,23,42,0.05);
+    padding: 1rem 1.1rem; background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 10px; cursor: pointer; transition: border-color 0.15s; text-align: left;
   }
-  .cw-action-card:hover { box-shadow: 0 4px 16px rgba(37,99,235,0.14); transform: translateY(-1px); }
+  .cw-action-card:hover { border-color: #1d4ed8; }
   .cw-action-text { flex: 1; }
-  .cw-action-text strong { display: block; font-size: 0.95rem; color: #0f172a; font-weight: 700; }
+  .cw-action-text strong { display: block; font-size: 0.94rem; color: #0f172a; font-weight: 600; }
   .cw-action-text small { font-size: 0.78rem; color: #64748b; }
-  .cw-action-arrow { color: #0f172a; display: flex; }
+  .cw-action-arrow { color: #1d4ed8; display: flex; }
 
   .cw-home-convos { margin-top: 1rem; }
 
   /* ── NAV ── */
-  .cw-nav { display: flex; border-top: 1px solid #eef2f6; background: #fff; }
+  .cw-nav { display: flex; border-top: 1px solid #e2e8f0; background: #fff; }
   .cw-nav-btn {
     flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
     padding: 0.65rem 0; background: none; border: none; cursor: pointer;
-    font-size: 0.72rem; font-weight: 600; color: #94a3b8; transition: 0.18s; font-family: inherit;
+    font-size: 0.71rem; font-weight: 500; color: #94a3b8; transition: color 0.15s; font-family: inherit;
   }
-  .cw-nav-btn svg { width: 22px; height: 22px; }
-  .cw-nav-btn.active { color: #0f172a; }
-  .cw-nav-btn:hover { color: #0f172a; }
+  .cw-nav-btn svg { width: 21px; height: 21px; }
+  .cw-nav-btn.active { color: #1d4ed8; }
+  .cw-nav-btn:hover { color: #1d4ed8; }
 
   /* ── SUBHEAD (messages / help) ── */
-  .cw-subhead { display: flex; align-items: center; gap: 0.4rem; padding: 0.9rem 1rem; border-bottom: 1px solid #eef2f6; }
-  .cw-subhead h3 { flex: 1; font-size: 1.05rem; font-weight: 700; color: #0f172a; }
-  .cw-back-btn { background: none; border: none; font-size: 1.5rem; color: #64748b; cursor: pointer; padding: 0 0.3rem; line-height: 1; }
+  .cw-subhead { display: flex; align-items: center; gap: 0.4rem; padding: 0.9rem 1rem; border-bottom: 1px solid #e2e8f0; }
+  .cw-subhead h3 { flex: 1; font-size: 1.02rem; font-weight: 600; color: #0f172a; margin: 0; }
+  .cw-back-btn { background: none; border: none; font-size: 1.4rem; color: #64748b; cursor: pointer; padding: 0 0.3rem; line-height: 1; }
   .cw-back-btn:hover { color: #0f172a; }
 
   .cw-convo-list { flex: 1; overflow-y: auto; }
   .cw-convo-loading { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem; }
-  .cw-convo-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.2rem; cursor: pointer; transition: 0.15s; border-bottom: 1px solid #f1f5f9; }
+  .cw-convo-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.2rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f1f5f9; }
   .cw-convo-item:hover { background: #f8fafc; }
-  .cw-convo-icon { width: 38px; height: 38px; border-radius: 50%; background: #eef6ff; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+  .cw-convo-icon { width: 36px; height: 36px; border-radius: 8px; background: #eef2ff; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; flex-shrink: 0; }
   .cw-convo-info { flex: 1; min-width: 0; }
-  .cw-convo-name { font-size: 0.88rem; font-weight: 600; color: #0f172a; }
+  .cw-convo-name { font-size: 0.88rem; font-weight: 500; color: #0f172a; }
   .cw-convo-time { font-size: 0.68rem; color: #94a3b8; flex-shrink: 0; }
 
-  /* ── HELP ── */
-  .cw-help-body { flex: 1; overflow-y: auto; padding: 1.2rem; background: #f8fafc; }
-  .cw-help-lead { font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 1rem; }
-  .cw-help-link { display: block; margin-top: 0.8rem; padding: 0.85rem 1rem; background: #fff; border: 1px solid #e8edf3; border-radius: 12px; font-size: 0.88rem; font-weight: 600; color: #0f172a; text-decoration: none; }
-  .cw-help-link:hover { border-color: #2563eb; }
+  /* ── HELP: search + collections list ── */
+  .cw-help-search { display: flex; align-items: center; gap: 0.5rem; margin: 0.9rem 1rem 0.2rem; padding: 0.55rem 0.8rem; background: #f1f5f9; border-radius: 8px; color: #94a3b8; }
+  .cw-help-search input { flex: 1; border: none; background: none; outline: none; font-size: 0.85rem; color: #0f172a; font-family: inherit; }
+  .cw-help-search input::placeholder { color: #94a3b8; }
+
+  .cw-help-scroll { flex: 1; overflow-y: auto; padding: 0.9rem 1rem 1.2rem; background: #fff; }
+  .cw-help-contact { margin-bottom: 1.1rem; }
+
+  .cw-collections-count { font-size: 0.78rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; margin: 0 0 0.5rem; }
+
+  .cw-collection-list { display: flex; flex-direction: column; }
+  .cw-collection-item { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 0.2rem; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
+  .cw-collection-item:hover .cw-collection-title { color: #1d4ed8; }
+  .cw-collection-text { flex: 1; }
+  .cw-collection-title { font-size: 0.92rem; font-weight: 600; color: #0f172a; margin: 0; transition: color 0.15s; }
+  .cw-collection-sub { font-size: 0.78rem; color: #64748b; margin: 0.15rem 0 0; }
+  .cw-collection-count { font-size: 0.78rem; color: #94a3b8; margin: 0.2rem 0 0; }
+  .cw-collection-chevron { color: #cbd5e1; flex-shrink: 0; margin-left: 0.6rem; }
+
+  /* ── HELP: article list within collection ── */
+  .cw-collection-meta { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.8rem; }
+  .cw-collection-meta .count { font-size: 0.8rem; color: #94a3b8; }
+  .cw-article-item { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 0.2rem; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
+  .cw-article-item:hover .cw-article-title { color: #1d4ed8; }
+  .cw-article-title { font-size: 0.9rem; color: #0f172a; margin: 0; transition: color 0.15s; }
+  .cw-article-sub { font-size: 0.76rem; color: #94a3b8; margin: 0.15rem 0 0; }
+
+  /* ── HELP: single article ── */
+  .cw-article-heading { font-size: 1.08rem; font-weight: 600; color: #0f172a; margin: 0 0 0.2rem; }
+  .cw-article-subhead { font-size: 0.85rem; color: #64748b; margin: 0 0 1.1rem; }
+  .cw-article-h { font-size: 0.92rem; font-weight: 600; color: #0f172a; margin: 1.1rem 0 0.4rem; }
+  .cw-article-h:first-of-type { margin-top: 0; }
+  .cw-article-p { font-size: 0.87rem; color: #334155; line-height: 1.6; margin: 0 0 0.7rem; }
+  .cw-article-ul { margin: 0 0 0.7rem; padding-left: 1.1rem; }
+  .cw-article-ul li { font-size: 0.87rem; color: #334155; line-height: 1.6; margin-bottom: 0.3rem; }
+  .cw-article-feedback { margin-top: 1.4rem; padding-top: 1.1rem; border-top: 1px solid #f1f5f9; text-align: center; }
+  .cw-article-feedback p { font-size: 0.82rem; color: #64748b; margin: 0 0 0.5rem; }
+  .cw-feedback-emojis { display: flex; justify-content: center; gap: 0.6rem; font-size: 1.3rem; }
+  .cw-feedback-emojis button { background: none; border: none; cursor: pointer; padding: 0.2rem; border-radius: 6px; }
+  .cw-feedback-emojis button:hover { background: #f1f5f9; }
 
   /* ── THREAD ── */
-  .cw-thread-header { display: flex; align-items: center; gap: 0.4rem; padding: 0.9rem 1rem; border-bottom: 1px solid #eef2f6; background: #fff; }
-  .cw-thread-title { flex: 1; font-size: 0.98rem; font-weight: 700; color: #0f172a; }
+  .cw-thread-header { display: flex; align-items: center; gap: 0.4rem; padding: 0.9rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+  .cw-thread-title { flex: 1; font-size: 0.98rem; font-weight: 600; color: #0f172a; }
   .cw-thread-msgs { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; background: #f8fafc; }
   .cw-msg { display: flex; flex-direction: column; max-width: 80%; }
   .cw-msg.mine { align-self: flex-end; }
   .cw-msg.theirs { align-self: flex-start; }
   .cw-msg-name { font-size: 0.65rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.15rem; }
-  .cw-msg-bubble { padding: 0.55rem 0.85rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.5; word-wrap: break-word; }
-  .cw-msg.mine .cw-msg-bubble { background: #2563eb; color: #fff; border-bottom-right-radius: 4px; }
-  .cw-msg.theirs .cw-msg-bubble { background: #fff; color: #0f172a; border: 1px solid #eef2f6; border-bottom-left-radius: 4px; }
+  .cw-msg-bubble { padding: 0.55rem 0.85rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.5; word-wrap: break-word; }
+  .cw-msg.mine .cw-msg-bubble { background: #1d4ed8; color: #fff; border-bottom-right-radius: 4px; }
+  .cw-msg.theirs .cw-msg-bubble { background: #fff; color: #0f172a; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
   .cw-msg-time { font-size: 0.6rem; color: #94a3b8; margin-top: 0.15rem; }
   .cw-msg.mine .cw-msg-time { text-align: right; }
 
-  .cw-thread-input { display: flex; gap: 0.4rem; padding: 0.7rem 0.9rem; border-top: 1px solid #eef2f6; background: #fff; }
-  .cw-input { flex: 1; background: #f1f5f9; border: 1px solid transparent; border-radius: 22px; padding: 0.55rem 1rem; font-size: 0.85rem; color: #0f172a; outline: none; font-family: inherit; }
-  .cw-input:focus { border-color: #2563eb; background: #fff; }
+  .cw-thread-input { display: flex; gap: 0.4rem; padding: 0.7rem 0.9rem; border-top: 1px solid #e2e8f0; background: #fff; }
+  .cw-input { flex: 1; background: #f1f5f9; border: 1px solid transparent; border-radius: 20px; padding: 0.55rem 1rem; font-size: 0.85rem; color: #0f172a; outline: none; font-family: inherit; }
+  .cw-input:focus { border-color: #1d4ed8; background: #fff; }
   .cw-input::placeholder { color: #94a3b8; }
-  .cw-send { width: 40px; height: 40px; border-radius: 50%; border: none; background: #2563eb; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
-  .cw-send:hover { background: #1d4ed8; }
+  .cw-send { width: 38px; height: 38px; border-radius: 50%; border: none; background: #1d4ed8; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; flex-shrink: 0; }
+  .cw-send:hover { background: #1739ad; }
   .cw-send:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .cw-login-prompt { padding: 2rem 1.5rem; text-align: center; }
   .cw-login-prompt p { font-size: 0.9rem; color: #64748b; margin-bottom: 1rem; }
-  .cw-login-btn { background: #2563eb; color: #fff; border: none; border-radius: 10px; padding: 0.65rem 1.5rem; font-size: 0.88rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
-  .cw-login-btn:hover { background: #1d4ed8; }
+  .cw-login-btn { background: #1d4ed8; color: #fff; border: none; border-radius: 8px; padding: 0.65rem 1.5rem; font-size: 0.88rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+  .cw-login-btn:hover { background: #1739ad; }
 
   @media (max-width: 480px) {
-    .cw-panel { width: calc(100vw - 2rem); right: -0.5rem; bottom: 60px; height: 75vh; }
+    .cw-panel { width: calc(100vw - 2rem); right: -0.5rem; bottom: 58px; height: 75vh; }
   }
 
   /* ── UNREAD BADGE ── */
   .cw-badge {
-    position: absolute; top: -6px; right: -6px;
-    background: #4455ef; color: #fff;
-    font-size: 0.65rem; font-weight: 700;
-    min-width: 20px; height: 20px; border-radius: 10px;
+    position: absolute; top: -4px; right: -4px;
+    background: #dc2626; color: #fff;
+    font-size: 0.62rem; font-weight: 700;
+    min-width: 18px; height: 18px; border-radius: 9px;
     display: flex; align-items: center; justify-content: center;
     padding: 0 4px; border: 2px solid #fff;
     pointer-events: none;
@@ -279,10 +337,11 @@ const agents = [
 
 <script>
   import { supabase } from '../lib/supabase.js';
+  import { helpCollections } from '../data/helpData.js';
 
   const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
-  const base = '/ThesisArcPro';
+  const base = '';
 
   let cwSession: any = null;
   let cwUserId = '';
@@ -291,12 +350,15 @@ const agents = [
   let cwConversations: any[] = [];
   let cwActiveConvoId: string | null = null;
   let cwSub: any = null;
+  let cwActiveCollectionId: string | null = null;
 
   const bubble = document.getElementById('cwBubble')!;
   const panel = document.getElementById('cwPanel')!;
   const homeScreen = document.getElementById('cwHome')!;
   const messagesScreen = document.getElementById('cwMessages')!;
   const helpScreen = document.getElementById('cwHelp')!;
+  const helpCollectionScreen = document.getElementById('cwHelpCollection')!;
+  const helpArticleScreen = document.getElementById('cwHelpArticle')!;
   const threadScreen = document.getElementById('cwThread')!;
 
   function cwEsc(v: any) { return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -337,17 +399,14 @@ const agents = [
 
   async function cwStartGlobalSub() {
     if (cwGlobalSub) return;
-    // Subscribe to ALL messages table inserts — filter by sender_id != me on client side
     cwGlobalSub = supabase
       .channel('cw-global-notify')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' },
         (payload: any) => {
           const msg = payload.new;
-          if (msg.sender_id === cwUserId) return; // ignore own messages
-          // Only notify if the conversation belongs to us
+          if (msg.sender_id === cwUserId) return;
           const isOurs = cwConversations.some((c: any) => c.id === msg.conversation_id);
           if (!isOurs) return;
-          // Only ping/badge if panel is closed OR this isn't the active thread
           const panelOpen = panel.classList.contains('open');
           const isActiveThread = panelOpen && msg.conversation_id === cwActiveConvoId;
           if (!isActiveThread) {
@@ -372,7 +431,7 @@ const agents = [
     showScreen('home');
     await loadCwConversations();
     cwStartGlobalSub();
-    cwSetBadge(0); // clear badge when user opens the panel
+    cwSetBadge(0);
   });
 
   function closePanel() {
@@ -382,10 +441,12 @@ const agents = [
   }
 
   function showScreen(name: string) {
-    [homeScreen, messagesScreen, helpScreen, threadScreen].forEach(s => s.classList.remove('active'));
+    [homeScreen, messagesScreen, helpScreen, helpCollectionScreen, helpArticleScreen, threadScreen].forEach(s => s.classList.remove('active'));
     if (name === 'home') homeScreen.classList.add('active');
     else if (name === 'messages') messagesScreen.classList.add('active');
-    else if (name === 'help') helpScreen.classList.add('active');
+    else if (name === 'help') { helpScreen.classList.add('active'); renderHelpCollections(); }
+    else if (name === 'help-collection') helpCollectionScreen.classList.add('active');
+    else if (name === 'help-article') helpArticleScreen.classList.add('active');
     else if (name === 'thread') threadScreen.classList.add('active');
   }
 
@@ -400,8 +461,10 @@ const agents = [
   });
 
   document.getElementById('cwBackFromMessages')?.addEventListener('click', () => showScreen('home'));
-  document.getElementById('cwBackFromHelp')?.addEventListener('click', () => showScreen('home'));
-  document.getElementById('cwBackFromThread')?.addEventListener('click', () => { showScreen('messages'); cwActiveConvoId = null; if (cwSub) { cwSub.unsubscribe(); cwSub = null; } });
+  document.getElementById('cwBackFromHelpCollection')?.addEventListener('click', () => showScreen('help'));
+  document.getElementById('cwBackFromHelpArticle')?.addEventListener('click', () => {
+    if (cwActiveCollectionId) showScreen('help-collection'); else showScreen('help');
+  });
 
   function showLoginPrompt() {
     homeScreen.classList.add('active');
@@ -427,7 +490,7 @@ const agents = [
 
   async function loadCwConversations() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${cwUserId}&select=conversation_id,conversations(id,type,title,updated_at)`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${cwUserId}&select=conversation_id,conversations!inner(id,type,title,updated_at,status)&conversations.status=eq.open`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
       const data = await res.json();
       cwConversations = data.map((d: any) => d.conversations).filter(Boolean).sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
       renderCwConvoList();
@@ -439,11 +502,10 @@ const agents = [
     const el = document.getElementById('cwConvoList')!;
     if (!cwConversations.length) { el.innerHTML = ''; return; }
     const recent = cwConversations.slice(0, 3);
-    el.innerHTML = `<p style="font-size:0.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 0.4rem;">Recent</p>` +
+    el.innerHTML = `<p style="font-size:0.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.4px;margin:0 0 0.4rem;">Recent</p>` +
       recent.map((c: any) => {
-        const icon = c.type === 'support' ? '🛟' : '📋';
-        return `<div class="cw-convo-item" data-cwcid="${c.id}" style="border-radius:12px;border-bottom:none;background:#fff;margin-bottom:0.4rem;border:1px solid #eef2f6;">
-          <div class="cw-convo-icon">${icon}</div>
+        return `<div class="cw-convo-item" data-cwcid="${c.id}" style="border-radius:10px;border-bottom:none;background:#fff;margin-bottom:0.4rem;border:1px solid #e2e8f0;">
+          <div class="cw-convo-icon">${c.type === 'support' ? 'S' : 'O'}</div>
           <div class="cw-convo-info"><div class="cw-convo-name">${cwEsc(c.title || 'Chat')}</div></div>
         </div>`;
       }).join('');
@@ -454,12 +516,108 @@ const agents = [
     const el = document.getElementById('cwAllConvos')!;
     if (!cwConversations.length) { el.innerHTML = '<div class="cw-convo-loading">No conversations yet</div>'; return; }
     el.innerHTML = cwConversations.map((c: any) => {
-      const icon = c.type === 'support' ? '🛟' : '📋';
       const time = c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
-      return `<div class="cw-convo-item" data-cwcid="${c.id}"><div class="cw-convo-icon">${icon}</div><div class="cw-convo-info"><div class="cw-convo-name">${cwEsc(c.title || 'Chat')}</div></div><div class="cw-convo-time">${time}</div></div>`;
+      return `<div class="cw-convo-item" data-cwcid="${c.id}"><div class="cw-convo-icon">${c.type === 'support' ? 'S' : 'O'}</div><div class="cw-convo-info"><div class="cw-convo-name">${cwEsc(c.title || 'Chat')}</div></div><div class="cw-convo-time">${time}</div></div>`;
     }).join('');
     el.querySelectorAll('.cw-convo-item').forEach(item => item.addEventListener('click', () => openCwThread((item as HTMLElement).dataset.cwcid!)));
   }
+
+  // ── HELP: collections ──
+  function renderHelpCollections() {
+    const countEl = document.getElementById('cwCollectionsCount')!;
+    const listEl = document.getElementById('cwCollectionList')!;
+    countEl.textContent = `${helpCollections.length} collections`;
+    listEl.innerHTML = helpCollections.map((c: any) => `
+      <div class="cw-collection-item" data-cid="${c.id}">
+        <div class="cw-collection-text">
+          <p class="cw-collection-title">${cwEsc(c.title)}</p>
+          ${c.description ? `<p class="cw-collection-sub">${cwEsc(c.description)}</p>` : ''}
+          <p class="cw-collection-count">${c.articles.length} article${c.articles.length === 1 ? '' : 's'}</p>
+        </div>
+        <span class="cw-collection-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+      </div>
+    `).join('');
+    listEl.querySelectorAll('.cw-collection-item').forEach(item => {
+      item.addEventListener('click', () => openHelpCollection((item as HTMLElement).dataset.cid!));
+    });
+  }
+
+  function openHelpCollection(cid: string) {
+    const collection = helpCollections.find((c: any) => c.id === cid);
+    if (!collection) return;
+    cwActiveCollectionId = cid;
+    document.getElementById('cwHelpCollectionTitle')!.textContent = collection.title;
+    const metaEl = document.getElementById('cwHelpCollectionMeta')!;
+    metaEl.innerHTML = `<span class="count">${collection.articles.length} article${collection.articles.length === 1 ? '' : 's'}</span>`;
+    const listEl = document.getElementById('cwHelpArticleList')!;
+    listEl.innerHTML = collection.articles.map((a: any, i: number) => `
+      <div class="cw-article-item" data-aidx="${i}">
+        <div>
+          <p class="cw-article-title">${cwEsc(a.title)}</p>
+        </div>
+        <span class="cw-collection-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+      </div>
+    `).join('');
+    listEl.querySelectorAll('.cw-article-item').forEach(item => {
+      item.addEventListener('click', () => openHelpArticle(cid, parseInt((item as HTMLElement).dataset.aidx!, 10)));
+    });
+    showScreen('help-collection');
+  }
+
+  function openHelpArticle(cid: string, articleIdx: number) {
+    const collection = helpCollections.find((c: any) => c.id === cid);
+    const article = collection?.articles[articleIdx];
+    if (!article) return;
+    const bodyEl = document.getElementById('cwHelpArticleBody')!;
+    let html = `<h2 class="cw-article-heading">${cwEsc(article.title)}</h2>`;
+    html += `<p class="cw-article-subhead">${cwEsc(article.subtitle)}</p>`;
+    article.body.forEach((block: any) => {
+      if (block.t === 'h') html += `<h4 class="cw-article-h">${cwEsc(block.v)}</h4>`;
+      else if (block.t === 'p') html += `<p class="cw-article-p">${cwEsc(block.v)}</p>`;
+      else if (block.t === 'ul') html += `<ul class="cw-article-ul">${block.items.map((i: string) => `<li>${cwEsc(i)}</li>`).join('')}</ul>`;
+    });
+    html += `<div class="cw-article-feedback">
+      <p>Did this answer your question?</p>
+      <div class="cw-feedback-emojis">
+        <button aria-label="Not helpful">🙁</button>
+        <button aria-label="Somewhat helpful">😐</button>
+        <button aria-label="Helpful">🙂</button>
+      </div>
+    </div>`;
+    bodyEl.innerHTML = html;
+    showScreen('help-article');
+  }
+
+  document.getElementById('cwHelpSearch')?.addEventListener('input', (e) => {
+    const q = (e.target as HTMLInputElement).value.trim().toLowerCase();
+    const listEl = document.getElementById('cwCollectionList')!;
+    if (!q) { renderHelpCollections(); return; }
+    const matches: { collectionId: string; collectionTitle: string; article: any; idx: number }[] = [];
+    helpCollections.forEach((c: any) => {
+      c.articles.forEach((a: any, idx: number) => {
+        if (a.title.toLowerCase().includes(q) || a.subtitle.toLowerCase().includes(q)) {
+          matches.push({ collectionId: c.id, collectionTitle: c.title, article: a, idx });
+        }
+      });
+    });
+    document.getElementById('cwCollectionsCount')!.textContent = `${matches.length} result${matches.length === 1 ? '' : 's'}`;
+    listEl.innerHTML = matches.map(m => `
+      <div class="cw-collection-item" data-cid="${m.collectionId}" data-aidx="${m.idx}">
+        <div class="cw-collection-text">
+          <p class="cw-collection-title">${cwEsc(m.article.title)}</p>
+          <p class="cw-collection-sub">${cwEsc(m.collectionTitle)}</p>
+        </div>
+        <span class="cw-collection-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+      </div>
+    `).join('');
+    listEl.querySelectorAll('.cw-collection-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const el = item as HTMLElement;
+        cwActiveCollectionId = el.dataset.cid!;
+        openHelpArticle(el.dataset.cid!, parseInt(el.dataset.aidx!, 10));
+      });
+    });
+  });
 
   async function startSupport() {
     if (!cwSession) return;

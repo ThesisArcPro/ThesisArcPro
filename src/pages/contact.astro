@@ -2,13 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-const base = '/ThesisArcPro';
+const base = '';
 ---
 
 <BaseLayout
   title="Place Order"
   description="Place your order with ThesisArcPro — get an instant price quote for expert academic writing support."
-  url="https://thesisarcpro.github.io/ThesisArcPro/contact">
+  url="https://thesisarcpro.github.io/contact">
   <Header />
 
   <!-- Payment Modal (unchanged) -->
@@ -488,11 +488,13 @@ const base = '/ThesisArcPro';
 
 <script>
   import { supabase } from '../lib/supabase.js';
+  import { io } from 'socket.io-client';
+  const socket = io('https://thesisarcpro.onrender.com', { transports: ['websocket'] });
 
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVL-dECKrdcEyyJObsP9KCQnRJ_TnmTT7qB6rvx-89cSmDbGIUKzviUAX83wPkYtZWzg/exec';
   const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
-  const base = '/ThesisArcPro';
+  const base = '';
 
   const TOTAL_STEPS = 5;
   let step = 1;
@@ -824,7 +826,7 @@ const base = '/ThesisArcPro';
         body: JSON.stringify({
           order_number: ticketId, client_email: email, topic, assignment_type: type, subject, service, language,
           education_level: level, pages: parseInt(pages), deadline, total_amount: total, amount_paid: amountPaid,
-          payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full', order_status: 'new', instructions,
+          payment_status: isDeposit ? '50% Deposit Paid' : 'Paid in Full', order_status: 'open_for_bids', instructions,
           transaction_id: $('submitOrderBtn')?.getAttribute('data-txn') || ''
         })
       });
@@ -832,8 +834,32 @@ const base = '/ThesisArcPro';
       const st = $('successTicketId'); if (st) st.textContent = ticketId;
       const dl = $('successDashboardLink') as HTMLAnchorElement; if (dl) dl.href = `${base}/dashboard/`;
       ($('wizFlow') as HTMLElement).style.display = 'none';
+      // Broadcast new order to all online writers in real time
+      socket.emit('order:new', {
+        id: ticketId,
+        order_number: ticketId,
+        topic,
+        assignment_type: type,
+        subject,
+        pages: parseInt(pages),
+        deadline,
+        total_amount: total,
+        order_status: 'open_for_bids'
+      });
       ($('orderSuccess') as HTMLElement).style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Trustpilot review invite
+      try {
+        if (typeof (window as any).tp === 'function') {
+          (window as any).tp('createInvitation', {
+            recipientEmail: email,
+            recipientName: email.split('@')[0],
+            referenceId: String(ticketId),
+            source: 'InvitationScript'
+          });
+        }
+      } catch(e) { console.warn('Trustpilot invite error', e); }
     } catch {
       btn.textContent = '❌ Error — please try again'; btn.disabled = false;
     }
