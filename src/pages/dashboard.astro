@@ -1955,6 +1955,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
     renderNotifRows();
   }
 
+  document.getElementById('addFundsBtn')?.addEventListener('click', openWalletModal);
   document.getElementById('profileIconBtn')?.addEventListener('click', openAccountModal);
   document.getElementById('accountModalClose')?.addEventListener('click', () => document.getElementById('accountModal')!.classList.remove('open'));
   document.getElementById('accountModalOverlay')?.addEventListener('click', () => document.getElementById('accountModal')!.classList.remove('open'));

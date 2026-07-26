@@ -21,7 +21,9 @@ const base = '';
             <button class="sidenav-item" data-section="tickets"><span class="sidenav-icon">🎫</span>Tickets<span class="sidenav-badge" id="ticketsBadge" style="display:none;">0</span></button>
             <button class="sidenav-item" data-section="messages"><span class="sidenav-icon">💬</span>Messages</button>
             <button class="sidenav-item" data-section="payments"><span class="sidenav-icon">💰</span>Payments</button>
+            <button class="sidenav-item" data-section="leaderboard"><span class="sidenav-icon">📊</span>Leaderboard</button>
             <div class="sidenav-divider"></div>
+            <button class="sidenav-item" data-section="users"><span class="sidenav-icon">👤</span>Users</button>
             <button class="sidenav-item" data-section="settings"><span class="sidenav-icon">⚙️</span>Settings</button>
           </nav>
           <button id="logoutBtn" class="btn-logout-side">Log out</button>
@@ -222,18 +224,39 @@ const base = '';
                 </div>
               </div>
 
-              <div class="settings-card">
-                <h3 class="settings-card-title">Staff</h3>
-                <p class="settings-card-sub">Writers who can be assigned to orders. Adding someone here does not create their login — send them an invite separately.</p>
-                <div id="staffList" class="admin-files-list"><span class="input-note">Loading…</span></div>
-                <div class="form-group" style="margin-top:1rem;">
-                  <label>Add staff member</label>
-                  <input type="text" id="staffNameInput" placeholder="Full name" style="margin-bottom:0.5rem;" />
-                  <input type="email" id="staffEmailInput" placeholder="Email address" />
-                </div>
-                <button class="btn-update" id="addStaffBtn" style="width:auto;padding:0.7rem 1.4rem;">Add staff member</button>
-              </div>
+              <p class="input-note">Looking to manage support team accounts? That's under <strong>Users</strong> in the sidebar. Writers stay separate — assign them per order from the Orders tab.</p>
 
+            </div>
+
+            <!-- ═══ LEADERBOARD SECTION ═══ -->
+            <div id="leaderboardSection" class="section-panel" style="display:none;">
+              <h3 class="section-subheading" style="margin-top:0;">Writers by completed orders</h3>
+              <div class="fin-table">
+                <div class="fin-table-head" style="grid-template-columns:0.4fr 1.6fr 1fr 1fr;">
+                  <span>Rank</span><span>Writer</span><span>Completed</span><span>Earned</span>
+                </div>
+                <div id="leaderboardList"><div class="loading-state"><div class="spinner"></div></div></div>
+              </div>
+            </div>
+
+            <!-- ═══ USERS SECTION (support/admin team accounts) ═══ -->
+            <div id="usersSection" class="section-panel" style="display:none;">
+              <div class="settings-card">
+                <h3 class="settings-card-title">Users</h3>
+                <p class="settings-card-sub">Support and admin team members who log into this dashboard. Not writers — writers have their own dashboard and stay off this list.</p>
+                <div id="usersList" class="admin-files-list"><span class="input-note">Loading…</span></div>
+                <div class="form-group" style="margin-top:1rem;">
+                  <label>Add user</label>
+                  <input type="text" id="userNameInput" placeholder="Full name" style="margin-bottom:0.5rem;" />
+                  <input type="email" id="userEmailInput" placeholder="Email address" style="margin-bottom:0.5rem;" />
+                  <select id="userRoleInput">
+                    <option value="support">Support</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <button class="btn-update" id="addUserBtn" style="width:auto;padding:0.7rem 1.4rem;">Add user</button>
+                <p class="input-note">This adds them to the team list. They still need an account invite sent separately before they can log in.</p>
+              </div>
             </div>
 
           </div>
@@ -470,10 +493,12 @@ body.dark-mode .current-file { background: #0f2a1a; color: #4ade80; }
 .theirs-avatar { background: #e2e8f0; color: #475569; }
 .imsg-sender-name { font-size: 0.68rem; font-weight: 600; color: #94a3b8; }
 .imsg-bubble { padding: 0.6rem 0.95rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.55; word-wrap: break-word; }
-.imsg-row.mine .imsg-bubble { background: #046fcd; color: #fff; border-bottom-right-radius: 4px; }
+.imsg-row.mine .imsg-bubble { background: #fdebd3; color: #92400e; border-bottom-right-radius: 4px; }
 .imsg-row.theirs .imsg-bubble { background: #fff; color: #0f172a; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
-.imsg-time { font-size: 0.62rem; color: #94a3b8; }
+.imsg-time { font-size: 0.62rem; color: #94a3b8; display: flex; align-items: center; gap: 3px; }
 .imsg-row.mine .imsg-time { text-align: right; }
+.imsg-read-check { color: #046fcd; font-size: 0.68rem; }
+.imsg-date-divider { align-self: center; font-size: 0.68rem; font-weight: 600; color: #94a3b8; background: #eef2f7; padding: 0.25rem 0.8rem; border-radius: 12px; margin: 0.3rem 0; }
 .inbox-input-bar { display: flex; gap: 0.6rem; padding: 0.9rem 1.2rem; border-top: 1px solid #e2e8f0; background: #fff; align-items: center; }
 .inbox-input { flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 24px; padding: 0.6rem 1.1rem; font-size: 0.85rem; color: #0f172a; outline: none; font-family: inherit; transition: 0.15s; }
 .inbox-input:focus { border-color: #046fcd; background: #fff; box-shadow: 0 0 0 3px rgba(4,111,205,0.08); }
@@ -481,10 +506,10 @@ body.dark-mode .current-file { background: #0f2a1a; color: #4ade80; }
 .inbox-send-btn { background: #046fcd; color: #fff; border: none; border-radius: 24px; padding: 0.6rem 1.4rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: inherit; white-space: nowrap; }
 .inbox-send-btn:hover { background: #0361b3; }
 .inbox-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.ticket-status-pill { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; padding: 0.1rem 0.45rem; border-radius: 5px; margin-left: 0.4rem; }
-.ticket-status-pill.open { background: rgba(99,102,241,0.15); color: #4f46e5; }
-.ticket-status-pill.resolved { background: rgba(34,197,94,0.15); color: #16a34a; }
-.ticket-status-pill.closed { background: rgba(148,163,184,0.2); color: #64748b; }
+.ticket-status-label { font-size: 0.66rem; font-weight: 700; margin-bottom: 0.1rem; }
+.ticket-status-label.open { color: #4f46e5; }
+.ticket-status-label.resolved { color: #16a34a; }
+.ticket-status-label.closed { color: #64748b; }
 
 body.dark-mode .inbox-layout { background: #1a1f2e; border-color: rgba(255,255,255,0.06); }
 body.dark-mode .inbox-sidebar { background: #161b27; border-right-color: rgba(255,255,255,0.06); }
@@ -502,6 +527,8 @@ body.dark-mode .inbox-thread-header { background: #161b27; border-bottom-color: 
 body.dark-mode .inbox-thread-title { color: #e2e8f0; }
 body.dark-mode .inbox-messages { background: #0f1117; }
 body.dark-mode .imsg-row.theirs .imsg-bubble { background: #1e2536; color: #e2e8f0; border-color: rgba(255,255,255,0.06); }
+body.dark-mode .imsg-row.mine .imsg-bubble { background: #78350f; color: #fde68a; }
+body.dark-mode .imsg-date-divider { background: #1e2536; color: #64748b; }
 body.dark-mode .inbox-input-bar { background: #161b27; border-top-color: rgba(255,255,255,0.06); }
 body.dark-mode .inbox-input { background: #1a1f2e; border-color: rgba(255,255,255,0.1); color: #e2e8f0; }
 body.dark-mode .inbox-input:focus { border-color: #60a5fa; }
@@ -601,7 +628,8 @@ body.dark-mode .afile-name { color: #e2e8f0; }
   // ═══ SECTION SWITCHING ═══
   const SECTION_TITLES: Record<string, string> = {
     dashboard: 'Dashboard', orders: 'Orders', tickets: 'Tickets',
-    messages: 'Messages', payments: 'Payments', settings: 'Settings'
+    messages: 'Messages', payments: 'Payments', leaderboard: 'Leaderboard',
+    users: 'Users', settings: 'Settings'
   };
 
   function showSection(name: string) {
@@ -620,6 +648,8 @@ body.dark-mode .afile-name { color: #e2e8f0; }
     if (name === 'tickets') ticketsController.load();
     if (name === 'messages') messagesController.load();
     if (name === 'payments') loadFinance();
+    if (name === 'leaderboard') loadLeaderboard();
+    if (name === 'users') loadUsers();
     if (name === 'settings') loadSettings();
   }
 
@@ -1054,11 +1084,12 @@ body.dark-mode .afile-name { color: #e2e8f0; }
         const time = c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
         const isActive = c.id === activeId;
         const label = c.title || (opts.kind === 'support' ? 'Support Chat' : 'Order Chat');
-        const statusPill = opts.withStatus ? `<span class="ticket-status-pill ${c.status || 'open'}">${esc(c.status || 'open')}</span>` : '';
+        const statusLine = opts.withStatus ? `<div class="ticket-status-label ${c.status || 'open'}">${esc((c.status || 'open').charAt(0).toUpperCase() + (c.status || 'open').slice(1))}</div>` : '';
         return `<div class="inbox-item ${isActive ? 'active' : ''}" data-cid="${c.id}">
           <div class="inbox-item-avatar ${avatarCls}">${initials}</div>
           <div class="inbox-item-info">
-            <div class="inbox-item-name">${esc(label)}${statusPill}</div>
+            ${statusLine}
+            <div class="inbox-item-name">${esc(label)}</div>
             <div class="inbox-item-type">${opts.kind === 'support' ? 'Support' : 'Order chat'}</div>
           </div>
           <div class="inbox-item-time">${time}</div>
@@ -1136,8 +1167,10 @@ body.dark-mode .afile-name { color: #e2e8f0; }
       const thread = document.getElementById(ids.thread)!;
       thread.style.display = 'flex';
       const header = document.getElementById(ids.header)!;
-      const icon = opts.kind === 'support' ? '🎫' : '📋';
       const typeLabel = opts.kind === 'support' ? 'Support ticket' : 'Order chat';
+      const avatarCls = opts.kind === 'support' ? 'avatar-support' : 'avatar-order';
+      const initials = opts.kind === 'support' ? 'SP' : 'OR';
+      const localTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
       let statusControls = '';
       if (opts.withStatus) {
@@ -1153,7 +1186,11 @@ body.dark-mode .afile-name { color: #e2e8f0; }
         ? `<button class="inbox-clear-btn" id="${opts.idPrefix}ArchiveBtn">♻️ Restore</button>`
         : `<button class="inbox-clear-btn" id="${opts.idPrefix}ArchiveBtn">🗄️ Archive</button>`;
       const deleteBtn = `<button class="inbox-clear-btn danger" id="${opts.idPrefix}DeleteBtn">🗑️ Delete</button>`;
-      header.innerHTML = `<div style="flex:1;min-width:0;"><div class="inbox-thread-title">${icon} ${esc(conv?.title || 'Chat')}</div><div class="inbox-thread-sub">${typeLabel}</div></div>${statusControls}${writerBtn}${archiveBtn}${deleteBtn}`;
+      const lastActive = conv?.updated_at ? new Date(conv.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—';
+      header.innerHTML = `<div class="inbox-item-avatar ${avatarCls}" style="flex-shrink:0;">${initials}</div>
+        <div style="flex:1;min-width:0;"><div class="inbox-thread-title">${esc(conv?.title || 'Chat')}</div><div class="inbox-thread-sub">${typeLabel} · last active ${lastActive}</div></div>
+        <div style="font-size:0.7rem;color:#94a3b8;margin-right:0.4rem;">${localTime}</div>
+        ${statusControls}${writerBtn}${archiveBtn}${deleteBtn}`;
 
       if (conv?.type === 'order') {
         ensureOrderWriter(conv);
@@ -1195,21 +1232,40 @@ body.dark-mode .afile-name { color: #e2e8f0; }
         ).subscribe();
     }
 
+    function dayLabel(d: Date) {
+      const today = new Date();
+      const yest = new Date(); yest.setDate(today.getDate() - 1);
+      const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+      if (sameDay(d, today)) return 'Today';
+      if (sameDay(d, yest)) return 'Yesterday';
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: d.getFullYear() !== today.getFullYear() ? 'numeric' : undefined });
+    }
+
     function renderMessages(messages: any[]) {
       const container = document.getElementById(ids.messages)!;
       if (!messages.length) { container.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:2rem;font-size:0.85rem;">No messages yet.</div>'; return; }
-      container.innerHTML = messages.map((m: any) => {
+      let lastDay = '';
+      const parts: string[] = [];
+      messages.forEach((m: any) => {
+        const created = m.created_at ? new Date(m.created_at) : null;
+        const day = created ? created.toDateString() : '';
+        if (day && day !== lastDay) {
+          parts.push(`<div class="imsg-date-divider">${dayLabel(created!)}</div>`);
+          lastDay = day;
+        }
         const isSupport = m.sender_role === 'support' || m.sender_id === currentSession.user.id;
-        const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+        const time = created ? created.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
         const senderLabel = isSupport ? 'Support' : (m.sender_name || 'User');
         const avatarInitial = isSupport ? 'S' : (m.sender_name?.[0]?.toUpperCase() || 'U');
-        return `<div class="imsg-row ${isSupport ? 'mine' : 'theirs'}">
+        const readCheck = isSupport ? '<span class="imsg-read-check">✓</span>' : '';
+        parts.push(`<div class="imsg-row ${isSupport ? 'mine' : 'theirs'}">
           ${!isSupport ? `<div class="imsg-meta"><div class="imsg-avatar theirs-avatar">${avatarInitial}</div><div class="imsg-sender-name">${esc(senderLabel)}</div></div>` : ''}
           <div class="imsg-bubble">${esc(m.content)}</div>
           ${isSupport ? `<div class="imsg-meta-right"><div class="imsg-sender-name" style="text-align:right">You</div><div class="imsg-avatar mine-avatar">S</div></div>` : ''}
-          <div class="imsg-time">${time}</div>
-        </div>`;
-      }).join('');
+          <div class="imsg-time">${time}${readCheck}</div>
+        </div>`);
+      });
+      container.innerHTML = parts.join('');
       container.scrollTop = container.scrollHeight;
     }
 
@@ -1316,42 +1372,62 @@ body.dark-mode .afile-name { color: #e2e8f0; }
     } catch (err: any) { alert(err.message || 'Invalid code — try again.'); }
   });
 
-  async function loadStaff() {
-    const box = document.getElementById('staffList')!;
+  // ═══ USERS (support/admin team — NOT writers) ═══
+  // Assumes a `role` text column on `profiles` ('admin' | 'support'), separate from `is_admin`.
+  async function loadUsers() {
+    const box = document.getElementById('usersList')!;
     box.innerHTML = '<span class="input-note">Loading…</span>';
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/writers?order=full_name.asc`, { headers: hdr() });
-      const staff = await res.json();
-      if (!Array.isArray(staff) || !staff.length) { box.innerHTML = '<span class="input-note">No staff added yet.</span>'; return; }
-      box.innerHTML = staff.map((w: any) => `
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?role=in.(admin,support)&order=full_name.asc`, { headers: hdr() });
+      const users = await res.json();
+      if (!Array.isArray(users) || !users.length) { box.innerHTML = '<span class="input-note">No team members added yet.</span>'; return; }
+      box.innerHTML = users.map((u: any) => `
         <div class="afile-row">
-          <div class="afile-info"><span class="afile-name">${esc(w.full_name || 'Unnamed')}</span><span class="afile-by">${esc(w.email || '')}</span></div>
+          <div class="afile-info"><span class="afile-type">${esc(u.role || 'support')}</span><span class="afile-name">${esc(u.full_name || 'Unnamed')}</span><span class="afile-by">${esc(u.email || '')}</span></div>
         </div>`).join('');
-    } catch (err) { console.error(err); box.innerHTML = '<span class="input-note">Could not load staff.</span>'; }
+    } catch (err) { console.error(err); box.innerHTML = '<span class="input-note">Could not load users.</span>'; }
   }
 
-  document.getElementById('addStaffBtn')?.addEventListener('click', async () => {
-    const name = (document.getElementById('staffNameInput') as HTMLInputElement).value.trim();
-    const email = (document.getElementById('staffEmailInput') as HTMLInputElement).value.trim();
+  document.getElementById('addUserBtn')?.addEventListener('click', async () => {
+    const name = (document.getElementById('userNameInput') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('userEmailInput') as HTMLInputElement).value.trim();
+    const role = (document.getElementById('userRoleInput') as HTMLSelectElement).value;
     if (!name || !email) { alert('Enter a name and email.'); return; }
-    const btn = document.getElementById('addStaffBtn') as HTMLButtonElement;
+    const btn = document.getElementById('addUserBtn') as HTMLButtonElement;
     btn.disabled = true;
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/writers`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', ...hdr(), 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ full_name: name, email })
+        body: JSON.stringify({ full_name: name, email, role })
       });
-      (document.getElementById('staffNameInput') as HTMLInputElement).value = '';
-      (document.getElementById('staffEmailInput') as HTMLInputElement).value = '';
-      await loadStaff();
-      await loadWriters();
-    } catch (err) { console.error(err); alert('Could not add staff member.'); }
+      (document.getElementById('userNameInput') as HTMLInputElement).value = '';
+      (document.getElementById('userEmailInput') as HTMLInputElement).value = '';
+      await loadUsers();
+    } catch (err) { console.error(err); alert('Could not add user.'); }
     btn.disabled = false;
   });
 
   function loadSettings() {
     loadMfaStatus();
-    loadStaff();
+  }
+
+  // ═══ LEADERBOARD (writers ranked by completed orders) ═══
+  function loadLeaderboard() {
+    const box = document.getElementById('leaderboardList')!;
+    if (!allWriters.length) { box.innerHTML = '<div class="input-note">No writers yet.</div>'; return; }
+    const ranked = allWriters.map((w: any) => {
+      const completed = allOrders.filter((o: any) => o.writer_id === w.id && o.order_status === 'completed');
+      const earned = completed.reduce((s: number, o: any) => s + Number(o.total_amount || 0), 0);
+      return { name: w.full_name || 'Unnamed', completed: completed.length, earned };
+    }).sort((a, b) => b.completed - a.completed);
+    if (!ranked.length || !ranked.some(r => r.completed > 0)) { box.innerHTML = '<div class="input-note">No completed orders yet.</div>'; return; }
+    box.innerHTML = ranked.map((r, i) => `
+      <div class="fin-row" style="grid-template-columns:0.4fr 1.6fr 1fr 1fr;">
+        <div style="font-weight:700;color:#94a3b8;">${i + 1}</div>
+        <div class="fin-row-label">${esc(r.name)}</div>
+        <div>${r.completed}</div>
+        <div style="font-weight:700;">$${r.earned.toFixed(2)}</div>
+      </div>`).join('');
   }
 
   checkAuth();
