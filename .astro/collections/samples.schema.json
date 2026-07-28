@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 65
+    },
+    "meta_title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 140,
+      "maxLength": 160
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "History",
+        "Nursing",
+        "Business",
+        "Psychology",
+        "Literature"
+      ]
+    },
+    "category": {
+      "type": "string"
+    },
+    "essay_type": {
+      "type": "string",
+      "enum": [
+        "Analytical",
+        "Argumentative",
+        "Descriptive",
+        "Expository",
+        "Narrative"
+      ]
+    },
+    "assignment_type": {
+      "type": "string",
+      "enum": [
+        "Essay",
+        "Research Paper",
+        "Case Study",
+        "Admission Essay",
+        "Discussion Post"
+      ]
+    },
+    "word_count": {
+      "type": "number"
+    },
+    "pages": {
+      "type": "number"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "writer_name": {
+      "type": "string"
+    },
+    "writer_tagline": {
+      "type": "string"
+    },
+    "writer_rating": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "writer_reviews": {
+      "type": "number"
+    },
+    "writer_photo": {
+      "type": "string"
+    },
+    "writer_ontime": {
+      "type": "number"
+    },
+    "writer_subjects": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "order_service_link": {
+      "type": "string"
+    },
+    "grammarly_checked": {
+      "default": false,
+      "type": "boolean"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "meta_title",
+    "description",
+    "subject",
+    "category",
+    "essay_type",
+    "assignment_type",
+    "word_count",
+    "pages",
+    "date",
+    "writer_name",
+    "writer_tagline",
+    "writer_rating",
+    "writer_reviews",
+    "order_service_link"
+  ]
+}
