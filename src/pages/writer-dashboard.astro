@@ -1628,6 +1628,13 @@ const base = '';
     writerData = data[0];
     writerId = writerData.id;
 
+    if (writerData.account_status === 'deactivated') {
+      alert('Your account has been deactivated. Contact admin to reactivate it.');
+      await supabase.auth.signOut();
+      window.location.replace(`${base}/writer-login/`);
+      return;
+    }
+
     // Populate the sidebar profile pill + popover with real data
     const pillName = document.getElementById('sidebarProfileName');
     const popName = document.getElementById('sidebarPopName');
@@ -3478,8 +3485,141 @@ const base = '';
       </div>`;
   }
 
+  async function loadAs2faStatus() {
+    const statusEl = document.getElementById('as2faStatus');
+    const setupBtn = document.getElementById('asManage2fa') as HTMLButtonElement;
+    const disableBtn = document.getElementById('asDisable2fa') as HTMLButtonElement;
+    if (!statusEl) return;
+    try {
+      const { data, error } = await supabase.auth.mfa.listFactors();
+      if (error) throw error;
+      const verified = (data?.totp || []).find((f: any) => f.status === 'verified');
+      if (verified) {
+        statusEl.textContent = 'Enabled';
+        if (setupBtn) setupBtn.style.display = 'none';
+        if (disableBtn) { disableBtn.style.display = 'inline-block'; disableBtn.dataset.factorId = verified.id; }
+      } else {
+        statusEl.textContent = 'Not enabled';
+        if (setupBtn) setupBtn.style.display = 'inline-block';
+        if (disableBtn) disableBtn.style.display = 'none';
+      }
+    } catch (err) {
+      statusEl.textContent = 'Could not check status';
+    }
+  }
+
+  async function as2faEnroll() {
+    const form = document.getElementById('as2faEnrollForm') as HTMLElement;
+    const secretText = document.getElementById('as2faSecretText')!;
+    try {
+      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' });
+      if (error) throw error;
+      secretText.textContent = data?.totp?.uri || data?.totp?.secret || '';
+      form.dataset.factorId = data?.id || '';
+      form.classList.add('open');
+    } catch (err: any) {
+      alert(err.message || 'Could not start 2FA enrollment.');
+    }
+  }
+
+  async function as2faVerify() {
+    const form = document.getElementById('as2faEnrollForm') as HTMLElement;
+    const factorId = form.dataset.factorId || '';
+    const code = (document.getElementById('as2faCodeInput') as HTMLInputElement).value.trim();
+    const msg = document.getElementById('as2faMsg')!;
+    if (!factorId || !code) return;
+    try {
+      const { data: challenge, error: chErr } = await supabase.auth.mfa.challenge({ factorId });
+      if (chErr) throw chErr;
+      const { error: verErr } = await supabase.auth.mfa.verify({ factorId, challengeId: challenge.id, code });
+      if (verErr) throw verErr;
+      form.classList.remove('open');
+      msg.textContent = '';
+      await loadAs2faStatus();
+    } catch (err: any) {
+      msg.textContent = err.message || 'Invalid code — try again.';
+      msg.className = 'setting-msg error';
+    }
+  }
+
+  async function as2faDisable() {
+    const btn = document.getElementById('asDisable2fa') as HTMLButtonElement;
+    const factorId = btn?.dataset.factorId;
+    if (!factorId) return;
+    if (!confirm('Disable two-factor authentication?')) return;
+    try {
+      const { error } = await supabase.auth.mfa.unenroll({ factorId });
+      if (error) throw error;
+      await loadAs2faStatus();
+    } catch (err: any) {
+      alert(err.message || 'Could not disable 2FA.');
+    }
+  }
+
+  async function asToggleGoogleLink() {
+    const linked = (currentSession?.user?.identities || []).some((i: any) => i.provider === 'google');
+    try {
+      if (linked) {
+        if (!confirm('Unlink your Google account?')) return;
+        const identity = currentSession.user.identities.find((i: any) => i.provider === 'google');
+        const { error } = await supabase.auth.unlinkIdentity(identity);
+        if (error) throw error;
+        const { data: { session } } = await supabase.auth.getSession();
+        currentSession = session;
+        renderAccountSettingsModal();
+      } else {
+        const { error } = await supabase.auth.linkIdentity({
+          provider: 'google',
+          options: { redirectTo: window.location.href }
+        });
+        if (error) throw error;
+        // Supabase redirects to Google's consent screen, then back here — no code runs after this until reload.
+      }
+    } catch (err: any) {
+      alert(err.message || 'Could not update Google link. Make sure Google is enabled as a provider in Supabase.');
+    }
+  }
+
+  async function asLogoutOtherDevices() {
+    const msg = document.getElementById('asSessionsMsg')!;
+    const btn = document.getElementById('asLogoutOtherDevices') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = 'Logging out other devices…';
+    try {
+      const { error } = await supabase.auth.signOut({ scope: 'others' });
+      if (error) throw error;
+      msg.textContent = 'All other devices have been logged out. This device stays signed in.';
+      msg.className = 'setting-msg success';
+      msg.style.display = 'block';
+    } catch (err: any) {
+      msg.textContent = err.message || 'Could not log out other devices.';
+      msg.className = 'setting-msg error';
+      msg.style.display = 'block';
+    }
+    btn.disabled = false; btn.textContent = 'Log out on other devices';
+  }
+
+  async function asDeactivateAccount() {
+    if (!confirm('Deactivate your account? You will be signed out and admin will need to reactivate you before you can log in again.')) return;
+    const btn = document.getElementById('asDeactivateBtn') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = 'Deactivating…';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/writers?id=eq.${writerId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal' },
+        body: JSON.stringify({ account_status: 'deactivated' })
+      });
+      if (!res.ok) throw new Error('Could not deactivate — the account_status column may not exist yet.');
+      await supabase.auth.signOut();
+      window.location.href = `${base}/writer-login/`;
+    } catch (err: any) {
+      alert(err.message || 'Could not deactivate account. Make sure the account_status migration has been run.');
+      btn.disabled = false; btn.textContent = 'Deactivate account';
+    }
+  }
+
   function renderAsSecurity() {
     const userEmail = currentSession?.user?.email || '';
+    const googleLinked = (currentSession?.user?.identities || []).some((i: any) => i.provider === 'google');
     return `
       <div class="profile-card">
         <div class="settings-section" style="margin-bottom:0;">
@@ -3488,21 +3628,28 @@ const base = '';
           <div class="setting-form" id="asEmailForm"><input type="email" id="asNewEmailInput" placeholder="New email address" /><button class="btn-save" id="asSaveEmailBtn">Update Email</button><div class="setting-msg" id="asEmailMsg"></div></div>
           <div class="setting-row"><div class="setting-info"><div class="setting-label">Password</div><div class="setting-desc">••••••••</div></div><button class="btn-setting" id="asTogglePasswordForm">Change</button></div>
           <div class="setting-form" id="asPasswordForm"><input type="password" id="asNewPasswordInput" placeholder="New password (min 6 chars)" /><input type="password" id="asConfirmPasswordInput" placeholder="Confirm new password" /><button class="btn-save" id="asSavePasswordBtn">Update Password</button><div class="setting-msg" id="asPasswordMsg"></div></div>
-          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">Two-factor authentication</div></div><button class="btn-setting" id="asManage2fa">Set up</button></div>
+          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">Two-factor authentication</div><div class="setting-desc" id="as2faStatus">Checking…</div></div><button class="btn-setting" id="asManage2fa" style="display:none;">Set up</button><button class="btn-setting" id="asDisable2fa" style="display:none;color:#dc2626;border-color:#fecaca;">Disable</button></div>
+          <div class="setting-form" id="as2faEnrollForm">
+            <div class="setting-desc" style="margin-bottom:0.3rem;">Scan the secret below in your authenticator app, then enter the 6-digit code.</div>
+            <p id="as2faSecretText" style="font-size:0.76rem;word-break:break-all;color:#046fcd;margin:0 0 0.3rem;"></p>
+            <input type="text" id="as2faCodeInput" placeholder="123456" maxlength="6" />
+            <button class="btn-save" id="as2faVerifyBtn">Verify and enable</button>
+            <div class="setting-msg" id="as2faMsg"></div>
+          </div>
         </div>
       </div>
-      <div class="as-note">Two-factor auth, Google linking, active sessions, and account deactivation aren't wired to real backend logic yet — buttons below are placeholders.</div>
       <div class="profile-card">
         <div class="settings-section" style="margin-bottom:0;">
           <h3>Social accounts</h3>
-          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">Google</div></div><button class="btn-setting" id="asLinkGoogle">Link Google</button></div>
+          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">Google</div><div class="setting-desc">${googleLinked ? 'Linked' : 'Not linked'}</div></div><button class="btn-setting" id="asLinkGoogle">${googleLinked ? 'Unlink' : 'Link Google'}</button></div>
         </div>
       </div>
       <div class="profile-card">
         <div class="settings-section" style="margin-bottom:0;">
           <h3>Sessions</h3>
-          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">This device</div><div class="setting-desc">Current session</div></div><button class="btn-setting" id="asLogoutOtherDevices">Log out on other devices</button></div>
+          <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">This device</div><div class="setting-desc">Stays signed in</div></div><button class="btn-setting" id="asLogoutOtherDevices">Log out on other devices</button></div>
         </div>
+        <div class="setting-msg" id="asSessionsMsg" style="display:none;margin-top:0.6rem;"></div>
       </div>
       <div class="profile-card">
         <div class="settings-section" style="margin-bottom:0;">
@@ -3566,10 +3713,13 @@ const base = '';
         if (error) { msg.textContent = error.message; msg.className = 'setting-msg error'; } else { msg.textContent = 'Password updated.'; msg.className = 'setting-msg success'; }
         btn.disabled = false; btn.textContent = 'Update Password';
       });
-      document.getElementById('asManage2fa')?.addEventListener('click', () => alert('Two-factor authentication isn\'t set up yet — this will be wired once we add TOTP support.'));
-      document.getElementById('asLinkGoogle')?.addEventListener('click', () => alert('Google account linking isn\'t wired yet — needs OAuth provider setup in Supabase Auth.'));
-      document.getElementById('asLogoutOtherDevices')?.addEventListener('click', () => alert('Session tracking isn\'t built yet — Supabase Auth doesn\'t expose a session list via this client SDK without extra setup.'));
-      document.getElementById('asDeactivateBtn')?.addEventListener('click', () => alert('Account deactivation isn\'t wired yet — this needs a confirmed backend flow before going live.'));
+      loadAs2faStatus();
+      document.getElementById('asManage2fa')?.addEventListener('click', as2faEnroll);
+      document.getElementById('asDisable2fa')?.addEventListener('click', as2faDisable);
+      document.getElementById('as2faVerifyBtn')?.addEventListener('click', as2faVerify);
+      document.getElementById('asLinkGoogle')?.addEventListener('click', asToggleGoogleLink);
+      document.getElementById('asLogoutOtherDevices')?.addEventListener('click', asLogoutOtherDevices);
+      document.getElementById('asDeactivateBtn')?.addEventListener('click', asDeactivateAccount);
     } else {
       body.innerHTML = renderAsNotifications();
       body.querySelectorAll('[data-asnotif]').forEach(input => {
