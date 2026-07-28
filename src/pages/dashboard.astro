@@ -1846,9 +1846,18 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   import { io } from 'socket.io-client';
  
   const BIDDING_SERVER = 'https://thesisarcpro.onrender.com';
-  const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
+  const socket = io(BIDDING_SERVER, { transports: ['websocket'], reconnection: true, reconnectionDelay: 1000, reconnectionAttempts: Infinity });
  
-  socket.on('connect', () => console.log('Connected to bidding server:', socket.id));
+  socket.on('connect', () => {
+    console.log('Connected to bidding server:', socket.id);
+    // Re-join the pending order's bid room and re-sync any bids placed while we were
+    // disconnected — this is the fix for "writer bids but client only sees it after refresh".
+    const pendingId = wizCurrentOrderDbId || localStorage.getItem('wizPendingOrderId');
+    if (pendingId) {
+      socket.emit('bid:join', pendingId);
+      refreshLiveBids(pendingId);
+    }
+  });
   socket.on('disconnect', () => console.log('Disconnected from bidding server'));
  
   const base = '';
@@ -2950,6 +2959,29 @@ async function openWriterProfileModal(writerId: string) {
 
 let wizPendingBids: any[] = [];
 let wizCurrentOrderDbId = '';
+
+async function refreshLiveBids(orderId: string) {
+  try {
+    const bRes = await fetch(`${SUPABASE_URL}/rest/v1/bids?order_id=eq.${orderId}&select=id,bid_price,note,writer_id,created_at,status&order=created_at.desc`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` }
+    });
+    const bids = await bRes.json();
+    if (!Array.isArray(bids)) return;
+    const box = document.getElementById('wizLiveBids');
+    const waiting = document.getElementById('wizBidsWaiting');
+    const countEl = document.getElementById('wizBidCount');
+    if (!box) return;
+    const existingIds = new Set(Array.from(box.querySelectorAll('[data-wbid]')).map(el => (el as HTMLElement).dataset.wbid));
+    const missing = bids.filter((b: any) => !existingIds.has(String(b.id)));
+    if (missing.length) {
+      if (waiting) waiting.style.display = 'none';
+      const enriched = await enrichBidsWithWriters(missing);
+      enriched.forEach((b: any) => box.insertAdjacentHTML('afterbegin', wizRenderBidCard(b, orderId)));
+      attachWizHireBtns(box, orderId);
+    }
+    if (countEl) countEl.textContent = String(box.querySelectorAll('[data-wbid]').length);
+  } catch (e) { console.error('refreshLiveBids error', e); }
+}
 
 document.querySelectorAll('.wiz-tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
