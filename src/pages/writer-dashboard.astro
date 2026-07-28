@@ -3563,13 +3563,20 @@ const base = '';
     const btn = document.getElementById('asDisable2fa') as HTMLButtonElement;
     const factorId = btn?.dataset.factorId;
     if (!factorId) return;
-    if (!confirm('Disable two-factor authentication?')) return;
+    const code = prompt('Enter your current 6-digit authentication code to confirm disabling 2FA:');
+    if (!code) return;
     try {
+      // Supabase requires the session to be at AAL2 (a completed 2FA challenge) before
+      // it will let you unenroll a verified factor — step up first, then unenroll.
+      const { data: challenge, error: chErr } = await supabase.auth.mfa.challenge({ factorId });
+      if (chErr) throw chErr;
+      const { error: verErr } = await supabase.auth.mfa.verify({ factorId, challengeId: challenge.id, code: code.trim() });
+      if (verErr) throw verErr;
       const { error } = await supabase.auth.mfa.unenroll({ factorId });
       if (error) throw error;
       await loadAs2faStatus();
     } catch (err: any) {
-      alert(err.message || 'Could not disable 2FA.');
+      alert(err.message || 'Could not disable 2FA — check the code and try again.');
     }
   }
 
