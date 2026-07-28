@@ -20,6 +20,13 @@ const base = '';
       </div>
 
       <button class="wl__btn" id="loginBtn">Log In</button>
+
+      <div class="form-group" id="mfaGroup" style="display:none;">
+        <label>6-digit authentication code</label>
+        <input type="text" id="mfaCode" placeholder="123456" maxlength="6" />
+      </div>
+      <button class="wl__btn" id="mfaVerifyBtn" style="display:none;">Verify</button>
+
       <div class="wl__msg" id="msg" style="display:none;"></div>
     </div>
   </div>
@@ -124,6 +131,71 @@ const base = '';
     }
   })();
 
+  let pendingWriterCheck = false;
+
+  async function finishLoginAfterMfa() {
+    const msg = document.getElementById('msg') as HTMLElement;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Session missing after 2FA verification.');
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/writers?auth_user_id=eq.${session.user.id}&select=id`,
+        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${session.access_token}` } }
+      );
+      const writers = await res.json();
+      if (!writers.length) {
+        await supabase.auth.signOut();
+        msg.textContent = 'This account is not linked to a writer profile. Contact your admin.';
+        msg.className = 'wl__msg error';
+        msg.style.display = 'block';
+        return;
+      }
+      msg.textContent = '✅ Welcome! Redirecting…';
+      msg.className = 'wl__msg success';
+      msg.style.display = 'block';
+      setTimeout(() => { window.location.href = `${base}/writer-dashboard/`; }, 600);
+    } catch (err: any) {
+      msg.textContent = err.message || 'Could not complete login.';
+      msg.className = 'wl__msg error';
+      msg.style.display = 'block';
+    }
+  }
+
+  document.getElementById('mfaVerifyBtn')?.addEventListener('click', async () => {
+    const code = (document.getElementById('mfaCode') as HTMLInputElement).value.trim();
+    const msg = document.getElementById('msg') as HTMLElement;
+    const verifyBtn = document.getElementById('mfaVerifyBtn') as HTMLButtonElement;
+    if (!code || code.length !== 6) {
+      msg.textContent = 'Enter the 6-digit code.';
+      msg.className = 'wl__msg error';
+      msg.style.display = 'block';
+      return;
+    }
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = 'Verifying…';
+    try {
+      const { data: factors, error: factorsErr } = await supabase.auth.mfa.listFactors();
+      if (factorsErr) throw factorsErr;
+      const factor = (factors?.totp || []).find((f: any) => f.status === 'verified');
+      if (!factor) throw new Error('No verified 2FA method found on this account.');
+      const { data: challenge, error: chErr } = await supabase.auth.mfa.challenge({ factorId: factor.id });
+      if (chErr) throw chErr;
+      const { error: verErr } = await supabase.auth.mfa.verify({ factorId: factor.id, challengeId: challenge.id, code });
+      if (verErr) throw verErr;
+      await finishLoginAfterMfa();
+    } catch (err: any) {
+      msg.textContent = err.message || 'Invalid code — try again.';
+      msg.className = 'wl__msg error';
+      msg.style.display = 'block';
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = 'Verify';
+    }
+  });
+
+  document.getElementById('mfaCode')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('mfaVerifyBtn')?.click();
+  });
+
   document.getElementById('loginBtn')?.addEventListener('click', async () => {
     const email = (document.getElementById('email') as HTMLInputElement).value.trim();
     const password = (document.getElementById('password') as HTMLInputElement).value.trim();
@@ -144,6 +216,24 @@ const base = '';
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+
+      // Check if this account has 2FA enrolled and needs a challenge before proceeding.
+      // aal1 = only password verified so far; aal2 = fully authenticated (2FA passed or not required).
+      const { data: aalData, error: aalErr } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (aalErr) throw aalErr;
+      if (aalData.nextLevel === 'aal2' && aalData.currentLevel !== 'aal2') {
+        pendingWriterCheck = true;
+        (document.getElementById('email') as HTMLInputElement).disabled = true;
+        (document.getElementById('password') as HTMLInputElement).disabled = true;
+        btn.style.display = 'none';
+        document.getElementById('mfaGroup')!.style.display = 'flex';
+        document.getElementById('mfaVerifyBtn')!.style.display = 'block';
+        msg.textContent = 'Enter the 6-digit code from your authenticator app.';
+        msg.className = 'wl__msg success';
+        msg.style.display = 'block';
+        (document.getElementById('mfaCode') as HTMLInputElement).focus();
+        return;
+      }
 
       // Verify this user is a writer
       const res = await fetch(
