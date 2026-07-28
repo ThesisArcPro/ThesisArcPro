@@ -561,6 +561,7 @@ const base = '';
   .setting-form.open { display: flex; }
   .setting-form input { width: 100%; background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.85rem; color: var(--text); font-family: inherit; outline: none; }
   .setting-form input:focus { border-color: #046fcd; }
+  #as2faQrBox svg { width: 160px; height: 160px; display: block; }
   .btn-save { background: #046fcd; color: #fff; border: none; border-radius: 8px; padding: 0.5rem 1.2rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: inherit; align-self: flex-start; }
   .btn-save:hover { background: #0361b3; }
   .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -3511,6 +3512,7 @@ const base = '';
   async function as2faEnroll() {
     const form = document.getElementById('as2faEnrollForm') as HTMLElement;
     const secretText = document.getElementById('as2faSecretText')!;
+    const qrBox = document.getElementById('as2faQrBox')!;
     try {
       // Clean up any stale unverified factor first — Supabase blocks a new enroll
       // if one with the same (blank) friendly name already exists for this user.
@@ -3521,7 +3523,13 @@ const base = '';
       }
       const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: `totp-${Date.now()}` });
       if (error) throw error;
-      secretText.textContent = data?.totp?.uri || data?.totp?.secret || '';
+      if (data?.totp?.qr_code) {
+        qrBox.innerHTML = data.totp.qr_code; // Supabase returns this as inline SVG markup
+        qrBox.style.display = 'flex';
+      } else {
+        qrBox.style.display = 'none';
+      }
+      secretText.textContent = data?.totp?.secret || '';
       form.dataset.factorId = data?.id || '';
       form.classList.add('open');
     } catch (err: any) {
@@ -3637,8 +3645,10 @@ const base = '';
           <div class="setting-form" id="asPasswordForm"><input type="password" id="asNewPasswordInput" placeholder="New password (min 6 chars)" /><input type="password" id="asConfirmPasswordInput" placeholder="Confirm new password" /><button class="btn-save" id="asSavePasswordBtn">Update Password</button><div class="setting-msg" id="asPasswordMsg"></div></div>
           <div class="setting-row" style="border-bottom:none;"><div class="setting-info"><div class="setting-label">Two-factor authentication</div><div class="setting-desc" id="as2faStatus">Checking…</div></div><button class="btn-setting" id="asManage2fa" style="display:none;">Set up</button><button class="btn-setting" id="asDisable2fa" style="display:none;color:#dc2626;border-color:#fecaca;">Disable</button></div>
           <div class="setting-form" id="as2faEnrollForm">
-            <div class="setting-desc" style="margin-bottom:0.3rem;">Scan the secret below in your authenticator app, then enter the 6-digit code.</div>
-            <p id="as2faSecretText" style="font-size:0.76rem;word-break:break-all;color:#046fcd;margin:0 0 0.3rem;"></p>
+            <div class="setting-desc" style="margin-bottom:0.5rem;">Scan this QR code in your authenticator app (Google Authenticator, 1Password, Authy, etc.), then enter the 6-digit code.</div>
+            <div id="as2faQrBox" style="display:none;background:#fff;border-radius:10px;padding:0.8rem;width:fit-content;margin-bottom:0.6rem;"></div>
+            <div class="setting-desc" style="margin-bottom:0.2rem;">Or enter this code manually:</div>
+            <p id="as2faSecretText" style="font-size:0.8rem;word-break:break-all;color:#046fcd;margin:0 0 0.6rem;font-family:monospace;"></p>
             <input type="text" id="as2faCodeInput" placeholder="123456" maxlength="6" />
             <button class="btn-save" id="as2faVerifyBtn">Verify and enable</button>
             <div class="setting-msg" id="as2faMsg"></div>
