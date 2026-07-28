@@ -1,0 +1,495 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = '';
+---
+
+<BaseLayout title="Apply to Write — ThesisArcPro" description="Apply to become a writer on ThesisArcPro">
+  <div class="wa">
+    <div class="wa__card">
+      <div class="wa__steps" id="stepIndicator">
+        <span class="wa__step active" data-step="1">1. Account</span>
+        <span class="wa__step" data-step="2">2. Profile</span>
+        <span class="wa__step" data-step="3">3. Writing Test</span>
+        <span class="wa__step" data-step="4">4. Verification</span>
+        <span class="wa__step" data-step="5">5. Review</span>
+      </div>
+
+      <!-- STEP 1: Account -->
+      <div class="wa__panel active" data-panel="1">
+        <div id="s1_signupBlock">
+          <h1>Apply to Write</h1>
+          <p class="wa__sub">Create your account to begin your application.</p>
+          <div class="form-group">
+            <label>Full name</label>
+            <input type="text" id="s1_fullName" placeholder="Jane Doe" />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="s1_email" placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="s1_password" placeholder="At least 8 characters" />
+          </div>
+          <div class="form-group">
+            <label>Confirm password</label>
+            <input type="password" id="s1_confirmPassword" placeholder="Repeat password" />
+          </div>
+          <button class="wa__btn" id="s1_next">Create account & continue</button>
+        </div>
+
+        <!-- Shown after signup when email confirmation is required -->
+        <div id="s1_confirmBlock" style="display:none;">
+          <h1>Confirm your email</h1>
+          <p class="wa__sub">We've sent a confirmation link to <strong id="s1_confirmEmailShown"></strong>. Click it, then come back here and log in below to continue your application.</p>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="s1_resumeEmail" placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="s1_resumePassword" placeholder="Your password" />
+          </div>
+          <button class="wa__btn" id="s1_resumeBtn">I've confirmed — continue</button>
+        </div>
+
+        <div class="wa__msg" id="s1_msg" style="display:none;"></div>
+      </div>
+
+      <!-- STEP 2: Profile -->
+      <div class="wa__panel" data-panel="2">
+        <h1>Your Profile</h1>
+        <p class="wa__sub">Tell us about your writing background.</p>
+        <div class="form-group">
+          <label>Phone number</label>
+          <input type="text" id="s2_phone" placeholder="+1 234 567 8900" />
+        </div>
+        <div class="form-group">
+          <label>Subjects / Specialties (comma separated)</label>
+          <input type="text" id="s2_specialties" placeholder="Nursing, Business, Psychology" />
+        </div>
+        <div class="form-group">
+          <label>Highest education level</label>
+          <select id="s2_education">
+            <option value="">— Select —</option>
+            <option>Bachelor's</option>
+            <option>Master's</option>
+            <option>PhD</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Years of writing experience</label>
+          <input type="number" id="s2_experience" min="0" placeholder="3" />
+        </div>
+        <div class="form-group">
+          <label>Short bio</label>
+          <textarea id="s2_bio" rows="4" placeholder="Tell us about yourself and your writing experience..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Writing sample (PDF/DOC)</label>
+          <input type="file" id="s2_sampleFile" accept=".pdf,.doc,.docx" />
+        </div>
+        <div class="wa__btnrow">
+          <button class="wa__btn wa__btn--ghost" id="s2_back">Back</button>
+          <button class="wa__btn" id="s2_next">Continue</button>
+        </div>
+        <div class="wa__msg" id="s2_msg" style="display:none;"></div>
+      </div>
+
+      <!-- STEP 3: Timed Test -->
+      <div class="wa__panel" data-panel="3">
+        <h1>Writing & Grammar Test</h1>
+        <p class="wa__sub">You have <strong>15 minutes</strong> to respond to the prompt below. The timer starts as soon as you click Start.</p>
+
+        <div id="s3_intro">
+          <button class="wa__btn" id="s3_start">Start test</button>
+        </div>
+
+        <div id="s3_testArea" style="display:none;">
+          <div class="wa__timer" id="s3_timer">15:00</div>
+          <div class="wa__prompt" id="s3_promptText"></div>
+          <div class="form-group">
+            <label>Your response</label>
+            <textarea id="s3_response" rows="10" placeholder="Write your response here..."></textarea>
+          </div>
+          <button class="wa__btn" id="s3_submit">Submit test & continue</button>
+        </div>
+        <div class="wa__msg" id="s3_msg" style="display:none;"></div>
+      </div>
+
+      <!-- STEP 4: ID + Education Verification -->
+      <div class="wa__panel" data-panel="4">
+        <h1>Verification</h1>
+        <p class="wa__sub">Last step before review — we need to verify your identity and education.</p>
+        <div class="form-group">
+          <label>ID type</label>
+          <select id="s4_idType">
+            <option value="">— Select —</option>
+            <option>National ID</option>
+            <option>Passport</option>
+            <option>Driver's License</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>ID number</label>
+          <input type="text" id="s4_idNumber" placeholder="ID / Passport number" />
+        </div>
+        <div class="form-group">
+          <label>Upload a photo/scan of your ID</label>
+          <input type="file" id="s4_idFile" accept=".pdf,.jpg,.jpeg,.png" />
+        </div>
+        <div class="form-group">
+          <label>Upload proof of education (degree/certificate)</label>
+          <input type="file" id="s4_eduFile" accept=".pdf,.jpg,.jpeg,.png" />
+        </div>
+        <div class="wa__btnrow">
+          <button class="wa__btn wa__btn--ghost" id="s4_back">Back</button>
+          <button class="wa__btn" id="s4_next">Continue</button>
+        </div>
+        <div class="wa__msg" id="s4_msg" style="display:none;"></div>
+      </div>
+
+      <!-- STEP 5: Review -->
+      <div class="wa__panel" data-panel="5">
+        <h1>Review & Submit</h1>
+        <p class="wa__sub">Please confirm your details before submitting your application.</p>
+        <div class="wa__review" id="s5_review"></div>
+        <div class="wa__btnrow">
+          <button class="wa__btn wa__btn--ghost" id="s5_back">Back</button>
+          <button class="wa__btn" id="s5_submit">Submit application</button>
+        </div>
+        <div class="wa__msg" id="s5_msg" style="display:none;"></div>
+      </div>
+
+      <!-- DONE -->
+      <div class="wa__panel" data-panel="done">
+        <h1>Application submitted!</h1>
+        <p class="wa__sub">Thank you for applying. Our admin team will review your application and get back to you by email once a decision is made.</p>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+.wa { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; background: #f1f5f9; padding: 2.5rem 1.5rem; font-family: 'Poppins', sans-serif; }
+.wa__card { background: #fff; border-radius: 16px; padding: 2.2rem 2.4rem 2.6rem; width: 100%; max-width: 560px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.wa__steps { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.8rem; }
+.wa__step { font-size: 0.68rem; font-weight: 700; color: #94a3b8; background: #f1f5f9; padding: 0.3rem 0.6rem; border-radius: 20px; }
+.wa__step.active { background: #046fcd; color: #fff; }
+.wa__step.done { background: #dcfce7; color: #16a34a; }
+.wa__panel { display: none; }
+.wa__panel.active { display: block; }
+.wa__panel h1 { font-size: 1.4rem; font-weight: 700; color: #0f172a; margin-bottom: 0.3rem; }
+.wa__sub { color: #64748b; font-size: 0.86rem; margin-bottom: 1.6rem; line-height: 1.5; }
+.form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.1rem; }
+.form-group label { font-size: 0.83rem; font-weight: 600; color: #303b4f; }
+.form-group input, .form-group select, .form-group textarea {
+  padding: 0.7rem 0.9rem; border: 1.5px solid #e2e8f0; border-radius: 10px;
+  font-size: 0.87rem; outline: none; transition: border-color 0.2s; font-family: inherit; resize: vertical;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #046fcd; }
+.wa__btn { width: 100%; padding: 0.8rem; background: #046fcd; color: #fff; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 0.4rem; }
+.wa__btn:hover { background: #0361b3; }
+.wa__btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.wa__btn--ghost { background: #f1f5f9; color: #303b4f; }
+.wa__btn--ghost:hover { background: #e2e8f0; }
+.wa__btnrow { display: flex; gap: 0.7rem; }
+.wa__btnrow .wa__btn { margin-top: 0.4rem; }
+.wa__msg { margin-top: 1rem; padding: 0.7rem 0.9rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600; }
+.wa__msg.error { background: #fef2f2; color: #dc2626; }
+.wa__msg.success { background: #ecfdf5; color: #16a34a; }
+.wa__timer { font-size: 1.4rem; font-weight: 800; color: #046fcd; text-align: center; margin-bottom: 1rem; padding: 0.6rem; background: #eef6fb; border-radius: 10px; }
+.wa__timer.urgent { color: #dc2626; background: #fef2f2; }
+.wa__prompt { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; font-size: 0.9rem; color: #0f172a; line-height: 1.6; margin-bottom: 1.2rem; font-weight: 600; }
+.wa__review { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem; }
+.wa__review-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid #eef2f7; font-size: 0.85rem; }
+.wa__review-label { color: #64748b; font-weight: 600; flex-shrink: 0; }
+.wa__review-val { color: #0f172a; text-align: right; word-break: break-word; }
+</style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+
+  const base = '';
+  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+  const BUCKET = 'writer-applications';
+  const TEST_SECONDS = 15 * 60;
+
+  const TEST_PROMPTS = [
+    'Correct the grammar and punctuation errors in the following paragraph, then rewrite it clearly: "me and my freind was going to the store yesterday when we seen a dog who was lost, so we tryed to find it owner but nobody don\'t know who it belong to."',
+    'Identify and fix all grammatical errors in this passage, then explain in one or two sentences the main rule you applied: "The company have decided to increase they prices next month, which effect all of it customers negatively, and many peoples are not happy about this decision who was made without warning."',
+    'Rewrite the following sentence to be grammatically correct and more concise, then briefly explain what was wrong: "Despite of the fact that she was very tired, she still continued working on her assignment until very late at night because she don\'t want to miss the deadline which was due tomorrow."'
+  ];
+
+  let currentSession: any = null;
+  let currentUserId: string | null = null;
+  let sampleFileUrl = '';
+  let sampleFileName = '';
+  let idFileUrl = '';
+  let idFileName = '';
+  let eduFileUrl = '';
+  let eduFileName = '';
+  let testPrompt = '';
+  let testStartedAt: string | null = null;
+  let timerInterval: any = null;
+
+  function esc(v: any) {
+    return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function showStep(step: string) {
+    document.querySelectorAll('.wa__panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.wa__panel[data-panel="${step}"]`)?.classList.add('active');
+    document.querySelectorAll('.wa__step').forEach(s => {
+      const n = (s as HTMLElement).dataset.step;
+      s.classList.toggle('active', n === step);
+      if (n && step !== 'done' && parseInt(n) < parseInt(step)) s.classList.add('done');
+    });
+  }
+
+  function showMsg(id: string, text: string, isError: boolean) {
+    const el = document.getElementById(id)!;
+    el.textContent = text;
+    el.className = 'wa__msg ' + (isError ? 'error' : 'success');
+    el.style.display = 'block';
+  }
+
+  // If they already have a confirmed session (e.g. returning after confirming email in a
+  // fresh tab and navigating back here directly), skip straight past step 1.
+  (async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      currentSession = session;
+      currentUserId = session.user.id;
+      showStep('2');
+    }
+  })();
+
+  // ── STEP 1: create account ──
+  document.getElementById('s1_next')?.addEventListener('click', async () => {
+    const fullName = (document.getElementById('s1_fullName') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('s1_email') as HTMLInputElement).value.trim();
+    const password = (document.getElementById('s1_password') as HTMLInputElement).value;
+    const confirmPw = (document.getElementById('s1_confirmPassword') as HTMLInputElement).value;
+    const btn = document.getElementById('s1_next') as HTMLButtonElement;
+
+    if (!fullName || !email || !password) { showMsg('s1_msg', 'Please fill in all fields.', true); return; }
+    if (password.length < 8) { showMsg('s1_msg', 'Password must be at least 8 characters.', true); return; }
+    if (password !== confirmPw) { showMsg('s1_msg', 'Passwords do not match.', true); return; }
+
+    btn.disabled = true; btn.textContent = 'Creating account…';
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email, password,
+        options: { data: { full_name: fullName } }
+      });
+      if (error) throw error;
+      if (!data.session) {
+        // Email confirmation required — switch to the resume/login block.
+        document.getElementById('s1_signupBlock')!.style.display = 'none';
+        document.getElementById('s1_confirmBlock')!.style.display = 'block';
+        (document.getElementById('s1_confirmEmailShown') as HTMLElement).textContent = email;
+        (document.getElementById('s1_resumeEmail') as HTMLInputElement).value = email;
+        return;
+      }
+      currentSession = data.session;
+      currentUserId = data.user!.id;
+      showStep('2');
+    } catch (err: any) {
+      showMsg('s1_msg', err.message || 'Could not create account.', true);
+      btn.disabled = false; btn.textContent = 'Create account & continue';
+    }
+  });
+
+  // ── STEP 1b: resume after email confirmation ──
+  document.getElementById('s1_resumeBtn')?.addEventListener('click', async () => {
+    const email = (document.getElementById('s1_resumeEmail') as HTMLInputElement).value.trim();
+    const password = (document.getElementById('s1_resumePassword') as HTMLInputElement).value;
+    const btn = document.getElementById('s1_resumeBtn') as HTMLButtonElement;
+    if (!email || !password) { showMsg('s1_msg', 'Enter your email and password.', true); return; }
+
+    btn.disabled = true; btn.textContent = 'Checking…';
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      currentSession = data.session;
+      currentUserId = data.user.id;
+      showStep('2');
+    } catch (err: any) {
+      showMsg('s1_msg', err.message || 'Could not log in — have you confirmed your email yet?', true);
+    }
+    btn.disabled = false; btn.textContent = "I've confirmed — continue";
+  });
+
+  // ── STEP 2: profile + sample upload ──
+  document.getElementById('s2_back')?.addEventListener('click', () => showStep('1'));
+  document.getElementById('s2_next')?.addEventListener('click', async () => {
+    const btn = document.getElementById('s2_next') as HTMLButtonElement;
+    if (!currentUserId) { showMsg('s2_msg', 'Session missing — please restart from step 1.', true); return; }
+
+    const fileInput = document.getElementById('s2_sampleFile') as HTMLInputElement;
+    const file = fileInput.files?.[0];
+
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      if (file) {
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = `${currentUserId}/sample_${Date.now()}_${safeName}`;
+        const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true });
+        if (upErr) throw upErr;
+        const { data: signed } = await supabase.storage.from(BUCKET).createSignedUrl(path, 60 * 60 * 24 * 365);
+        sampleFileUrl = signed?.signedUrl || path;
+        sampleFileName = file.name;
+      }
+      showStep('3');
+    } catch (err: any) {
+      showMsg('s2_msg', err.message || 'Could not upload sample file.', true);
+    }
+    btn.disabled = false; btn.textContent = 'Continue';
+  });
+
+  // ── STEP 3: timed test ──
+  document.getElementById('s3_start')?.addEventListener('click', () => {
+    testPrompt = TEST_PROMPTS[Math.floor(Math.random() * TEST_PROMPTS.length)];
+    testStartedAt = new Date().toISOString();
+    (document.getElementById('s3_promptText') as HTMLElement).textContent = testPrompt;
+    document.getElementById('s3_intro')!.style.display = 'none';
+    document.getElementById('s3_testArea')!.style.display = 'block';
+
+    let remaining = TEST_SECONDS;
+    const timerEl = document.getElementById('s3_timer')!;
+    const tick = () => {
+      const mins = Math.floor(remaining / 60);
+      const secs = remaining % 60;
+      timerEl.textContent = `${mins}:${String(secs).padStart(2, '0')}`;
+      timerEl.classList.toggle('urgent', remaining <= 60);
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        submitTest(true);
+        return;
+      }
+      remaining--;
+    };
+    tick();
+    timerInterval = setInterval(tick, 1000);
+  });
+
+  async function submitTest(auto: boolean) {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    const response = (document.getElementById('s3_response') as HTMLTextAreaElement).value.trim();
+    const btn = document.getElementById('s3_submit') as HTMLButtonElement;
+    if (!auto && !response) { showMsg('s3_msg', 'Please write a response before submitting.', true); return; }
+    btn.disabled = true;
+    (window as any).__testResponse = response;
+    (window as any).__testSubmittedAt = new Date().toISOString();
+    if (auto) showMsg('s3_msg', 'Time\'s up — your response was submitted automatically.', false);
+    showStep('4');
+  }
+
+  document.getElementById('s3_submit')?.addEventListener('click', () => submitTest(false));
+
+  // ── STEP 4: ID + education verification ──
+  document.getElementById('s4_back')?.addEventListener('click', () => showStep('3'));
+  document.getElementById('s4_next')?.addEventListener('click', async () => {
+    const idType = (document.getElementById('s4_idType') as HTMLSelectElement).value;
+    const idNumber = (document.getElementById('s4_idNumber') as HTMLInputElement).value.trim();
+    const idFileInput = document.getElementById('s4_idFile') as HTMLInputElement;
+    const idFile = idFileInput.files?.[0];
+    const eduFileInput = document.getElementById('s4_eduFile') as HTMLInputElement;
+    const eduFile = eduFileInput.files?.[0];
+    const btn = document.getElementById('s4_next') as HTMLButtonElement;
+
+    if (!idType || !idNumber || !idFile || !eduFile) { showMsg('s4_msg', 'Please fill in all fields and upload both documents.', true); return; }
+
+    btn.disabled = true; btn.textContent = 'Uploading…';
+    try {
+      const safeIdName = idFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const idPath = `${currentUserId}/id_${Date.now()}_${safeIdName}`;
+      const { error: idErr } = await supabase.storage.from(BUCKET).upload(idPath, idFile, { upsert: true });
+      if (idErr) throw idErr;
+      const { data: idSigned } = await supabase.storage.from(BUCKET).createSignedUrl(idPath, 60 * 60 * 24 * 365);
+      idFileUrl = idSigned?.signedUrl || idPath;
+      idFileName = idFile.name;
+
+      const safeEduName = eduFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const eduPath = `${currentUserId}/education_${Date.now()}_${safeEduName}`;
+      const { error: eduErr } = await supabase.storage.from(BUCKET).upload(eduPath, eduFile, { upsert: true });
+      if (eduErr) throw eduErr;
+      const { data: eduSigned } = await supabase.storage.from(BUCKET).createSignedUrl(eduPath, 60 * 60 * 24 * 365);
+      eduFileUrl = eduSigned?.signedUrl || eduPath;
+      eduFileName = eduFile.name;
+
+      renderReview();
+      showStep('5');
+    } catch (err: any) {
+      showMsg('s4_msg', err.message || 'Could not upload documents.', true);
+    }
+    btn.disabled = false; btn.textContent = 'Continue';
+  });
+
+  // ── STEP 5: review + final submit ──
+  function renderReview() {
+    const box = document.getElementById('s5_review')!;
+    const row = (label: string, val: string) => `<div class="wa__review-row"><span class="wa__review-label">${label}</span><span class="wa__review-val">${esc(val)}</span></div>`;
+    box.innerHTML = [
+      row('Full name', (document.getElementById('s1_fullName') as HTMLInputElement).value),
+      row('Email', (document.getElementById('s1_email') as HTMLInputElement).value || (document.getElementById('s1_resumeEmail') as HTMLInputElement).value),
+      row('Phone', (document.getElementById('s2_phone') as HTMLInputElement).value),
+      row('Specialties', (document.getElementById('s2_specialties') as HTMLInputElement).value),
+      row('Education level', (document.getElementById('s2_education') as HTMLSelectElement).value),
+      row('Experience', (document.getElementById('s2_experience') as HTMLInputElement).value + ' years'),
+      row('Writing sample', sampleFileName || 'None uploaded'),
+      row('Test', (window as any).__testResponse ? 'Completed' : 'Not completed'),
+      row('ID type', (document.getElementById('s4_idType') as HTMLSelectElement).value),
+      row('ID number', (document.getElementById('s4_idNumber') as HTMLInputElement).value),
+      row('ID document', idFileName || 'None uploaded'),
+      row('Education certificate', eduFileName || 'None uploaded'),
+    ].join('');
+  }
+
+  document.getElementById('s5_back')?.addEventListener('click', () => showStep('4'));
+  document.getElementById('s5_submit')?.addEventListener('click', async () => {
+    const btn = document.getElementById('s5_submit') as HTMLButtonElement;
+    if (!currentUserId || !currentSession) { showMsg('s5_msg', 'Session missing — please restart from step 1.', true); return; }
+    btn.disabled = true; btn.textContent = 'Submitting…';
+    try {
+      const emailVal = (document.getElementById('s1_email') as HTMLInputElement).value.trim()
+        || (document.getElementById('s1_resumeEmail') as HTMLInputElement).value.trim();
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/writer_applications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal' },
+        body: JSON.stringify({
+          auth_user_id: currentUserId,
+          full_name: (document.getElementById('s1_fullName') as HTMLInputElement).value.trim(),
+          email: emailVal,
+          phone: (document.getElementById('s2_phone') as HTMLInputElement).value.trim(),
+          specialties: (document.getElementById('s2_specialties') as HTMLInputElement).value.trim(),
+          education_level: (document.getElementById('s2_education') as HTMLSelectElement).value,
+          years_experience: parseInt((document.getElementById('s2_experience') as HTMLInputElement).value) || 0,
+          bio: (document.getElementById('s2_bio') as HTMLTextAreaElement).value.trim(),
+          sample_url: sampleFileUrl,
+          sample_name: sampleFileName,
+          id_type: (document.getElementById('s4_idType') as HTMLSelectElement).value,
+          id_number: (document.getElementById('s4_idNumber') as HTMLInputElement).value.trim(),
+          id_document_url: idFileUrl,
+          id_document_name: idFileName,
+          education_document_url: eduFileUrl,
+          education_document_name: eduFileName,
+          test_prompt: testPrompt,
+          test_response: (window as any).__testResponse || '',
+          test_started_at: testStartedAt,
+          test_submitted_at: (window as any).__testSubmittedAt || null,
+          status: 'pending'
+        })
+      });
+      if (!res.ok) throw new Error((await res.json())?.message || 'Could not submit application.');
+      showStep('done');
+    } catch (err: any) {
+      showMsg('s5_msg', err.message || 'Could not submit application.', true);
+      btn.disabled = false; btn.textContent = 'Submit application';
+    }
+  });
+</script>
