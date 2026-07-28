@@ -3512,7 +3512,14 @@ const base = '';
     const form = document.getElementById('as2faEnrollForm') as HTMLElement;
     const secretText = document.getElementById('as2faSecretText')!;
     try {
-      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' });
+      // Clean up any stale unverified factor first — Supabase blocks a new enroll
+      // if one with the same (blank) friendly name already exists for this user.
+      const { data: existing } = await supabase.auth.mfa.listFactors();
+      const stale = (existing?.totp || []).find((f: any) => f.status !== 'verified');
+      if (stale) {
+        await supabase.auth.mfa.unenroll({ factorId: stale.id });
+      }
+      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: `totp-${Date.now()}` });
       if (error) throw error;
       secretText.textContent = data?.totp?.uri || data?.totp?.secret || '';
       form.dataset.factorId = data?.id || '';
