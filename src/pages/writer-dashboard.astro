@@ -1564,6 +1564,7 @@ const base = '';
 <script>
   import { supabase } from '../lib/supabase.js';
   import { io } from 'socket.io-client';
+  import QRCode from 'qrcode';
   const BIDDING_SERVER = 'https://thesisarcpro.onrender.com';
   const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
  
@@ -3523,8 +3524,9 @@ const base = '';
       }
       const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: `totp-${Date.now()}` });
       if (error) throw error;
-      if (data?.totp?.qr_code) {
-        qrBox.innerHTML = data.totp.qr_code; // Supabase returns this as inline SVG markup
+      if (data?.totp?.uri) {
+        const dataUrl = await QRCode.toDataURL(data.totp.uri, { width: 180, margin: 1 });
+        qrBox.innerHTML = `<img src="${dataUrl}" width="160" height="160" alt="2FA QR code" />`;
         qrBox.style.display = 'flex';
       } else {
         qrBox.style.display = 'none';

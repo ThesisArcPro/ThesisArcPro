@@ -16,10 +16,12 @@
     "@astrojs/sitemap": "^3.7.3",
     "@supabase/supabase-js": "^2.106.2",
     "astro": "^6.4.2",
+    "qrcode": "^1.5.4",
     "socket.io-client": "^4.8.3",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
+    "@types/qrcode": "^1.5.6",
     "supabase": "^2.104.0"
   }
 }
