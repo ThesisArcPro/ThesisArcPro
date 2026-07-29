@@ -29,6 +29,8 @@ Secondly, the imposition of financial sanctions and penalties on Germany was see
 
 The third weakness of the treaty is that it caused territorial losses. Germany lost Alsace-Lorraine to France and the eastern part of Poland, and overseas colonies were lost, affecting its access to resources and labor (Murphy, 2024). From Germany's perspective, the imposition of territorial policy was unfair and disrespected the sovereignty of the country. Some ethnic groups and cultures were affected because they found themselves outside their geographic location, and displacement continued to affect stability within Europe (Murphy, 2024).
 
+<!--split-->
+
 Also, the military restriction policy imposed on Germany demonstrated the weakness of the treaty. The country's troop numbers were restructured to 100,000, and military hardware, including tanks, submarines, and air power, was restricted (Murphy, 2024). Such restrictions caused resentment among citizens, whose frustrations triggered political reforms. Those who were dissatisfied gained political influence by promising to overturn the treaty's agreement, which was seen as oppressive.
 
 Another weakness was that the Allied countries disagreed on specific causes during drafting. The French convoy led by Prime Minister Clemenceau proposed that Germany be completely undermined, while US President Woodrow Wilson supported self-determination and international collaboration, and British Prime Minister Lloyd George supported a balanced punishment (Murphy, 2024). Differentiated treaty expectations caused major compromises that complicated implementation.
