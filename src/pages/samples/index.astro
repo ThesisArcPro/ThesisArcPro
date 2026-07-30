@@ -64,9 +64,9 @@ const groupedSubjects = Object.entries(categoryGroups).map(([group, subjectList]
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.3-4.3"/>
           </svg>
-          <input type="text" placeholder="Search samples..." />
+          <input type="text" id="hubSearchInput" placeholder="Search samples..." />
         </div>
-        <button>Search</button>
+        <button id="hubSearchBtn">Search</button>
       </div>
     </div>
   </div>
@@ -95,6 +95,16 @@ const groupedSubjects = Object.entries(categoryGroups).map(([group, subjectList]
   </div>
 
   <Footer />
+  <script>
+  function goToSearch() {
+    const val = (document.getElementById('hubSearchInput') as HTMLInputElement)?.value.trim() || '';
+    window.location.href = `/samples/search/?q=${encodeURIComponent(val)}`;
+  }
+  document.getElementById('hubSearchBtn')?.addEventListener('click', goToSearch);
+  document.getElementById('hubSearchInput')?.addEventListener('keydown', (e) => {
+    if ((e as KeyboardEvent).key === 'Enter') goToSearch();
+  });
+</script>
 </BaseLayout>
 
 <style>

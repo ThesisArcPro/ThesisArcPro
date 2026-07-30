@@ -1,0 +1,117 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const allSamples = await getCollection('samples');
+const searchIndex = allSamples.map((e) => ({
+  title: e.data.title,
+  description: e.data.description,
+  category: e.data.category,
+  subject: e.data.subject,
+  essay_type: e.data.essay_type,
+  word_count: e.data.word_count,
+  href: `/samples/${e.data.category.toLowerCase().replace(/\s+/g, '-')}/${e.id}`,
+}));
+---
+
+<BaseLayout title="Search Essay Samples - ThesisArcPro" description="Search ThesisArcPro's free essay examples by topic, subject, or keyword.">
+  <Header />
+  <div class="hero-band">
+    <div class="page-inner">
+      <h1>Search results</h1>
+      <div class="hero-search">
+        <div class="search-input-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search samples..." />
+        </div>
+        <button id="searchBtn">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-inner">
+    <p id="resultCount" class="result-count"></p>
+    <div class="essay-list" id="results"></div>
+  </div>
+  <Footer />
+</BaseLayout>
+
+<script define:vars={{ searchIndex }}>
+  const params = new URLSearchParams(window.location.search);
+  const q = (params.get('q') || '').trim();
+  const input = document.getElementById('searchInput');
+  const btn = document.getElementById('searchBtn');
+  const resultsEl = document.getElementById('results');
+  const countEl = document.getElementById('resultCount');
+
+  if (input) input.value = q;
+
+  function render(query) {
+    const term = query.toLowerCase();
+    const matches = term
+      ? searchIndex.filter((e) =>
+          e.title.toLowerCase().includes(term) ||
+          e.description.toLowerCase().includes(term) ||
+          e.subject.toLowerCase().includes(term) ||
+          e.category.toLowerCase().includes(term)
+        )
+      : [];
+
+    countEl.textContent = query
+      ? `${matches.length} result${matches.length === 1 ? '' : 's'} for "${query}"`
+      : 'Type a keyword and press Search.';
+
+    resultsEl.innerHTML = matches.map((e) => `
+      <div class="essay-row">
+        <div class="essay-row-text">
+          <p class="essay-title">${e.title}</p>
+          <p class="essay-desc">${e.description}</p>
+          <div class="essay-meta">
+            <span>${e.essay_type} Essay</span>
+            <span>${e.subject}</span>
+            <span>${e.word_count} words</span>
+          </div>
+        </div>
+        <a href="${e.href}" class="read-more-btn">Read more</a>
+      </div>
+    `).join('');
+  }
+
+  function goSearch() {
+    const val = input.value.trim();
+    const url = new URL(window.location.href);
+    url.searchParams.set('q', val);
+    window.history.replaceState({}, '', url);
+    render(val);
+  }
+
+  btn?.addEventListener('click', goSearch);
+  input?.addEventListener('keydown', (e) => { if (e.key === 'Enter') goSearch(); });
+
+  render(q);
+</script>
+
+<style>
+  .page-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px 64px; }
+  .hero-band { background: linear-gradient(to bottom, #FFFFFF 0%, #F7F8FE 50%, #EFF2FC 100%); border-top: 1px solid #DCE1F2; padding: 110px 0 32px; }
+  h1 { font-size: 28px; font-weight: 700; color: #1B2A4A; margin: 0 0 16px; }
+  .hero-search { display: flex; gap: 8px; max-width: 480px; }
+  .search-input-wrap { position: relative; flex: 1; display: flex; align-items: center; }
+  .search-input-wrap svg { position: absolute; left: 12px; color: #9ca3af; }
+  .hero-search input { width: 100%; padding: 12px 14px 12px 36px; border-radius: 8px; border: 1px solid #E8E2D6; font-size: 13px; }
+  .hero-search button { background: #C5A059; color: #1B2A4A; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; }
+  .result-count { font-size: 13px; color: #6b7280; padding-top: 24px; margin: 0 0 12px; }
+  .essay-list { display: flex; flex-direction: column; gap: 16px; }
+  .essay-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid #E8E2D6; border-radius: 12px; padding: 20px 24px; }
+  .essay-row:hover { border-color: #C5A059; }
+  .essay-title { font-size: 16px; font-weight: 700; color: #1B2A4A; margin: 0 0 6px; }
+  .essay-desc { font-size: 13px; color: #6b7280; line-height: 1.5; margin: 0 0 12px; }
+  .essay-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .essay-meta span { background: #F7F5F0; color: #4b5563; font-size: 11px; padding: 3px 10px; border-radius: 12px; border: 1px solid #E8E2D6; }
+  .read-more-btn { flex-shrink: 0; background: #F7F5F0; color: #1B2A4A; border: 1px solid #E8E2D6; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+</style>
