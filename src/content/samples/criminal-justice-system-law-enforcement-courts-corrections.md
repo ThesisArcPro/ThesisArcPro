@@ -1,6 +1,6 @@
 ---
 title: "Criminal Justice Essay Example: Law, Courts, Corrections"
-meta_title: "Criminal Justice Essay Example: Law, Courts, Corrections - Essay Example - ThesisArcPro"
+meta_title: "Criminal Justice Essay Example: Police, Courts, and Corrections - Essay Example - ThesisArcPro"
 description: "This criminal justice essay example covers law enforcement, courts, and corrections, showing how each shapes justice and reform."
 subject: "Criminal justice"
 category: "Criminal justice essays"
