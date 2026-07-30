@@ -16,6 +16,7 @@ export async function getStaticPaths() {
 const { category } = Astro.props;
 const allSamples = await getCollection('samples');
 const essays = allSamples.filter((e) => e.data.category === category);
+const assignmentTypes = [...new Set(essays.map((e) => e.data.assignment_type))];
 ---
 
 <BaseLayout title={`${category} - Essay Examples - ThesisArcPro`} description={`Browse free ${category.toLowerCase()} sample essays written by ThesisArcPro's academic writers.`}>
@@ -35,13 +36,26 @@ const essays = allSamples.filter((e) => e.data.category === category);
   </div>
 
   <div class="page-inner">
-    <div class="essay-list">
+    <div class="category-layout">
+      <aside class="filter-card">
+        <p class="filter-title">Select your assignment type</p>
+        <p class="filter-popular">Popular</p>
+        {assignmentTypes.map((type) => (
+          <label class="filter-checkbox">
+            <input type="checkbox" name="assignment_type" value={type} />
+            {type}
+          </label>
+        ))}
+        <button class="filter-apply" type="button">Apply filter</button>
+      </aside>
+
+      <div class="essay-list" id="essayList">
       {essays.map((essay) => {
         const formattedDate = new Intl.DateTimeFormat('en-GB', {
           day: '2-digit', month: '2-digit', year: 'numeric',
         }).format(essay.data.date);
         return (
-          <div class="essay-row">
+          <div class="essay-row" data-assignment-type={essay.data.assignment_type}>
             <div class="essay-row-text">
               <p class="essay-title">{essay.data.title}</p>
               <p class="essay-desc">{essay.data.description}</p>
@@ -58,8 +72,26 @@ const essays = allSamples.filter((e) => e.data.category === category);
         );
       })}
     </div>
+    </div>
   </div>
   <Footer />
+  <script>
+  const checkboxes = document.querySelectorAll('input[name="assignment_type"]');
+  const applyBtn = document.querySelector('.filter-apply');
+  const rows = document.querySelectorAll('.essay-row');
+
+  applyBtn?.addEventListener('click', () => {
+    const checked = Array.from(checkboxes)
+      .filter((cb) => (cb as HTMLInputElement).checked)
+      .map((cb) => (cb as HTMLInputElement).value);
+
+    rows.forEach((row) => {
+      const rowType = row.getAttribute('data-assignment-type');
+      const show = checked.length === 0 || checked.includes(rowType || '');
+      (row as HTMLElement).style.display = show ? 'flex' : 'none';
+    });
+  });
+</script>
 </BaseLayout>
 
 <style>
@@ -85,4 +117,18 @@ const essays = allSamples.filter((e) => e.data.category === category);
     text-decoration: none; white-space: nowrap;
   }
   .read-more-btn:hover { border-color: #C5A059; }
+  .category-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 32px; padding-top: 32px; }
+  @media (max-width: 800px) { .category-layout { grid-template-columns: 1fr; } }
+  .filter-card { background: #ECEEFF; border-radius: 14px; padding: 20px; align-self: start; }
+  .filter-title { font-size: 14px; font-weight: 600; color: #1B2A4A; margin: 0 0 10px; }
+  .filter-popular { font-size: 12px; color: #C5A059; margin: 0 0 8px; font-weight: 600; }
+  .filter-checkbox {
+    display: flex; align-items: center; gap: 8px; font-size: 13px; color: #334155;
+    padding: 8px 0; border-bottom: 1px solid #dfe2fb; cursor: pointer;
+  }
+  .filter-apply {
+    width: 100%; margin-top: 14px; background: #1B2A4A; color: #fff; border: none;
+    padding: 12px 0; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;
+  }
+  .essay-list { padding-top: 0 !important; }
 </style>
