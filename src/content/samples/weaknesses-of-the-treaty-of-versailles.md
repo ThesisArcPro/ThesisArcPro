@@ -37,7 +37,7 @@ Another weakness was that the Allied countries disagreed on specific causes duri
 
 Also, the enforcement of the treaty demonstrated a major weakness. The League of Nations was expected to enforce the treaty but did not have the military power to implement policies (Ağkaya, 2025). The body depended on major superpowers to donate troops and hardware, and by the 1930s, the League had completely stopped imposing active restrictions on Germany and its allies (Ağkaya, 2025).
 
-Importantly, the treaty expressed a weakness because Allied members acted out of fear to restrain Germany rather than to build lasting peace. The harsh economic movements during the 1930s depression weakened enforcement powers (Mwadi et al., 2025), giving opportunity to dictators like Adolf Hitler, whose ambition was to restore Germany's pride and strengthen its economy.
+Importantly, the treaty expressed a weakness because Allied members acted out of fear to restrain Germany rather than to build lasting peace. The harsh economic movements during the 1930s depression weakened enforcement powers (Mwadi et al., 2025), giving opportunity to dictators like Adolf Hitler, whose ambition was to restore Germany's pride and strengthen its economy
 
 In conclusion, the Treaty of Versailles's weaknesses affected its strict implementation. Germany lost territorial regions, its military was suppressed, reparations damaged its economy, and resentment fueled movements that led to leaders like Adolf Hitler. While the policies were enforceable, countries like the US did not join the League of Nations to ensure lasting peaceful cooperation. Hence, these weaknesses were major drawbacks explaining why the Treaty of Versailles did not have a lasting solution to future conflict, including World War II.
 
