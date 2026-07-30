@@ -1,0 +1,155 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const allSamples = await getCollection('samples');
+
+// Full target taxonomy. Only subjects matching an enum value in
+// content.config.ts will ever show a real count/link — the rest display
+// as "(0)" placeholders until essays + schema enums are added for them.
+const categoryGroups: Record<string, string[]> = {
+  'Social sciences': [
+    'Communications and media', 'Community and society', 'Cultural studies',
+    'Human relations', 'Psychology', 'Social psychology', 'Social science',
+    'Social studies', 'Social work', 'Sociology',
+  ],
+  'Philosophy': ['Ethics', 'Philosophy', 'Religion and theology'],
+  'Legal': ['Criminal justice', 'Criminology', 'Human rights', 'Law', 'Public administration'],
+  'History': ['American history', 'Anthropology', 'History'],
+  'English and literature': [
+    'American literature', 'Ancient literature', 'English',
+    'Language studies', 'Literature', 'Shakespeare literature',
+  ],
+  'Business administration': [
+    'Accounting', 'Business and management', 'Employee welfare', 'Entrepreneurship',
+    'Hospitality management', 'Human resource management', 'Leadership',
+    'Logistics', 'Project management', 'Strategic management',
+  ],
+  'Economics': ['Agriculture', 'Economics', 'Finance', 'Investing and financial markets', 'Political economics'],
+  'Health Sciences': ['Nursing'],
+};
+
+const bySubject: Record<string, number> = {};
+for (const s of allSamples) {
+  bySubject[s.data.subject] = (bySubject[s.data.subject] || 0) + 1;
+}
+
+// For each subject, find one essay's real category slug so the link goes
+// somewhere valid — subjects with 0 essays get no link yet.
+const groupedSubjects = Object.entries(categoryGroups).map(([group, subjectList]) => ({
+  group,
+  subjects: subjectList.map((subj) => {
+    const match = allSamples.find((e) => e.data.subject === subj);
+    return {
+      subject: subj,
+      count: bySubject[subj] || 0,
+      href: match ? `/samples/${match.data.category.toLowerCase().replace(/\s+/g, '-')}` : null,
+    };
+  }),
+}));
+---
+
+<BaseLayout title="Free Essay Examples Database - ThesisArcPro" description="Browse free essay samples across every subject and assignment type, written by ThesisArcPro's academic writers.">
+  <Header />
+
+  <div class="hero-band">
+    <div class="page-inner">
+      <h1>Free essay examples library</h1>
+      <p class="hero-sub">Browse complimentary sample essays across subjects and assignment types.</p>
+      <div class="hero-search">
+        <div class="search-input-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="text" placeholder="Search samples..." />
+        </div>
+        <button>Search</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-inner">
+    <h2 class="section-title">Browse by subject</h2>
+    <div class="subject-columns">
+      {groupedSubjects.map(({ group, subjects }) => (
+        <div class="subject-column">
+          <p class="subject-column-title">{group}</p>
+          {subjects.map(({ subject, count, href }) => (
+            href ? (
+              <a href={href} class="subject-link">{subject} <span class="count">({count})</span></a>
+            ) : (
+              <span class="subject-link subject-link--empty">{subject} <span class="count">({count})</span></span>
+            )
+          ))}
+        </div>
+      ))}
+    </div>
+
+    <p class="disclaimer">
+      ThesisArcPro essays are provided strictly for research and study purposes and are not
+      intended to be submitted as finished work. ThesisArcPro does not endorse or condone plagiarism.
+    </p>
+  </div>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .page-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  .hero-band {
+    background: linear-gradient(to bottom, #FFFFFF 0%, #F7F8FE 50%, #EFF2FC 100%);
+    border-top: 1px solid #DCE1F2;
+    padding: 110px 0 40px;
+  }
+  .hero-band h1 { font-size: 32px; font-weight: 700; color: #1B2A4A; margin: 0 0 8px; text-align: center; }
+  .hero-sub { text-align: center; color: #6b7280; font-size: 14px; margin: 0 0 24px; }
+  .hero-search { display: flex; gap: 8px; max-width: 480px; margin: 0 auto; }
+  .search-input-wrap { position: relative; flex: 1; display: flex; align-items: center; }
+  .search-input-wrap svg { position: absolute; left: 12px; color: #9ca3af; }
+  .hero-search input { width: 100%; padding: 12px 14px 12px 36px; border-radius: 8px; border: 1px solid #E8E2D6; font-size: 13px; }
+  .hero-search button { background: #C5A059; color: #1B2A4A; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; }
+
+  .section-title { font-size: 20px; font-weight: 700; color: #1B2A4A; margin: 40px 0 16px; }
+
+  .subject-columns { column-count: 4; column-gap: 32px; }
+  .subject-column { break-inside: avoid; margin-bottom: 32px; }
+  @media (max-width: 900px) { .subject-columns { column-count: 2; } }
+  @media (max-width: 560px) { .subject-columns { column-count: 1; } }
+  .subject-column-title { font-size: 14px; font-weight: 700; color: #1B2A4A; margin: 0 0 12px; }
+  .subject-link { display: block; color: #4b5563; font-size: 13px; text-decoration: none; padding: 6px 0; }
+  .subject-link:hover { color: #C5A059; }
+  .subject-link--empty { color: #c0c4cc; cursor: default; pointer-events: none; }
+  .subject-link .count { color: #9ca3af; }
+
+  .cta-banner {
+    display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
+    background: linear-gradient(135deg, #1B2A4A 0%, #2c4270 100%);
+    border-radius: 16px; padding: 28px 32px; margin: 40px 0;
+  }
+  .cta-badges { display: flex; flex-direction: column; gap: 10px; }
+  .cta-badge {
+    background: #fff; color: #1B2A4A; font-size: 13px; font-weight: 600;
+    padding: 10px 18px; border-radius: 999px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    white-space: nowrap;
+  }
+  .cta-text { flex: 1; min-width: 240px; }
+  .cta-title { color: #fff; font-weight: 700; font-size: 20px; margin: 0 0 8px; }
+  .cta-sub { color: #cbd5e1; font-size: 14px; line-height: 1.5; margin: 0 0 16px; max-width: 380px; }
+  .cta-btn { display: inline-block; background: #C5A059; color: #1B2A4A; font-weight: 700; font-size: 14px; padding: 12px 22px; border-radius: 8px; text-decoration: none; }
+
+  .essay-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .essay-card {
+    display: block; border: 1px solid #E8E2D6; border-radius: 12px; padding: 18px;
+    text-decoration: none; color: inherit;
+  }
+  .essay-card:hover { border-color: #C5A059; }
+  .essay-title { font-size: 15px; font-weight: 700; color: #1B2A4A; margin: 0 0 8px; }
+  .essay-desc { font-size: 13px; color: #6b7280; line-height: 1.5; margin: 0 0 12px; }
+  .essay-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .essay-meta span { background: #F7F5F0; color: #4b5563; font-size: 11px; padding: 3px 10px; border-radius: 12px; border: 1px solid #E8E2D6; }
+
+  .disclaimer { margin: 48px 0 24px; font-size: 11px; color: #9a9da6; line-height: 1.6; border-top: 1px solid #E8E2D6; padding-top: 16px; }
+</style>
