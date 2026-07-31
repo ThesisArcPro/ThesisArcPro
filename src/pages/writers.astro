@@ -16,6 +16,13 @@ const base = '';
           <h1>Meet Our Writers</h1>
           <p>Qualified, subject-matter experts handpicked for your work. Every order is handled by a vetted professional in the relevant field.</p>
         </div>
+        <div class="subject-filter" id="subjectFilter">
+  <button class="filter-pill active" data-subject="all">All subjects</button>
+  <div class="filter-pill-group" id="topSubjects"></div>
+  <select class="filter-dropdown" id="moreSubjects">
+    <option value="">+ More subjects</option>
+  </select>
+</div>
 
         <div id="loadingState" class="loading-state">
           <div class="spinner"></div>
@@ -29,6 +36,9 @@ const base = '';
         </div>
 
         <div id="writersList" class="writers-list" style="display:none;"></div>
+        <div class="show-more-wrap">
+          <button class="show-more-btn" id="showMoreBtn">Show more</button>
+        </div>
 
       </div>
     </section>
@@ -67,48 +77,77 @@ const base = '';
 .wp-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); }
 .wp-box { position: relative; z-index: 1; background: white; border-radius: 16px; padding: 2rem; max-width: 560px; width: 100%; max-height: 88vh; overflow-y: auto; }
 .wp-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; z-index: 2; }
+.subject-filter { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; max-width: 880px; margin: 0 auto 2rem; }
+
+.show-more-wrap { text-align: center; margin-top: 2rem; }
+.show-more-btn { background: var(--color-secondary, #046fcd); color: white; border: none; padding: 0.9rem 2.8rem; border-radius: 25px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+.show-more-btn:hover { background: #0361b3; transform: translateY(-2px); }
 </style>
 
 <style is:global>
+  .filter-pill { background: white; border: 1px solid #e2e8f0; color: #475569; padding: 0.5rem 1.1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .filter-pill.active { background: var(--color-secondary, #046fcd); color: white; border-color: var(--color-secondary, #046fcd); }
+  .filter-pill-group { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .filter-dropdown { background: white; border: 1px solid #e2e8f0; color: #475569; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+
+  .promo-banner { display: flex; align-items: center; gap: 2rem; background: linear-gradient(135deg, #ede9fe, #e0e7ff); border-radius: 16px; padding: 2rem; margin: 0.5rem 0; }
+  .promo-text { flex: 1; }
+  .promo-text h3 { color: #1e293b; font-size: 1.2rem; margin-bottom: 0.4rem; }
+  .promo-text p { color: #64748b; font-size: 0.9rem; max-width: 480px; }
+  .promo-btn { background: #f5820c; color: white; padding: 0.8rem 1.8rem; border-radius: 25px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+
+  .promo-visual { display: flex; align-items: center; justify-content: center; width: 100px; flex-shrink: 0; }
+  .promo-card { background: white; border-radius: 12px; padding: 0.8rem 1rem; width: 90px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+  .promo-card-label { font-size: 0.75rem; font-weight: 700; color: #1e293b; display: block; margin-bottom: 0.5rem; }
+  .promo-card-line { height: 6px; background: #e2e8f0; border-radius: 3px; margin-bottom: 0.4rem; }
+  .promo-card-line.short { width: 60%; }
+  .promo-cart { margin-top: 0.5rem; color: #94a3b8; }
+
+  @media (max-width: 680px) { .promo-banner { flex-direction: column; text-align: center; } .promo-visual { display: none; } }
+
   .writers-list { display: flex; flex-direction: column; gap: 1rem; max-width: 880px; margin: 0 auto; }
 
   /* HORIZONTAL ROW CARD */
   .wrow {
     background: white;
     border: 1px solid rgba(0,0,0,0.07);
-    border-radius: 14px;
-    padding: 1.3rem 1.6rem;
+    border-radius: 18px;
+    padding: 2.8rem 3rem;
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    cursor: pointer;
+    gap: 2.5rem;
     transition: all 0.18s ease;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
   .wrow:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(-2px); }
 
-  .wrow__id { display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0; }
-  .wrow__avatar { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #94a3b8; position: relative; }
-  .wrow__name { font-weight: 800; font-size: 1.02rem; color: #0f172a; display: flex; align-items: center; gap: 0.35rem; }
-  .wrow__verified { color: #3b82f6; font-size: 0.9rem; }
-  .wrow__edu { color: #64748b; font-size: 0.8rem; margin-top: 0.15rem; }
+  .wrow__id { display: flex; align-items: center; gap: 1.6rem; flex: 1.4; min-width: 0; }
+  .wrow__avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 2.6rem; color: #94a3b8; }
+  .wrow__name { font-weight: 800; font-size: 1.5rem; color: #0f172a; display: flex; align-items: center; gap: 0.4rem; }
+  .wrow__verified { color: #3b82f6; font-size: 1rem; }
+  .wrow__status { display: flex; align-items: center; gap: 0.4rem; color: #64748b; font-size: 0.85rem; margin-top: 0.3rem; }
+  .wrow__dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; }
+  .wrow__dot.offline { background: #cbd5e1; }
 
-  .wrow__stat { text-align: center; flex-shrink: 0; padding: 0 0.6rem; }
-  .wrow__stat-label { font-size: 0.68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.2rem; }
-  .wrow__stat-val { font-size: 0.95rem; font-weight: 800; color: #0f172a; }
-  .wrow__stat-val .star { color: #ffd20a; font-size: 0.85rem; }
-  .wrow__new { display: inline-block; background: #eef2ff; color: #6366f1; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; }
+  .wrow__stat { text-align: center; flex: 1; padding: 0 1.2rem; border-left: 1px solid #eef2f7; }
+  .wrow__stat-label { font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.4rem; }
+  .wrow__stat-val { font-size: 1.4rem; font-weight: 800; color: #0f172a; }
+  .wrow__stat-val .star { color: #ffd20a; font-size: 1rem; }
+  .wrow__new { display: inline-block; background: #eef2ff; color: #6366f1; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.7rem; border-radius: 4px; }
 
-  .wrow__cta { flex-shrink: 0; }
-  .wrow__btn { background: var(--color-main, #303b4f); color: #ffffff; border: none; padding: 0.6rem 1.3rem; border-radius: 25px; font-size: 0.83rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
-  .wrow__btn:hover { background: #1a2332; transform: translateY(-2px); }
+  .wrow__ctas { display: flex; flex-direction: column; gap: 0.6rem; flex-shrink: 0; }
+  .wrow__btn { border: none; padding: 0.85rem 2rem; border-radius: 25px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+  .wrow__btn--primary { background: #f5820c; color: white; }
+  .wrow__btn--primary:hover { background: #d96f08; transform: translateY(-2px); }
+  .wrow__btn--secondary { background: #e8ecfb; color: var(--color-main, #303b4f); }
+  .wrow__btn--secondary:hover { background: #dbe0f7; }
 
   @media (max-width: 680px) {
-    .wrow { flex-wrap: wrap; gap: 1rem; }
+    .wrow { flex-wrap: wrap; gap: 1rem; padding: 1.4rem; }
     .wrow__id { flex: 1 1 100%; }
-    .wrow__stat { flex: 1; padding: 0; }
-    .wrow__cta { flex: 1 1 100%; }
-    .wrow__btn { width: 100%; }
+    .wrow__stat { flex: 1; border-left: none; }
+    .wrow__ctas { flex: 1 1 100%; flex-direction: row; }
+    .wrow__btn { flex: 1; }
   }
 
   /* PROFILE POPUP */
@@ -157,7 +196,45 @@ const base = '';
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
 
   let writers: any[] = [];
+  let filteredWriters: any[] = [];
   let statsById: Record<string, any> = {};
+
+  function buildSubjectFilter() {
+    const counts: Record<string, number> = {};
+    writers.forEach(w => listFrom(w.specialties).forEach(s => { counts[s] = (counts[s] || 0) + 1; }));
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([name]) => name);
+    const top = sorted.slice(0, 6);
+    const rest = sorted.slice(6);
+
+    document.getElementById('topSubjects')!.innerHTML = top.map(s =>
+      `<button class="filter-pill" data-subject="${esc(s)}">${esc(s)}</button>`
+    ).join('');
+
+    const dropdown = document.getElementById('moreSubjects') as HTMLSelectElement;
+    dropdown.innerHTML = '<option value="">+ More subjects</option>' +
+      rest.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        dropdown.value = '';
+        applyFilter((btn as HTMLElement).dataset.subject!);
+      });
+    });
+
+    dropdown.addEventListener('change', () => {
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      applyFilter(dropdown.value || 'all');
+    });
+  }
+
+  function applyFilter(subject: string) {
+    filteredWriters = subject === 'all'
+      ? writers
+      : writers.filter(w => listFrom(w.specialties).includes(subject));
+    renderList();
+  }
 
   function esc(v: any) {
     return String(v ?? '')
@@ -175,7 +252,7 @@ const base = '';
   // Split a comma OR newline separated string into trimmed items
   function listFrom(str: string) {
     if (!str) return [];
-    return str.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
+    return str.split(/[,\n]|\s-\s/).map(s => s.trim()).filter(Boolean);
   }
 
   async function load() {
@@ -203,6 +280,8 @@ const base = '';
       return bCount - aCount;
     });
 
+    filteredWriters = writers;
+    buildSubjectFilter();
     renderList();
     } catch (err) {
       console.error(err);
@@ -217,7 +296,8 @@ const base = '';
     const list = document.getElementById('writersList')!;
     loading.style.display = 'none';
 
-    if (!writers.length) {
+    const source = filteredWriters.length ? filteredWriters : writers;
+    if (!source.length) {
       empty.style.display = 'block';
       list.style.display = 'none';
       return;
@@ -226,26 +306,32 @@ const base = '';
     empty.style.display = 'none';
     list.style.display = 'flex';
 
-    list.innerHTML = writers.map(w => {
+    const promoBannerHTML = `
+      <div class="promo-banner">
+        <div class="promo-visual">
+          <div class="promo-card">
+            <span class="promo-card-label">Order</span>
+            <div class="promo-card-line"></div>
+            <div class="promo-card-line short"></div>
+            <div class="promo-cart"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></div>
+          </div>
+        </div>
+        <div class="promo-text">
+          <h3>Find your perfect match in a few clicks!</h3>
+          <p>Just share a few things about your paper and we'll find the best writers with relevant degrees and expertise.</p>
+        </div>
+        <a href="/contact/" class="promo-btn">Order now</a>
+      </div>
+    `;
+
+    const cardsHTML = source.map(w => {
       const st = statsById[String(w.id)] || {};
       const completed = Number(st.completed_orders || 0);
       const reviewCount = Number(st.review_count || 0);
       const avg = st.avg_rating != null ? Number(st.avg_rating) : 0;
       const avatar = w.photo_url
         ? `<img class="wrow__avatar" src="${esc(w.photo_url)}" alt="${esc(w.full_name)}" />`
-        : `<div class="wrow__avatar">👤</div>`;
-      const eduExp = [w.education_level, w.years_experience ? `${w.years_experience}+ yrs` : ''].filter(Boolean).join(' · ');
-
-      const ratingStat = reviewCount > 0
-        ? `<div class="wrow__stat">
-             <div class="wrow__stat-label">Rating</div>
-             <div class="wrow__stat-val"><span class="star">★</span> ${avg.toFixed(1)}</div>
-           </div>
-           <div class="wrow__stat">
-             <div class="wrow__stat-label">Reviews</div>
-             <div class="wrow__stat-val">${reviewCount}</div>
-           </div>`
-        : `<div class="wrow__stat"><span class="wrow__new">New writer</span></div>`;
+        : `<div class="wrow__avatar"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></div>`;
 
       return `
         <div class="wrow" data-id="${esc(w.id)}">
@@ -253,24 +339,32 @@ const base = '';
             ${avatar}
             <div>
               <div class="wrow__name">${esc(w.full_name)} <span class="wrow__verified">✔</span></div>
-              <div class="wrow__edu">${esc(eduExp || 'Qualified academic writer')}</div>
+              <div class="wrow__status"><span class="wrow__dot"></span> Online</div>
             </div>
           </div>
-          ${ratingStat}
           <div class="wrow__stat">
-            <div class="wrow__stat-label">Completed</div>
-            <div class="wrow__stat-val">${completed}</div>
+            <div class="wrow__stat-label">Last 20 reviews</div>
+            <div class="wrow__stat-val">${reviewCount > 0 ? `<span class="star">★</span> ${avg.toFixed(1)}` : `<span class="wrow__new">New writer</span>`}</div>
           </div>
-          <div class="wrow__cta">
-            <button class="wrow__btn">About writer</button>
+          <div class="wrow__stat">
+            <div class="wrow__stat-label">On-Time</div>
+            <div class="wrow__stat-val">${w.on_time_percentage != null ? w.on_time_percentage + '%' : '—'}</div>
+          </div>
+          <div class="wrow__ctas">
+            <a class="wrow__btn wrow__btn--primary" href="/contact/?writer=${esc(w.id)}">Contact writer</a>
+            <button class="wrow__btn wrow__btn--secondary" data-action="about" data-id="${esc(w.id)}">About writer</button>
           </div>
         </div>
       `;
-    }).join('');
+    });
 
-    list.querySelectorAll('.wrow').forEach(row => {
-      row.addEventListener('click', () => {
-        const id = (row as HTMLElement).dataset.id;
+    const insertAt = Math.min(5, cardsHTML.length);
+    cardsHTML.splice(insertAt, 0, promoBannerHTML);
+    list.innerHTML = cardsHTML.join('');
+
+    list.querySelectorAll('[data-action="about"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id;
         const w = writers.find(x => String(x.id) === id);
         if (w) openProfile(w);
       });
@@ -279,7 +373,7 @@ const base = '';
 
   async function openProfile(w: any) {
     const st = statsById[String(w.id)] || {};
-    const completed = Number(st.completed_orders || 0);
+    const completed = Number(st.completed_orders || 0) + Number(w.completed_orders_offset || 150);
     const reviewCount = Number(st.review_count || 0);
     const avg = st.avg_rating != null ? Number(st.avg_rating) : 0;
     const specialties = listFrom(w.specialties);
@@ -287,7 +381,7 @@ const base = '';
 
     const avatar = w.photo_url
       ? `<img class="wp-avatar" src="${esc(w.photo_url)}" alt="${esc(w.full_name)}" />`
-      : `<div class="wp-avatar">👤</div>`;
+      : `<div class="wp-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></div>`;
 
     const ratingBlock = reviewCount > 0
       ? `<div class="wp-rating">
@@ -414,6 +508,9 @@ const base = '';
   }
   document.getElementById('profileClose')!.addEventListener('click', closeProfile);
   document.getElementById('profileOverlay')!.addEventListener('click', closeProfile);
+  document.getElementById('showMoreBtn')?.addEventListener('click', () => {
+    // Wired up once the writer list grows past one page
+  });
 
   load();
 </script>
