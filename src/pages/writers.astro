@@ -42,6 +42,84 @@ const base = '';
 
       </div>
     </section>
+
+    <section class="faq-section">
+      <div class="container">
+        <h2 class="faq-title">FAQ</h2>
+        <div class="faq-grid" id="faqGrid">
+          <button class="faq-item" data-faq="1">
+            <div class="faq-q">
+              <span>What qualifications do ThesisArcPro writers have?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Every writer goes through a vetting process before joining our team. Most hold a Bachelor's or Master's degree in their subject area, and several hold PhDs. We check writing samples, subject knowledge, and past academic performance before approving anyone to take orders.</div>
+          </button>
+          <button class="faq-item" data-faq="2">
+            <div class="faq-q">
+              <span>Can I request a specific writer for my paper?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Yes. Browse writer profiles on this page, check their subject specialties and ratings, and select "Contact writer" to request them directly for your order.</div>
+          </button>
+          <button class="faq-item" data-faq="3">
+            <div class="faq-q">
+              <span>How is a writer's rating calculated?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Ratings reflect recent client feedback, weighted so that low scores affect the rating more than high scores raise it. This keeps ratings meaningful and prevents one bad review from being buried under volume.</div>
+          </button>
+          <button class="faq-item" data-faq="4">
+            <div class="faq-q">
+              <span>What does "On-Time %" mean on a writer's profile?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">It's the share of a writer's completed orders delivered by the agreed deadline. A higher percentage means a stronger track record of punctual delivery.</div>
+          </button>
+          <button class="faq-item" data-faq="5">
+            <div class="faq-q">
+              <span>Can I message the writer while they work on my order?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Yes, you can communicate directly through your client dashboard once your order is placed and assigned, to share updates or answer questions the writer may have.</div>
+          </button>
+          <button class="faq-item" data-faq="6">
+            <div class="faq-q">
+              <span>What if I'm not satisfied with the writer's work?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">You're covered by free unlimited revisions and our money-back guarantee. If something isn't right, request a revision first — most concerns are resolved that way.</div>
+          </button>
+          <button class="faq-item" data-faq="7">
+            <div class="faq-q">
+              <span>Do writers specialize in specific subjects?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Yes. Each writer lists their subject specialties on their profile. Use the subject filters above to narrow the list to writers experienced in your field.</div>
+          </button>
+          <button class="faq-item" data-faq="8">
+            <div class="faq-q">
+              <span>How quickly can a writer start on an urgent order?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Many of our writers accept urgent deadlines starting from a few hours. Availability depends on the writer and current workload, so check their "Online" status or contact them directly to confirm.</div>
+          </button>
+          <button class="faq-item" data-faq="9">
+            <div class="faq-q">
+              <span>Are writer reviews verified?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Yes. Reviews are only added after a client's order is marked complete, so every rating and comment reflects an actual completed assignment.</div>
+          </button>
+          <button class="faq-item" data-faq="10">
+            <div class="faq-q">
+              <span>What happens if my assigned writer becomes unavailable?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">If a writer can no longer complete your order, our support team reassigns it to another qualified writer with matching expertise, at no extra cost to you.</div>
+          </button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- Full Profile Popup -->
@@ -186,6 +264,19 @@ const base = '';
   .wp-review__date { color: #94a3b8; font-size: 0.74rem; }
   .wp-review__text { color: #475569; font-size: 0.85rem; line-height: 1.5; }
   .wp-no-reviews { color: #94a3b8; font-size: 0.85rem; text-align: center; padding: 1rem; }
+
+  .faq-section { background: linear-gradient(135deg, #1b2340, #2a3358); padding: 4rem 0; margin-top: 3rem; }
+  .faq-title { color: white; font-size: 2.2rem; font-weight: 700; margin-bottom: 2rem; }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+  .faq-item { background: rgba(255,255,255,0.06); border: none; border-radius: 10px; padding: 1.1rem 1.4rem; text-align: left; cursor: pointer; color: white; width: 100%; transition: background 0.2s ease; }
+  .faq-item:hover { background: rgba(255,255,255,0.1); }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; font-weight: 500; }
+  .faq-icon { font-size: 1.3rem; font-weight: 300; flex-shrink: 0; margin-left: 1rem; transition: transform 0.2s ease; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; opacity: 0; font-size: 0.88rem; line-height: 1.6; color: rgba(255,255,255,0.75); transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease; }
+  .faq-item.open .faq-a { max-height: 300px; opacity: 1; margin-top: 0.9rem; }
+
+  @media (max-width: 720px) { .faq-grid { grid-template-columns: 1fr; } }
 </style>
 
 <script>
@@ -510,6 +601,14 @@ const base = '';
   document.getElementById('profileOverlay')!.addEventListener('click', closeProfile);
   document.getElementById('showMoreBtn')?.addEventListener('click', () => {
     // Wired up once the writer list grows past one page
+  });
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
   });
 
   load();
