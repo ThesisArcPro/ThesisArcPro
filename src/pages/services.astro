@@ -162,6 +162,6 @@ const base = '';
   const { data: { session } } = await supabase.auth.getSession();
   const btns = document.querySelectorAll('.auth-gate-page');
   btns.forEach(btn => {
-    btn.setAttribute('href', '/contact/');
+    btn.setAttribute('href', '/order/');
   });
 </script>

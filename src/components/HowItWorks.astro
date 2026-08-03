@@ -173,6 +173,6 @@ const base = '';
 
   const { data: { session } } = await supabase.auth.getSession();
   document.querySelectorAll('.auth-gate').forEach(link => {
-    link.setAttribute('href', '/contact/');
+    link.setAttribute('href', '/order/');
   });
 </script>

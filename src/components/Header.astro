@@ -225,11 +225,11 @@ const base = '';
   if (session) {
     loginBtn!.style.display = 'none';
     logoutBtn!.style.display = 'block';
-    getStartedBtn!.setAttribute('href', '/contact/');
+    getStartedBtn!.setAttribute('href', '/order/');
   } else {
     loginBtn!.style.display = 'block';
     logoutBtn!.style.display = 'none';
-    getStartedBtn!.setAttribute('href', '/contact/');
+    getStartedBtn!.setAttribute('href', '/order/');
   }
 
   logoutBtn?.addEventListener('click', async () => {
