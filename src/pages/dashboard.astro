@@ -1289,13 +1289,13 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   <div class="wiz-stack-step" id="ws1">
     <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Service</div>
     <div class="s-chips">
-      <span class="s-chip" data-svc="Writing" data-base="12">Writing</span>
-      <span class="s-chip" data-svc="Rewriting" data-base="9">Rewriting</span>
-      <span class="s-chip" data-svc="Editing" data-base="8">Editing</span>
-      <span class="s-chip" data-svc="Proofreading" data-base="7">Proofreading</span>
-      <span class="s-chip" data-svc="Problem solving" data-base="11">Problem solving</span>
-      <span class="s-chip" data-svc="Calculations" data-base="11">Calculations</span>
-      <span class="s-chip" data-svc="Review my work" data-base="10">Review my work</span>
+      <span class="s-chip" data-svc="Writing" data-base="7">Writing</span>
+      <span class="s-chip" data-svc="Rewriting" data-base="6">Rewriting</span>
+      <span class="s-chip" data-svc="Editing" data-base="5">Editing</span>
+      <span class="s-chip" data-svc="Proofreading" data-base="5">Proofreading</span>
+      <span class="s-chip" data-svc="Problem solving" data-base="8">Problem solving</span>
+      <span class="s-chip" data-svc="Calculations" data-base="8">Calculations</span>
+      <span class="s-chip" data-svc="Review my work" data-base="4">Review my work</span>
     </div>
   </div>
 
@@ -1316,6 +1316,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       <span class="s-chip" data-sub="Law">Law</span>
       <span class="s-chip" data-sub="Mathematics">Mathematics</span>
     </div>
+    <input type="text" class="s-instr-title" id="wsSubjectOther" placeholder="Or type your own subject" style="margin-top:10px;margin-bottom:0;" />
   </div>
 
   <!-- STEP 3: ASSIGNMENT TYPE -->
@@ -1343,6 +1344,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       <span class="s-chip" data-asgn="Coursework">Coursework</span>
       <span class="s-chip" data-asgn="Case study">Case study</span>
     </div>
+    <input type="text" class="s-instr-title" id="wsTypeOther" placeholder="Or type your own assignment type" style="margin-top:10px;margin-bottom:0;" />
   </div>
 
   <!-- STEP 4: ACADEMIC LEVEL -->
@@ -1421,7 +1423,6 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   <!-- STEP 8: INSTRUCTIONS -->
   <div class="wiz-stack-step" id="ws8" style="display:none;">
     <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Instructions</div>
-    <input type="text" class="s-instr-title" id="wsTitle" placeholder="Name your assignment" />
     <textarea class="s-instr-area" id="wsInstructions" placeholder="Describe your assignment. Share references, links to articles, and any other instructions."></textarea>
     <div class="s-warn-bar">⚠️ Do not share personal information — <strong>no name, email, or phone number.</strong></div>
     <div class="s-file-zone">📎 Browse or drag and drop files here.</div>
@@ -2407,18 +2408,20 @@ function resetWizard() {
   document.querySelectorAll('.s-chip').forEach(c => c.classList.remove('s-sel'));
 
   // Clear visible inputs
-  const wsTitle = document.getElementById('wsTitle') as HTMLInputElement;
   const wsInstr = document.getElementById('wsInstructions') as HTMLTextAreaElement;
   const wsDeadline = document.getElementById('wsDeadline') as HTMLInputElement;
   const wsPagesVal = document.getElementById('wsPagesVal');
   const wsPagesHint = document.getElementById('wsPagesHint');
   const wsTypeDropdown = document.getElementById('wsTypeDropdown') as HTMLSelectElement;
-  if (wsTitle) wsTitle.value = '';
   if (wsInstr) wsInstr.value = '';
   if (wsDeadline) wsDeadline.value = '';
   if (wsPagesVal) wsPagesVal.textContent = '1';
   if (wsPagesHint) wsPagesHint.textContent = '≈ 275 words';
   if (wsTypeDropdown) wsTypeDropdown.value = '';
+  const wsSubjectOther = document.getElementById('wsSubjectOther') as HTMLInputElement;
+  const wsTypeOther = document.getElementById('wsTypeOther') as HTMLInputElement;
+  if (wsSubjectOther) wsSubjectOther.value = '';
+  if (wsTypeOther) wsTypeOther.value = '';
   const wsDouble = document.getElementById('wsDouble');
   const wsSingle = document.getElementById('wsSingle');
   if (wsDouble) wsDouble.classList.add('s-sel');
@@ -2570,10 +2573,20 @@ document.querySelectorAll('.s-chip[data-sub]').forEach(chip => {
     chip.classList.add('s-sel');
     const inp = document.getElementById('wizSubject') as HTMLInputElement;
     if (inp) inp.value = (chip as HTMLElement).dataset.sub || '';
+    const other = document.getElementById('wsSubjectOther') as HTMLInputElement;
+    if (other) other.value = '';
     markDone(2);
     setTimeout(() => revealStep(3), 220);
     wizRefreshInfo();
   });
+});
+document.getElementById('wsSubjectOther')?.addEventListener('input', (e) => {
+  const val = (e.target as HTMLInputElement).value.trim();
+  const inp = document.getElementById('wizSubject') as HTMLInputElement;
+  if (inp) inp.value = val;
+  document.querySelectorAll('.s-chip[data-sub]').forEach(c => c.classList.remove('s-sel'));
+  wizRefreshInfo();
+  if (val) { markDone(2); revealStep(3); }
 });
 
 // ── STEP 3: Assignment type ──
@@ -2596,9 +2609,21 @@ document.getElementById('wsTypeDropdown')?.addEventListener('change', (e) => {
   const inp = document.getElementById('wizType') as HTMLInputElement;
   if (inp) inp.value = val;
   document.querySelectorAll('.s-chip[data-asgn]').forEach(c => c.classList.remove('s-sel'));
+  const other = document.getElementById('wsTypeOther') as HTMLInputElement;
+  if (other) other.value = '';
   markDone(3);
   setTimeout(() => revealStep(4), 220);
   wizRefreshInfo();
+});
+document.getElementById('wsTypeOther')?.addEventListener('input', (e) => {
+  const val = (e.target as HTMLInputElement).value.trim();
+  const inp = document.getElementById('wizType') as HTMLInputElement;
+  if (inp) inp.value = val;
+  document.querySelectorAll('.s-chip[data-asgn]').forEach(c => c.classList.remove('s-sel'));
+  const dd = document.getElementById('wsTypeDropdown') as HTMLSelectElement;
+  if (dd) dd.value = '';
+  wizRefreshInfo();
+  if (val) { markDone(3); revealStep(4); }
 });
 
 // ── STEP 4: Academic level ──
@@ -2690,18 +2715,13 @@ document.getElementById('wsNext7')?.addEventListener('click', () => {
 });
 
 // ── STEP 8: Instructions ──
-document.getElementById('wsTitle')?.addEventListener('input', () => {
-  const val = (document.getElementById('wsTitle') as HTMLInputElement)?.value || '';
-  const inp = document.getElementById('wizTopic') as HTMLInputElement; if (inp) inp.value = val;
-  wizRefreshInfo();
-});
 document.getElementById('wsInstructions')?.addEventListener('input', wizRefreshInfo);
 document.getElementById('wsNext8')?.addEventListener('click', async () => {
-  const title = (document.getElementById('wsTitle') as HTMLInputElement)?.value.trim();
   const instr = (document.getElementById('wsInstructions') as HTMLTextAreaElement)?.value.trim();
-  if (!title) { alert('Please name your assignment.'); return; }
   if (!instr) { alert('Please add your instructions.'); return; }
   const wizInstr = document.getElementById('wizInstructions') as HTMLInputElement; if (wizInstr) wizInstr.value = instr;
+  const wizTopic = document.getElementById('wizTopic') as HTMLInputElement;
+  if (wizTopic) wizTopic.value = instr.length > 60 ? instr.slice(0, 60) + '…' : instr;
   markDone(8);
   await wizSubmitOrder();
 });
