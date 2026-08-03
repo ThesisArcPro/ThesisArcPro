@@ -366,7 +366,7 @@ img.trust-logo {
   if (quoteBtn && brief) {
     quoteBtn.addEventListener('click', () => {
       const val = brief.value.trim();
-      quoteBtn.setAttribute('href', val ? `/contact/?brief=${encodeURIComponent(val)}` : '/contact/');
+      quoteBtn.setAttribute('href', val ? `/order/?brief=${encodeURIComponent(val)}` : '/order/');
     });
   }
 
