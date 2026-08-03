@@ -1,0 +1,505 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+const base = '';
+---
+
+<BaseLayout title="Order Now - Custom Academic Writing | ThesisArcPro" description="Get a custom essay written by a vetted expert. Free plagiarism report, unlimited revisions, and on-time delivery guaranteed.">
+  <Header />
+
+  <main>
+    <!-- HERO -->
+    <section class="order-hero">
+      <div class="container">
+        <div class="hero-badges">
+          <span class="hero-badge"><span class="dot"></span> 50+ writers online</span>
+          <span class="hero-badge">★ 4.9 average rating</span>
+          <span class="hero-badge">Ready in 3+ hours</span>
+        </div>
+        <h1>Get your paper written by a real expert</h1>
+        <p class="hero-sub">Tell us what you need — matched with a qualified writer in minutes, with free revisions and a money-back guarantee.</p>
+        <a href="#orderForm" class="hero-cta">Start my order ↓</a>
+      </div>
+    </section>
+
+    <!-- OFFER BANNER -->
+    <section class="offer-banner">
+      <div class="container offer-inner">
+        <div class="offer-text">
+          <strong>15% off your first order</strong> — automatically applied at checkout, no code needed.
+        </div>
+        <div class="offer-text offer-secondary">
+          Refer a friend and you both get $10 credit toward your next paper.
+        </div>
+      </div>
+    </section>
+
+    <!-- ORDER FORM -->
+    <section class="order-form-section" id="orderForm">
+      <div class="container order-grid">
+
+        <!-- LEFT: wizard -->
+        <div class="order-main">
+
+          <!-- Success state -->
+          <div id="ordSuccess" style="display:none;">
+            <div class="success-icon">🎉</div>
+            <h2>Order received!</h2>
+            <p>We're matching you with writers now. Track live proposals below.</p>
+            <div class="ticket-box">
+              <span class="ticket-label">Your ticket number</span>
+              <span class="ticket-id" id="ordTicketId">T-0000</span>
+            </div>
+          </div>
+
+          <div id="ordStepsFlow">
+
+            <!-- STEP 1: SERVICE -->
+            <div class="stack-step" id="o1">
+              <div class="step-title"><span class="step-check">✓</span>What do you need?</div>
+              <div class="chip-row">
+                <span class="chip" data-svc="Writing" data-base="7">Writing</span>
+                <span class="chip" data-svc="Rewriting" data-base="6">Rewriting</span>
+                <span class="chip" data-svc="Editing" data-base="5">Editing</span>
+                <span class="chip" data-svc="Proofreading" data-base="5">Proofreading</span>
+                <span class="chip" data-svc="Problem solving" data-base="8">Problem solving</span>
+                <span class="chip" data-svc="Calculations" data-base="8">Calculations</span>
+                <span class="chip" data-svc="Review my work" data-base="4">Review my work</span>
+              </div>
+            </div>
+
+            <!-- STEP 2: SUBJECT -->
+            <div class="stack-step" id="o2" style="display:none;">
+              <div class="step-title"><span class="step-check">✓</span>Subject</div>
+              <div class="chip-row">
+                <span class="chip" data-sub="English & Literature">English</span>
+                <span class="chip" data-sub="Psychology">Psychology</span>
+                <span class="chip" data-sub="Nursing & Healthcare">Nursing</span>
+                <span class="chip" data-sub="Business Management">Business</span>
+                <span class="chip" data-sub="History">History</span>
+                <span class="chip" data-sub="Law">Law</span>
+                <span class="chip" data-sub="Science">Science</span>
+              </div>
+              <input type="text" class="text-field" id="oSubjectOther" placeholder="Or type your own subject" />
+            </div>
+
+            <!-- STEP 3: ASSIGNMENT TYPE -->
+            <div class="stack-step" id="o3" style="display:none;">
+              <div class="step-title"><span class="step-check">✓</span>Assignment type</div>
+              <div class="chip-row">
+                <span class="chip" data-asgn="Essay (any type)">Essay (any type)</span>
+                <span class="chip" data-asgn="Research paper">Research paper</span>
+                <span class="chip" data-asgn="Case study">Case study</span>
+                <span class="chip" data-asgn="Discussion post">Discussion post</span>
+                <span class="chip" data-asgn="Coursework">Coursework</span>
+              </div>
+              <input type="text" class="text-field" id="oTypeOther" placeholder="Or type your own assignment type" />
+            </div>
+
+            <!-- STEP 4: LEVEL -->
+            <div class="stack-step" id="o4" style="display:none;">
+              <div class="step-title"><span class="step-check">✓</span>Academic level</div>
+              <div class="chip-row">
+                <span class="chip" data-lvl="HighSchool" data-step-add="0">High school</span>
+                <span class="chip" data-lvl="College" data-step-add="1">College</span>
+                <span class="chip" data-lvl="Bachelor" data-step-add="1">Bachelor's</span>
+                <span class="chip" data-lvl="Masters" data-step-add="2">Master's</span>
+                <span class="chip" data-lvl="PhD" data-step-add="3">Doctorate</span>
+              </div>
+            </div>
+
+            <!-- STEP 5: SIZE -->
+            <div class="stack-step" id="o5" style="display:none;">
+              <div class="step-title"><span class="step-check">✓</span>Size</div>
+              <div class="size-row">
+                <div>
+                  <div class="mini-label">Pages</div>
+                  <div class="counter-row">
+                    <button type="button" id="oPagesMinus">−</button>
+                    <span class="counter-val" id="oPagesVal">1</span>
+                    <button type="button" id="oPagesPlus">+</button>
+                  </div>
+                  <div class="size-hint" id="oPagesHint">≈ 275 words</div>
+                </div>
+              </div>
+              <div class="next-wrap"><button type="button" class="next-btn" id="oNext5">Next</button></div>
+            </div>
+
+            <!-- STEP 6: DEADLINE -->
+            <div class="stack-step" id="o6" style="display:none;">
+              <div class="step-title"><span class="step-check">✓</span>Deadline</div>
+              <div class="date-box">
+                📅 <input type="datetime-local" id="oDeadline" />
+              </div>
+              <div class="mini-label">Quick pick:</div>
+              <div class="chip-row">
+                <span class="chip" data-dlh="3">3 hours</span>
+                <span class="chip" data-dlh="6">6 hours</span>
+                <span class="chip" data-dlh="12">12 hours</span>
+                <span class="chip" data-dlh="24">1 day</span>
+                <span class="chip" data-dlh="48">2 days</span>
+                <span class="chip" data-dlh="120">5 days</span>
+              </div>
+              <div class="next-wrap"><button type="button" class="next-btn" id="oNext6">Next</button></div>
+            </div>
+
+            <!-- STEP 7: INSTRUCTIONS -->
+            <div class="stack-step" id="o7" style="display:none;">
+              <div class="step-title"><span class="step-check">✓</span>Instructions</div>
+              <textarea class="text-area" id="oInstructions" placeholder="Describe your assignment. Share references, links, and any other instructions." rows="4"></textarea>
+              <div class="next-wrap"><button type="button" class="next-btn" id="oNext7">Next</button></div>
+            </div>
+
+            <!-- STEP 8: AUTH GATE -->
+            <div class="stack-step" id="o8" style="display:none;">
+              <div class="step-title"><span class="step-check">✓</span>Almost done</div>
+              <p class="mini-note" style="margin:0 0 12px;">Sign up or log in to post your order and track proposals from writers.</p>
+              <div class="next-wrap"><button type="button" class="next-btn" id="oSubmit">Continue to sign up / login →</button></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT: summary -->
+        <aside class="order-aside">
+          <div class="summary-card" id="ordSummaryCard">
+            <div class="summary-price" id="ordTotal">$0.00</div>
+            <div class="summary-label">Estimated total</div>
+            <div class="summary-rows">
+              <div class="row"><span>Service</span><span id="sumSvc">—</span></div>
+              <div class="row"><span>Level</span><span id="sumLvl">—</span></div>
+              <div class="row"><span>Base price</span><span id="sumBase">—</span></div>
+              <div class="row"><span>Pages</span><span id="sumPages">x 1</span></div>
+              <div class="row" id="sumUrgRow" style="display:none;"><span id="sumUrgLbl">Urgency</span><span id="sumUrg">+$0.00</span></div>
+              <div class="row" id="sumDiscRow"><span>First-order discount</span><span id="sumDisc">−15%</span></div>
+            </div>
+            <div class="summary-benefits">
+              <div>✔ Free plagiarism & AI report</div>
+              <div>✔ Free unlimited revisions</div>
+              <div>✔ On-time delivery guaranteed</div>
+              <div>✔ Money-back guarantee</div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- TRUST STRIP -->
+    <section class="trust-strip">
+      <div class="container trust-grid">
+        <div class="trust-item"><div class="trust-ico">🛡️</div><div><strong>Plagiarism-free</strong><p>Every paper checked before delivery</p></div></div>
+        <div class="trust-item"><div class="trust-ico">🔁</div><div><strong>Unlimited revisions</strong><p>Free until you're satisfied</p></div></div>
+        <div class="trust-item"><div class="trust-ico">⏱️</div><div><strong>On-time delivery</strong><p>Deadlines from 3 hours</p></div></div>
+        <div class="trust-item"><div class="trust-ico">💰</div><div><strong>Money-back guarantee</strong><p>Refund if we don't deliver</p></div></div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="order-faq">
+      <div class="container">
+        <h2 class="faq-title">FAQ</h2>
+        <div class="faq-grid">
+          <button class="faq-item" data-faq="1">
+            <div class="faq-q"><span>How fast can I get my paper?</span><span class="faq-icon">+</span></div>
+            <div class="faq-a">Deadlines start from 3 hours for shorter assignments. Choose your deadline in the order form and we'll match you with writers who can deliver in time.</div>
+          </button>
+          <button class="faq-item" data-faq="2">
+            <div class="faq-q"><span>What if I'm not happy with the result?</span><span class="faq-icon">+</span></div>
+            <div class="faq-a">You get free unlimited revisions. If it still doesn't meet your requirements, our money-back guarantee applies.</div>
+          </button>
+          <button class="faq-item" data-faq="3">
+            <div class="faq-q"><span>Is my information kept private?</span><span class="faq-icon">+</span></div>
+            <div class="faq-a">Yes. We never share your personal details with writers or third parties — communication happens through your dashboard with a client ID, not your name.</div>
+          </button>
+          <button class="faq-item" data-faq="4">
+            <div class="faq-q"><span>How does pricing work?</span><span class="faq-icon">+</span></div>
+            <div class="faq-a">Price depends on service type, academic level, page count, and deadline urgency. You'll see the exact total before you pay — no hidden fees.</div>
+          </button>
+          <button class="faq-item" data-faq="5">
+            <div class="faq-q"><span>Can I choose my writer?</span><span class="faq-icon">+</span></div>
+            <div class="faq-a">Yes. Once your order is posted, qualified writers submit proposals and you pick the one that fits best, or let us match you automatically.</div>
+          </button>
+          <button class="faq-item" data-faq="6">
+            <div class="faq-q"><span>Do you check for AI-generated content?</span><span class="faq-icon">+</span></div>
+            <div class="faq-a">Every order includes a free plagiarism and AI-detection report, so you know the work is original before you submit it.</div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style is:global>
+  :root { --navy: #1B2A4A; --gold: #C5A059; --off-white: #F5F6FD; --border: #E8E2D6; --text-mid: #6b7280; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+  .order-hero { background: linear-gradient(to bottom, #fff 0%, #F7F8FE 50%, #EFF2FC 100%); padding: 130px 0 60px; text-align: center; }
+  .hero-badges { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 1.2rem; }
+  .hero-badge { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12.5px; color: var(--navy); font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+  .hero-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; display: inline-block; }
+  .order-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); color: var(--navy); font-weight: 800; margin: 0 0 0.7rem; }
+  .hero-sub { color: var(--text-mid); font-size: 1.02rem; max-width: 560px; margin: 0 auto 1.5rem; }
+  .hero-cta { display: inline-block; background: var(--gold); color: var(--navy); font-weight: 700; padding: 0.9rem 2.2rem; border-radius: 8px; text-decoration: none; font-size: 0.95rem; }
+
+  .offer-banner { background: var(--navy); padding: 14px 0; }
+  .offer-inner { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+  .offer-text { color: #fff; font-size: 0.9rem; }
+  .offer-text strong { color: var(--gold); }
+  .offer-secondary { color: #cbd5e1; }
+
+  .order-form-section { background: var(--off-white); padding: 3.5rem 0; }
+  .order-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2.5rem; align-items: start; }
+  @media (max-width: 820px) { .order-grid { grid-template-columns: 1fr; } }
+
+  .stack-step { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 0.7rem; }
+  .confirm-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 1.8rem; }
+  .confirm-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border); }
+  .confirm-check { width: 34px; height: 34px; border-radius: 50%; background: #4ade80; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+  .confirm-title { font-size: 1.05rem; font-weight: 700; color: var(--navy); }
+  .confirm-sub { font-size: 0.82rem; color: var(--text-mid); margin-top: 2px; }
+  .confirm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem; margin-bottom: 1.3rem; }
+  .confirm-field { display: flex; flex-direction: column; gap: 3px; }
+  .cf-label { font-size: 0.68rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+  .cf-value { font-size: 0.9rem; font-weight: 600; color: var(--navy); }
+  .confirm-instr { background: var(--off-white); border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1.5rem; }
+  .confirm-instr p { font-size: 0.85rem; color: #475569; line-height: 1.6; margin: 6px 0 0; }
+  .confirm-btn { width: 100%; background: #046fcd; color: #fff; border: none; padding: 1.1rem; border-radius: 10px; font-size: 1.05rem; font-weight: 700; cursor: pointer; }
+  .confirm-btn:hover { background: #0361b3; }
+  @media (max-width: 500px) { .confirm-grid { grid-template-columns: 1fr; } }
+  .step-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .step-check { width: 17px; height: 17px; border-radius: 50%; background: #4ade80; display: none; align-items: center; justify-content: center; font-size: 9px; color: #fff; font-weight: 700; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+  .chip { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 12.5px; color: #64748b; cursor: pointer; background: var(--off-white); user-select: none; }
+  .chip:hover { border-color: #cbd5e1; color: #475569; }
+  .chip.sel { border-color: var(--gold); background: rgba(197,160,89,0.14); color: #8a6d2f; font-weight: 600; }
+  .text-field { width: 100%; box-sizing: border-box; background: var(--off-white); border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; font-size: 12.5px; color: var(--navy); outline: none; margin-top: 8px; }
+  .text-area { width: 100%; box-sizing: border-box; background: var(--off-white); border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; font-size: 12.5px; color: var(--navy); outline: none; resize: vertical; }
+  .mini-label { font-size: 11px; color: #94a3b8; margin: 8px 0 6px; }
+  .mini-note { font-size: 11.5px; color: #94a3b8; margin: 8px 0 0; }
+  .next-wrap { margin-top: 12px; }
+  .next-btn { background: var(--navy); color: #fff; border: none; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .counter-row { display: flex; align-items: center; background: var(--off-white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; width: fit-content; }
+  .counter-row button { width: 36px; height: 36px; background: #fff; border: none; border-right: 1px solid var(--border); font-size: 17px; cursor: pointer; color: #64748b; }
+  .counter-row button:last-child { border-right: none; border-left: 1px solid var(--border); }
+  .counter-val { padding: 0 18px; font-size: 13px; font-weight: 700; color: var(--navy); }
+  .size-hint { font-size: 11px; color: #94a3b8; margin-top: 6px; }
+  .date-box { background: var(--off-white); border: 1px solid var(--border); border-radius: 8px; padding: 9px 13px; display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin-bottom: 10px; }
+  .date-box input { border: none; background: none; outline: none; font-size: 12.5px; font-family: inherit; flex: 1; }
+
+  .success-icon { font-size: 3rem; text-align: center; margin-bottom: 0.5rem; }
+  #ordSuccess h2 { text-align: center; color: var(--navy); }
+  #ordSuccess p { text-align: center; color: var(--text-mid); margin-bottom: 1.2rem; }
+  .ticket-box { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; text-align: center; }
+  .ticket-label { display: block; font-size: 0.85rem; color: var(--text-mid); margin-bottom: 0.4rem; }
+  .ticket-id { font-size: 2rem; font-weight: 800; color: var(--gold); }
+
+  .order-aside { position: sticky; top: 100px; }
+  .summary-card { background: var(--navy); border-radius: 16px; padding: 1.6rem; color: #fff; }
+  .summary-price { font-size: 2.2rem; font-weight: 800; color: var(--gold); text-align: center; }
+  .summary-label { text-align: center; color: rgba(255,255,255,0.55); font-size: 0.78rem; margin-bottom: 1.1rem; }
+  .summary-rows { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.1rem; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.12); }
+  .summary-rows .row { display: flex; justify-content: space-between; font-size: 0.82rem; color: rgba(255,255,255,0.8); }
+  .summary-benefits div { color: rgba(255,255,255,0.7); font-size: 0.76rem; margin-bottom: 0.3rem; }
+
+  .trust-strip { background: #fff; padding: 2.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  @media (max-width: 720px) { .trust-grid { grid-template-columns: 1fr 1fr; } }
+  .trust-item { display: flex; gap: 0.8rem; align-items: flex-start; }
+  .trust-ico { font-size: 1.6rem; }
+  .trust-item strong { color: var(--navy); font-size: 0.9rem; display: block; margin-bottom: 0.2rem; }
+  .trust-item p { color: var(--text-mid); font-size: 0.8rem; margin: 0; }
+
+  .order-faq { background: linear-gradient(135deg, #1b2340, #2a3358); padding: 4rem 0; }
+  .faq-title { color: #fff; font-size: 2rem; font-weight: 700; margin-bottom: 2rem; }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+  @media (max-width: 720px) { .faq-grid { grid-template-columns: 1fr; } }
+  .faq-item { background: rgba(255,255,255,0.06); border: none; border-radius: 10px; padding: 1.1rem 1.4rem; text-align: left; cursor: pointer; color: #fff; width: 100%; }
+  .faq-item:hover { background: rgba(255,255,255,0.1); }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; font-weight: 500; }
+  .faq-icon { font-size: 1.3rem; font-weight: 300; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; opacity: 0; font-size: 0.88rem; line-height: 1.6; color: rgba(255,255,255,0.75); transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease; }
+  .faq-item.open .faq-a { max-height: 300px; opacity: 1; margin-top: 0.9rem; }
+</style>
+
+<script>
+  import { supabase } from '../lib/supabase.js';
+  import { io } from 'socket.io-client';
+  const base = '';
+  const socket = io('https://thesisarcpro.onrender.com', { transports: ['websocket'] });
+  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVL-dECKrdcEyyJObsP9KCQnRJ_TnmTT7qB6rvx-89cSmDbGIUKzviUAX83wPkYtZWzg/exec';
+
+  const state = { service: '', base: 0, subject: '', type: '', levelAdd: 0, levelLabel: '', pages: 1, deadline: '', instructions: '', email: '' };
+  let total = 0;
+
+  function $(id: string) { return document.getElementById(id); }
+
+  function reveal(n: number) {
+    const el = $(`o${n}`);
+    if (el) el.style.display = 'block';
+    if (n >= 4) updateSummary();
+    setTimeout(() => el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+  }
+  function markDone(n: number) { const chk = document.querySelector(`#o${n} .step-check`) as HTMLElement; if (chk) chk.style.display = 'inline-flex'; }
+
+  function updateSummary() {
+    const rate = state.base ? state.base + state.levelAdd : 0;
+    let urgencyPerPage = 0, urgencyText = '';
+    if (state.deadline) {
+      const h = (new Date(state.deadline).getTime() - Date.now()) / 3600000;
+      if (h < 6) { urgencyPerPage = rate * 0.5; urgencyText = '🔴 Rush: +50%'; }
+      else if (h < 12) { urgencyPerPage = rate * 0.3; urgencyText = '🟠 Urgent: +30%'; }
+      else if (h < 24) { urgencyPerPage = rate * 0.2; urgencyText = '🟡 Same day: +20%'; }
+      else if (h < 48) { urgencyPerPage = rate * 0.1; urgencyText = '🟢 Standard: +10%'; }
+    }
+    const baseTotal = rate * state.pages;
+    const urgencyTotal = urgencyPerPage * state.pages;
+    const subtotal = baseTotal + urgencyTotal;
+    total = subtotal * 0.85;
+
+    const set = (id: string, v: string) => { const e = $(id); if (e) e.textContent = v; };
+    set('sumSvc', state.service || '—');
+    set('sumLvl', state.levelLabel || '—');
+    set('sumBase', rate ? `$${rate.toFixed(2)}/pg` : '—');
+    set('sumPages', `x ${state.pages}`);
+    set('ordTotal', `$${total.toFixed(2)}`);
+    const uRow = $('sumUrgRow'); if (uRow) (uRow as HTMLElement).style.display = urgencyTotal > 0 ? 'flex' : 'none';
+    set('sumUrgLbl', urgencyText.split(':')[0] || 'Urgency');
+    set('sumUrg', `+$${urgencyTotal.toFixed(2)}`);
+  }
+
+  document.querySelectorAll('.chip[data-svc]').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-svc]').forEach(x => x.classList.remove('sel'));
+    c.classList.add('sel');
+    state.service = (c as HTMLElement).dataset.svc || '';
+    state.base = parseFloat((c as HTMLElement).dataset.base || '0');
+    markDone(1); setTimeout(() => reveal(2), 200);
+  }));
+
+  document.querySelectorAll('.chip[data-sub]').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-sub]').forEach(x => x.classList.remove('sel'));
+    c.classList.add('sel');
+    state.subject = (c as HTMLElement).dataset.sub || '';
+    (($('oSubjectOther') as HTMLInputElement)).value = '';
+    markDone(2); setTimeout(() => reveal(3), 200);
+  }));
+  $('oSubjectOther')?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value.trim();
+    state.subject = val;
+    document.querySelectorAll('.chip[data-sub]').forEach(x => x.classList.remove('sel'));
+    if (val) { markDone(2); reveal(3); }
+  });
+
+  document.querySelectorAll('.chip[data-asgn]').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-asgn]').forEach(x => x.classList.remove('sel'));
+    c.classList.add('sel');
+    state.type = (c as HTMLElement).dataset.asgn || '';
+    (($('oTypeOther') as HTMLInputElement)).value = '';
+    markDone(3); setTimeout(() => reveal(4), 200);
+  }));
+  $('oTypeOther')?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value.trim();
+    state.type = val;
+    document.querySelectorAll('.chip[data-asgn]').forEach(x => x.classList.remove('sel'));
+    if (val) { markDone(3); reveal(4); }
+  });
+
+  document.querySelectorAll('.chip[data-lvl]').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-lvl]').forEach(x => x.classList.remove('sel'));
+    c.classList.add('sel');
+    state.levelAdd = parseInt((c as HTMLElement).dataset.stepAdd || '0');
+    state.levelLabel = c.textContent?.trim() || '';
+    markDone(4); setTimeout(() => reveal(5), 200);
+  }));
+
+  $('oPagesMinus')?.addEventListener('click', () => { state.pages = Math.max(1, state.pages - 1); syncPages(); });
+  $('oPagesPlus')?.addEventListener('click', () => { state.pages = Math.min(500, state.pages + 1); syncPages(); });
+  function syncPages() {
+    const v = $('oPagesVal'); if (v) v.textContent = String(state.pages);
+    const h = $('oPagesHint'); if (h) h.textContent = `≈ ${state.pages * 275} words`;
+    updateSummary();
+  }
+  $('oNext5')?.addEventListener('click', () => { markDone(5); reveal(6); });
+
+  document.querySelectorAll('.chip[data-dlh]').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-dlh]').forEach(x => x.classList.remove('sel'));
+    c.classList.add('sel');
+    const hours = parseInt((c as HTMLElement).dataset.dlh || '0');
+    const d = new Date(); d.setHours(d.getHours() + hours);
+    state.deadline = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    (($('oDeadline') as HTMLInputElement)).value = state.deadline;
+    updateSummary();
+  }));
+  $('oDeadline')?.addEventListener('change', (e) => { state.deadline = (e.target as HTMLInputElement).value; updateSummary(); });
+  $('oNext6')?.addEventListener('click', () => {
+    if (!state.deadline) { alert('Please choose a deadline.'); return; }
+    markDone(6); reveal(7);
+  });
+
+  $('oNext7')?.addEventListener('click', () => {
+    const instr = (($('oInstructions') as HTMLTextAreaElement)).value.trim();
+    if (!instr) { alert('Please add your instructions.'); return; }
+    state.instructions = instr;
+    markDone(7); reveal(8);
+  });
+
+  $('oSubmit')?.addEventListener('click', () => {
+    localStorage.setItem('pendingOrderDraft', JSON.stringify(state));
+    window.location.href = `${base}/login/?redirect=/order/`;
+  });
+
+  (async function checkPendingDraft() {
+    const draft = localStorage.getItem('pendingOrderDraft');
+    if (!draft) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
+    let d: any;
+    try { d = JSON.parse(draft); } catch { localStorage.removeItem('pendingOrderDraft'); return; }
+
+    const email = session.user.email || '';
+    const ticketId = `T-${Date.now().toString().slice(-6)}`;
+    const rate = d.base ? d.base + (d.levelAdd || 0) : 0;
+    const orderTotal = rate * d.pages * 0.85;
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientEmail: email, topic: (d.instructions || '').slice(0, 60), assignmentType: d.type, subject: d.subject, service: d.service, level: d.levelLabel, pages: d.pages, deadline: d.deadline, totalPrice: `$${orderTotal.toFixed(2)}`, instructions: d.instructions, ticketId })
+      });
+
+      const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}`, Prefer: 'return=representation' },
+        body: JSON.stringify({ order_number: ticketId, client_email: email, topic: (d.instructions || '').slice(0, 60), assignment_type: d.type, subject: d.subject, service: d.service, education_level: d.levelLabel, pages: d.pages, deadline: d.deadline, total_amount: orderTotal, amount_paid: 0, payment_status: 'Pending', order_status: 'open_for_bids', instructions: d.instructions })
+      });
+      const inserted = await insertRes.json();
+      const newOrderDbId = inserted[0]?.id;
+
+      socket.emit('order:new', { id: ticketId, order_number: ticketId, topic: (d.instructions || '').slice(0, 60), assignment_type: d.type, subject: d.subject, pages: d.pages, deadline: d.deadline, total_amount: orderTotal, order_status: 'open_for_bids' });
+
+      localStorage.removeItem('pendingOrderDraft');
+      if (newOrderDbId) localStorage.setItem('wizPendingOrderId', String(newOrderDbId));
+      window.location.href = `${base}/dashboard/`;
+    } catch (err) {
+      console.error('Failed to post order from landing page draft', err);
+    }
+  })();
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  updateSummary();
+</script>
