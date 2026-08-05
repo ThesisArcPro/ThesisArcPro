@@ -115,6 +115,7 @@ const base = '';
         <div class="writers-content">
           <h2>Meet Our Writers</h2>
           <p>Qualified, subject-matter experts handpicked for your work. Every order is handled by a vetted professional in the relevant field.</p>
+          <a href="/writers" class="view-all-writers">View all writers &rarr;</a>
         </div>
       </div>
     </section>
@@ -465,15 +466,17 @@ const base = '';
   .quote-total { color: #EAB308; font-size: 1.35rem; font-weight: 800; }
   .quote-cta { width: 100%; background: var(--gold); color: var(--navy); border: none; padding: 0.75rem; border-radius: 7px; font-size: 0.88rem; font-weight: 700; cursor: pointer; }
 
-  .writers-profile-section { background: #ffffff; padding: 3.5rem 0; border-bottom: 1px solid var(--border); }
+  .writers-profile-section { background: #f4f6fc; padding: 3.5rem 0; border-bottom: 1px solid #e2e8f0; }
   .writers-profile-grid { display: flex; align-items: center; justify-content: center; gap: 3rem; }
   .writers-avatar-container { display: flex; align-items: center; }
-  .writer-avatar-lg { width: 110px; height: 110px; border-radius: 50%; border: 4px solid #ffffff; background-color: #e2e8f0; object-fit: cover; margin-left: -35px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06); transition: transform 0.2s ease; }
+  .writer-avatar-lg { width: 110px; height: 110px; border-radius: 50%; border: 4px solid #ffffff; background-color: #e2e8f0; object-fit: cover; margin-left: -35px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); transition: transform 0.2s ease; }
   .writer-avatar-lg:first-child { margin-left: 0; }
   .writer-avatar-lg:hover { transform: translateY(-3px); z-index: 2; }
   .writers-content { max-width: 440px; }
-  .writers-content h2 { font-size: 2.2rem; font-weight: 800; color: var(--navy); margin: 0 0 0.5rem; line-height: 1.15; letter-spacing: -0.02em; }
-  .writers-content p { font-size: 0.98rem; color: #475569; line-height: 1.55; margin: 0; }
+  .writers-content h2 { font-size: 2.2rem; font-weight: 800; color: #0d1b3e; margin: 0 0 0.5rem; line-height: 1.15; letter-spacing: -0.02em; }
+  .writers-content p { font-size: 0.98rem; color: #475569; line-height: 1.55; margin: 0 0 1rem; }
+  .view-all-writers { display: inline-block; font-size: 0.9rem; font-weight: 700; color: #1e3a8a; text-decoration: none; transition: color 0.2s; }
+  .view-all-writers:hover { color: #0d1b3e; text-decoration: underline; }
 
   @media (max-width: 768px) {
     .writers-profile-grid { flex-direction: column; text-align: center; gap: 1.5rem; }
