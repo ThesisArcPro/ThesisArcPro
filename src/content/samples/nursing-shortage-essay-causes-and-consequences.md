@@ -1,0 +1,50 @@
+---
+title: "Nursing Shortage Essay: Causes and Consequences Explained"
+meta_title: "Nursing Shortage Essay: Causes and Consequences Explained - Essay Example - ThesisArcPro"
+description: "This nursing shortage essay examines the causes and consequences straining hospitals worldwide, covering burnout, training gaps, and safety risks."
+subject: "Nursing"
+category: "Nursing essays"
+essay_type: "Argumentative"
+assignment_type: "Essay"
+word_count: 1221
+pages: 5
+date: 2026-08-06
+writer_name: "Ann P."
+writer_tagline: "6+ yrs experience, Master's in Nursing, dissertation & thesis specialist"
+writer_rating: 5.0
+writer_reviews: 99
+writer_photo: "https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/1781880969475_Anne.jpg"
+writer_ontime: 99
+writer_subjects: ["Nursing", "Law", "History", "Philosophy", "Sociology"]
+related: []
+order_service_link: "/order/"
+grammarly_checked: true
+---
+
+In hospitals worldwide, the same professionals, essential to their operations, are in short supply. The World Health Organization estimates that there will be a shortage of 12.9 million nurses by 2035, putting strain on emergency departments, delaying surgeries, and creating a risk of staff burnout (Tamata & Mohammadnezhad 2023). This nursing shortage is not a quick fix on the staffing front. It stems from a complex mix of workforce failings, nursing education failings and work environment failings and has implications beyond hospital budgets. Patients may wait longer and be at greater risk of medical mistakes, nurses may experience burnout, leading them to leave the profession, and health systems take on the costs of crisis management. However, the nursing shortage is a self-reinforcing process rather than a straightforward supply issue, so each of the causes reinforces the others, and each of the consequences exacerbates the issue of nursing shortage itself. To develop solutions that stick, it's crucial to grasp this cycle, from planning for the workforce to its impact on patients and budgets.
+
+An important factor is the fact that the nursing workforce is aging. Unprepared for the growing complexity of needs among patients, yet nearing retirement age, large numbers of registered nurses are arriving at the same time (Tamata & Mohammadnezhad 2023). Many older nurses are forced into retirement due to the physical strain or a lifetime of years spent in a challenging profession. However, the number of new nurses joining each year has not been commensurate with the number of nurses leaving. In past years, health systems might have been able to replace the loss of senior employees by filling new roles with new hires, but now they are losing key staff at a rate they cannot keep up with. This imbalance of population means the shortage is more than just a blip in the data; if recruitment and retention efforts are not significantly boosted in the near future, it will be a continuing trend.
+
+<!--split-->
+
+Limited capability of nursing education systems to train sufficient numbers of new professionals is the second cause. Even though there are many countries with high demand in nursing schools enrollment, they are short of classroom space, clinical placement sites, and qualified instructors needed to accommodate the high enrollment (Tamata and Mohammadnezhad, 2023). Where areas of interest are not lacking, but rather the institutions themselves are unable to accommodate qualified applicants, the problem is not a lack of interest, but a lack of space. This is a constraint that has repercussions beyond enrollments. Ghimire & Neupane (2024) described how the students of nursing in understaffed clinical situations in Nepal felt abandoned during training, not receiving supervision and mentorship to develop their foundational clinical skills. Others resorted to AI solutions to serve as substitutes for mentoring, a creative and partial solution. It's not just that the professionals are not there to teach the next generation when they are too busy to teach. It compounds and creates less prepared students who are more likely to drop out of school.
+
+Another major culprit, and one of the biggest, is burnout resulting from chronic understaffing. In their review of 33 studies related to the nursing shortage, Jones and Allin (2025) found the most common cause reported in the studies to be stress, burnout, and mental health strain in 18 of the 33 studies, serving as a direct cause of nursing shortages. Nurses who work on a regular basis in understaffed units are carrying more patients, working more hours and have significantly less time to rest and recover. This gradually diminishes nurses' job satisfaction and encourages them to leave the nursing profession, either by leaving their job, transferring to nonclinical positions or by retiring from the profession. The real danger of burnout is that it is both a cause and an effect of the shortage, which is presented in greater detail below.
+
+These combined causes have the most severe impact on the patient. The most common effects reported from hospital nursing shortages, linked to the critical impact of nursing shortages on patient care and safety, are reported in nineteen of the reviewed studies and are followed closely by worsened patient outcomes, in fourteen of the studies. Increased nurse to patient ratios increase the risk of medication not being taken, slow response to complications, and preventable errors. The same issue was explored by Tamata and Mohammadnezhad (2023), who found that the nursing shortage affected early detection of patient complications and thus, overall quality of care. The above are not merely numbers. They are real patients who need enough attentive, well-rested nursing staff at their bedside, something which chronic understaffing makes harder to ensure.
+
+The nursing deficit is a major economic and systemic cost in addition to being a safety concern. In eleven of the studies reviewed in their umbrella review, Jones and Allin (2025) found that reduced system and provider efficiency, such as lost productivity, was cited as a direct impact of hospital nurse shortages. Hospitals with large, persistent staffing deficits may turn to expensive temporary staffing services or overtime to make up for the shortfall, further compressing already limited staffing budgets. Persistent understaffing at smaller or rural facilities may result in staffing reductions and facility closures, potentially affecting access to care for entire communities. Such financial pressures are seldom contained in one hospital. These ripple out and impact insurance costs, public health spending, and the overall ability of health systems to prepare for emergencies or population growth. Loss of local hospital services typically results in increased travel time to access urgent care, particularly affecting rural communities.
+
+Other people believe that technology, such as artificial intelligence and staffing skill mix, can help to solve the nursing problem without an extensive investment in the workforce. Yes, as Ghimire and Neupane (2024) noted, AI-assisted decision support systems have aided students and nurses in navigating information gaps. But nothing will ever replace the clinical judgment, emotional support and mentorship relationships nurses give. Berthelsen and Hansen (2025) concluded that, in their study of nine different introduction programs, the structured and human-led programs all resulted in an increase in retention and a decrease in turnover for newly graduated nurses. This evidence shows that improvements brought about by investing in human-centred solutions rather than the substitution of technologies are measurable and lasting. While technology can help alleviate an over-extended workforce, it can't fix the underlying structural deficiencies that caused the shortage in the first place.
+
+The nursing shortage is a crisis of interlocking causes: an aging nursing workforce, insufficient nursing training and resources, and a nursing workforce experiencing burnout and attrition, with the consequences of that burnout and attrition feeding directly back into the causes of the nursing shortage. Jones and Allin (2025) showed that this feedback loop can cause the shortage to become self-reinforcing, with delayed action causing the problem to worsen rather than improve. Effective solutions must involve policies that increase nursing education capacity, funding for good nursing mentorship, proven policies that retain nurses, and enhanced working conditions to the point that nurses do not prematurely exit. The introduction programs of Berthelsen and Hansen (2025) provide a clear starting point, as they have been shown to measurably increase retention. If the workforce is neglected and not invested in globally, healthcare systems will continue to be squeezed by an ever-increasing shortage of healthcare providers year by year.
+
+## References
+
+Berthelsen, C., & Hansen, C. A. (2025). Content and effect of introduction programmes to increase retention and decrease turnover of newly graduated nurses in hospitals: Umbrella review. *Journal of Clinical Nursing*, *34*(4), 1149-1169. https://onlinelibrary.wiley.com/doi/pdf/10.1111/jocn.17494
+
+Ghimire, A., & Neupane, M. (2024). A generation at risk: The unseen consequences of Nepal's nursing shortage on undergraduate nursing students' clinical education. *BMC Nursing*, *23*(1), 942. https://link.springer.com/content/pdf/10.1186/s12912-024-02578-5.pdf
+
+Jones, D., & Allin, S. (2025). Causes and effects of hospital nursing shortages to consider potential feedback effects: An umbrella review. *Human Resources for Health*, *23*(1), 61. https://link.springer.com/content/pdf/10.1186/s12960-025-01028-w.pdf
+
+Tamata, A. T., & Mohammadnezhad, M. (2023). A systematic review study on the factors affecting shortage of nursing workforce in the hospitals. *Nursing Open*, *10*(3), 1247-1257. https://onlinelibrary.wiley.com/doi/pdf/10.1002/nop2.1434
