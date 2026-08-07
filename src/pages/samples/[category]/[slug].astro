@@ -265,20 +265,20 @@ const formattedDate = new Intl.DateTimeFormat('en-GB', {
 
   const promoVariants = [
     {
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C5A059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="m9 15 2 2 4-4"/></svg>`,
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2408fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`,
       title: 'Get a custom-written paper',
       sub: 'Grab a <strong>100% original</strong> academic paper tailored to your instructions',
       btn: 'Let us help you',
     },
     {
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C5A059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/></svg>`,
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2408fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/><path d="M6.38 18.7 4 21"/><path d="M17.64 18.67 20 21"/><path d="m9 13 2 2 4-4"/></svg>`,
       title: 'On-time essay delivery!',
       sub: 'Get your custom, <strong>100% plagiarism-free</strong> paper in as little as 1 hour',
       btn: "Let's start",
     },
     {
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C5A059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>`,
-      title: 'Cut 15% off your first order',
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2408fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>`,
+      title: 'Cut 15% <span class="promo-highlight">OFF</span> your first order',
       sub: `We'll deliver a <strong>100% custom paper</strong> perfectly tailored to your needs`,
       btn: 'Use discount',
     },
@@ -338,17 +338,18 @@ const formattedDate = new Intl.DateTimeFormat('en-GB', {
   .cta-sub.cta-sub { color: #cbd5e1 !important; font-size: 14px !important; line-height: 1.5 !important; margin: 0 0 16px !important; max-width: 380px; text-align: left !important; font-family: system-ui, sans-serif !important; }
   .cta-btn { display: inline-block; background: #C5A059; color: #1B2A4A; font-weight: 700; font-size: 14px; padding: 12px 22px; border-radius: 8px; text-decoration: none; }
 
-  .promo-strip {
-    display: flex; align-items: center; justify-content: space-between; gap: 20px;
-    background: #fff; border: 1.5px solid #C5A059; border-radius: 14px;
-    padding: 18px 22px; margin: 32px 0; flex-wrap: wrap;
+  :global(.promo-strip) {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    background: #fff; border: 1.5px solid #f5b8b8; border-radius: 12px;
+    padding: 12px 18px; margin: 20px 0; flex-wrap: wrap;
   }
-  .promo-icon { flex-shrink: 0; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: #F7F5F0; border-radius: 10px; }
-  .promo-left { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 240px; }
-  .promo-title { font-size: 16px; font-weight: 700; color: #1B2A4A; margin: 0 0 4px; }
-  .promo-sub { font-size: 13px; color: #6b7280; margin: 0; }
-  .promo-sub strong { color: #1B2A4A; }
-  .promo-btn { flex-shrink: 0; background: linear-gradient(135deg, #C5A059, #b5904a); color: #1B2A4A; font-weight: 700; font-size: 13px; padding: 12px 24px; border-radius: 999px; text-decoration: none; white-space: nowrap; }
+  :global(.promo-icon) { flex-shrink: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #F7F5F0; border-radius: 8px; }
+  :global(.promo-left) { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 200px; }
+  :global(.promo-title) { font-size: 14px; font-weight: 700; color: #4338ca; margin: 0 0 2px; }
+  :global(.promo-highlight) { color: #10b981; }
+  :global(.promo-sub) { font-size: 12px; color: #374151; margin: 0; }
+  :global(.promo-sub strong) { color: #1B2A4A; }
+  :global(.promo-btn) { flex-shrink: 0; background: linear-gradient(135deg, #ec4899, #f97316); color: #fff; font-weight: 700; font-size: 12px; padding: 9px 18px; border-radius: 999px; text-decoration: none; white-space: nowrap; }
   .related { margin-top: 48px; }
   .related h2 { font-size: 18px; font-weight: 700; color: #1B2A4A; margin: 0 0 16px; }
   .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
