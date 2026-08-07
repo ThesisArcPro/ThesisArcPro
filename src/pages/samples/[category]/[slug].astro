@@ -23,7 +23,7 @@ const data = entry.data;
 
 const SPLIT = '<!--split-->';
 const rawBody = entry.body ?? '';
-const [firstRaw, secondRaw] = rawBody.includes(SPLIT) ? rawBody.split(SPLIT) : [rawBody, ''];
+const rawParts = rawBody.split(SPLIT);
 
 function toHtml(md: string) {
   return md.trim().split(/\r?\n\s*\r?\n+/).map((block: string) => {
@@ -36,8 +36,7 @@ function toHtml(md: string) {
   }).join('\n');
 }
 
-const firstHtml = toHtml(firstRaw);
-const secondHtml = toHtml(secondRaw);
+const bodyParts = rawParts.map((part) => toHtml(part));
 
 let related = [];
 if (data.related.length > 0) {
@@ -157,27 +156,30 @@ const formattedDate = new Intl.DateTimeFormat('en-GB', {
         </div>
 
         <div class="essay-body">
-          <div set:html={firstHtml} />
-
-          {secondRaw && (
-            <div class="cta-banner">
-              <div class="cta-badges">
-                <span class="cta-badge">Ready in 3+ hours</span>
-                <span class="cta-badge">Plagiarism &amp; AI free</span>
-                <span class="cta-badge">50+ writers online</span>
-              </div>
-              <div class="cta-text">
-                <p class="cta-title">Put your paper in expert hands</p>
-                <p class="cta-sub">Get a custom essay written to your exact requirements researched, structured, and delivered on time.</p>
-                <a href="/order/" class="cta-btn">Write my essay</a>
-              </div>
-            </div>
-          )}
-
-          <div set:html={secondHtml} />
+          {bodyParts.map((partHtml, i) => (
+            <>
+              <div set:html={partHtml} />
+              {i < bodyParts.length - 1 && (
+                i === 0 ? (
+                  <div class="cta-banner">
+                    <div class="cta-badges">
+                      <span class="cta-badge">Ready in 3+ hours</span>
+                      <span class="cta-badge">Plagiarism &amp; AI free</span>
+                      <span class="cta-badge">50+ writers online</span>
+                    </div>
+                    <div class="cta-text">
+                      <p class="cta-title">Put your paper in expert hands</p>
+                      <p class="cta-sub">Get a custom essay written to your exact requirements researched, structured, and delivered on time.</p>
+                      <a href="/order/" class="cta-btn">Write my essay</a>
+                    </div>
+                  </div>
+                ) : (
+                  <div class="promo-strip"></div>
+                )
+              )}
+            </>
+          ))}
         </div>
-
-        <div class="promo-strip" id="promoStrip"></div>
       </div>
     </div>
 
@@ -282,8 +284,7 @@ const formattedDate = new Intl.DateTimeFormat('en-GB', {
     },
   ];
 
-  const promoBox = document.getElementById('promoStrip');
-  if (promoBox) {
+  document.querySelectorAll('.promo-strip').forEach((promoBox) => {
     const pick = promoVariants[Math.floor(Math.random() * promoVariants.length)];
     promoBox.innerHTML = `
       <div class="promo-left">
@@ -295,7 +296,7 @@ const formattedDate = new Intl.DateTimeFormat('en-GB', {
       </div>
       <a href="/order/" class="promo-btn">${pick.btn}</a>
     `;
-  }
+  });
 </script>
 </BaseLayout>
 
