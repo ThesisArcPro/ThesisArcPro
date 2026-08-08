@@ -21,7 +21,25 @@ const db = new Pool({
 });
 
 // ── CORS ──
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+const ALLOWED_ORIGINS = [
+  process.env.CLIENT_URL,
+  'http://localhost:4321',
+  'http://localhost:3000'
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. server-to-server, curl, Stripe webhooks)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 
 // Stripe webhook needs the RAW request body to verify its signature — this MUST be
 // registered before express.json(), and only for this one path, or signature checks fail.
@@ -92,7 +110,7 @@ app.post('/create-payment-intent', async (req, res) => {
 
 // ── SOCKET.IO ──
 const io = new Server(server, {
-  cors: { origin: process.env.CLIENT_URL, methods: ['GET', 'POST'], credentials: true }
+  cors: { origin: ALLOWED_ORIGINS, methods: ['GET', 'POST'], credentials: true }
 });
 
 // Track online writers

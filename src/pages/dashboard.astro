@@ -5,7 +5,9 @@ const base = '';
 ---
  
 <BaseLayout title="My Orders" description="View your orders on ThesisArcPro">
- 
+
+<script src="https://js.stripe.com/v3/" is:inline></script>
+
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
  
@@ -1551,10 +1553,9 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
           <span style="width:16px;height:16px;border-radius:50%;background:#5B8FFF;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
             <span style="width:6px;height:6px;border-radius:50%;background:#0E1116;"></span>
           </span>
-          <span style="color:#E7E9EE;font-weight:600;font-size:0.9rem;flex:1;">PayPal</span>
-          <span style="background:#FFC439;color:#003087;font-weight:700;font-size:0.72rem;padding:0.25rem 0.5rem;border-radius:4px;">PayPal</span>
+          <span style="color:#E7E9EE;font-weight:600;font-size:0.9rem;flex:1;">Debit / Credit Card</span>
+          <span style="background:#635bff;color:#fff;font-weight:700;font-size:0.72rem;padding:0.25rem 0.5rem;border-radius:4px;">Secure</span>
         </div>
-        <p style="font-size:0.76rem;color:#5B6270;margin-top:-1rem;margin-bottom:1.5rem;">More payment methods (card, Apple Pay, Google Pay) coming soon.</p>
 
         <label style="display:flex;align-items:flex-start;gap:0.6rem;margin-bottom:1.5rem;cursor:pointer;">
           <input type="checkbox" id="addFundsAgree" style="margin-top:0.2rem;" />
@@ -1574,18 +1575,14 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       </div>
     </div>
 
-    <!-- PAYPAL CONFIRM STEP (hidden until Proceed clicked) -->
+    <!-- STRIPE CARD STEP (hidden until Proceed clicked) -->
     <div id="addFundsPayPalStep" style="display:none;padding:2rem;">
-      <h2 style="font-size:1.3rem;font-weight:700;color:#E7E9EE;margin-bottom:1rem;">Complete your PayPal payment</h2>
+      <h2 style="font-size:1.3rem;font-weight:700;color:#E7E9EE;margin-bottom:1rem;">Enter your card details</h2>
       <div id="addFundsAmountSummary" style="background:#181B22;border:1px solid #23262E;border-radius:10px;padding:1rem;margin-bottom:1.2rem;color:#E7E9EE;font-size:0.9rem;"></div>
-      <a id="addFundsPayPalLink" href="https://www.paypal.com/ncp/payment/X4GBU659AGXGQ" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:0.7rem;background:#FFC439;color:#003087;font-weight:700;font-size:1rem;padding:0.9rem 2rem;border-radius:8px;text-decoration:none;margin-bottom:1.2rem;">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19c-.988 0-1.829.722-1.974 1.699l-1.12 7.106-.313 1.983h3.293l.742-4.713.048-.306c.145-.977.986-1.699 1.974-1.699h1.245c3.863 0 6.637-1.57 7.49-6.114.333-1.726.163-3.168-.734-4.312z"/></svg>
-        Pay with PayPal
-      </a>
-      <label style="display:block;font-weight:600;color:#E7E9EE;font-size:0.88rem;margin-bottom:0.4rem;">Enter PayPal Transaction ID *</label>
-      <input type="text" id="addFundsTxnId" placeholder="e.g. 7GH123456789" style="width:100%;padding:0.75rem 1rem;background:#181B22;border:1.5px solid #23262E;border-radius:8px;color:#E7E9EE;font-size:0.92rem;outline:none;box-sizing:border-box;margin-bottom:0.3rem;" />
-      <p style="font-size:0.74rem;color:#5B6270;margin-bottom:1.2rem;">Find it in your PayPal confirmation email.</p>
-      <button id="addFundsConfirmBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">✅ I Have Paid — Credit My Wallet</button>
+      <div id="addFundsCardElement" style="background:#181B22;border:1.5px solid #23262E;border-radius:8px;padding:0.9rem 1rem;margin-bottom:0.6rem;"></div>
+      <p id="addFundsCardError" style="color:#f87171;font-size:0.8rem;margin-bottom:1rem;min-height:1rem;"></p>
+      <button id="addFundsConfirmBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">💳 Pay & Credit My Wallet</button>
+      <p style="font-size:0.74rem;color:#5B6270;margin-top:0.8rem;text-align:center;">🔒 Payments are securely processed by Stripe. We never see or store your card details.</p>
       <div id="addFundsMsg" style="margin-top:0.8rem;font-size:0.85rem;"></div>
     </div>
   </div>
@@ -1847,7 +1844,11 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   import { io } from 'socket.io-client';
  
   const BIDDING_SERVER = 'https://thesisarcpro.onrender.com';
-  const socket = io(BIDDING_SERVER, { transports: ['websocket'], reconnection: true, reconnectionDelay: 1000, reconnectionAttempts: Infinity });
+  const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
+
+  const STRIPE_PUBLISHABLE_KEY = 'pk_test_51U0IH92RM1cuZjiGEwbbf0T0aQvNZzfgPRuqG8fRBTeg8mWABkCqQOgZphUuekIxbF4zXOc7hy9gncybiwJiv1X2003il2emdr';
+  const stripeClient = (window as any).Stripe ? (window as any).Stripe(STRIPE_PUBLISHABLE_KEY) : null;
+  let stripeElements: any = null;
  
   socket.on('connect', () => {
     console.log('Connected to bidding server:', socket.id);
@@ -2028,9 +2029,9 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   function openAddFundsModal() {
     (document.getElementById('addFundsAmount') as HTMLInputElement).value = '';
     (document.getElementById('addFundsAgree') as HTMLInputElement).checked = false;
-    (document.getElementById('addFundsTxnId') as HTMLInputElement).value = '';
     document.getElementById('addFundsPayPalStep')!.style.display = 'none';
     document.getElementById('addFundsMsg')!.textContent = '';
+    const errEl = document.getElementById('addFundsCardError'); if (errEl) errEl.textContent = '';
     updateProceedBtn();
     document.getElementById('addFundsModal')!.classList.add('open');
   }
@@ -2049,55 +2050,68 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   document.getElementById('addFundsAmount')?.addEventListener('input', updateProceedBtn);
   document.getElementById('addFundsAgree')?.addEventListener('change', updateProceedBtn);
 
-  document.getElementById('addFundsProceedBtn')?.addEventListener('click', () => {
+  document.getElementById('addFundsProceedBtn')?.addEventListener('click', async () => {
     const amt = parseFloat((document.getElementById('addFundsAmount') as HTMLInputElement).value || '0');
-    if (amt < 5) return;
-    document.getElementById('addFundsAmountSummary')!.textContent = `Amount to add: $${amt.toFixed(2)}`;
-    document.getElementById('addFundsPayPalStep')!.style.display = 'block';
-  });
+    if (amt < 5 || !stripeClient) return;
+    const proceedBtn = document.getElementById('addFundsProceedBtn') as HTMLButtonElement;
+    proceedBtn.disabled = true; proceedBtn.textContent = 'Loading…';
+    try {
+      const res = await fetch(`${BIDDING_SERVER}/create-payment-intent`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: amt, userId: currentSession.user.id, userEmail: currentSession.user.email })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.clientSecret) throw new Error(data.error || 'Could not start payment.');
 
-  document.getElementById('addFundsTxnId')?.addEventListener('input', (e) => {
-    const v = (e.target as HTMLInputElement).value.trim();
-    const btn = document.getElementById('addFundsConfirmBtn') as HTMLButtonElement;
-    const valid = v.length >= 5;
-    btn.disabled = !valid;
-    btn.style.background = valid ? '#22c55e' : '#334155';
-    btn.style.color = valid ? '#0f172a' : '#94a3b8';
-    btn.style.cursor = valid ? 'pointer' : 'not-allowed';
+      document.getElementById('addFundsAmountSummary')!.textContent = `Amount to add: $${amt.toFixed(2)}`;
+      document.getElementById('addFundsPayPalStep')!.style.display = 'block';
+
+      stripeElements = stripeClient.elements({ clientSecret: data.clientSecret, appearance: { theme: 'night' } });
+      const cardEl = stripeElements.create('payment');
+      cardEl.mount('#addFundsCardElement');
+
+      const confirmBtn = document.getElementById('addFundsConfirmBtn') as HTMLButtonElement;
+      confirmBtn.disabled = false;
+      confirmBtn.style.background = '#22c55e';
+      confirmBtn.style.color = '#0f172a';
+      confirmBtn.style.cursor = 'pointer';
+    } catch (err: any) {
+      alert(err.message || 'Could not start payment. Please try again.');
+    }
+    proceedBtn.disabled = false; proceedBtn.textContent = 'Proceed →';
   });
 
   document.getElementById('addFundsConfirmBtn')?.addEventListener('click', async () => {
-    const txnId = (document.getElementById('addFundsTxnId') as HTMLInputElement).value.trim();
-    const amt = parseFloat((document.getElementById('addFundsAmount') as HTMLInputElement).value || '0');
     const msg = document.getElementById('addFundsMsg')!;
-    if (!/^[A-Z0-9]{8,20}$/i.test(txnId)) {
-      msg.textContent = '❌ Invalid Transaction ID format.';
-      msg.style.color = '#f87171';
-      return;
-    }
+    const errEl = document.getElementById('addFundsCardError')!;
     const btn = document.getElementById('addFundsConfirmBtn') as HTMLButtonElement;
-    btn.disabled = true; btn.textContent = '⏳ Verifying…';
+    if (!stripeClient || !stripeElements) return;
+    btn.disabled = true; btn.textContent = '⏳ Processing…';
+    errEl.textContent = '';
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/add_wallet_funds`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` },
-        body: JSON.stringify({ p_user_id: currentSession.user.id, p_amount: amt, p_paypal_txn_id: txnId })
+      const { error, paymentIntent } = await stripeClient.confirmPayment({
+        elements: stripeElements,
+        confirmParams: { return_url: window.location.href },
+        redirect: 'if_required'
       });
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        throw new Error(errBody.message || 'Could not credit wallet');
-      }
-      await refreshWalletBalance();
-      msg.textContent = '✅ Funds added successfully!';
+      if (error) throw new Error(error.message || 'Payment failed.');
+      if (paymentIntent?.status !== 'succeeded') throw new Error('Payment was not completed.');
+
+      msg.textContent = '✅ Payment successful! Crediting your wallet…';
       msg.style.color = '#4ade80';
-      setTimeout(() => {
-        document.getElementById('addFundsModal')!.classList.remove('open');
-      }, 1200);
+
+      // The webhook credits the wallet server-side — poll briefly since it can take a couple seconds.
+      for (let i = 0; i < 8; i++) {
+        await new Promise(r => setTimeout(r, 1000));
+        await refreshWalletBalance();
+      }
+      msg.textContent = '✅ Funds added successfully!';
+      setTimeout(() => { document.getElementById('addFundsModal')!.classList.remove('open'); }, 1200);
     } catch (err: any) {
       console.error(err);
-      msg.textContent = `❌ ${err.message || 'Something went wrong. Please try again.'}`;
-      msg.style.color = '#f87171';
-      btn.disabled = false; btn.textContent = '✅ I Have Paid — Credit My Wallet';
+      errEl.textContent = err.message || 'Something went wrong. Please try again.';
+      btn.disabled = false; btn.textContent = '💳 Pay & Credit My Wallet';
     }
   });
 
