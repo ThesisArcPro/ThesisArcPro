@@ -4,9 +4,11 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const { Pool } = require('pg');
+const Stripe = require('stripe');
 
 const app = express();
 const server = http.createServer(app);
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 // ── DATABASE ──
 const db = new Pool({
@@ -20,7 +22,73 @@ const db = new Pool({
 
 // ── CORS ──
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+
+// Stripe webhook needs the RAW request body to verify its signature — this MUST be
+// registered before express.json(), and only for this one path, or signature checks fail.
+app.post('/stripe-webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error('Stripe webhook signature verification failed:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === 'payment_intent.succeeded') {
+    const intent = event.data.object;
+    const userId = intent.metadata?.user_id;
+    const amount = intent.amount_received / 100; // Stripe uses cents
+    if (userId) {
+      try {
+        await db.query('BEGIN');
+        await db.query(
+          `INSERT INTO wallet_transactions (user_id, type, amount, note, created_at)
+           VALUES ($1, 'deposit', $2, $3, NOW())`,
+          [userId, amount, `Stripe payment ${intent.id}`]
+        );
+        await db.query(
+          `INSERT INTO wallets (user_id, available_balance)
+           VALUES ($1, $2)
+           ON CONFLICT (user_id) DO UPDATE SET available_balance = wallets.available_balance + EXCLUDED.available_balance`,
+          [userId, amount]
+        );
+        await db.query('COMMIT');
+        console.log(`Wallet credited: user ${userId} +$${amount}`);
+      } catch (err) {
+        await db.query('ROLLBACK');
+        console.error('Wallet credit error:', err);
+      }
+    } else {
+      console.error('Stripe webhook: missing user_id in metadata');
+    }
+  }
+
+  res.json({ received: true });
+});
+
 app.use(express.json());
+
+// Create a PaymentIntent for the embedded card form (Stripe Elements)
+app.post('/create-payment-intent', async (req, res) => {
+  const { amount, userId, userEmail } = req.body;
+  if (!amount || amount < 5 || !userId) {
+    return res.status(400).json({ error: 'Invalid amount or missing user.' });
+  }
+  try {
+    const intent = await stripe.paymentIntents.create({
+      amount: Math.round(amount * 100), // convert dollars to cents
+      currency: 'usd',
+      receipt_email: userEmail,
+      metadata: { user_id: userId },
+      automatic_payment_methods: { enabled: true }
+    });
+    res.json({ clientSecret: intent.client_secret });
+  } catch (err) {
+    console.error('create-payment-intent error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // ── SOCKET.IO ──
 const io = new Server(server, {
