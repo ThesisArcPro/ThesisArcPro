@@ -60,16 +60,18 @@ app.post('/stripe-webhook', express.raw({ type: 'application/json' }), async (re
     if (userId) {
       try {
         await db.query('BEGIN');
-        await db.query(
-          `INSERT INTO wallet_transactions (user_id, type, amount, note, created_at)
-           VALUES ($1, 'deposit', $2, $3, NOW())`,
-          [userId, amount, `Stripe payment ${intent.id}`]
-        );
-        await db.query(
+        const walletRes = await db.query(
           `INSERT INTO wallets (user_id, available_balance)
            VALUES ($1, $2)
-           ON CONFLICT (user_id) DO UPDATE SET available_balance = wallets.available_balance + EXCLUDED.available_balance`,
+           ON CONFLICT (user_id) DO UPDATE SET available_balance = wallets.available_balance + EXCLUDED.available_balance
+           RETURNING available_balance`,
           [userId, amount]
+        );
+        const newBalance = walletRes.rows[0].available_balance;
+        await db.query(
+          `INSERT INTO wallet_transactions (user_id, type, amount, note, balance_after, created_at)
+           VALUES ($1, 'deposit', $2, $3, $4, NOW())`,
+          [userId, amount, `Stripe payment ${intent.id}`, newBalance]
         );
         await db.query('COMMIT');
         console.log(`Wallet credited: user ${userId} +$${amount}`);

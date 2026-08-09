@@ -1538,57 +1538,77 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   <div class="modal-box" style="max-width:900px;width:95%;max-height:88vh;padding:0;overflow:hidden;background:#0E1116;">
     <button class="modal-close" id="addFundsModalClose" style="color:#5B6270;z-index:210;">✕</button>
     <div style="display:flex;height:100%;">
-      <!-- LEFT: form -->
+      <!-- LEFT: swaps between amount step and card step -->
       <div style="flex:1.2;padding:2rem;overflow-y:auto;">
-        <h2 style="font-size:1.4rem;font-weight:700;color:#E7E9EE;margin-bottom:1.5rem;">Add funds to your account</h2>
 
-        <label style="font-size:0.85rem;color:#9CA1AC;display:block;margin-bottom:0.5rem;">Amount in USD (minimum $5.00):</label>
-        <div style="background:#181B22;border:1px solid #23262E;border-radius:10px;padding:0.8rem 1rem;display:flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem;">
-          <span style="color:#9CA1AC;font-size:1.3rem;">$</span>
-          <input type="number" id="addFundsAmount" min="5" step="0.01" placeholder="0.00" style="flex:1;background:none;border:none;outline:none;color:#E7E9EE;font-size:1.3rem;font-weight:700;" />
+        <div id="addFundsStep1">
+          <h2 style="font-size:1.4rem;font-weight:700;color:#E7E9EE;margin-bottom:1.5rem;">Add funds to your account</h2>
+
+          <label style="font-size:0.85rem;color:#9CA1AC;display:block;margin-bottom:0.5rem;">Amount in USD (minimum $5.00):</label>
+          <div style="background:#181B22;border:1px solid #23262E;border-radius:10px;padding:0.8rem 1rem;display:flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem;">
+            <span style="color:#9CA1AC;font-size:1.3rem;">$</span>
+            <input type="number" id="addFundsAmount" min="5" step="0.01" placeholder="0.00" style="flex:1;background:none;border:none;outline:none;color:#E7E9EE;font-size:1.3rem;font-weight:700;" />
+          </div>
+
+          <label style="font-size:0.85rem;color:#9CA1AC;display:block;margin-bottom:0.6rem;">Payment method:</label>
+          <div style="background:#181B22;border:1.5px solid #5B8FFF;border-radius:10px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.7rem;margin-bottom:1.5rem;">
+            <span style="width:16px;height:16px;border-radius:50%;background:#5B8FFF;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+              <span style="width:6px;height:6px;border-radius:50%;background:#0E1116;"></span>
+            </span>
+            <span style="color:#E7E9EE;font-weight:600;font-size:0.9rem;flex:1;">Debit / Credit Card</span>
+            <span style="background:#635bff;color:#fff;font-weight:700;font-size:0.72rem;padding:0.25rem 0.5rem;border-radius:4px;">Secure</span>
+          </div>
+
+          <label style="display:flex;align-items:flex-start;gap:0.6rem;margin-bottom:1.5rem;cursor:pointer;">
+            <input type="checkbox" id="addFundsAgree" style="margin-top:0.2rem;" />
+            <span style="font-size:0.8rem;color:#9CA1AC;line-height:1.5;">Yes, I understand and agree to the <a href="/terms" target="_blank" style="color:#5B8FFF;">Terms of Service</a>, including the <a href="/privacy" target="_blank" style="color:#5B8FFF;">Privacy Policy</a> and <a href="/payment-policy" target="_blank" style="color:#5B8FFF;">Payment Policy</a>.</span>
+          </label>
+
+          <button id="addFundsProceedBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">Proceed →</button>
         </div>
 
-        <label style="font-size:0.85rem;color:#9CA1AC;display:block;margin-bottom:0.6rem;">Payment method:</label>
-        <div style="background:#181B22;border:1.5px solid #5B8FFF;border-radius:10px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.7rem;margin-bottom:1.5rem;">
-          <span style="width:16px;height:16px;border-radius:50%;background:#5B8FFF;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
-            <span style="width:6px;height:6px;border-radius:50%;background:#0E1116;"></span>
-          </span>
-          <span style="color:#E7E9EE;font-weight:600;font-size:0.9rem;flex:1;">Debit / Credit Card</span>
-          <span style="background:#635bff;color:#fff;font-weight:700;font-size:0.72rem;padding:0.25rem 0.5rem;border-radius:4px;">Secure</span>
+        <div id="addFundsStep2" style="display:none;">
+          <button id="addFundsBackBtn" style="background:none;border:none;color:#9CA1AC;font-size:0.82rem;cursor:pointer;padding:0;margin-bottom:1rem;display:flex;align-items:center;gap:0.3rem;">← Back</button>
+          <h2 style="font-size:1.3rem;font-weight:700;color:#E7E9EE;margin-bottom:1rem;">Enter your card details</h2>
+          <div id="addFundsAmountSummary" style="background:#181B22;border:1px solid #23262E;border-radius:10px;padding:1rem;margin-bottom:1.2rem;color:#E7E9EE;font-size:0.9rem;"></div>
+          <div style="margin-bottom:1rem;">
+  <label style="font-size:0.8rem;color:#9CA1AC;display:block;margin-bottom:0.4rem;">Credit or debit card number</label>
+  <div id="addFundsCardNumber" style="background:#0E1116;border:1px solid #23262E;border-radius:8px;padding:0.85rem 1rem;margin-bottom:0.9rem;"></div>
+  <div style="display:flex;gap:0.8rem;margin-bottom:0.9rem;">
+    <div style="flex:1;">
+      <label style="font-size:0.8rem;color:#9CA1AC;display:block;margin-bottom:0.4rem;">Expiration date</label>
+      <div id="addFundsCardExpiry" style="background:#0E1116;border:1px solid #23262E;border-radius:8px;padding:0.85rem 1rem;"></div>
+    </div>
+    <div style="flex:1;">
+      <label style="font-size:0.8rem;color:#9CA1AC;display:block;margin-bottom:0.4rem;">Security code</label>
+      <div id="addFundsCardCvc" style="background:#0E1116;border:1px solid #23262E;border-radius:8px;padding:0.85rem 1rem;"></div>
+    </div>
+  </div>
+  <label style="font-size:0.8rem;color:#9CA1AC;display:block;margin-bottom:0.4rem;">Name on card</label>
+  <input type="text" id="addFundsNameOnCard" placeholder="Full name as on card" style="width:100%;background:#0E1116;border:1px solid #23262E;border-radius:8px;padding:0.85rem 1rem;color:#E7E9EE;font-size:0.9rem;outline:none;box-sizing:border-box;" />
+</div>
+          <p id="addFundsCardError" style="color:#f87171;font-size:0.8rem;margin-bottom:1rem;min-height:1rem;"></p>
+          <button id="addFundsConfirmBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">Pay & Credit My Wallet</button>
+          <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:1rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5B6270" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <p style="font-size:0.74rem;color:#5B6270;margin:0;">Payments are secure and encrypted — we never see or store your card details.</p>
+          </div>
+          <div id="addFundsMsg" style="margin-top:0.8rem;font-size:0.85rem;"></div>
         </div>
 
-        <label style="display:flex;align-items:flex-start;gap:0.6rem;margin-bottom:1.5rem;cursor:pointer;">
-          <input type="checkbox" id="addFundsAgree" style="margin-top:0.2rem;" />
-          <span style="font-size:0.8rem;color:#9CA1AC;line-height:1.5;">Yes, I understand and agree to the <a href="/terms" target="_blank" style="color:#5B8FFF;">Terms of Service</a>, including the <a href="/privacy" target="_blank" style="color:#5B8FFF;">Privacy Policy</a> and <a href="/payment-policy" target="_blank" style="color:#5B8FFF;">Payment Policy</a>.</span>
-        </label>
-
-        <button id="addFundsProceedBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">Proceed →</button>
       </div>
 
-      <!-- RIGHT: trust panel -->
+      <!-- RIGHT: trust panel (stays the same across both steps) -->
       <div style="flex:1;background:#141821;padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-left:1px solid #23262E;">
         <div style="width:90px;height:90px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;margin-bottom:1.3rem;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.4286V18C22 19.1046 21.1046 20 20 20H7C5.89543 20 5 19.1046 5 18V16.5M22 11.4286V10C22 8.89543 21.1046 8 20 8H19M22 11.4286H19" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8V14.5C19 15.6046 18.1046 16.5 17 16.5H4C2.89543 16.5 2 15.6046 2 14.5V6.5C2 5.39543 2.89543 4.5 4 4.5H17C18.1046 4.5 19 5.39543 19 6.5V8ZM19 8H5.5" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <h3 style="font-size:1.05rem;font-weight:700;color:#E7E9EE;margin-bottom:0.6rem;">Make a secure payment</h3>
-        <p style="font-size:0.85rem;color:#9CA1AC;line-height:1.6;max-width:280px;">We use PayPal's secure, encrypted checkout to protect your information and process all transactions.</p>
-      </div>
-    </div>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#E7E9EE;margin-bottom:0.6rem;">Enter card details</h3>
+        <p style="font-size:0.85rem;color:#9CA1AC;line-height:1.6;max-width:280px;">To continue with this transaction, enter your card details.
+Please ensure your card has a valid expiration date and sufficient funds to finalize this transaction.
 
-    <!-- STRIPE CARD STEP (hidden until Proceed clicked) -->
-    <div id="addFundsPayPalStep" style="display:none;padding:2rem;">
-      <h2 style="font-size:1.3rem;font-weight:700;color:#E7E9EE;margin-bottom:1rem;">Enter your card details</h2>
-      <div id="addFundsAmountSummary" style="background:#181B22;border:1px solid #23262E;border-radius:10px;padding:1rem;margin-bottom:1.2rem;color:#E7E9EE;font-size:0.9rem;"></div>
-      <div style="background:#0E1116;border:1px solid #23262E;border-radius:10px;padding:1.2rem;margin-bottom:1rem;">
-        <div id="addFundsCardElement"></div>
+Some transactions may require up to 15 minutes to process..</p>
       </div>
-      <p id="addFundsCardError" style="color:#f87171;font-size:0.8rem;margin-bottom:1rem;min-height:1rem;"></p>
-      <button id="addFundsConfirmBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">Pay & Credit My Wallet</button>
-      <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:1rem;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5B6270" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <p style="font-size:0.74rem;color:#5B6270;margin:0;">Payments secured and processed by <strong style="color:#9CA1AC;">Stripe</strong> — we never see or store your card details.</p>
-      </div>
-      <div id="addFundsMsg" style="margin-top:0.8rem;font-size:0.85rem;"></div>
     </div>
   </div>
 </div>
@@ -1854,6 +1874,10 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   const STRIPE_PUBLISHABLE_KEY = 'pk_test_51U0IH92RM1cuZjiGEwbbf0T0aQvNZzfgPRuqG8fRBTeg8mWABkCqQOgZphUuekIxbF4zXOc7hy9gncybiwJiv1X2003il2emdr';
   const stripeClient = (window as any).Stripe ? (window as any).Stripe(STRIPE_PUBLISHABLE_KEY) : null;
   let stripeElements: any = null;
+  let addFundsCardNumberEl: any = null;
+  let addFundsCardExpiryEl: any = null;
+  let addFundsCardCvcEl: any = null;
+  let addFundsClientSecret: string = '';
  
   socket.on('connect', () => {
     console.log('Connected to bidding server:', socket.id);
@@ -2034,7 +2058,8 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   function openAddFundsModal() {
     (document.getElementById('addFundsAmount') as HTMLInputElement).value = '';
     (document.getElementById('addFundsAgree') as HTMLInputElement).checked = false;
-    document.getElementById('addFundsPayPalStep')!.style.display = 'none';
+    document.getElementById('addFundsStep1')!.style.display = 'block';
+    document.getElementById('addFundsStep2')!.style.display = 'none';
     document.getElementById('addFundsMsg')!.textContent = '';
     const errEl = document.getElementById('addFundsCardError'); if (errEl) errEl.textContent = '';
     updateProceedBtn();
@@ -2070,34 +2095,26 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       if (!res.ok || !data.clientSecret) throw new Error(data.error || 'Could not start payment.');
 
       document.getElementById('addFundsAmountSummary')!.textContent = `Amount to add: $${amt.toFixed(2)}`;
-      document.getElementById('addFundsPayPalStep')!.style.display = 'block';
+      document.getElementById('addFundsStep1')!.style.display = 'none';
+      document.getElementById('addFundsStep2')!.style.display = 'block';
 
-      stripeElements = stripeClient.elements({
-        clientSecret: data.clientSecret,
-        appearance: {
-          theme: 'night',
-          variables: {
-            colorPrimary: '#c5a059',
-            colorBackground: '#181B22',
-            colorText: '#E7E9EE',
-            colorTextSecondary: '#9CA1AC',
-            colorDanger: '#f87171',
-            fontFamily: 'Poppins, Inter, sans-serif',
-            spacingUnit: '4px',
-            borderRadius: '8px'
-          },
-          rules: {
-            '.Input': { border: '1.5px solid #23262E', boxShadow: 'none' },
-            '.Input:focus': { border: '1.5px solid #c5a059', boxShadow: '0 0 0 1px #c5a059' },
-            '.Label': { fontSize: '0.82rem', fontWeight: '600', marginBottom: '0.4rem' }
-          }
-        }
-      });
-      const cardEl = stripeElements.create('payment', {
-        fields: { billingDetails: { name: 'auto' } },
-        layout: 'tabs'
-      });
-      cardEl.mount('#addFundsCardElement');
+      addFundsClientSecret = data.clientSecret;
+      stripeElements = stripeClient.elements();
+      const elementStyle = {
+        base: {
+          color: '#E7E9EE',
+          fontFamily: 'Poppins, Inter, sans-serif',
+          fontSize: '15px',
+          '::placeholder': { color: '#5B6270' }
+        },
+        invalid: { color: '#f87171' }
+      };
+      addFundsCardNumberEl = stripeElements.create('cardNumber', { style: elementStyle, showIcon: true });
+      addFundsCardExpiryEl = stripeElements.create('cardExpiry', { style: elementStyle });
+      addFundsCardCvcEl = stripeElements.create('cardCvc', { style: elementStyle });
+      addFundsCardNumberEl.mount('#addFundsCardNumber');
+      addFundsCardExpiryEl.mount('#addFundsCardExpiry');
+      addFundsCardCvcEl.mount('#addFundsCardCvc');
 
       const confirmBtn = document.getElementById('addFundsConfirmBtn') as HTMLButtonElement;
       confirmBtn.disabled = false;
@@ -2118,10 +2135,12 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
     btn.disabled = true; btn.textContent = '⏳ Processing…';
     errEl.textContent = '';
     try {
-      const { error, paymentIntent } = await stripeClient.confirmPayment({
-        elements: stripeElements,
-        confirmParams: { return_url: window.location.href },
-        redirect: 'if_required'
+      const nameOnCard = (document.getElementById('addFundsNameOnCard') as HTMLInputElement)?.value.trim();
+      const { error, paymentIntent } = await stripeClient.confirmCardPayment(addFundsClientSecret, {
+        payment_method: {
+          card: addFundsCardNumberEl,
+          billing_details: { name: nameOnCard || undefined }
+        }
       });
       if (error) throw new Error(error.message || 'Payment failed.');
       if (paymentIntent?.status !== 'succeeded') throw new Error('Payment was not completed.');
@@ -2144,6 +2163,10 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   });
 
   document.getElementById('addFundsModalClose')?.addEventListener('click', () => document.getElementById('addFundsModal')!.classList.remove('open'));
+  document.getElementById('addFundsBackBtn')?.addEventListener('click', () => {
+    document.getElementById('addFundsStep2')!.style.display = 'none';
+    document.getElementById('addFundsStep1')!.style.display = 'block';
+  });
 
   function openRefundPolicyModal() {
     document.getElementById('walletModal')!.classList.remove('open');
