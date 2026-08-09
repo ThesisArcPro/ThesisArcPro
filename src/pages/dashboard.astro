@@ -1579,10 +1579,15 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
     <div id="addFundsPayPalStep" style="display:none;padding:2rem;">
       <h2 style="font-size:1.3rem;font-weight:700;color:#E7E9EE;margin-bottom:1rem;">Enter your card details</h2>
       <div id="addFundsAmountSummary" style="background:#181B22;border:1px solid #23262E;border-radius:10px;padding:1rem;margin-bottom:1.2rem;color:#E7E9EE;font-size:0.9rem;"></div>
-      <div id="addFundsCardElement" style="background:#181B22;border:1.5px solid #23262E;border-radius:8px;padding:0.9rem 1rem;margin-bottom:0.6rem;"></div>
+      <div style="background:#0E1116;border:1px solid #23262E;border-radius:10px;padding:1.2rem;margin-bottom:1rem;">
+        <div id="addFundsCardElement"></div>
+      </div>
       <p id="addFundsCardError" style="color:#f87171;font-size:0.8rem;margin-bottom:1rem;min-height:1rem;"></p>
-      <button id="addFundsConfirmBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">💳 Pay & Credit My Wallet</button>
-      <p style="font-size:0.74rem;color:#5B6270;margin-top:0.8rem;text-align:center;">🔒 Payments are securely processed by Stripe. We never see or store your card details.</p>
+      <button id="addFundsConfirmBtn" disabled style="width:100%;background:#334155;color:#94a3b8;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:700;cursor:not-allowed;">Pay & Credit My Wallet</button>
+      <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:1rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5B6270" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <p style="font-size:0.74rem;color:#5B6270;margin:0;">Payments secured and processed by <strong style="color:#9CA1AC;">Stripe</strong> — we never see or store your card details.</p>
+      </div>
       <div id="addFundsMsg" style="margin-top:0.8rem;font-size:0.85rem;"></div>
     </div>
   </div>
@@ -2067,8 +2072,31 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       document.getElementById('addFundsAmountSummary')!.textContent = `Amount to add: $${amt.toFixed(2)}`;
       document.getElementById('addFundsPayPalStep')!.style.display = 'block';
 
-      stripeElements = stripeClient.elements({ clientSecret: data.clientSecret, appearance: { theme: 'night' } });
-      const cardEl = stripeElements.create('payment');
+      stripeElements = stripeClient.elements({
+        clientSecret: data.clientSecret,
+        appearance: {
+          theme: 'night',
+          variables: {
+            colorPrimary: '#c5a059',
+            colorBackground: '#181B22',
+            colorText: '#E7E9EE',
+            colorTextSecondary: '#9CA1AC',
+            colorDanger: '#f87171',
+            fontFamily: 'Poppins, Inter, sans-serif',
+            spacingUnit: '4px',
+            borderRadius: '8px'
+          },
+          rules: {
+            '.Input': { border: '1.5px solid #23262E', boxShadow: 'none' },
+            '.Input:focus': { border: '1.5px solid #c5a059', boxShadow: '0 0 0 1px #c5a059' },
+            '.Label': { fontSize: '0.82rem', fontWeight: '600', marginBottom: '0.4rem' }
+          }
+        }
+      });
+      const cardEl = stripeElements.create('payment', {
+        fields: { billingDetails: { name: 'auto' } },
+        layout: 'tabs'
+      });
       cardEl.mount('#addFundsCardElement');
 
       const confirmBtn = document.getElementById('addFundsConfirmBtn') as HTMLButtonElement;

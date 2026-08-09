@@ -99,7 +99,7 @@ app.post('/create-payment-intent', async (req, res) => {
       currency: 'usd',
       receipt_email: userEmail,
       metadata: { user_id: userId },
-      automatic_payment_methods: { enabled: true }
+      payment_method_types: ['card']
     });
     res.json({ clientSecret: intent.client_secret });
   } catch (err) {
