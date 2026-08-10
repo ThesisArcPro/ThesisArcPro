@@ -4,7 +4,7 @@ meta_title: "Ethical Dilemma Essay: Navigating Everyday Decisions - Essay Exampl
 description: "This ethical dilemma essay examines everyday moral choices, showing how reason, fairness, consequences, and responsibility guide difficult decisions."
 subject: "Ethics"
 category: "Ethics essays"
-essay_type: "Argumentative"
+essay_type: "Analytical"
 assignment_type: "Essay"
 word_count: 1197
 pages: 5
@@ -19,7 +19,8 @@ writer_subjects: ["Nursing", "Law", "History", "Philosophy", "Sociology"]
 related: []
 order_service_link: "/order/"
 grammarly_checked: true
---- 
+---
+
 Ethical issues are not limited to the court, hospital, or business. They emerge in situations where normal decisions bring into conflict the competing moral issues. One can choose to disclose a friend's errors, report wrongdoing, keep a hard promise, or take a personal advantage that might hurt another person. An employee may find that a co-worker has entered the wrong numbers, and might have to decide whether to cover for the co-worker or report it, which could impact a group decision. Convenience is not always the correct choice in such situations. Ethical decision-making is not simply instinct or personal preference. This essay argues that navigating a moral choice in everyday life demands intentional moral reasoning based on the facts, competing values, affected parties, consequences, fairness, and one's responsibilities to others involved.
 
 Ethical dilemmas differ from simply difficult decisions, because they involve a conflict between two or more choices that are morally significant. Ethical issues often relate to competing interests and concerns, and consequences may extend beyond the person making the decision. Banks et al. (2022) explain that a person first has to recognize that a situation contains an ethical element; otherwise, they might make a decision based on short-term goals, habit, or convenience. Writing on social dilemmas, Miranda-Rodríguez et al. (2023) show how choices can place individuals and groups in conflict between personal and social interests. People are constantly faced with decisions about what they might want to do, but also what they may need to do for others, and why.
