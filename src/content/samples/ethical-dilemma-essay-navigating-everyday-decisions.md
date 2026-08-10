@@ -2,9 +2,9 @@
 title: "Ethical Dilemma Essay: Navigating Everyday Decisions"
 meta_title: "Ethical Dilemma Essay: Navigating Everyday Decisions - Essay Example - ThesisArcPro"
 description: "This ethical dilemma essay examines everyday moral choices, showing how reason, fairness, consequences, and responsibility guide difficult decisions."
-subject: "	Ethics"
-category: "Philosophy essays"
-essay_type: "Analytical"
+subject: "Ethics"
+category: "Ethics essays"
+essay_type: "Argumentative"
 assignment_type: "Essay"
 word_count: 1197
 pages: 5
