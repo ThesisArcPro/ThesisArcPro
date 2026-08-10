@@ -2,8 +2,8 @@
 title: "Comparative Religion: Religion and Theology Essay"
 meta_title: "Comparative Religion: Religion and Theology Essay - Essay Example - ThesisArcPro"
 description: "Explore a comparative religion and theology essay analyzing beliefs, ethics, spiritual fulfillment, and religious practice through a critical academic lens."
-subject: "Religion and Theology"
-category: "Religion and Theology essays"
+subject: "Religion and theology"
+category: "Religion and theology essays"
 essay_type: "Analytical"
 assignment_type: "Essay"
 word_count: 1213
