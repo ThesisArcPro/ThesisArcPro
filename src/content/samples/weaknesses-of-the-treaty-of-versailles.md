@@ -23,6 +23,8 @@ grammarly_checked: true
 
 The Treaty of Versailles was signed in 1919 after WWI. France, the US, and Britain designed the treaty to discuss the punishment to be imposed on Germany for its role in the war. While the treaty ended the war, most historians regard the onset of World War II as having been caused by the weaknesses of the treaty's implementation. These weaknesses prevented the treaty from offering a long-term solution to instability within the region. Notable weaknesses included harsh punishment imposed on Germany, huge economic consequences, unfairness in political decisions, and poor enforcement strategies, which led to instability as a cause of WWII. This essay focuses on the weaknesses of the Treaty of Versailles.
 
+<!--split-->
+
 One weakness of the treaty was the imposition of unbearable punishment on Germany for its involvement in the war. Under Article 231 of the treaty, the representative members required Germany to take responsibility for starting the war and causing atrocities (Klüners, 2025). While Germany believed other nations also participated in the war and would have shared the responsibility, this was not considered. As a result, Germany lost its reputation and national pride, and in anger, such a decision created resentment that contributed to political extremism within the country. Although the treaty was intended to establish long-term peace, its punitive approach destabilized Europe.
 
 Secondly, the imposition of financial sanctions and penalties on Germany was seen as a weakness because of the reparations. Economic pressure increased as Germany was forced to pay 132 billion old marks to compensate the Allied powers that suffered losses during World War I (Grimmer-Solem, 2023). While Germany's economy was slightly stable, the imposition of the hefty fine destabilized its financial value and caused inflation during the 1920s. Inflation caused massive job losses, declining money value, and lost savings. As a result, citizens lost trust in their democratic political systems and turned to radical leaders who promised to restore the economy (Grimmer-Solem, 2023).
@@ -52,3 +54,4 @@ Klüners, M. (2025). Hitler becomes a Jew-hater: The "trauma" of the Treaty of V
 Mwadi, B., Mandefu, B., Boyoko, D., Kamanda, P., Mbutamuntu, J. M., Musao, C., & Omoyajowo, K. (2025). Humiliation trap and resurgence of conflicts and wars in the international arena: Insights from the Versailles Treaty. *Rev. Eur. Stud.*, *17*, 1.
 
 Murphy, F. (2024). Was the Treaty of Versailles an appropriate response by the Allies? *TimePieces*, *25*.
+<!--split-->
