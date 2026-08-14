@@ -128,6 +128,45 @@ const base = '';
   font-size: 0.76rem;
   color: rgba(255,255,255,0.8);
 }
+.ws__card { cursor: pointer; }
+.ws__card-body { transition: opacity 0.2s ease; }
+.ws__card:hover .ws__card-body { opacity: 0; }
+.ws__card-hover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(30,41,59,0.55), rgba(15,23,42,0.92));
+  border-radius: 20px;
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+}
+.ws__card:hover .ws__card-hover {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.ws__hover-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: auto; }
+.ws__hover-name { color: #fff; font-weight: 700; font-size: 0.92rem; }
+.ws__hover-degree { color: rgba(255,255,255,0.75); font-size: 0.76rem; margin-top: 0.1rem; }
+.ws__hover-sample { color: #fff; font-size: 0.76rem; text-decoration: underline; flex-shrink: 0; }
+.ws__hover-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.6rem 0; }
+.ws__hover-tag { font-size: 0.68rem; font-weight: 600; padding: 0.22rem 0.6rem; border-radius: 12px; color: #fff; }
+.ws__hover-tag.c1 { background: rgba(34,197,94,0.35); }
+.ws__hover-tag.c2 { background: rgba(139,92,246,0.4); }
+.ws__hover-stats { display: flex; gap: 1rem; margin-bottom: 0.7rem; }
+.ws__hover-stat-num { color: #fff; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 0.2rem; }
+.ws__hover-stat-num .star { color: #ffd20a; }
+.ws__hover-stat-label { color: rgba(255,255,255,0.65); font-size: 0.68rem; }
+.ws__hover-actions { display: flex; flex-direction: column; gap: 0.4rem; }
+.ws__hover-btn { text-align: center; border-radius: 10px; padding: 0.5rem; font-size: 0.78rem; font-weight: 700; text-decoration: none; }
+.ws__hover-btn--ghost { background: rgba(255,255,255,0.12); color: #fff; }
+.ws__hover-btn--ghost:hover { background: rgba(255,255,255,0.2); }
+.ws__hover-btn--primary { background: #f5820c; color: #fff; }
+.ws__hover-btn--primary:hover { background: #d96f08; }
 
 /* ── Bottom actions ── */
 .ws__actions {
@@ -166,7 +205,12 @@ const base = '';
 <script>
   import { supabase } from '../lib/supabase.js';
 
-  function esc(s: string) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function esc(s: any) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function listFrom(str: string) {
+    if (!str) return [];
+    return str.split(/[,\n]|\s-\s/).map((s: string) => s.trim()).filter(Boolean);
+  }
 
   async function loadWriters() {
     const grid = document.getElementById('writersGrid');
@@ -202,14 +246,23 @@ const base = '';
       grid.innerHTML = writers.slice(0, 4).map((w: any) => {
         const s = statsMap[w.id] || {};
         const rating = s.avg_rating ? Number(s.avg_rating).toFixed(1) : null;
-        const completed = s.completed_orders || 0;
+        const completed = Number(s.completed_orders || 0) + Number(w.completed_orders_offset || 150);
+        const reviewCount = Number(s.review_count || 0);
+        const onTime = w.on_time_percentage != null ? `${w.on_time_percentage}%` : null;
+        const tags = listFrom(w.specialties).slice(0, 2);
+
+        let sampleUrl = '';
+        if (w.sample_url) {
+          const { data: pub } = supabase.storage.from('writer-samples').getPublicUrl(w.sample_url);
+          sampleUrl = pub.publicUrl;
+        }
 
         const photoHtml = w.photo_url
           ? `<img class="ws__card-photo" src="${w.photo_url}" alt="${esc(w.full_name || '')}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="ws__card-placeholder" style="display:none;">👤</div>`
           : `<div class="ws__card-placeholder">👤</div>`;
 
         return `
-          <a class="ws__card" href="/writers/">
+          <div class="ws__card" data-goto="/writers/">
             ${photoHtml}
             <div class="ws__card-body">
               <div class="ws__card-name">
@@ -222,7 +275,25 @@ const base = '';
               ${w.education_level ? `<div class="ws__card-detail">${esc(w.education_level)}</div>` : ''}
               <div class="ws__card-detail">Orders completed: <strong>${completed}</strong></div>
             </div>
-          </a>
+            <div class="ws__card-hover">
+              <div class="ws__hover-top">
+                <div>
+                  <div class="ws__hover-name">${esc(w.full_name || 'Writer')}</div>
+                  ${w.education_level ? `<div class="ws__hover-degree">${esc(w.education_level)}</div>` : ''}
+                </div>
+                ${sampleUrl ? `<a class="ws__hover-sample" href="${sampleUrl}" target="_blank" rel="noopener">Sample</a>` : ''}
+              </div>
+              ${tags.length ? `<div class="ws__hover-tags">${tags.map((t, i) => `<span class="ws__hover-tag c${(i % 2) + 1}">${esc(t)}</span>`).join('')}</div>` : ''}
+              <div class="ws__hover-stats">
+                ${rating ? `<div><div class="ws__hover-stat-num"><span class="star">★</span>${rating}</div><div class="ws__hover-stat-label">Last ${reviewCount || 0} reviews</div></div>` : ''}
+                ${onTime ? `<div><div class="ws__hover-stat-num">${onTime}</div><div class="ws__hover-stat-label">On-Time</div></div>` : ''}
+              </div>
+              <div class="ws__hover-actions">
+                <a class="ws__hover-btn ws__hover-btn--ghost" href="/writers/">View profile</a>
+                <a class="ws__hover-btn ws__hover-btn--primary" href="/order/?writer=${esc(w.id)}">Write my paper</a>
+              </div>
+            </div>
+          </div>
         `;
       }).join('');
 
@@ -233,4 +304,11 @@ const base = '';
   }
 
   loadWriters();
+
+  document.getElementById('writersGrid')?.addEventListener('click', (e) => {
+    const actionLink = (e.target as HTMLElement).closest('.ws__hover-actions a, .ws__hover-sample');
+    if (actionLink) return;
+    const card = (e.target as HTMLElement).closest('.ws__card') as HTMLElement | null;
+    if (card?.dataset.goto) window.location.href = card.dataset.goto;
+  });
 </script>
