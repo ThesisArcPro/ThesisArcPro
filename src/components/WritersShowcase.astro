@@ -289,7 +289,7 @@ const base = '';
                 ${onTime ? `<div><div class="ws__hover-stat-num">${onTime}</div><div class="ws__hover-stat-label">On-Time</div></div>` : ''}
               </div>
               <div class="ws__hover-actions">
-                <a class="ws__hover-btn ws__hover-btn--ghost" href="/writers/">View profile</a>
+                <a class="ws__hover-btn ws__hover-btn--ghost" href="/writers/?writer=${esc(w.id)}">View profile</a>
                 <a class="ws__hover-btn ws__hover-btn--primary" href="/order/?writer=${esc(w.id)}">Write my paper</a>
               </div>
             </div>
