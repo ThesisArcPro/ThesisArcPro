@@ -81,6 +81,18 @@ const fullTitle = title.includes('ThesisArcPro') ? title : `${title} | ThesisArc
     </script>
   </head>
   <body>
+    <!-- Referral capture: saves ?ref=CODE from the URL into a cookie so it
+         survives navigation until the person actually signs up. Runs on
+         every page since referral links may point anywhere on the site. -->
+    <script is:inline>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var ref = params.get('ref');
+        if (ref) {
+          document.cookie = 'ref_code=' + encodeURIComponent(ref) + ';path=/;max-age=' + (60 * 60 * 24 * 30);
+        }
+      })();
+    </script>
     <slot />
     <!-- Chat Widget -->
     <ChatWidget />

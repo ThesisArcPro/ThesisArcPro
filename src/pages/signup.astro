@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
 ---
 
 <BaseLayout 
@@ -12,11 +11,11 @@ import Footer from '../components/Footer.astro';
 
   <main>
     <section class="auth-section">
-      <div class="container auth__inner">
+      <div class="auth__inner">
 
-        <div class="auth-card">
+        <div class="auth-col auth-form-col">
           <div class="auth-card__header">
-            <h1>Create Account</h1>
+            <h1>Create account</h1>
             <p>Sign up to place your order and track progress</p>
           </div>
 
@@ -49,7 +48,7 @@ import Footer from '../components/Footer.astro';
               <input type="password" id="confirmPassword" placeholder="Repeat your password" required />
             </div>
 
-            <button type="submit" class="btn-primary auth-submit" id="submitBtn">
+            <button type="submit" class="btn-login auth-submit" id="submitBtn">
               Create Account
             </button>
           </form>
@@ -59,36 +58,34 @@ import Footer from '../components/Footer.astro';
           </div>
         </div>
 
-        <div class="auth-info">
-          <h2>Why Create an Account?</h2>
-          <div class="auth-benefits">
-            <div class="benefit">
-              <span class="benefit__icon">📋</span>
-              <div>
-                <strong>Track Your Orders</strong>
-                <p>See all your orders and their status in one place</p>
-              </div>
+        <div class="auth-col auth-benefits">
+          <h2>Why create an account?</h2>
+          <div class="benefit">
+            <span class="benefit-icon">📋</span>
+            <div>
+              <h3>Track your orders</h3>
+              <p>See all your orders and their status in one place.</p>
             </div>
-            <div class="benefit">
-              <span class="benefit__icon">⚡</span>
-              <div>
-                <strong>Faster Ordering</strong>
-                <p>Your details auto-fill every time you place an order</p>
-              </div>
+          </div>
+          <div class="benefit">
+            <span class="benefit-icon">⚡</span>
+            <div>
+              <h3>Faster ordering</h3>
+              <p>Your details auto-fill every time you place an order.</p>
             </div>
-            <div class="benefit">
-              <span class="benefit__icon">🔒</span>
-              <div>
-                <strong>Secure Payments</strong>
-                <p>Pay safely and securely via PayPal</p>
-              </div>
+          </div>
+          <div class="benefit">
+            <span class="benefit-icon">🔒</span>
+            <div>
+              <h3>Secure payments</h3>
+              <p>Pay safely and securely via PayPal.</p>
             </div>
-            <div class="benefit">
-              <span class="benefit__icon">📧</span>
-              <div>
-                <strong>Order Notifications</strong>
-                <p>Get email updates on your order progress</p>
-              </div>
+          </div>
+          <div class="benefit">
+            <span class="benefit-icon">📧</span>
+            <div>
+              <h3>Order notifications</h3>
+              <p>Get email updates on your order progress.</p>
             </div>
           </div>
         </div>
@@ -96,37 +93,65 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
   </main>
-
-  <Footer />
 </BaseLayout>
 
 <style>
-.auth-section { padding: 10rem 0 5rem; background-color: var(--off-white); min-height: 100vh; }
-.auth__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-.auth-card { background: var(--white); border-radius: 16px; padding: 2.5rem; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-.auth-card__header { margin-bottom: 2rem; }
-.auth-card__header h1 { color: var(--navy); font-size: 1.8rem; margin-bottom: 0.5rem; }
-.auth-card__header p { color: var(--text-mid); }
+.auth-section { background-color: #ffffff; min-height: 100vh; }
+.auth__inner { display: flex; min-height: 100vh; }
+
+.auth-col { padding: 4rem 4vw; }
+.auth-form-col { flex: 1 1 50%; max-width: 620px; display: flex; flex-direction: column; justify-content: center; }
+
+.auth-card__header { margin-bottom: 1.75rem; }
+.auth-card__header h1 { color: #1a1f2b; font-size: 1.7rem; font-weight: 700; margin-bottom: 0.5rem; }
+.auth-card__header p { color: #6b7280; font-size: 0.9rem; }
+
 .auth-form { display: flex; flex-direction: column; gap: 1.2rem; }
 .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-.form-group label { color: var(--navy); font-size: 0.9rem; font-weight: 600; }
-.form-group input { padding: 0.85rem 1rem; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; font-family: var(--font-body); font-size: 0.95rem; color: var(--text-dark); background-color: var(--white); transition: border-color 0.3s ease; outline: none; width: 100%; }
-.form-group input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(197,160,89,0.1); }
-.auth-submit { width: 100%; padding: 1rem; font-size: 1rem; border: none; cursor: pointer; border-radius: 8px; font-weight: 700; margin-top: 0.5rem; }
-.auth-footer { margin-top: 1.5rem; text-align: center; color: var(--text-mid); font-size: 0.9rem; }
-.auth-footer a { color: var(--gold); font-weight: 600; text-decoration: none; }
-.auth-footer a:hover { text-decoration: underline; }
+.form-group label { color: #1a1f2b; font-size: 0.9rem; font-weight: 500; }
+.form-group input {
+  padding: 0.85rem 1rem; border: 1.5px solid #b8d4f5; border-radius: 6px;
+  font-family: var(--font-body); font-size: 0.95rem; color: #1a1f2b;
+  background-color: #ffffff; transition: border-color 0.3s ease; outline: none; width: 100%;
+}
+.form-group input:focus { border-color: #2f6fed; box-shadow: 0 0 0 3px rgba(47,111,237,0.12); }
+
+.btn-login {
+  width: 100%; padding: 1rem; font-size: 1rem; border: none; cursor: pointer;
+  border-radius: 8px; font-weight: 700; margin-top: 0.5rem;
+  background-color: #ffcc00; color: #1a1f2b;
+  transition: background 0.2s ease;
+}
+.btn-login:hover { background-color: #f0c000; }
+
+.auth-footer { margin-top: 1.5rem; text-align: center; color: #6b7280; font-size: 0.9rem; }
+.auth-footer a { color: #2f6fed; font-weight: 600; text-decoration: underline; }
+
 .auth-error { background: #fdeaea; border: 1px solid #e74c3c; color: #c0392b; padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.9rem; margin-bottom: 1rem; }
 .auth-success { background: #eafaf1; border: 1px solid #2ecc71; color: #1a7a3c; padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.9rem; margin-bottom: 1rem; }
-.auth-info h2 { color: var(--navy); margin-bottom: 1.5rem; }
-.auth-benefits { display: flex; flex-direction: column; gap: 1.5rem; }
-.benefit { display: flex; gap: 1rem; align-items: flex-start; }
-.benefit__icon { font-size: 1.8rem; flex-shrink: 0; }
-.benefit strong { display: block; color: var(--navy); margin-bottom: 0.3rem; }
-.benefit p { color: var(--text-mid); font-size: 0.9rem; margin: 0; }
-@media (max-width: 768px) {
-  .auth__inner { grid-template-columns: 1fr; }
-  .auth-info { display: none; }
+
+.auth-benefits {
+  flex: 1 1 50%;
+  background: #edf1f9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.auth-benefits h2 { color: #1a1f2b; font-size: 1.3rem; font-weight: 700; margin-bottom: 1.75rem; line-height: 1.4; max-width: 480px; }
+.benefit { display: flex; gap: 1rem; margin-bottom: 1.5rem; max-width: 480px; align-items: flex-start; }
+.benefit:last-child { margin-bottom: 0; }
+.benefit-icon {
+  flex-shrink: 0; width: 42px; height: 42px; border-radius: 8px;
+  background: #ffffff; display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.benefit h3 { color: #1a1f2b; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+.benefit p { color: #6b7280; font-size: 0.85rem; line-height: 1.5; margin: 0; }
+
+@media (max-width: 900px) {
+  .auth__inner { flex-direction: column; min-height: auto; }
+  .auth-benefits { order: -1; }
+  .auth-col { max-width: 100%; padding: 2.5rem 6vw; }
 }
 </style>
 
@@ -138,6 +163,17 @@ import Footer from '../components/Footer.astro';
   const successMsg = document.getElementById('successMsg');
   const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
+  // Referral code capture now happens site-wide in BaseLayout.astro.
+  // These helpers just read/clear the cookie it sets.
+  function getReferralCode(): string | null {
+    const match = document.cookie.match(/(?:^|;\s*)ref_code=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  function clearReferralCode() {
+    document.cookie = 'ref_code=;path=/;max-age=0';
+  }
+
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -147,7 +183,6 @@ import Footer from '../components/Footer.astro';
     const password = (document.getElementById('password') as HTMLInputElement).value;
     const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement).value;
 
-    // Validation
     if (password !== confirmPassword) {
       errorMsg!.textContent = 'Passwords do not match!';
       errorMsg!.style.display = 'block';
@@ -165,7 +200,6 @@ import Footer from '../components/Footer.astro';
     submitBtn.disabled = true;
 
     try {
-      // Create auth user
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -176,13 +210,24 @@ import Footer from '../components/Footer.astro';
 
       if (error) throw error;
 
-      // Profile is created automatically by the database trigger (handle_new_user).
-      // We only need to update the phone number, which the trigger doesn't have.
       if (data.user) {
         await supabase
           .from('profiles')
           .update({ phone })
           .eq('id', data.user.id);
+
+        const refCode = getReferralCode();
+        if (refCode) {
+          try {
+            await supabase.functions.invoke('attach-referral', {
+              body: { code: refCode, userId: data.user.id }
+            });
+          } catch (refErr) {
+            // Don't block signup if referral attachment fails; just log it.
+            console.error('Referral attach failed:', refErr);
+          }
+          clearReferralCode();
+        }
       }
 
       successMsg!.textContent = '✅ Account created! Please check your email to verify your account, then login.';

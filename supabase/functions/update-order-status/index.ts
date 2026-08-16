@@ -46,6 +46,26 @@ Deno.serve(async (req) => {
       .eq("order_number", orderId)
       .maybeSingle();
 
+    // If this order just completed, credit any pending referral tied to
+    // this customer. complete_referral() is a no-op if there's no pending
+    // referral for them (e.g. this isn't their first order) — safe to
+    // call on every completed order.
+    if (status === "completed" && order?.client_email) {
+      try {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("email", order.client_email)
+          .maybeSingle();
+
+        if (profile?.id) {
+          await supabase.rpc("complete_referral", { p_referred_user_id: profile.id });
+        }
+      } catch (_) {
+        // Don't let a referral hiccup block the order status update itself
+      }
+    }
+
     // Notify client only when completed — hard 5s timeout so it can never hang
     if (status === "completed" && order?.client_email) {
       try {
