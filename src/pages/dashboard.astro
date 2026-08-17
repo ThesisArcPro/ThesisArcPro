@@ -95,6 +95,26 @@ const base = '';
   }
  
   .main-header h1 { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
+
+  .dash-referral-strip {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    background: #eef6fb; border: 1px solid #cfe4f7; border-radius: 10px;
+    padding: 0.65rem 1.1rem; margin: 1rem 2rem 0; flex-wrap: wrap;
+  }
+  .dash-referral-strip__text { font-size: 0.82rem; color: #046fcd; font-weight: 500; }
+  .dash-referral-strip__text strong { font-weight: 700; }
+  .dash-referral-strip__actions { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+  .dash-referral-strip__btn {
+    background: #046fcd; color: #fff; border: none; border-radius: 7px;
+    padding: 0.4rem 0.85rem; font-size: 0.78rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+  }
+  .dash-referral-strip__btn:hover { background: #0361b3; }
+  .dash-referral-strip__close {
+    background: none; border: none; color: #64748b; cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0.2rem;
+  }
+  body.dark-mode .dash-referral-strip { background: #16233a; border-color: rgba(96,165,250,0.25); }
+  body.dark-mode .dash-referral-strip__text { color: #60a5fa; }
+  body.dark-mode .dash-referral-strip__close { color: #94a3b8; }
  
   .btn-new-order-main {
     background: #ffffff;
@@ -999,7 +1019,9 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
     </a>
     <a class="nav-item" href={`${base}/writers/`} id="writersLink"
        onclick="window.location.assign('/writers/'); return false;">
-      <span class="icon">👥</span> Writers
+      <span class="icon" style="display:flex;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+      </span> Writers
     </a>
     <a class="nav-item" href="#" id="chatsLink" style="position:relative;">
       <span class="icon" style="display:flex;">
@@ -1059,6 +1081,14 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
         <span class="theme-icon-current" id="themeIconCurrent">🌙</span>
       </button>
       <button class="btn-new-order-main" id="headerNewOrderBtn">New order ＋</button>
+    </div>
+  </div>
+
+  <div class="dash-referral-strip" id="dashReferralStrip">
+    <span class="dash-referral-strip__text">💵 <strong>Refer a friend, get $50.00</strong> — earn credit for every friend who completes an order.</span>
+    <div class="dash-referral-strip__actions">
+      <button class="dash-referral-strip__btn" id="dashReferralBtn">Refer a friend</button>
+      <button class="dash-referral-strip__close" id="dashReferralClose" aria-label="Dismiss">✕</button>
     </div>
   </div>
  
@@ -1248,6 +1278,15 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Referral banner -->
+          <div id="wizReferralBanner" style="background:linear-gradient(135deg,#046fcd,#0361b3);border-radius:10px;padding:0.9rem 1.1rem;margin-bottom:0.9rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;color:#fff;flex-wrap:wrap;">
+            <div style="font-size:0.82rem;line-height:1.5;">
+              <strong>🎉 Know someone who needs this too?</strong><br/>
+              Refer a friend and get <strong>$50.00</strong> once they complete their first order.
+            </div>
+            <button id="wizReferralBtn" style="background:#fff;color:#046fcd;border:none;border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;font-weight:700;cursor:pointer;white-space:nowrap;">Refer a friend</button>
           </div>
  
           <!-- Tab panels -->
@@ -2009,7 +2048,23 @@ Some transactions may require up to 15 minutes to process..</p>
   document.getElementById('acctNickname')?.addEventListener('input', updateNicknameCount);
 
   document.getElementById('addFundsBtn')?.addEventListener('click', openWalletModal);
-  document.getElementById('profileIconBtn')?.addEventListener('click', openAccountModal);
+document.getElementById('earnReferralBtn')?.addEventListener('click', () => {
+  window.location.href = `${base}/referrals/`;
+});
+
+document.getElementById('dashReferralBtn')?.addEventListener('click', () => {
+  window.location.href = `${base}/referrals/`;
+});
+document.getElementById('dashReferralClose')?.addEventListener('click', () => {
+  const strip = document.getElementById('dashReferralStrip');
+  if (strip) strip.style.display = 'none';
+  sessionStorage.setItem('dashReferralDismissed', '1');
+});
+if (sessionStorage.getItem('dashReferralDismissed')) {
+  const strip = document.getElementById('dashReferralStrip');
+  if (strip) strip.style.display = 'none';
+}
+document.getElementById('profileIconBtn')?.addEventListener('click', openAccountModal);
   document.getElementById('accountModalClose')?.addEventListener('click', () => document.getElementById('accountModal')!.classList.remove('open'));
   document.getElementById('accountModalOverlay')?.addEventListener('click', () => document.getElementById('accountModal')!.classList.remove('open'));
   document.getElementById('accountLogoutBtn')?.addEventListener('click', async () => { await supabase.auth.signOut(); window.location.href = `${base}/login/`; });
@@ -2223,6 +2278,20 @@ Some transactions may require up to 15 minutes to process..</p>
       const el = document.getElementById('walletBalanceDisplay');
       if (el) el.textContent = `$${walletBalance.toFixed(2)}`;
     } catch (e) { console.error('refreshWalletBalance error', e); }
+  }
+
+  async function refreshReferralEarnings() {
+    if (!currentSession) return;
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/referrals?referrer_id=eq.${currentSession.user.id}&status=eq.completed&select=reward_amount`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+      );
+      const rows = await res.json();
+      const total = Array.isArray(rows) ? rows.reduce((sum: number, r: any) => sum + Number(r.reward_amount), 0) : 0;
+      const el = document.getElementById('earnReferralAmount');
+      if (el) el.textContent = `$${total.toFixed(2)}`;
+    } catch (e) { console.error('refreshReferralEarnings error', e); }
   }
  
   // Track the review popup state
@@ -3110,6 +3179,9 @@ document.getElementById('wizGetHelpBtn')?.addEventListener('click', () => {
   if ((window as any).tidioChatApi) { (window as any).tidioChatApi.open(); }
   else { alert('Support chat is loading. Please try again in a moment.'); }
 });
+document.getElementById('wizReferralBtn')?.addEventListener('click', () => {
+  window.location.href = `${base}/referrals/`;
+});
 document.getElementById('wizInviteWritersBtn')?.addEventListener('click', () => {
   window.open(`${base}/writers/`, '_blank');
 });
@@ -3310,6 +3382,7 @@ try {
       } catch (e) { console.warn('Could not load client_id', e); }
       await loadOrders(session);
       await refreshWalletBalance();
+      await refreshReferralEarnings();
  
       // Reopen pending order modal if client refreshed while waiting for bids
       const pendingId = localStorage.getItem('wizPendingOrderId');

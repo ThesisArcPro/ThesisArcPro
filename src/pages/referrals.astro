@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 ---
 
@@ -8,200 +7,368 @@ import Footer from '../components/Footer.astro';
   title="Refer a Friend"
   description="Refer a friend to ThesisArcPro and earn rewards for every completed order."
   url="https://thesisarcpro.github.io/referrals">
-  <Header />
-
-  <main>
-    <section class="refer-section">
-      <div class="container">
-
-        <div class="refer-hero">
-          <h1>Refer a Friend. Get <span id="rewardAmount">$34.70</span></h1>
-          <p>Bring your friend over to ThesisArcPro! We'll add <span id="rewardAmountInline">$34.70</span> to your balance for every friend who completes an order. Each friend gets 10% off their first order, too!</p>
-        </div>
-
-        <div id="authGate" class="refer-card" style="display:none;">
-          <p>Please <a href="/login/?redirect=/referrals/">log in</a> to see your referral link.</p>
-        </div>
-
-        <div id="referContent" style="display:none;">
-          <div class="refer-card">
-            <h3>Share your unique link</h3>
-            <div class="link-row">
-              <input type="text" id="referralLink" readonly />
-              <button type="button" id="copyBtn" class="btn-copy" aria-label="Copy link">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              </button>
-            </div>
-
-            <div class="share-row">
-              <a id="shareWhatsapp" href="#" target="_blank" rel="noopener noreferrer" class="share-btn share-btn--whatsapp">
-                Message It!
-              </a>
-              <a id="shareFacebook" href="#" target="_blank" rel="noopener noreferrer" class="share-btn share-btn--facebook">
-                Post It!
-              </a>
-              <a id="shareTwitter" href="#" target="_blank" rel="noopener noreferrer" class="share-btn share-btn--twitter">
-                Share It!
-              </a>
-            </div>
-          </div>
-
-          <div class="stats-grid">
-            <div class="stat-card">
-              <span class="stat-value" id="statSent">0</span>
-              <span class="stat-label">Referrals sent</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-value" id="statCompleted">0</span>
-              <span class="stat-label">Referrals completed</span>
-            </div>
-            <div class="stat-card stat-card--highlight">
-              <span class="stat-value" id="statEarned">$0.00</span>
-              <span class="stat-label">You've earned</span>
-            </div>
-          </div>
-
-          <div class="refer-card how-it-works">
-            <h3>How it works?</h3>
-            <p>You can get <span id="rewardAmountHow">$34.70</span> on your ThesisArcPro balance for every friend you refer to us. It's a good way to help someone. Use your earnings next time you place an order.</p>
-
-            <h4>What should I do?</h4>
-            <p>Copy the link above. Share it via your messengers, social network accounts or email. When someone signs up using your link, they save 10% on their first order.</p>
-
-            <h4>When will I get my reward?</h4>
-            <p>Once we confirm your referral completed their first order, you'll get a top-up to your balance. Track your results right here on this page.</p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-  </main>
-
-  <Footer />
-</BaseLayout>
 
 <style>
-.refer-section { padding: 8rem 0 5rem; background-color: var(--off-white); min-height: 100vh; }
-.refer-hero { text-align: center; max-width: 640px; margin: 0 auto 2.5rem; }
-.refer-hero h1 { color: var(--navy); font-size: 2rem; margin-bottom: 1rem; }
-.refer-hero h1 span { color: var(--gold); }
-.refer-hero p { color: var(--text-mid); line-height: 1.6; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.refer-card {
-  background: var(--white); border-radius: 16px; padding: 2rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.06); max-width: 640px; margin: 0 auto 1.5rem;
-}
-.refer-card h3 { color: var(--navy); font-size: 1.1rem; margin-bottom: 1rem; }
+  :root {
+    --gold: #c5a059;
+    --main-bg: #f1f5f9;
+    --panel-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --active-blue: #046fcd;
+  }
 
-.link-row { display: flex; gap: 0.6rem; margin-bottom: 1.25rem; }
-.link-row input {
-  flex: 1; padding: 0.85rem 1rem; border: 1.5px solid rgba(0,0,0,0.12);
-  border-radius: 6px; font-family: var(--font-body); font-size: 0.9rem;
-  color: var(--text-dark); background: var(--off-white);
-}
-.btn-copy {
-  flex-shrink: 0; width: 46px; border-radius: 6px; border: none; cursor: pointer;
-  background: var(--navy); color: var(--white); display: flex; align-items: center; justify-content: center;
-  transition: background 0.2s ease;
-}
-.btn-copy:hover { background: #14213d; }
-.btn-copy.copied { background: #2ecc71; }
+  body {
+    font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif;
+    background: var(--main-bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
 
-.share-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.share-btn {
-  flex: 1; min-width: 130px; text-align: center; padding: 0.75rem 1rem;
-  border-radius: 8px; font-weight: 700; font-size: 0.9rem; color: var(--white);
-  text-decoration: none; transition: opacity 0.2s ease;
-}
-.share-btn:hover { opacity: 0.9; }
-.share-btn--whatsapp { background: #25D366; }
-.share-btn--facebook { background: #1877F2; }
-.share-btn--twitter { background: #000000; }
+  .ref-page {
+    display: flex;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    align-items: flex-start;
+  }
 
-.stats-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
-  max-width: 640px; margin: 0 auto 1.5rem;
-}
-.stat-card {
-  background: var(--white); border-radius: 12px; padding: 1.5rem 1rem; text-align: center;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-}
-.stat-card--highlight { background: var(--navy); }
-.stat-value { display: block; font-size: 1.5rem; font-weight: 700; color: var(--navy); margin-bottom: 0.4rem; }
-.stat-card--highlight .stat-value { color: var(--gold); }
-.stat-label { font-size: 0.8rem; color: var(--text-mid); }
-.stat-card--highlight .stat-label { color: rgba(255,255,255,0.7); }
+  /* ── SIDEBAR CARD ── */
+  .side-card {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--panel-bg);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .side-card__header {
+    background: #111827;
+    color: #fff;
+    padding: 1rem 1.3rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+  .side-card__body { padding: 1.3rem; }
+  .side-user { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.2rem; }
+  .side-user__avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: #e2e8f0; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; color: #94a3b8; flex-shrink: 0;
+  }
+  .side-user__name { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+  .side-user__stars { color: #e2e8f0; font-size: 0.75rem; margin-top: 0.15rem; }
 
-.how-it-works h4 { color: var(--navy); font-size: 0.95rem; margin: 1.25rem 0 0.4rem; }
-.how-it-works p { color: var(--text-mid); font-size: 0.9rem; line-height: 1.6; margin: 0; }
+  .side-stats { display: flex; justify-content: space-between; margin-bottom: 1.3rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border); }
+  .side-stat { text-align: center; flex: 1; }
+  .side-stat__num { font-size: 1.15rem; font-weight: 800; }
+  .side-stat__num.green { color: #22c55e; }
+  .side-stat__num.red { color: #ef4444; }
+  .side-stat__num.blue { color: var(--active-blue); }
+  .side-stat__label { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.15rem; }
 
-@media (max-width: 600px) {
-  .stats-grid { grid-template-columns: 1fr; }
-  .share-row { flex-direction: column; }
-}
+  .side-nav { display: flex; flex-direction: column; gap: 0.15rem; }
+  .side-nav a {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.65rem 0.7rem; border-radius: 8px;
+    color: var(--text-muted); font-size: 0.85rem; font-weight: 500;
+    text-decoration: none; transition: all 0.15s;
+  }
+  .side-nav a:hover { background: #f8fafc; color: var(--text); }
+  .side-nav a.active { background: #eef6fb; color: var(--active-blue); font-weight: 700; }
+  .side-nav a .icon { width: 18px; text-align: center; }
+
+  /* ── MAIN CONTENT ── */
+  .ref-main { flex: 1; min-width: 0; }
+  .ref-loading { text-align: center; color: var(--text-muted); padding: 4rem 0; }
+
+  .ref-hero { margin-bottom: 1.8rem; position: relative; }
+  .ref-hero h1 { font-size: 1.6rem; font-weight: 800; color: var(--text); margin-bottom: 0.6rem; }
+  .ref-hero p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; max-width: 560px; }
+
+  .ref-link-card { margin-bottom: 2rem; }
+  .ref-link-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.8rem; }
+  .link-row { display: flex; gap: 0.6rem; max-width: 480px; margin-bottom: 0.5rem; }
+  .link-row input {
+    flex: 1; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 8px;
+    font-family: inherit; font-size: 0.88rem; color: var(--text); background: var(--panel-bg);
+  }
+  .copy-btn {
+    width: 46px; flex-shrink: 0; border: none; border-radius: 8px; cursor: pointer;
+    background: var(--active-blue); color: #fff; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s ease;
+  }
+  .copy-btn:hover { background: #0361b3; }
+  .copy-confirm { color: #16a34a; font-size: 0.82rem; margin-bottom: 0.8rem; }
+
+  .share-row { display: flex; gap: 0.7rem; flex-wrap: wrap; max-width: 560px; margin-top: 1rem; }
+  .share-btn {
+    flex: 1; min-width: 150px; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.83rem; font-weight: 700;
+    color: #fff; text-decoration: none; transition: opacity 0.2s ease;
+  }
+  .share-btn:hover { opacity: 0.88; }
+  .share-btn--email { background: var(--active-blue); }
+  .share-btn--facebook { background: #1e293b; }
+  .share-btn--x { background: #000000; }
+
+  .stats-section { margin-bottom: 2.2rem; }
+  .stats-section h3 { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.9rem; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 620px; }
+  .stat-card {
+    background: var(--panel-bg); border-radius: 12px; padding: 1.3rem 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04); display: flex; flex-direction: column; gap: 0.3rem;
+  }
+  .stat-card--highlight { background: #111827; }
+  .stat-card--highlight .stat-number, .stat-card--highlight .stat-label { color: #fff; }
+  .stat-number { color: var(--text); font-size: 1.5rem; font-weight: 800; }
+  .stat-label { color: var(--text-muted); font-size: 0.78rem; }
+
+  .ref-faq { max-width: 620px; display: flex; flex-direction: column; gap: 1.3rem; margin-bottom: 2rem; }
+  .faq-item h4 { color: var(--text); font-size: 0.92rem; font-weight: 700; margin-bottom: 0.35rem; }
+  .faq-item p { color: var(--text-muted); font-size: 0.86rem; line-height: 1.65; }
+  .reward-inline { color: var(--gold); font-weight: 700; }
+
+  .contact-strip {
+    max-width: 620px; background: var(--panel-bg); border-radius: 10px;
+    padding: 1rem 1.2rem; text-align: center; font-size: 0.85rem; color: var(--text-muted);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 2rem;
+  }
+  .contact-strip a { color: var(--active-blue); font-weight: 600; text-decoration: none; }
+
+  .legal-fine-print {
+    max-width: 780px; font-size: 0.72rem; line-height: 1.7; color: #94a3b8;
+  }
+
+  @media (max-width: 860px) {
+    .ref-page { flex-direction: column; }
+    .side-card { width: 100%; }
+    .stats-row { grid-template-columns: 1fr; }
+    .link-row { flex-direction: column; }
+    .copy-btn { width: 100%; height: 42px; }
+  }
 </style>
+
+<div class="ref-page">
+
+  <!-- SIDEBAR -->
+  <aside class="side-card">
+    <div class="side-card__header">My ThesisArcPro</div>
+    <div class="side-card__body">
+      <div class="side-user">
+        <div class="side-user__avatar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+        </div>
+        <div>
+          <div class="side-user__name" id="sideUserName">Loading…</div>
+          <div class="side-user__stars">★★★★★</div>
+        </div>
+      </div>
+
+      <div class="side-stats">
+        <div class="side-stat"><div class="side-stat__num green" id="sideCompleted">0</div><div class="side-stat__label">Completed</div></div>
+        <div class="side-stat"><div class="side-stat__num red" id="sideCancelled">0</div><div class="side-stat__label">Cancelled</div></div>
+        <div class="side-stat"><div class="side-stat__num blue" id="sideInProgress">0</div><div class="side-stat__label">In progress</div></div>
+      </div>
+
+      <nav class="side-nav">
+        <a href="/dashboard/">
+          <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></span> Profile
+        </a>
+        <a href="/dashboard/">
+          <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M7 11h10"/><path d="M7 15h6"/><path d="M7 7h8"/></svg></span> Testimonials
+        </a>
+        <a href="/referrals/" class="active">
+          <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c5a059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg></span> Refer a friend
+        </a>
+        <a href="#" id="sideLogoutLink">
+          <span class="icon">↩</span> Logout
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="ref-main">
+    <div id="authGate" class="ref-loading">Loading your referral info...</div>
+
+    <div id="refContent" style="display:none;">
+
+      <div class="ref-hero">
+        <h1>Refer a Friend. Get <span id="rewardAmount">$34.70</span></h1>
+        <p>Bring your friend over to ThesisArcPro! We'll add <span id="rewardAmountInline">$34.70</span> to your balance for every friend who completes an order. Each friend gets a discount on their first order, too!</p>
+      </div>
+
+      <div class="ref-link-card">
+        <h3>Share your unique link</h3>
+        <div class="link-row">
+          <input type="text" id="refLinkInput" readonly />
+          <button id="copyBtn" class="copy-btn" aria-label="Copy link">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+        <div id="copyConfirm" class="copy-confirm" style="display:none;">Link copied!</div>
+
+        <div class="share-row">
+          <a id="shareEmail" class="share-btn share-btn--email" href="#">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>
+            Message it
+          </a>
+          <a id="shareFacebook" class="share-btn share-btn--facebook" href="#" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.23 10.44 22v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22C18.34 21.23 22 17.08 22 12.06z"/></svg>
+            Post it
+          </a>
+          <a id="shareX" class="share-btn share-btn--x" href="#" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-7.2l-5.6-7.3L4 22H1l8.1-9.3L1 2h7.3l5.1 6.7L18.9 2z"/></svg>
+            Share it
+          </a>
+        </div>
+      </div>
+
+      <div class="stats-section">
+        <h3>Your statistics</h3>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-number" id="statSent">0</div>
+            <div class="stat-label">Referrals sent</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="statCompleted">0</div>
+            <div class="stat-label">Referrals completed</div>
+          </div>
+          <div class="stat-card stat-card--highlight">
+            <div class="stat-number" id="statEarned">$0.00</div>
+            <div class="stat-label">You've earned</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-faq">
+        <div class="faq-item">
+          <h4>How it works?</h4>
+          <p>You can get <span class="reward-inline">$34.70</span> on your ThesisArcPro balance for every friend you refer to us. It's a good way to help someone. Use your earnings next time you place an order.</p>
+        </div>
+        <div class="faq-item">
+          <h4>What should I do?</h4>
+          <p>Copy the link above. Share it via your messengers, social network accounts, or email. When someone registers using your link, they save on their first order. Perfect!</p>
+        </div>
+        <div class="faq-item">
+          <h4>When will I get my reward?</h4>
+          <p>Once we confirm your referral completed their first order, you'll get a top-up to your balance. To track your results, revisit this page any time.</p>
+        </div>
+      </div>
+
+      <div class="contact-strip">
+        Questions? Contact our <a href="/contact/">support manager</a>.
+      </div>
+
+      <p class="legal-fine-print">
+        These rules describe the basic conditions of working with the referral program. In these rules, the term "referral" refers to a user who registered on our website directly by means of your referral link. Your unique referral link is generated automatically for registration of new website users. It is forbidden to create multiple accounts by one program participant. You are forbidden to give your login and password to third parties, allowing them access to your account and other services provided by our referral program. All actions requiring the use of a login and password are considered to be committed only by the program participant. Payments are not made to participants who violate the referral program rules. We reserve the right to make changes to these rules unilaterally. The fact of the changes is their publication on the site, as well as notification of these changes. Terms of remuneration: a new customer must sign up, order and pay for the services on the site using your link; the remuneration is transferred to your balance after the order of a new user who has registered on the site with your link gets a "completed" status and passes verification. In your account, you can check the statistics of the approved referrals and the amount of the remuneration that you are due. The remuneration on the referral program is credited only in your account balance and can be used exclusively for new orders; withdrawal in any other currency is prohibited and not refundable.
+      </p>
+
+    </div>
+  </main>
+
+</div>
+
+<Footer />
 
 <script>
   import { supabase } from '../lib/supabase.js';
 
-  const REWARD_AMOUNT = 34.70; // keep in sync with the schema's default reward_amount
+  const authGate = document.getElementById('authGate');
+  const refContent = document.getElementById('refContent');
+  const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
 
   async function init() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      document.getElementById('authGate')!.style.display = 'block';
+      window.location.href = '/login/?redirect=/referrals/';
       return;
     }
 
-    document.getElementById('referContent')!.style.display = 'block';
+    const nameEl = document.getElementById('sideUserName');
+    if (nameEl) nameEl.textContent = user.email?.split('@')[0] || 'Account';
 
-    // Get this user's referral code
+    // Order stats for the sidebar (mirrors dashboard.astro's tab logic)
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const ordersRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?client_email=eq.${encodeURIComponent(user.email || '')}&select=order_status`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session?.access_token}` } }
+      );
+      const orders = await ordersRes.json();
+      if (Array.isArray(orders)) {
+        const completed = orders.filter((o: any) => o.order_status === 'completed').length;
+        const cancelled = orders.filter((o: any) => o.order_status === 'cancelled').length;
+        const inProgress = orders.filter((o: any) => o.order_status === 'in_progress' || o.order_status === 'new').length;
+        document.getElementById('sideCompleted')!.textContent = String(completed);
+        document.getElementById('sideCancelled')!.textContent = String(cancelled);
+        document.getElementById('sideInProgress')!.textContent = String(inProgress);
+      }
+    } catch (e) { console.error('order stats error', e); }
+
+    // Referral code + link
     const { data: codeRow } = await supabase
       .from('referral_codes')
       .select('code')
       .eq('user_id', user.id)
       .maybeSingle();
 
-    const code = codeRow?.code ?? '';
-    const referralLink = `${window.location.origin}/?ref=${code}`;
+    const code = codeRow?.code;
+    const refLink = code ? `${window.location.origin}/?ref=${code}` : '';
 
-    const linkInput = document.getElementById('referralLink') as HTMLInputElement;
-    linkInput.value = referralLink;
+    const refLinkInput = document.getElementById('refLinkInput') as HTMLInputElement;
+    refLinkInput.value = refLink;
 
-    // Share buttons
-    const shareText = `Check out ThesisArcPro — sign up with my link and get 10% off your first order!`;
-    (document.getElementById('shareWhatsapp') as HTMLAnchorElement).href =
-      `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + referralLink)}`;
+    const shareText = "Check out ThesisArcPro — here's my referral link:";
+    (document.getElementById('shareEmail') as HTMLAnchorElement).href =
+      `mailto:?subject=${encodeURIComponent('Check out ThesisArcPro')}&body=${encodeURIComponent(shareText + ' ' + refLink)}`;
     (document.getElementById('shareFacebook') as HTMLAnchorElement).href =
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`;
-    (document.getElementById('shareTwitter') as HTMLAnchorElement).href =
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(referralLink)}`;
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(refLink)}`;
+    (document.getElementById('shareX') as HTMLAnchorElement).href =
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(refLink)}`;
 
-    // Copy button
-    const copyBtn = document.getElementById('copyBtn')!;
-    copyBtn.addEventListener('click', async () => {
-      await navigator.clipboard.writeText(referralLink);
-      copyBtn.classList.add('copied');
-      setTimeout(() => copyBtn.classList.remove('copied'), 1500);
-    });
-
-    // Stats
+    // Referral stats
     const { data: referrals } = await supabase
       .from('referrals')
       .select('status, reward_amount')
       .eq('referrer_id', user.id);
 
     const sent = referrals?.length ?? 0;
-    const completed = referrals?.filter(r => r.status === 'completed').length ?? 0;
-    const earned = referrals
-      ?.filter(r => r.status === 'completed')
+    const completedRefs = referrals?.filter(r => r.status === 'completed').length ?? 0;
+    const earned = referrals?.filter(r => r.status === 'completed')
       .reduce((sum, r) => sum + Number(r.reward_amount), 0) ?? 0;
 
     document.getElementById('statSent')!.textContent = String(sent);
-    document.getElementById('statCompleted')!.textContent = String(completed);
+    document.getElementById('statCompleted')!.textContent = String(completedRefs);
     document.getElementById('statEarned')!.textContent = `$${earned.toFixed(2)}`;
+
+    authGate!.style.display = 'none';
+    refContent!.style.display = 'block';
   }
+
+  document.getElementById('copyBtn')?.addEventListener('click', async () => {
+    const input = document.getElementById('refLinkInput') as HTMLInputElement;
+    await navigator.clipboard.writeText(input.value);
+    const confirm = document.getElementById('copyConfirm')!;
+    confirm.style.display = 'block';
+    setTimeout(() => { confirm.style.display = 'none'; }, 2000);
+  });
+
+  document.getElementById('sideLogoutLink')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = '/login/';
+  });
 
   init();
 </script>
+
+</BaseLayout>
