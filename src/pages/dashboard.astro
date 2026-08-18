@@ -1912,7 +1912,7 @@ Some transactions may require up to 15 minutes to process..</p>
   const BIDDING_SERVER = 'https://thesisarcpro.onrender.com';
   const socket = io(BIDDING_SERVER, { transports: ['websocket'] });
 
-  const STRIPE_PUBLISHABLE_KEY = 'pk_test_51U0IH92RM1cuZjiGEwbbf0T0aQvNZzfgPRuqG8fRBTeg8mWABkCqQOgZphUuekIxbF4zXOc7hy9gncybiwJiv1X2003il2emdr';
+  const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SehJY4AjDlVpd6ylwN5N4G9JeJdmvEb7ReFKArpdE4HQqYzdl2fFIeuPOfWou6nP7evRKrt9boChvG9FwY8Cr9w00DEiYWxxw';
   const stripeClient = (window as any).Stripe ? (window as any).Stripe(STRIPE_PUBLISHABLE_KEY) : null;
   let stripeElements: any = null;
   let addFundsCardNumberEl: any = null;
