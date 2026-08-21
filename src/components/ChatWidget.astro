@@ -822,9 +822,14 @@ const agents = [
 
   async function cwSendBotMessage(convId: string, content: string) {
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/messages`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader() }, body: JSON.stringify({ conversation_id: convId, sender_id: CW_BOT_ID, sender_name: CW_BOT_NAME, sender_role: 'bot', content }) });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/messages`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=representation' }, body: JSON.stringify({ conversation_id: convId, sender_id: CW_BOT_ID, sender_name: CW_BOT_NAME, sender_role: 'support', content }) });
+      if (!res.ok) {
+        const errBody = await res.text();
+        console.error('cwSendBotMessage failed:', res.status, errBody);
+        return;
+      }
       await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${convId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' }, body: JSON.stringify({ updated_at: new Date().toISOString() }) });
-    } catch (err) { console.error(err); }
+    } catch (err) { console.error('cwSendBotMessage exception:', err); }
   }
 
   async function cwSendMessage(presetText?: string) {
