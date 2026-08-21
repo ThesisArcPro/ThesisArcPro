@@ -12,12 +12,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9.10",
     "@astrojs/sitemap": "^3.7.3",
     "@stripe/react-stripe-js": "^6.8.0",
     "@stripe/stripe-js": "^9.13.0",
     "@supabase/supabase-js": "^2.106.2",
-    "astro": "^6.4.2",
+    "astro": "^7.2.4",
     "qrcode": "^1.5.4",
     "socket.io-client": "^4.8.3",
     "typescript": "^6.0.3"
