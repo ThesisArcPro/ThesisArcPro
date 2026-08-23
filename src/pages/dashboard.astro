@@ -464,7 +464,7 @@ const base = '';
   body.dark-mode #convThreadMessages { background: #0f1117; }
   body.dark-mode #convThreadEmpty { background: #0f1117; }
   body.dark-mode #convThreadAvatar { background: #2B2D31; color: #e2e8f0; }
-  body.dark-mode #convThreadTitle { color: #e2e8f0; }
+  body.dark-mode #convThreadTitle { color: #ffffff !important; }
   body.dark-mode #convThreadTime { color: #64748b; }
   body.dark-mode #convViewOrderBtn { border-color: rgba(255,255,255,0.1); color: #60a5fa; }
   body.dark-mode .cp-conv-item { border-bottom-color: rgba(255,255,255,0.04) !important; color: #e2e8f0; }
@@ -518,13 +518,13 @@ const base = '';
  
   .order-row:hover { background: #fafafa; border-color: rgba(99,102,241,0.45); }
  
-  .col-left { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 0; overflow: hidden; }
+  .col-left { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; min-width: 0; overflow: hidden; }
   .order-title { font-size: 0.93rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .order-meta { display: flex; align-items: center; gap: 0.35rem; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; }
   .meta-dot { color: #cbd5e1; }
   .order-id { color: #94a3b8; }
  
-  .col-right { display: flex; align-items: center; gap: 2.5rem; flex-shrink: 0; }
+  .col-right { display: flex; align-items: center; gap: 1.8rem; flex-shrink: 0; }
   .col-deadline { font-size: 0.82rem; color: #64748b; white-space: nowrap; min-width: 90px; text-align: right; }
   .col-deadline.overdue { color: #f87171; }
   .col-deadline.urgent { color: #fb923c; }
@@ -1213,17 +1213,19 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       <!-- Active thread -->
       <div id="convThreadActive" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
         <!-- Header -->
-        <div style="padding:0.75rem 1.2rem;border-bottom:1px solid var(--border);background:var(--panel-bg);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-          <div style="display:flex;align-items:center;gap:0.75rem;">
-            <div id="convThreadAvatar" style="width:38px;height:38px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;color:#0f172a;flex-shrink:0;overflow:hidden;"></div>
+        <div style="padding:0.45rem 1rem;border-bottom:1px solid var(--border);background:var(--panel-bg);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <div id="convThreadAvatar" style="width:30px;height:30px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#0f172a;flex-shrink:0;overflow:hidden;"></div>
             <div>
-              <div id="convThreadTitle" style="font-size:0.88rem;font-weight:700;color:#0f172a;"></div>
-              <div style="font-size:0.72rem;color:#4ade80;display:flex;align-items:center;gap:0.3rem;margin-top:0.1rem;"><span style="width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block;"></span>Online</div>
+              <div id="convThreadTitle" style="font-size:0.82rem;font-weight:700;color:#0f172a;line-height:1.2;"></div>
+              <div style="font-size:0.68rem;color:#94a3b8;line-height:1.2;">Last seen: today</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:0.75rem;">
-            <div id="convThreadTime" style="font-size:0.72rem;color:#94a3b8;text-align:right;line-height:1.4;"></div>
-            <button id="convViewOrderBtn" style="background:none;border:1px solid #e2e8f0;border-radius:8px;padding:0.35rem 0.75rem;font-size:0.78rem;font-weight:600;color:#046fcd;cursor:pointer;">↗</button>
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <div id="convThreadTime" style="font-size:0.68rem;color:#94a3b8;text-align:right;line-height:1.25;"></div>
+            <button id="convViewOrderBtn" style="background:none;border:1px solid #e2e8f0;border-radius:6px;padding:0.25rem 0.35rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2b09d7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/><path d="M9 21H3v-6"/></svg>
+            </button>
           </div>
         </div>
         <!-- Messages -->
@@ -1360,9 +1362,67 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
  
         <div id="wizStepsFlow">
 
-  <!-- STEP 1: SERVICE -->
+  <!-- STEP 1: TOPIC / TITLE -->
   <div class="wiz-stack-step" id="ws1">
-    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Service</div>
+    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Topic / title</div>
+    <input type="text" class="s-instr-title" id="wsTopic" placeholder="Enter your assignment topic or title" style="margin-bottom:0;" />
+    <div class="s-next-wrap">
+      <button type="button" class="s-next-btn" id="wsNext1">Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: ASSIGNMENT TYPE -->
+  <div class="wiz-stack-step" id="ws2" style="display:none;">
+    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Assignment type</div>
+    <div class="s-chips">
+      <span class="s-chip" data-asgn="Essay (any type)">Essay (any type)</span>
+      <span class="s-chip" data-asgn="Research paper">Research paper</span>
+      <span class="s-chip" data-asgn="Case study">Case study</span>
+      <span class="s-chip" data-asgn="Discussion post">Discussion post</span>
+      <span class="s-chip" data-asgn="Coursework">Coursework</span>
+    </div>
+    <input type="text" class="s-instr-title" id="wsTypeOther" placeholder="Or type your own assignment type" style="margin-top:10px;margin-bottom:0;" />
+    <div class="s-next-wrap">
+      <button type="button" class="s-next-btn" id="wsNext2" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: ACADEMIC LEVEL -->
+  <div class="wiz-stack-step" id="ws3" style="display:none;">
+    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Academic level</div>
+    <div class="s-chips">
+      <span class="s-chip" data-lvl="HighSchool" data-step-add="0">High school</span>
+      <span class="s-chip" data-lvl="College" data-step-add="1">College</span>
+      <span class="s-chip" data-lvl="Bachelor" data-step-add="1">Bachelor's</span>
+      <span class="s-chip" data-lvl="Masters" data-step-add="2">Master's</span>
+      <span class="s-chip" data-lvl="PhD" data-step-add="3">Doctorate</span>
+    </div>
+    <div class="s-next-wrap">
+      <button type="button" class="s-next-btn" id="wsNext3" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: SUBJECT -->
+  <div class="wiz-stack-step" id="ws4" style="display:none;">
+    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Subject</div>
+    <div class="s-chips">
+      <span class="s-chip" data-sub="English & Literature">English</span>
+      <span class="s-chip" data-sub="Psychology">Psychology</span>
+      <span class="s-chip" data-sub="Nursing & Healthcare">Nursing</span>
+      <span class="s-chip" data-sub="Business Management">Business</span>
+      <span class="s-chip" data-sub="History">History</span>
+      <span class="s-chip" data-sub="Law">Law</span>
+      <span class="s-chip" data-sub="Science">Science</span>
+    </div>
+    <input type="text" class="s-instr-title" id="wsSubjectOther" placeholder="Or type your own subject" style="margin-top:10px;margin-bottom:0;" />
+    <div class="s-next-wrap">
+      <button type="button" class="s-next-btn" id="wsNext4" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: SERVICE -->
+  <div class="wiz-stack-step" id="ws5" style="display:none;">
+    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>What do you need?</div>
     <div class="s-chips">
       <span class="s-chip" data-svc="Writing" data-base="7">Writing</span>
       <span class="s-chip" data-svc="Rewriting" data-base="6">Rewriting</span>
@@ -1372,108 +1432,71 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       <span class="s-chip" data-svc="Calculations" data-base="8">Calculations</span>
       <span class="s-chip" data-svc="Review my work" data-base="4">Review my work</span>
     </div>
-  </div>
-
-  <!-- STEP 2: SUBJECT -->
-  <div class="wiz-stack-step" id="ws2" style="display:none;">
-    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Subject</div>
-    <div class="s-chips">
-      <span class="s-chip" data-sub="English & Literature">English</span>
-      <span class="s-chip" data-sub="Psychology">Psychology</span>
-      <span class="s-chip" data-sub="Nursing & Healthcare">Nursing</span>
-      <span class="s-chip" data-sub="Business Management">Business</span>
-      <span class="s-chip" data-sub="History">History</span>
-      <span class="s-chip" data-sub="Artificial Intelligence">Intelligence</span>
-      <span class="s-chip" data-sub="Healthcare">Healthcare</span>
-      <span class="s-chip" data-sub="Education">Education</span>
-      <span class="s-chip" data-sub="Social Work">Social work</span>
-      <span class="s-chip" data-sub="Science">Science</span>
-      <span class="s-chip" data-sub="Law">Law</span>
-      <span class="s-chip" data-sub="Mathematics">Mathematics</span>
-    </div>
-    <input type="text" class="s-instr-title" id="wsSubjectOther" placeholder="Or type your own subject" style="margin-top:10px;margin-bottom:0;" />
-  </div>
-
-  <!-- STEP 3: ASSIGNMENT TYPE -->
-  <div class="wiz-stack-step" id="ws3" style="display:none;">
-    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Assignment type</div>
-    <select class="s-dropdown" id="wsTypeDropdown">
-      <option value="">Select assignment</option>
-      <option>Essay (any type)</option>
-      <option>Discussion post</option>
-      <option>Research paper</option>
-      <option>Coursework</option>
-      <option>Case study</option>
-      <option>Report</option>
-      <option>Dissertation / Thesis</option>
-      <option>Research Proposal</option>
-      <option>Literature Review</option>
-      <option>Take Home Exam</option>
-      <option>Other</option>
-    </select>
-    <div class="s-sub-label">Popular:</div>
-    <div class="s-chips">
-      <span class="s-chip" data-asgn="Essay (any type)">Essay (any type)</span>
-      <span class="s-chip" data-asgn="Discussion post">Discussion post</span>
-      <span class="s-chip" data-asgn="Research paper">Research paper</span>
-      <span class="s-chip" data-asgn="Coursework">Coursework</span>
-      <span class="s-chip" data-asgn="Case study">Case study</span>
-    </div>
-    <input type="text" class="s-instr-title" id="wsTypeOther" placeholder="Or type your own assignment type" style="margin-top:10px;margin-bottom:0;" />
-  </div>
-
-  <!-- STEP 4: ACADEMIC LEVEL -->
-  <div class="wiz-stack-step" id="ws4" style="display:none;">
-    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Academic level</div>
-    <div class="s-chips">
-      <span class="s-chip" data-lvl="HighSchool" data-step-add="0">High school</span>
-      <span class="s-chip" data-lvl="College" data-step-add="1">College</span>
-      <span class="s-chip" data-lvl="Bachelor" data-step-add="1">Bachelor's</span>
-      <span class="s-chip" data-lvl="Masters" data-step-add="2">Master's</span>
-      <span class="s-chip" data-lvl="PhD" data-step-add="3">Doctorate</span>
+    <div class="s-next-wrap">
+      <button type="button" class="s-next-btn" id="wsNext5" disabled>Next</button>
     </div>
   </div>
 
-  <!-- STEP 5: LANGUAGE -->
-  <div class="wiz-stack-step" id="ws5" style="display:none;">
+  <!-- STEP 6: LANGUAGE -->
+  <div class="wiz-stack-step" id="ws6" style="display:none;">
     <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Language</div>
     <div class="s-chips">
-      <span class="s-chip" data-lang="English (US)">🇺🇸 English (US)</span>
-      <span class="s-chip" data-lang="English (UK)">🇬🇧 English (UK)</span>
-      <span class="s-chip" data-lang="English (AU)">🇦🇺 English (AU)</span>
-      <span class="s-chip" data-lang="Spanish (ES)">🇪🇸 Spanish</span>
-      <span class="s-chip" data-lang="French (FR)">🇫🇷 French</span>
-    </div>
-  </div>
-
-  <!-- STEP 6: SIZE -->
-  <div class="wiz-stack-step" id="ws6" style="display:none;">
-    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Size</div>
-    <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:12px;">
-      <div>
-        <div class="s-sub-label" style="margin-bottom:6px;">Pages</div>
-        <div class="s-counter-row">
-          <button type="button" id="wsPagesMinus">−</button>
-          <span class="s-cv" id="wsPagesVal">1</span>
-          <button type="button" id="wsPagesPlus">+</button>
-        </div>
-        <div class="s-size-hint" id="wsPagesHint">≈ 275 words</div>
-      </div>
-      <div>
-        <div class="s-sub-label" style="margin-bottom:6px;">Line spacing</div>
-        <div class="s-toggle-row">
-          <button type="button" class="s-toggle-btn s-sel" id="wsDouble">Double</button>
-          <button type="button" class="s-toggle-btn" id="wsSingle">Single</button>
-        </div>
-      </div>
+      <span class="s-chip" data-lang="English (US)">English (US)</span>
+      <span class="s-chip" data-lang="English (UK)">English (UK)</span>
     </div>
     <div class="s-next-wrap">
-      <button type="button" class="s-next-btn" id="wsNext6">Next</button>
+      <button type="button" class="s-next-btn" id="wsNext6" disabled>Next</button>
     </div>
   </div>
 
-  <!-- STEP 7: DEADLINE -->
+  <!-- STEP 7: CITATION STYLE -->
   <div class="wiz-stack-step" id="ws7" style="display:none;">
+    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Citation style</div>
+    <select class="s-dropdown" id="wsCitation" style="margin-bottom:0;">
+      <option value="">Not required</option>
+      <option>APA 7</option>
+      <option>MLA 9</option>
+      <option>Chicago</option>
+      <option>Harvard</option>
+      <option>APA 6</option>
+      <option>Turabian</option>
+      <option>IEEE</option>
+      <option>Vancouver</option>
+      <option>Other</option>
+    </select>
+    <div class="s-next-wrap">
+      <button type="button" class="s-next-btn" id="wsNext7">Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 8: SOURCES REQUIRED -->
+  <div class="wiz-stack-step" id="ws8" style="display:none;">
+    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Sources required</div>
+    <input type="number" class="s-instr-title" id="wsSources" min="0" max="999" placeholder="e.g. 5" style="margin-bottom:0;" />
+    <div class="s-next-wrap">
+      <button type="button" class="s-next-btn" id="wsNext8">Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 9: SIZE -->
+  <div class="wiz-stack-step" id="ws9" style="display:none;">
+    <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Size</div>
+    <div style="margin-bottom:12px;">
+      <div class="s-sub-label" style="margin-bottom:6px;">Pages</div>
+      <div class="s-counter-row">
+        <button type="button" id="wsPagesMinus">−</button>
+        <span class="s-cv" id="wsPagesVal">1</span>
+        <button type="button" id="wsPagesPlus">+</button>
+      </div>
+      <div class="s-size-hint" id="wsPagesHint">≈ 275 words</div>
+    </div>
+    <div class="s-next-wrap">
+      <button type="button" class="s-next-btn" id="wsNext9">Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 10: DEADLINE -->
+  <div class="wiz-stack-step" id="ws10" style="display:none;">
     <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Deadline</div>
     <div style="display:flex;gap:10px;margin-bottom:10px;">
       <div class="s-date-box">
@@ -1491,18 +1514,18 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       <span class="s-chip" data-dlh="120">5 days</span>
     </div>
     <div class="s-next-wrap">
-      <button type="button" class="s-next-btn" id="wsNext7">Next</button>
+      <button type="button" class="s-next-btn" id="wsNext10">Next</button>
     </div>
   </div>
 
-  <!-- STEP 8: INSTRUCTIONS -->
-  <div class="wiz-stack-step" id="ws8" style="display:none;">
+  <!-- STEP 11: INSTRUCTIONS -->
+  <div class="wiz-stack-step" id="ws11" style="display:none;">
     <div class="wiz-s-title"><span class="wiz-s-check">✓</span>Instructions</div>
     <textarea class="s-instr-area" id="wsInstructions" placeholder="Describe your assignment. Share references, links to articles, and any other instructions."></textarea>
     <div class="s-warn-bar">⚠️ Do not share personal information — <strong>no name, email, or phone number.</strong></div>
     <div class="s-file-zone">📎 Browse or drag and drop files here.</div>
     <div class="s-next-wrap">
-      <button type="button" class="s-next-btn" id="wsNext8">🚀 Post Order</button>
+      <button type="button" class="s-next-btn" id="wsNext11">🚀 Post Order</button>
     </div>
   </div>
 
@@ -1602,6 +1625,19 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
 
     <button id="hireConfirmBtn" style="width:100%;padding:0.95rem;background:#2d6a4f;color:white;border:none;border-radius:8px;font-size:0.95rem;font-weight:700;cursor:pointer;">✅ Pay from Wallet — Hire Writer</button>
     <div id="hirePaymentMsg" style="margin-top:0.8rem;font-size:0.85rem;"></div>
+  </div>
+</div>
+
+<!-- WRITER HIRED SUCCESS MODAL -->
+<div class="modal" id="hireSuccessModal">
+  <div class="modal-overlay" id="hireSuccessOverlay"></div>
+  <div class="modal-box" style="max-width:420px;width:90%;text-align:center;flex-direction:column;padding:2.2rem 1.8rem 1.8rem;">
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(74,222,128,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+    </div>
+    <h2 style="color:#0f172a;font-size:1.15rem;font-weight:800;margin-bottom:0.6rem;">You're all set!</h2>
+    <p style="color:#64748b;font-size:0.9rem;line-height:1.65;margin-bottom:1.6rem;">Your writer has been hired and is now working on your order. We'll keep you updated on their progress every step of the way — thank you for trusting us with your work.</p>
+    <button id="hireSuccessOkBtn" style="width:100%;padding:0.85rem;background:#046fcd;color:#fff;border:none;border-radius:8px;font-size:0.92rem;font-weight:700;cursor:pointer;">Got it</button>
   </div>
 </div>
  
@@ -2379,12 +2415,54 @@ async function markMessagesRead(conversationId: string) {
   } catch(e) { console.error(e); }
 }
 
+async function repairMissingParticipants() {
+  try {
+    // Find order-type conversations belonging to this client's orders
+    // where the client isn't yet listed as a participant, and fix them.
+    const ordersRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/orders?client_email=eq.${encodeURIComponent(currentSession.user.email)}&select=id`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+    );
+    const myOrders = await ordersRes.json();
+    if (!Array.isArray(myOrders) || !myOrders.length) return;
+    const orderIds = myOrders.map((o: any) => o.id);
+
+    const convRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/conversations?type=eq.order&order_id=in.(${orderIds.join(',')})&select=id,order_id`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+    );
+    const convs = await convRes.json();
+    if (!Array.isArray(convs) || !convs.length) return;
+
+    const convIds = convs.map((c: any) => c.id);
+    const partRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/conversation_participants?conversation_id=in.(${convIds.map((id: string) => `"${id}"`).join(',')})&user_id=eq.${currentSession.user.id}&select=conversation_id`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+    );
+    const existingParts = await partRes.json();
+    const alreadyIn = new Set(Array.isArray(existingParts) ? existingParts.map((p: any) => p.conversation_id) : []);
+
+    const missing = convs.filter((c: any) => !alreadyIn.has(c.id));
+    if (!missing.length) return;
+
+    const clientName = myClientId ? `#${myClientId}` : currentSession.user.email?.split('@')[0] || 'Client';
+    for (const c of missing) {
+      await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal,resolution=ignore-duplicates' },
+        body: JSON.stringify({ conversation_id: c.id, user_id: currentSession.user.id, role: 'client', display_name: clientName })
+      });
+    }
+  } catch (e) { console.error('repairMissingParticipants error', e); }
+}
+
 async function loadChatsPanel() {
   const box = document.getElementById('convListItems')!;
   box.innerHTML = '<div style="padding:2rem;text-align:center;color:#94a3b8;font-size:0.85rem;">Loading…</div>';
+  await repairMissingParticipants();
   try {
     const pRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${currentSession.user.id}&select=conversation_id,conversations(id,title,order_id,updated_at,orders(id,topic,order_status,order_number,assignment_type,pages,deadline,created_at,instructions,education_level,subject,language,service,amount_paid,total_amount,payment_status))`,
+      `${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${currentSession.user.id}&select=conversation_id,conversations(id,title,order_id,updated_at,orders(id,topic,order_status,order_number,assignment_type,pages,deadline,created_at,instructions,education_level,subject,language,service,amount_paid,total_amount,payment_status,writer_id))`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
     );
     const parts = await pRes.json();
@@ -2460,24 +2538,42 @@ async function loadChatsPanel() {
         const convId = (item as HTMLElement).dataset.convId!;
         const conv = convs.find((c: any) => c.id === convId);
         cpCurrentOrder = conv?.order || null;
-        openCpThread(convId, conv?.order?.topic || conv?.title || 'Chat', conv?.order?.order_status || '');
+        openCpThread(convId, cpCurrentOrder, conv?.order?.order_status || '');
       });
     });
   } catch (err) { console.error(err); box.innerHTML = '<div style="padding:2rem;text-align:center;color:#f87171;font-size:0.85rem;">Could not load conversations.</div>'; }
 }
 
-async function openCpThread(convId: string, title: string, status: string) {
+async function openCpThread(convId: string, order: any, status: string) {
   cpConvId = convId;
   if (cpSub) { cpSub.unsubscribe(); cpSub = null; }
   document.getElementById('convThreadEmpty')!.style.display = 'none';
   const active = document.getElementById('convThreadActive')!;
   active.style.display = 'flex';
-  const initials = title.split(' ').slice(0, 2).map((w: string) => w[0] || '').join('').toUpperCase();
+
+  // Resolve the WRITER's name (fallback to a writer ID) — this is the
+  // client dashboard, so the other party in every thread is the writer.
+  let writerLabel = 'Writer';
+  if (order?.writer_id) {
+    writerLabel = `Writer #${order.writer_id}`;
+    try {
+      const wRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/writers?id=eq.${order.writer_id}&select=full_name`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
+      );
+      const wData = await wRes.json();
+      if (wData?.[0]?.full_name) writerLabel = wData[0].full_name;
+    } catch (e) { console.error('writer lookup error', e); }
+  }
+
+  const initials = writerLabel.split(' ').slice(0, 2).map((w: string) => w[0] || '').join('').toUpperCase();
   const avatarEl = document.getElementById('convThreadAvatar')!;
   avatarEl.textContent = initials;
-  document.getElementById('convThreadTitle')!.textContent = title;
+  document.getElementById('convThreadTitle')!.textContent = writerLabel;
+  // Subtitle is now static "Last seen: today" in the HTML — nothing to update here.
   const now = new Date();
-  document.getElementById('convThreadTime')!.innerHTML = `${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} 🇺🇸<br><span style="font-size:0.65rem;color:#94a3b8;">Local time</span>`;
+  const usTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' });
+  document.getElementById('convThreadTime')!.innerHTML = `<span style="color:#046fcd;font-weight:700;">${usTime} 🇺🇸</span><br><span style="font-size:0.65rem;color:#94a3b8;">Local time</span>`;
   const msgs = document.getElementById('convThreadMessages')!;
   msgs.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:0.85rem;margin:auto;">Loading…</div>';
   try {
@@ -2588,6 +2684,7 @@ const wizAddonPrices: Record<string, number> = { graphics: 5, psources: 4, abstr
 let wizTotal = 0;
 let wsRevealed = 1;
 let wsPages = 1;
+const WIZ_TOTAL_STEPS = 11;
 
 function openOrderModal() {
   resetWizard();
@@ -2606,8 +2703,8 @@ function resetWizard() {
   Object.keys(wizAddons).forEach(k => wizAddons[k] = 0);
   wizTotal = 0;
 
-  // Show only step 1, hide 2–8, clear done state
-  for (let i = 1; i <= 8; i++) {
+  // Show only step 1, hide the rest, clear done state
+  for (let i = 1; i <= WIZ_TOTAL_STEPS; i++) {
     const el = document.getElementById(`ws${i}`);
     if (!el) continue;
     el.style.display = i === 1 ? 'block' : 'none';
@@ -2618,24 +2715,24 @@ function resetWizard() {
   document.querySelectorAll('.s-chip').forEach(c => c.classList.remove('s-sel'));
 
   // Clear visible inputs
+  const wsTopic = document.getElementById('wsTopic') as HTMLInputElement;
   const wsInstr = document.getElementById('wsInstructions') as HTMLTextAreaElement;
   const wsDeadline = document.getElementById('wsDeadline') as HTMLInputElement;
   const wsPagesVal = document.getElementById('wsPagesVal');
   const wsPagesHint = document.getElementById('wsPagesHint');
-  const wsTypeDropdown = document.getElementById('wsTypeDropdown') as HTMLSelectElement;
+  const wsCitation = document.getElementById('wsCitation') as HTMLSelectElement;
+  const wsSources = document.getElementById('wsSources') as HTMLInputElement;
+  if (wsTopic) wsTopic.value = '';
   if (wsInstr) wsInstr.value = '';
   if (wsDeadline) wsDeadline.value = '';
   if (wsPagesVal) wsPagesVal.textContent = '1';
   if (wsPagesHint) wsPagesHint.textContent = '≈ 275 words';
-  if (wsTypeDropdown) wsTypeDropdown.value = '';
+  if (wsCitation) wsCitation.value = '';
+  if (wsSources) wsSources.value = '';
   const wsSubjectOther = document.getElementById('wsSubjectOther') as HTMLInputElement;
   const wsTypeOther = document.getElementById('wsTypeOther') as HTMLInputElement;
   if (wsSubjectOther) wsSubjectOther.value = '';
   if (wsTypeOther) wsTypeOther.value = '';
-  const wsDouble = document.getElementById('wsDouble');
-  const wsSingle = document.getElementById('wsSingle');
-  if (wsDouble) wsDouble.classList.add('s-sel');
-  if (wsSingle) wsSingle.classList.remove('s-sel');
 
   // Clear hidden compat fields
   (['wizTopic','wizType','wizSubject','wizLanguage','wizInstructions'] as string[]).forEach(id => {
@@ -2648,6 +2745,10 @@ function resetWizard() {
   if (wizDeadlineInp) wizDeadlineInp.value = '';
   const wizLevelSel = document.getElementById('wizLevel') as HTMLSelectElement;
   if (wizLevelSel) wizLevelSel.value = '';
+  const wizCitationInp = document.getElementById('wizCitation') as HTMLInputElement;
+  if (wizCitationInp) wizCitationInp.value = '';
+  const wizSourcesInp = document.getElementById('wizSources') as HTMLInputElement;
+  if (wizSourcesInp) wizSourcesInp.value = '0';
 
   // Reset success/flow
   const success = document.getElementById('wizSuccess'); if (success) success.style.display = 'none';
@@ -2663,7 +2764,7 @@ function resetWizard() {
 
 function updateWizBar() {
   const bar = document.getElementById('wizModalBar');
-  if (bar) bar.style.width = `${(wsRevealed / 8) * 100}%`;
+  if (bar) bar.style.width = `${(wsRevealed / WIZ_TOTAL_STEPS) * 100}%`;
 }
 
 function wizSetChatLayout(active: boolean) {
@@ -2680,10 +2781,10 @@ function revealStep(n: number) {
   wsRevealed = Math.max(wsRevealed, n);
   updateWizBar();
   setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
-  // Switch summary card at step 6
+  // Switch summary card once Size (step 9) is reached
   const info = document.getElementById('wizInfoCard');
   const price = document.getElementById('wizPriceCard');
-  if (n >= 6) {
+  if (n >= 9) {
     if (info) info.style.display = 'none';
     if (price) price.style.display = 'block';
     wizCalc();
@@ -2763,20 +2864,60 @@ document.getElementById('wizSuccessClose')?.addEventListener('click', () => {
   if (currentSession) loadOrders(currentSession);
 });
 
-// ── STEP 1: Service ──
-document.querySelectorAll('.s-chip[data-svc]').forEach(chip => {
+// ── STEP 1: Topic / title ──
+document.getElementById('wsNext1')?.addEventListener('click', () => {
+  const val = (document.getElementById('wsTopic') as HTMLInputElement)?.value.trim();
+  if (!val) { alert('Please enter a topic or title.'); return; }
+  const wizTopicInp = document.getElementById('wizTopic') as HTMLInputElement;
+  if (wizTopicInp) wizTopicInp.value = val;
+  markDone(1);
+  revealStep(2);
+});
+
+// ── STEP 2: Assignment type ──
+document.querySelectorAll('.s-chip[data-asgn]').forEach(chip => {
   chip.addEventListener('click', () => {
-    document.querySelectorAll('.s-chip[data-svc]').forEach(c => c.classList.remove('s-sel'));
+    document.querySelectorAll('.s-chip[data-asgn]').forEach(c => c.classList.remove('s-sel'));
     chip.classList.add('s-sel');
-    wizState.service = (chip as HTMLElement).dataset.svc || '';
-    wizState.serviceBase = parseFloat((chip as HTMLElement).dataset.base || '0');
-    markDone(1);
-    setTimeout(() => revealStep(2), 220);
+    const inp = document.getElementById('wizType') as HTMLInputElement;
+    if (inp) inp.value = (chip as HTMLElement).dataset.asgn || '';
+    const other = document.getElementById('wsTypeOther') as HTMLInputElement;
+    if (other) other.value = '';
+    markDone(2);
+    setTimeout(() => revealStep(3), 220);
+    wizRefreshInfo();
+  });
+});
+document.getElementById('wsTypeOther')?.addEventListener('input', (e) => {
+  const val = (e.target as HTMLInputElement).value.trim();
+  const inp = document.getElementById('wizType') as HTMLInputElement;
+  if (inp) inp.value = val;
+  document.querySelectorAll('.s-chip[data-asgn]').forEach(c => c.classList.remove('s-sel'));
+  wizRefreshInfo();
+  if (val) { markDone(2); revealStep(3); }
+});
+
+// ── STEP 3: Academic level ──
+document.querySelectorAll('.s-chip[data-lvl]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.s-chip[data-lvl]').forEach(c => c.classList.remove('s-sel'));
+    chip.classList.add('s-sel');
+    wizState.levelAdd = parseInt((chip as HTMLElement).dataset.stepAdd || '0');
+    wizState.levelLabel = chip.textContent?.trim() || '';
+    const sel = document.getElementById('wizLevel') as HTMLSelectElement;
+    if (sel) {
+      const lvl = (chip as HTMLElement).dataset.lvl || '';
+      for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === lvl) { sel.selectedIndex = i; break; }
+      }
+    }
+    markDone(3);
+    setTimeout(() => revealStep(4), 220);
     wizRefreshInfo();
   });
 });
 
-// ── STEP 2: Subject ──
+// ── STEP 4: Subject ──
 document.querySelectorAll('.s-chip[data-sub]').forEach(chip => {
   chip.addEventListener('click', () => {
     document.querySelectorAll('.s-chip[data-sub]').forEach(c => c.classList.remove('s-sel'));
@@ -2785,8 +2926,8 @@ document.querySelectorAll('.s-chip[data-sub]').forEach(chip => {
     if (inp) inp.value = (chip as HTMLElement).dataset.sub || '';
     const other = document.getElementById('wsSubjectOther') as HTMLInputElement;
     if (other) other.value = '';
-    markDone(2);
-    setTimeout(() => revealStep(3), 220);
+    markDone(4);
+    setTimeout(() => revealStep(5), 220);
     wizRefreshInfo();
   });
 });
@@ -2796,81 +2937,54 @@ document.getElementById('wsSubjectOther')?.addEventListener('input', (e) => {
   if (inp) inp.value = val;
   document.querySelectorAll('.s-chip[data-sub]').forEach(c => c.classList.remove('s-sel'));
   wizRefreshInfo();
-  if (val) { markDone(2); revealStep(3); }
+  if (val) { markDone(4); revealStep(5); }
 });
 
-// ── STEP 3: Assignment type ──
-document.querySelectorAll('.s-chip[data-asgn]').forEach(chip => {
+// ── STEP 5: Service ──
+document.querySelectorAll('.s-chip[data-svc]').forEach(chip => {
   chip.addEventListener('click', () => {
-    document.querySelectorAll('.s-chip[data-asgn]').forEach(c => c.classList.remove('s-sel'));
+    document.querySelectorAll('.s-chip[data-svc]').forEach(c => c.classList.remove('s-sel'));
     chip.classList.add('s-sel');
-    const inp = document.getElementById('wizType') as HTMLInputElement;
-    if (inp) inp.value = (chip as HTMLElement).dataset.asgn || '';
-    const dd = document.getElementById('wsTypeDropdown') as HTMLSelectElement;
-    if (dd) dd.value = '';
-    markDone(3);
-    setTimeout(() => revealStep(4), 220);
-    wizRefreshInfo();
-  });
-});
-document.getElementById('wsTypeDropdown')?.addEventListener('change', (e) => {
-  const val = (e.target as HTMLSelectElement).value;
-  if (!val) return;
-  const inp = document.getElementById('wizType') as HTMLInputElement;
-  if (inp) inp.value = val;
-  document.querySelectorAll('.s-chip[data-asgn]').forEach(c => c.classList.remove('s-sel'));
-  const other = document.getElementById('wsTypeOther') as HTMLInputElement;
-  if (other) other.value = '';
-  markDone(3);
-  setTimeout(() => revealStep(4), 220);
-  wizRefreshInfo();
-});
-document.getElementById('wsTypeOther')?.addEventListener('input', (e) => {
-  const val = (e.target as HTMLInputElement).value.trim();
-  const inp = document.getElementById('wizType') as HTMLInputElement;
-  if (inp) inp.value = val;
-  document.querySelectorAll('.s-chip[data-asgn]').forEach(c => c.classList.remove('s-sel'));
-  const dd = document.getElementById('wsTypeDropdown') as HTMLSelectElement;
-  if (dd) dd.value = '';
-  wizRefreshInfo();
-  if (val) { markDone(3); revealStep(4); }
-});
-
-// ── STEP 4: Academic level ──
-document.querySelectorAll('.s-chip[data-lvl]').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.s-chip[data-lvl]').forEach(c => c.classList.remove('s-sel'));
-    chip.classList.add('s-sel');
-    wizState.levelAdd = parseInt((chip as HTMLElement).dataset.stepAdd || '0');
-    wizState.levelLabel = chip.textContent?.trim() || '';
-    // Sync hidden select for wizSubmitOrder
-    const sel = document.getElementById('wizLevel') as HTMLSelectElement;
-    if (sel) {
-      const lvl = (chip as HTMLElement).dataset.lvl || '';
-      for (let i = 0; i < sel.options.length; i++) {
-        if (sel.options[i].value === lvl) { sel.selectedIndex = i; break; }
-      }
-    }
-    markDone(4);
-    setTimeout(() => revealStep(5), 220);
-    wizCalc();
-  });
-});
-
-// ── STEP 5: Language ──
-document.querySelectorAll('.s-chip[data-lang]').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.s-chip[data-lang]').forEach(c => c.classList.remove('s-sel'));
-    chip.classList.add('s-sel');
-    const inp = document.getElementById('wizLanguage') as HTMLInputElement;
-    if (inp) inp.value = (chip as HTMLElement).dataset.lang || '';
+    wizState.service = (chip as HTMLElement).dataset.svc || '';
+    wizState.serviceBase = parseFloat((chip as HTMLElement).dataset.base || '0');
     markDone(5);
     setTimeout(() => revealStep(6), 220);
     wizRefreshInfo();
   });
 });
 
-// ── STEP 6: Size ──
+// ── STEP 6: Language ──
+document.querySelectorAll('.s-chip[data-lang]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.s-chip[data-lang]').forEach(c => c.classList.remove('s-sel'));
+    chip.classList.add('s-sel');
+    const inp = document.getElementById('wizLanguage') as HTMLInputElement;
+    if (inp) inp.value = (chip as HTMLElement).dataset.lang || '';
+    markDone(6);
+    setTimeout(() => revealStep(7), 220);
+    wizRefreshInfo();
+  });
+});
+
+// ── STEP 7: Citation style ──
+document.getElementById('wsNext7')?.addEventListener('click', () => {
+  const val = (document.getElementById('wsCitation') as HTMLSelectElement)?.value || '';
+  const wizCitationInp = document.getElementById('wizCitation') as HTMLInputElement;
+  if (wizCitationInp) wizCitationInp.value = val;
+  markDone(7);
+  revealStep(8);
+});
+
+// ── STEP 8: Sources required ──
+document.getElementById('wsNext8')?.addEventListener('click', () => {
+  const val = (document.getElementById('wsSources') as HTMLInputElement)?.value || '0';
+  const wizSourcesInp = document.getElementById('wizSources') as HTMLInputElement;
+  if (wizSourcesInp) wizSourcesInp.value = val;
+  markDone(8);
+  revealStep(9);
+});
+
+// ── STEP 9: Size ──
 document.getElementById('wsPagesMinus')?.addEventListener('click', () => {
   wsPages = Math.max(1, wsPages - 1);
   const val = document.getElementById('wsPagesVal'); if (val) val.textContent = String(wsPages);
@@ -2885,20 +2999,12 @@ document.getElementById('wsPagesPlus')?.addEventListener('click', () => {
   const inp = document.getElementById('wizPages') as HTMLInputElement; if (inp) inp.value = String(wsPages);
   wizCalc();
 });
-document.getElementById('wsDouble')?.addEventListener('click', () => {
-  document.getElementById('wsDouble')?.classList.add('s-sel');
-  document.getElementById('wsSingle')?.classList.remove('s-sel');
-});
-document.getElementById('wsSingle')?.addEventListener('click', () => {
-  document.getElementById('wsSingle')?.classList.add('s-sel');
-  document.getElementById('wsDouble')?.classList.remove('s-sel');
-});
-document.getElementById('wsNext6')?.addEventListener('click', () => {
-  markDone(6);
-  revealStep(7);
+document.getElementById('wsNext9')?.addEventListener('click', () => {
+  markDone(9);
+  revealStep(10);
 });
 
-// ── STEP 7: Deadline ──
+// ── STEP 10: Deadline ──
 document.querySelectorAll('.s-chip[data-dlh]').forEach(chip => {
   chip.addEventListener('click', () => {
     document.querySelectorAll('.s-chip[data-dlh]').forEach(c => c.classList.remove('s-sel'));
@@ -2917,22 +3023,20 @@ document.getElementById('wsDeadline')?.addEventListener('change', (e) => {
   document.querySelectorAll('.s-chip[data-dlh]').forEach(c => c.classList.remove('s-sel'));
   wizCalc();
 });
-document.getElementById('wsNext7')?.addEventListener('click', () => {
+document.getElementById('wsNext10')?.addEventListener('click', () => {
   const dl = (document.getElementById('wsDeadline') as HTMLInputElement)?.value;
   if (!dl) { alert('Please choose a deadline.'); return; }
-  markDone(7);
-  revealStep(8);
+  markDone(10);
+  revealStep(11);
 });
 
-// ── STEP 8: Instructions ──
+// ── STEP 11: Instructions ──
 document.getElementById('wsInstructions')?.addEventListener('input', wizRefreshInfo);
-document.getElementById('wsNext8')?.addEventListener('click', async () => {
+document.getElementById('wsNext11')?.addEventListener('click', async () => {
   const instr = (document.getElementById('wsInstructions') as HTMLTextAreaElement)?.value.trim();
   if (!instr) { alert('Please add your instructions.'); return; }
   const wizInstr = document.getElementById('wizInstructions') as HTMLInputElement; if (wizInstr) wizInstr.value = instr;
-  const wizTopic = document.getElementById('wizTopic') as HTMLInputElement;
-  if (wizTopic) wizTopic.value = instr.length > 60 ? instr.slice(0, 60) + '…' : instr;
-  markDone(8);
+  markDone(11);
   await wizSubmitOrder();
 });
 async function fetchWriterProfile(writerId: string): Promise<any> {
@@ -4224,6 +4328,16 @@ openOrderChat(order);
   document.getElementById('hirePaymentOverlay')!.addEventListener('click', () => {
     document.getElementById('hirePaymentModal')!.classList.remove('open');
   });
+
+  function showHireSuccessModal() {
+    document.getElementById('hireSuccessModal')!.classList.add('open');
+  }
+  document.getElementById('hireSuccessOkBtn')!.addEventListener('click', () => {
+    document.getElementById('hireSuccessModal')!.classList.remove('open');
+  });
+  document.getElementById('hireSuccessOverlay')!.addEventListener('click', () => {
+    document.getElementById('hireSuccessModal')!.classList.remove('open');
+  });
   document.getElementById('hireConfirmBtn')!.addEventListener('click', async () => {
     const btn = document.getElementById('hireConfirmBtn') as HTMLButtonElement;
     const msg = document.getElementById('hirePaymentMsg')!;
@@ -4285,7 +4399,7 @@ openOrderChat(order);
       if (ipTab) ipTab.classList.add('active');
       currentTab = 'in_progress';
       renderOrders();
-      alert('✅ Writer hired! Your order is now in progress.');
+      showHireSuccessModal();
     } catch (err: any) {
       console.error(err);
       msg.textContent = `❌ ${err.message || 'Something went wrong. Please try again.'}`;
@@ -4730,6 +4844,7 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
   (async function initUnread() {
     for (let i = 0; i < 40 && !currentSession; i++) await new Promise(r => setTimeout(r, 250));
     if (!currentSession) return;
+    await repairMissingParticipants();
     await refreshUnread();
     startGlobalUnreadSub();
   })();
