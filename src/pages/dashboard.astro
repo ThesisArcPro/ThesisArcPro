@@ -1020,8 +1020,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2.5a1.5 1.5 0 0 1 1.2.6l.6.8a1.5 1.5 0 0 0 1.2.6z"/><path d="M3 8.268a2 2 0 0 0-1 1.738V19a2 2 0 0 0 2 2h11a2 2 0 0 0 1.732-1"/></svg>
       </span> My Orders
     </a>
-    <a class="nav-item" href={`${base}/writers/`} id="writersLink"
-       onclick="window.location.assign('/writers/'); return false;">
+    <a class="nav-item" href="#" id="writersLink">
       <span class="icon" style="display:flex;">
         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
       </span> Writers
@@ -1030,7 +1029,7 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
       <span class="icon" style="display:flex;">
         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/><path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/></svg>
       </span> Chats
-      <span id="chatsBadge" style="display:none;margin-left:auto;background:#ef4444;color:#fff;font-size:0.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;align-items:center;justify-content:center;">0</span>
+      <span id="chatsBadge" style="display:none;margin-left:auto;background:#046fcd;color:#fff;font-size:0.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;align-items:center;justify-content:center;">0</span>
     </a>
     <a class="nav-item" href="#" id="draftsLink" style="position:relative;">
       <span class="icon" style="display:flex;">
@@ -1159,6 +1158,32 @@ body.dark-mode .s-instr-area{background:#161b27;border-color:rgba(255,255,255,.0
   <div id="draftsPanelWrap" style="display:none;flex:1;overflow-y:auto;padding:1.5rem 2rem 2rem;flex-direction:column;">
     <div id="draftsLoadingState" style="text-align:center;padding:3rem;color:#94a3b8;font-size:0.85rem;">Loading drafts…</div>
     <div id="draftsList"></div>
+  </div>
+
+  <!-- WRITERS PANEL -->
+  <div id="writersPanelWrap" style="display:none;flex:1;overflow-y:auto;padding:1.5rem 2rem 2rem;flex-direction:column;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:1rem;">
+      <div style="display:flex;gap:0.3rem;">
+        <button class="tab active" id="writersTabAll">All writers <span class="count" id="writersCountAll">0</span></button>
+        <button class="tab" id="writersTabMine">My writers <span class="count" id="writersCountMine">0</span></button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:1rem;">
+      <div class="sort-wrap">
+        <span class="sort-label">Sort by</span>
+        <select class="sort-select" id="writersSortSelect">
+          <option value="orders" selected>Most orders completed</option>
+          <option value="rating">Writer's rating</option>
+          <option value="ontime">On-time %</option>
+        </select>
+      </div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" placeholder="Search by name" id="writersSearchInput" />
+      </div>
+    </div>
+    <div id="writersLoadingState" style="text-align:center;padding:3rem;color:#94a3b8;font-size:0.85rem;">Loading writers…</div>
+    <div id="writersList" style="display:flex;flex-direction:column;gap:0.6rem;"></div>
   </div>
   <div id="chatsPanelWrap" style="display:none;flex:1;overflow:hidden;height:100%;">
   <div style="display:flex;height:100%;width:100%;">
@@ -2367,10 +2392,11 @@ async function loadChatsPanel() {
       box.innerHTML = '<div style="padding:2rem;text-align:center;color:#94a3b8;font-size:0.85rem;">No conversations yet.</div>';
       return;
     }
-    const convs = parts.map((p: any) => ({ ...p.conversations, order: p.conversations?.orders })).filter(Boolean);
+    const convs = parts.map((p: any) => ({ ...p.conversations, order: p.conversations?.orders })).filter((c: any) => c.order);
     convs.sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
     const convIds = convs.map((c: any) => c.id);
     let lastMessages: Record<string, any> = {};
+    let unreadCounts: Record<string, number> = {};
     try {
       const mRes = await fetch(
         `${SUPABASE_URL}/rest/v1/messages?conversation_id=in.(${convIds.map((id: string) => `"${id}"`).join(',')})&select=conversation_id,content,sender_id,created_at,read_by&order=created_at.desc&limit=200`,
@@ -2378,6 +2404,11 @@ async function loadChatsPanel() {
       );
       const msgs = await mRes.json();
       msgs.forEach((m: any) => { if (!lastMessages[m.conversation_id]) lastMessages[m.conversation_id] = m; });
+      msgs.forEach((m: any) => {
+        if (m.sender_id !== currentSession.user.id && Array.isArray(m.read_by) && !m.read_by.includes(currentSession.user.id)) {
+          unreadCounts[m.conversation_id] = (unreadCounts[m.conversation_id] || 0) + 1;
+        }
+      });
     } catch(e) { console.error(e); }
     box.innerHTML = convs.map((c: any) => {
       const status = c.order?.order_status || 'open';
@@ -2390,8 +2421,8 @@ async function loadChatsPanel() {
       const previewPrefix = lm && isMine ? '<strong style="color:#0f172a;font-weight:600;">You</strong> ' : '';
       const seen = lm && Array.isArray(lm.read_by) && lm.read_by.some((id: string) => id !== currentSession.user.id);
       const tick = lm && isMine ? (seen ? ' <span style="color:#60a5fa;font-size:0.7rem;">✓✓</span>' : ' <span style="color:#94a3b8;font-size:0.7rem;">✓</span>') : '';
-      const unread = lm && !isMine && Array.isArray(lm.read_by) && !lm.read_by.includes(currentSession.user.id);
-      return `<div class="cp-conv-item" data-conv-id="${esc(c.id)}" data-order-id="${esc(c.order?.id || '')}" style="padding:0.65rem 0.85rem;margin:0.15rem 0.5rem;border-radius:10px;cursor:pointer;transition:background 0.15s, box-shadow 0.15s;background:${unread ? '#f8fafc' : 'transparent'};box-shadow:none;">
+      const unreadCount = unreadCounts[c.id] || 0;
+      return `<div class="cp-conv-item" data-conv-id="${esc(c.id)}" data-order-id="${esc(c.order?.id || '')}" style="padding:0.65rem 0.85rem;margin:0.15rem 0.5rem;border-radius:10px;cursor:pointer;transition:background 0.15s, box-shadow 0.15s;background:${unreadCount > 0 ? '#f8fafc' : 'transparent'};box-shadow:none;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem;">
           <div style="display:flex;align-items:center;gap:0.4rem;min-width:0;flex:1;">
             <span style="font-size:0.7rem;font-weight:700;color:${statusColor};white-space:nowrap;">${esc(status.replace(/_/g,' '))}</span>
@@ -2404,7 +2435,7 @@ async function loadChatsPanel() {
             <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
           </div>
           <span style="font-size:0.76rem;color:var(--text-muted);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;">${previewPrefix}${esc(previewText)}${tick}</span>
-          ${unread ? '<span style="width:8px;height:8px;border-radius:50%;background:#046fcd;flex-shrink:0;"></span>' : ''}
+          ${unreadCount > 0 ? `<span class="cp-unread-badge" style="min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#046fcd;color:#fff;font-size:0.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${unreadCount > 99 ? '99+' : unreadCount}</span>` : ''}
         </div>
       </div>`;
     }).join('');
@@ -2456,6 +2487,8 @@ async function openCpThread(convId: string, title: string, status: string) {
     );
     renderCpMessages(await res.json());
     await markMessagesRead(convId);
+    if (cpCurrentOrder?.id) { unreadOrderIds.delete(String(cpCurrentOrder.id)); paintUnread(); }
+    document.querySelector(`.cp-conv-item[data-conv-id="${convId}"] .cp-unread-badge`)?.remove();
     cpSub = supabase.channel(`cp-${convId}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${convId}` },
         (payload: any) => appendCpMessage(payload.new))
@@ -2905,7 +2938,7 @@ document.getElementById('wsNext8')?.addEventListener('click', async () => {
 async function fetchWriterProfile(writerId: string): Promise<any> {
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/writers?id=eq.${writerId}&select=id,full_name,photo_url,bio,specialties,credentials,highlights,sample_url,sample_name,years_experience,education_level,rating,orders_completed,auth_user_id`,
+      `${SUPABASE_URL}/rest/v1/writers?id=eq.${writerId}&select=id,full_name,photo_url,bio,specialties,credentials,highlights,sample_url,sample_name,years_experience,education_level,rating,orders_completed,auth_user_id,completed_orders_offset,on_time_percentage`,
       { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` } }
     );
     const data = await res.json();
@@ -3136,27 +3169,41 @@ async function openWriterProfileModal(writerId: string) {
   content.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:2rem;">Loading...</div>';
   const w = await fetchWriterProfile(writerId);
   if (!w) { content.innerHTML = '<div style="text-align:center;color:#f87171;padding:2rem;">Could not load profile.</div>'; return; }
+  let liveStats = writerStatsById[String(writerId)];
+  if (!liveStats) {
+    try {
+      const sRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/writer_stats`, {
+        method: 'POST',
+        headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json', Authorization: `Bearer ${currentSession.access_token}` },
+        body: '{}'
+      });
+      const allStats = await sRes.json();
+      if (Array.isArray(allStats)) liveStats = allStats.find((s: any) => String(s.writer_id) === String(writerId));
+    } catch (e) { console.warn('writer_stats fetch failed', e); }
+  }
+  const completedOrders = Number(liveStats?.completed_orders || 0) + Number(w.completed_orders_offset || 150);
+  const avgRating = liveStats?.avg_rating != null ? Number(liveStats.avg_rating).toFixed(1) : (w.rating ? Number(w.rating).toFixed(1) : '5.0');
   const initials = (w.full_name || '').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
   const highlights = w.highlights ? w.highlights.split(',').map((h: string) => `<span style="display:inline-block;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:20px;padding:0.25rem 0.7rem;font-size:0.75rem;color:#0f172a;margin:0.2rem;">${esc(h.trim())}</span>`).join('') : '';
   content.innerHTML = `
-    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid #e2e8f0;">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.12);">
       <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:#0f172a;">
         ${w.photo_url ? `<img src="${esc(w.photo_url)}" style="width:100%;height:100%;object-fit:cover;" />` : initials}
       </div>
       <div>
-        <div style="font-size:1rem;font-weight:800;color:#0f172a;">${esc(w.full_name || '—')}</div>
-        <div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem;">${esc(w.education_level || '')} ${w.years_experience ? `· ${w.years_experience} yrs experience` : ''}</div>
+        <div style="font-size:1rem;font-weight:800;color:#ffffff;">${esc(w.full_name || '—')}</div>
+        <div style="font-size:0.8rem;color:#ffffff;margin-top:0.2rem;">${esc(w.education_level || '')} ${w.years_experience ? `· ${w.years_experience} yrs experience` : ''}</div>
         <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.3rem;">
-          <span style="color:#fbbf24;font-size:0.82rem;">⭐ ${w.rating ? Number(w.rating).toFixed(1) : '5.0'}</span>
-          <span style="color:#64748b;font-size:0.78rem;">${w.orders_completed || 0} orders completed</span>
+          <span style="color:#fbbf24;font-size:0.82rem;">⭐ ${avgRating}</span>
+          <span style="color:#ffffff;font-size:0.78rem;">${completedOrders} orders completed</span>
         </div>
       </div>
     </div>
-    ${w.bio ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">About</div><p style="font-size:0.85rem;color:#475569;line-height:1.7;">${esc(w.bio)}</p></div>` : ''}
-    ${highlights ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Highlights</div><div>${highlights}</div></div>` : ''}
-    ${w.specialties ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Specialties</div><p style="font-size:0.85rem;color:#475569;">${esc(w.specialties)}</p></div>` : ''}
-    ${w.credentials ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Credentials</div><p style="font-size:0.85rem;color:#475569;">${esc(w.credentials)}</p></div>` : ''}
-    ${w.sample_url && w.sample_name ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Sample</div><div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem 1rem;"><span style="font-size:0.82rem;color:#0f172a;">📄 ${esc(w.sample_name)}</span><a href="${esc(w.sample_url)}" target="_blank" style="background:#046fcd;color:#fff;border:none;border-radius:6px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:600;text-decoration:none;">View</a></div></div>` : ''}
+    ${w.bio ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">About</div><p style="font-size:0.85rem;color:#ffffff;line-height:1.7;">${esc(w.bio)}</p></div>` : ''}
+    ${highlights ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Highlights</div><div>${highlights}</div></div>` : ''}
+    ${w.specialties ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Specialties</div><p style="font-size:0.85rem;color:#ffffff;">${esc(w.specialties)}</p></div>` : ''}
+    ${w.credentials ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Credentials</div><p style="font-size:0.85rem;color:#ffffff;">${esc(w.credentials)}</p></div>` : ''}
+    ${w.sample_url && w.sample_name ? `<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">Sample</div><div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem 1rem;"><span style="font-size:0.82rem;color:#0f172a;">📄 ${esc(w.sample_name)}</span><a href="${esc(w.sample_url)}" target="_blank" style="background:#046fcd;color:#fff;border:none;border-radius:6px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:600;text-decoration:none;">View</a></div></div>` : ''}
   `;
 }
 
@@ -4364,11 +4411,193 @@ document.getElementById('draftsLink')!.addEventListener('click', (e) => {
   (document.querySelector('.controls-bar') as HTMLElement).style.display = 'none';
   (document.querySelector('.orders-area') as HTMLElement).style.display = 'none';
   document.getElementById('chatsPanelWrap')!.style.display = 'none';
+  document.getElementById('writersPanelWrap')!.style.display = 'none';
   document.getElementById('draftsPanelWrap')!.style.display = 'flex';
   loadDraftsPanel();
 });
 
-  document.getElementById('chatsLink')!.addEventListener('click', (e) => {
+  // ═══ WRITERS PANEL ═══
+let writersCache: any[] = [];
+let myWriterIds = new Set<number>();
+let writersCurrentTab: 'all' | 'mine' = 'all';
+let writerStatsById: Record<string, any> = {};
+
+async function loadWritersPanel() {
+  const loading = document.getElementById('writersLoadingState')!;
+  const list = document.getElementById('writersList')!;
+  loading.style.display = 'block';
+  list.innerHTML = '';
+  try {
+    const [wRes, oRes, rRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/writers?is_active=eq.true&select=id,full_name,photo_url,rating,orders_completed,on_time_percentage,completed_orders_offset`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` }
+      }),
+      fetch(`${SUPABASE_URL}/rest/v1/orders?client_email=eq.${encodeURIComponent(currentSession.user.email)}&writer_id=not.is.null&select=writer_id`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` }
+      }),
+      fetch(`${SUPABASE_URL}/rest/v1/rpc/writer_stats`, {
+        method: 'POST',
+        headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json', Authorization: `Bearer ${currentSession.access_token}` },
+        body: '{}'
+      })
+    ]);
+    const rawWriters = await wRes.json();
+    const myOrders = await oRes.json();
+    const statsRows = await rRes.json();
+    const statsById: Record<string, any> = {};
+    (Array.isArray(statsRows) ? statsRows : []).forEach((s: any) => { statsById[String(s.writer_id)] = s; });
+    writerStatsById = statsById;
+    writersCache = (Array.isArray(rawWriters) ? rawWriters : []).map((w: any) => {
+      const st = statsById[String(w.id)] || {};
+      return {
+        ...w,
+        completed_orders: Number(st.completed_orders || 0),
+        review_count: Number(st.review_count || 0),
+        avg_rating: st.avg_rating != null ? Number(st.avg_rating) : 0
+      };
+    });
+    myWriterIds = new Set(Array.isArray(myOrders) ? myOrders.map((o: any) => o.writer_id) : []);
+    loading.style.display = 'none';
+    const countAll = document.getElementById('writersCountAll'); if (countAll) countAll.textContent = String(writersCache.length);
+    const countMine = document.getElementById('writersCountMine'); if (countMine) countMine.textContent = String(myWriterIds.size);
+    renderWritersList();
+  } catch (err) {
+    console.error('loadWritersPanel error', err);
+    loading.textContent = 'Could not load writers.';
+  }
+}
+
+function renderWritersList() {
+  const list = document.getElementById('writersList')!;
+  const search = (document.getElementById('writersSearchInput') as HTMLInputElement)?.value.toLowerCase() || '';
+  const sort = (document.getElementById('writersSortSelect') as HTMLSelectElement)?.value || 'rating';
+
+  let filtered = writersCurrentTab === 'mine'
+    ? writersCache.filter((w: any) => myWriterIds.has(w.id))
+    : writersCache;
+
+  if (search) filtered = filtered.filter((w: any) => (w.full_name || '').toLowerCase().includes(search));
+
+  filtered = [...filtered].sort((a: any, b: any) => {
+    if (sort === 'orders') return (b.completed_orders || 0) - (a.completed_orders || 0);
+    if (sort === 'ontime') return (b.on_time_percentage || 0) - (a.on_time_percentage || 0);
+    return (b.avg_rating || 0) - (a.avg_rating || 0);
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = `<div style="text-align:center;padding:3rem;color:#94a3b8;font-size:0.85rem;">No writers found.</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map((w: any) => {
+    const initials = (w.full_name || '?').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
+    const photo = w.photo_url ? `<img src="${esc(w.photo_url)}" style="width:100%;height:100%;object-fit:cover;" />` : initials;
+    const reviewCount = w.review_count || 0;
+    const ratingDisplay = reviewCount > 0 ? `⭐ ${Number(w.avg_rating).toFixed(1)}` : 'New writer';
+    const onTimeDisplay = w.on_time_percentage != null ? `${w.on_time_percentage}%` : '—';
+    const reviewLabel = reviewCount > 0 ? 'Last 20 reviews' : '';
+    return `<div class="order-row" style="cursor:default;padding:0;overflow:hidden;">
+      <div style="flex:1;padding:0.85rem 1.1rem;min-width:0;">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.55rem;">
+          <div style="width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0f172a;font-size:0.78rem;position:relative;">
+            ${photo}
+            <span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:#4ade80;border:2px solid var(--panel-bg);"></span>
+          </div>
+          <div style="min-width:0;">
+            <div style="font-size:0.9rem;font-weight:700;color:var(--text);">${esc(w.full_name || '—')}</div>
+            <button class="wp-view-profile" data-writer-id="${esc(w.id)}" style="background:none;border:none;color:var(--text-muted);font-size:0.76rem;font-weight:500;cursor:pointer;padding:0;text-align:left;">View profile</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.82rem;color:var(--text-muted);white-space:nowrap;">
+                    <span>${ratingDisplay} <span style="opacity:0.65;">${reviewLabel ? '· ' + reviewLabel : ''}</span></span>
+          <span>${onTimeDisplay} <span style="opacity:0.8;">On-Time</span></span>
+        </div>
+      </div>
+      <div style="width:1px;background:var(--border);flex-shrink:0;"></div>
+      <div style="display:flex;align-items:center;padding:0 1.1rem;flex-shrink:0;">
+        <button class="wp-invite-btn" data-writer-id="${esc(w.id)}" data-writer-name="${esc(w.full_name || '')}" style="background:#6366f1;color:#fff;border:none;border-radius:8px;padding:0.65rem 1.3rem;font-size:0.85rem;font-weight:700;cursor:pointer;white-space:nowrap;">Invite to order</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  list.querySelectorAll('.wp-view-profile').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const writerId = (btn as HTMLElement).dataset.writerId!;
+      await openWriterProfileModal(writerId);
+    });
+  });
+  list.querySelectorAll('.wp-invite-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const writerId = (btn as HTMLElement).dataset.writerId!;
+      const writerName = (btn as HTMLElement).dataset.writerName || 'this writer';
+      await inviteWriterToDraftOrder(writerId, writerName, btn as HTMLButtonElement);
+    });
+  });
+}
+
+async function inviteWriterToDraftOrder(writerId: string, writerName: string, btn: HTMLButtonElement) {
+  const pendingId = wizCurrentOrderDbId || localStorage.getItem('wizPendingOrderId');
+  if (!pendingId) {
+    alert('You need an order awaiting bids before you can invite a writer. Place an order first.');
+    return;
+  }
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = 'Inviting…';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/order_invites`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}`, Prefer: 'return=minimal' },
+      body: JSON.stringify({ order_id: parseInt(pendingId), writer_id: parseInt(writerId), invited_by: currentSession.user.id })
+    });
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      if (res.status === 409 || (errBody.message || '').includes('duplicate')) {
+        btn.textContent = '✓ Already invited';
+      } else {
+        throw new Error(errBody.message || 'Could not send invite');
+      }
+    } else {
+      btn.textContent = '✓ Invited';
+    }
+  } catch (err: any) {
+    console.error('inviteWriterToDraftOrder error', err);
+    alert(`Could not invite ${writerName}. Please try again.`);
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+document.getElementById('writersTabAll')?.addEventListener('click', () => {
+  writersCurrentTab = 'all';
+  document.getElementById('writersTabAll')!.classList.add('active');
+  document.getElementById('writersTabMine')!.classList.remove('active');
+  renderWritersList();
+});
+document.getElementById('writersTabMine')?.addEventListener('click', () => {
+  writersCurrentTab = 'mine';
+  document.getElementById('writersTabMine')!.classList.add('active');
+  document.getElementById('writersTabAll')!.classList.remove('active');
+  renderWritersList();
+});
+document.getElementById('writersSortSelect')?.addEventListener('change', renderWritersList);
+document.getElementById('writersSearchInput')?.addEventListener('input', renderWritersList);
+
+document.getElementById('writersLink')!.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('writersLink')!.classList.add('active');
+  (document.querySelector('.main-header') as HTMLElement).style.display = 'none';
+  (document.querySelector('.tabs-bar') as HTMLElement).style.display = 'none';
+  (document.querySelector('.controls-bar') as HTMLElement).style.display = 'none';
+  (document.querySelector('.orders-area') as HTMLElement).style.display = 'none';
+  document.getElementById('chatsPanelWrap')!.style.display = 'none';
+  document.getElementById('draftsPanelWrap')!.style.display = 'none';
+  document.getElementById('writersPanelWrap')!.style.display = 'flex';
+  loadWritersPanel();
+});
+
+document.getElementById('chatsLink')!.addEventListener('click', (e) => {
   e.preventDefault();
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('chatsLink')!.classList.add('active');
@@ -4377,6 +4606,7 @@ document.getElementById('draftsLink')!.addEventListener('click', (e) => {
   (document.querySelector('.controls-bar') as HTMLElement).style.display = 'none';
   (document.querySelector('.orders-area') as HTMLElement).style.display = 'none';
   document.getElementById('draftsPanelWrap')!.style.display = 'none';
+  document.getElementById('writersPanelWrap')!.style.display = 'none';
   document.getElementById('chatsPanelWrap')!.style.display = 'flex';
   loadChatsPanel();
 });
@@ -4386,6 +4616,7 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
   document.getElementById('myOrdersLink')!.classList.add('active');
   document.getElementById('chatsPanelWrap')!.style.display = 'none';
   document.getElementById('draftsPanelWrap')!.style.display = 'none';
+  document.getElementById('writersPanelWrap')!.style.display = 'none';
   (document.querySelector('.main-header') as HTMLElement).style.display = 'flex';
   (document.querySelector('.tabs-bar') as HTMLElement).style.display = 'flex';
   (document.querySelector('.controls-bar') as HTMLElement).style.display = 'flex';
@@ -4432,18 +4663,17 @@ document.getElementById('myOrdersLink')!.addEventListener('click', (e) => {
       const ids = myConvParticipants.map(p => p.conversation_id);
       const inList = ids.map(i => `"${i}"`).join(',');
       const mRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/messages?conversation_id=in.(${inList})&select=conversation_id,sender_id,created_at&order=created_at.desc&limit=200`,
+        `${SUPABASE_URL}/rest/v1/messages?conversation_id=in.(${inList})&select=conversation_id,sender_id,created_at,read_by&order=created_at.desc&limit=200`,
         { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${currentSession.access_token}` } }
       );
       const msgs = await mRes.json();
  
       const newUnread = new Set<string>();
       for (const p of myConvParticipants) {
-        const lr = p.last_read_at ? new Date(p.last_read_at).getTime() : 0;
         const hasNew = msgs.some((m: any) =>
           m.conversation_id === p.conversation_id &&
           m.sender_id !== currentSession.user.id &&
-          new Date(m.created_at).getTime() > lr
+          Array.isArray(m.read_by) && !m.read_by.includes(currentSession.user.id)
         );
         if (hasNew && p.order_id) newUnread.add(p.order_id);
       }
