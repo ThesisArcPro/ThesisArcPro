@@ -155,8 +155,9 @@ const agents = [
         <h3>Start a conversation</h3>
       </div>
       <div class="cw-help-scroll">
-        <p class="cw-guest-label">What's your name? So our support team knows who they're chatting with.</p>
-        <input type="text" id="cwGuestNameInput" class="cw-input cw-guest-input" placeholder="Your name" />
+        <p class="cw-guest-label">What's your name and email? So our support team knows who they're chatting with and can follow up.</p>
+        <input type="text" id="cwGuestNameInput" class="cw-input cw-guest-input" placeholder="Your name" style="margin-bottom:0.6rem;" />
+        <input type="email" id="cwGuestEmailInput" class="cw-input cw-guest-input" placeholder="Your email" />
         <button class="cw-login-btn cw-guest-submit" id="cwGuestNameSubmit">Start Chat</button>
       </div>
     </div>
@@ -182,7 +183,7 @@ const agents = [
 </div>
 
 <style is:global>
-  .cw-wrap { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 50000; font-family: 'Inter','Segoe UI',sans-serif; }
+  .cw-wrap { position: fixed; bottom: 1.5rem; left: 1.5rem; z-index: 50000; font-family: 'Inter','Segoe UI',sans-serif; }
 
   /* ── LAUNCHER — circular black icon button ── */
   .cw-launcher {
@@ -203,7 +204,7 @@ const agents = [
 
   /* ── PANEL ── */
   .cw-panel {
-    position: absolute; bottom: 66px; right: 0;
+    position: absolute; bottom: 66px; left: 0;
     width: 380px; height: 580px; background: #fff; border-radius: 14px;
     border: 1px solid #e2e8f0; box-shadow: 0 8px 30px rgba(15,23,42,0.12);
     display: none; flex-direction: column; overflow: hidden;
@@ -359,7 +360,7 @@ const agents = [
   .cw-guest-submit { width: 100%; box-sizing: border-box; text-align: center; border: none; border-radius: 999px; padding: 0.8rem 1.5rem; font-weight: 700; }
 
   @media (max-width: 480px) {
-    .cw-panel { width: calc(100vw - 2rem); right: -0.5rem; bottom: 66px; height: 75vh; }
+    .cw-panel { width: calc(100vw - 2rem); left: -0.5rem; bottom: 66px; height: 75vh; }
   }
 
   /* ── UNREAD BADGE ── */
@@ -385,6 +386,8 @@ const agents = [
   let cwSession: any = null;
   let cwUserId = '';
   let cwUserName = '';
+  let cwUserEmail = '';
+  let cwUserClientId = '';
   let cwUserRole = '';
   let cwConversations: any[] = [];
   let cwActiveConvoId: string | null = null;
@@ -414,6 +417,8 @@ const agents = [
   }
   function cwGetGuestName(): string { return localStorage.getItem('cw_guest_name') || ''; }
   function cwSetGuestName(name: string) { localStorage.setItem('cw_guest_name', name); }
+  function cwGetGuestEmail(): string { return localStorage.getItem('cw_guest_email') || ''; }
+  function cwSetGuestEmail(email: string) { localStorage.setItem('cw_guest_email', email); }
   function cwAuthHeader(): string { return `Bearer ${cwSession ? cwSession.access_token : SUPABASE_KEY}`; }
 
   let cwUnreadCount = 0;
@@ -537,11 +542,16 @@ const agents = [
   document.getElementById('cwGuestNameInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); cwSubmitGuestName(); } });
 
   function cwSubmitGuestName() {
-    const input = document.getElementById('cwGuestNameInput') as HTMLInputElement;
-    const name = input.value.trim();
-    if (!name) { input.focus(); return; }
+    const nameInput = document.getElementById('cwGuestNameInput') as HTMLInputElement;
+    const emailInput = document.getElementById('cwGuestEmailInput') as HTMLInputElement;
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    if (!name) { nameInput.focus(); return; }
+    if (!email || !email.includes('@')) { emailInput.focus(); return; }
     cwSetGuestName(name);
+    cwSetGuestEmail(email);
     cwUserName = name;
+    cwUserEmail = email;
     startSupport(true);
   }
 
@@ -570,10 +580,12 @@ const agents = [
     if (cwSession.user.email === 'thesisarcpro069@gmail.com') { cwUserRole = 'admin'; cwUserName = 'Admin'; return; }
     cwUserRole = 'client';
     cwUserName = cwSession.user.email?.split('@')[0] || 'Client';
+    cwUserEmail = cwSession.user.email || '';
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(cwSession.user.email || '')}&select=full_name`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(cwSession.user.email || '')}&select=full_name,client_id`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
       const data = await res.json();
       if (data[0]?.full_name) cwUserName = data[0].full_name;
+      if (data[0]?.client_id) cwUserClientId = data[0].client_id;
     } catch (e) {}
   }
 
@@ -722,16 +734,21 @@ const agents = [
   async function startSupport(skipNamePrompt = false) {
     if (!cwSession && cwUserRole === 'guest' && !skipNamePrompt) {
       const nameInput = document.getElementById('cwGuestNameInput') as HTMLInputElement;
+      const emailInput = document.getElementById('cwGuestEmailInput') as HTMLInputElement;
       if (nameInput) nameInput.value = cwGetGuestName();
+      if (emailInput) emailInput.value = cwGetGuestEmail();
       showScreen('guestname');
       return;
     }
     if (!cwUserId) return;
+    let identityLabel = cwUserName;
+    if (cwUserRole === 'client' && cwUserClientId) identityLabel = `${cwUserName} (#${cwUserClientId})`;
+    else if (cwUserRole === 'guest' && cwUserEmail) identityLabel = `${cwUserName} (${cwUserEmail})`;
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/conversations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=representation' },
-        body: JSON.stringify({ type: 'support', title: `Support — ${cwUserName}` })
+        body: JSON.stringify({ type: 'support', title: `Support — ${identityLabel}`, status: 'open' })
       });
       const conv = (await res.json())[0];
       if (!conv) throw new Error('Failed');
@@ -817,6 +834,43 @@ const agents = [
     container.scrollTop = container.scrollHeight;
   }
 
+  function cwRenderSatisfactionPrompt() {
+    const container = document.getElementById('cwThreadMsgs')!;
+    container.insertAdjacentHTML('beforeend', `
+      <div class="cw-msg theirs">
+        <div class="cw-msg-bubble">Would you like me to connect you with a live agent, or did that answer your question?</div>
+        <div class="cw-msg-time">Support team</div>
+      </div>
+      <div class="cw-chip-row" id="cwSatisfactionRow">
+        <button class="cw-chip" data-cwsat="connect">Connect me with an agent</button>
+        <button class="cw-chip" data-cwsat="resolved">That answered it</button>
+      </div>
+    `);
+    container.scrollTop = container.scrollHeight;
+    document.querySelectorAll('#cwSatisfactionRow .cw-chip').forEach(chip => {
+      chip.addEventListener('click', () => cwHandleSatisfactionChoice((chip as HTMLElement).dataset.cwsat!));
+    });
+  }
+
+  async function cwHandleSatisfactionChoice(choice: string) {
+    const row = document.getElementById('cwSatisfactionRow');
+    if (row) row.remove();
+    if (!cwActiveConvoId) return;
+    cwBotStage = 2;
+    if (choice === 'connect') {
+      await cwSendBotMessage(cwActiveConvoId, CW_ESCALATION_REPLY);
+    } else {
+      await cwSendBotMessage(cwActiveConvoId, "Glad that helped! Feel free to reach out again anytime.");
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ status: 'resolved' })
+        });
+      } catch (e) { console.error('cwHandleSatisfactionChoice resolve error', e); }
+    }
+  }
+
   document.getElementById('cwSend')?.addEventListener('click', () => cwSendMessage());
   document.getElementById('cwInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); cwSendMessage(); } });
 
@@ -846,10 +900,11 @@ const agents = [
       await fetch(`${SUPABASE_URL}/rest/v1/messages`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader() }, body: JSON.stringify({ conversation_id: cwActiveConvoId, sender_id: cwUserId, sender_name: cwUserName, sender_role: cwUserRole, content }) });
       await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' }, body: JSON.stringify({ updated_at: new Date().toISOString() }) });
 
-      if (cwUserRole === 'guest') {
+      if (cwUserRole === 'guest' || cwUserRole === 'client') {
         if (isTopicChip && cwBotStage === 0) {
           cwBotStage = 1;
           await cwSendBotMessage(cwActiveConvoId, CW_TOPIC_REPLIES[presetText!] || CW_ESCALATION_REPLY);
+          cwRenderSatisfactionPrompt();
         } else if (!isTopicChip && cwBotStage === 1) {
           cwBotStage = 2;
           await cwSendBotMessage(cwActiveConvoId, CW_ESCALATION_REPLY);
