@@ -38,4 +38,25 @@ const samples = defineCollection({
   }),
 });
 
-export const collections = { samples };
+const blogIndex = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog-index' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    category: z.enum([
+      'Essay Writing',
+      'Thesis & Dissertation',
+      'Research Paper',
+      'Editing & Proofreading',
+      'Dissertation Writing',
+    ]),
+    date: z.date(),
+    cover_image: z.string(),
+    cover_alt: z.string(),
+    url: z.string(),
+    featured: z.boolean().default(false),
+    read_time_minutes: z.number().optional(),
+  }),
+});
+
+export const collections = { samples, blogIndex };

@@ -3,6 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 const base = '';
+const preselectService = Astro.url.searchParams.get('service') || '';
+const preselectTopic = Astro.url.searchParams.get('topic') || '';
 ---
 
 <BaseLayout title="Order Now - Custom Academic Writing | ThesisArcPro" description="Get a custom essay written by a vetted expert. Free plagiarism report, unlimited revisions, and on-time delivery guaranteed.">
@@ -1231,7 +1233,23 @@ const base = '';
 
   updateSummary();
 
-  async function loadWriterAvatars() {
+// Pre-fill from URL params (e.g. /order?service=Writing&topic=Thesis%20help)
+(function prefillFromParams() {
+  const params = new URLSearchParams(window.location.search);
+  const svc = params.get('service');
+  const topic = params.get('topic');
+  if (svc) {
+    const chip = document.querySelector(`.chip[data-svc="${svc}"]`) as HTMLElement;
+    chip?.click();
+  }
+  if (topic) {
+    const topicInput = $('oTopic') as HTMLInputElement;
+    if (topicInput) topicInput.value = topic;
+  }
+  if (svc || topic) revealOrderForm();
+})();
+
+async function loadWriterAvatars() {
     const box = $('writersAvatarStack');
     if (!box) return;
     try {

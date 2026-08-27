@@ -1,19 +1,88 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import BlogCategoryTabs from '../../components/BlogCategoryTabs.astro';
 ---
 
 <BaseLayout
   title="How to Write a Master's Thesis: A Guide | ThesisArcPro"
   description="Learn how to write a master's thesis step by step. Our guide covers structure, format, proposal writing and research tips.">
 
+  <Header />
   <main class="blog-post">
+    <div class="blog-post__tabs-wrap">
+      <BlogCategoryTabs />
+    </div>
     <article>
 
+      <nav class="post-breadcrumb">
+        <a href="/" aria-label="Home">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e66d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          </svg>
+        </a>
+        <span>/</span>
+        <a href="/blog">Blog</a>
+        <span>/</span>
+        <span>How to Write a Master's Thesis</span>
+      </nav>
+
       <header class="post-header">
-        <h1>How to Write a Master's Thesis: A Complete Guide 
-        for Graduate Students</h1>
-        <p class="post-meta">By ThesisArcPro Editorial Team</p>
+        <div class="post-header__grid">
+          <div class="post-header__text">
+            <h1>How to Write a Master's Thesis: A Guide for Graduate Students</h1>
+
+            <div class="post-header__meta">
+              <a href="/blog" class="post-category-tag">Thesis &amp; Dissertation</a>
+              <span class="post-author">
+                <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/1781878508282_Wesley.jpg" alt="Wesley W." class="post-author__avatar" />
+                Written by <a href="/writers">Wesley W.</a>
+              </span>
+            </div>
+            <p class="post-header__dates">Last updated: June 4, 2026 &middot; 12 minutes</p>
+          </div>
+
+          <div class="post-header__image">
+            <img src="/images/blog/blog-cover-masters-thesis.webp" alt="Graduate student researching for masters thesis" />
+          </div>
+        </div>
       </header>
+
+      <div class="cta-steps-bar">
+        <a href="/order?service=Writing&topic=Master%27s+Thesis" class="cta-step">
+          <span class="cta-step__icon">📝</span> Tell us about your assignment
+        </a>
+      </div>
+
+      <div class="post-body-wrap">
+        <aside class="post-sidebar">
+          <details class="toc-box">
+            <summary>Table of Contents</summary>
+            <nav>
+              <a href="#masters-vs-phd">Master's Thesis vs. PhD Dissertation</a>
+              <a href="#start-planning">How to Start: Planning</a>
+              <a href="#proposal">How to Write a Proposal</a>
+              <a href="#structure">Standard Structure and Format</a>
+              <a href="#step-by-step">Step by Step</a>
+              <a href="#checklist">Thesis Checklist</a>
+              <a href="#polishing">Polishing and Defense</a>
+              <a href="#faq">FAQ</a>
+            </nav>
+          </details>
+
+          <div class="sidebar-cta">
+            <img src="/images/blog/samples-cta-illustration.webp" alt="Notebook and glasses illustration" />
+            <p class="sidebar-cta__title">Need help with your studies?</p>
+            <p class="sidebar-cta__text">Share the instructions, set a deadline, and our experts will do the rest.</p>
+            <div class="sidebar-cta__btn-row">
+              <span class="sidebar-cta__arrows sidebar-cta__arrows--left">»»»</span>
+              <a href="/order" class="sidebar-cta__btn">Order now</a>
+              <span class="sidebar-cta__arrows sidebar-cta__arrows--right">«««</span>
+            </div>
+          </div>
+        </aside>
 
       <section class="post-body">
 
@@ -25,12 +94,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         and the ability to contribute valuable insights to your 
         field of study.</p>
 
+        <div class="key-highlights">
+          <p class="key-highlights__title">Key Highlights</p>
+          <ul>
+            <li>A master's thesis typically runs 12,000–25,000 words and takes 6–12 months to complete.</li>
+            <li>Success depends more on a tightly scoped research question than on raw word count.</li>
+            <li>Structured planning — proposal, methodology, then drafting — prevents the most common delays.</li>
+          </ul>
+        </div>
+
         <p>Navigating this process can feel overwhelming. Managing 
         a large-scale research project while meeting strict 
         university guidelines requires structured planning, 
         sustained focus, and refined academic skills. If you are 
         feeling stuck or pressed for time, seeking professional 
-        <a href="/contact">thesis and dissertation help</a> 
+        <a href="/order?service=Writing&topic=Thesis+Help">thesis and dissertation help</a> 
         can provide the structured guidance and feedback you need 
         to keep your research on track.</p>
 
@@ -40,7 +118,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         chapters to formatting your final draft and preparing for 
         your thesis defense.</p>
 
-        <h2>Master's Thesis vs. PhD Dissertation: Key Differences</h2>
+        <h2 id="masters-vs-phd">Master's Thesis vs. PhD Dissertation: Key Differences</h2>
 
         <p>Before diving into the writing process, it is helpful 
         to clarify what a master's thesis is and how it differs 
@@ -88,7 +166,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </tbody>
         </table>
 
-        <h2>How to Start a Master's Thesis: Planning and 
+        <h2 id="start-planning">How to Start a Master's Thesis: Planning and 
         Preparation</h2>
 
         <p>A successful thesis is built on a foundation of careful 
@@ -116,6 +194,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           or no answer.</li>
         </ul>
 
+        <div class="tip-callout">
+          <strong>Tip:</strong> I always tell students to write their 
+          research question on a sticky note and keep it on their 
+          monitor. Every time a chapter drifts off-topic, that note 
+          pulls you back to what you're actually supposed to be proving.
+        </div>
+
         <figure>
           <img
             src="/images/blog/masters-thesis-topic-to-thesis-statement.webp"
@@ -131,7 +216,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           precise thesis statement.</figcaption>
         </figure>
 
-        <h2>How to Write a Master's Thesis Proposal</h2>
+        <p>According to the 
+        <a href="https://cgsnet.org/" target="_blank" rel="noopener">Council of Graduate Schools</a>, 
+        most master's programs expect thesis completion within 6 to 
+        12 months of full-time study, and delays are more commonly 
+        linked to an unclear research scope than to the data 
+        collection stage itself — another reason to get your 
+        research question right before you start drafting.</p>
+
+        <h2 id="proposal">How to Write a Master's Thesis Proposal</h2>
 
         <p>Before you are permitted to write your actual thesis, 
         most postgraduate programs require you to submit a formal 
@@ -155,11 +248,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <p>Writing a proposal requires a distinct tone. If you 
         find yourself struggling to organize your initial ideas, 
         utilizing professional 
-        <a href="/contact">essay writing services</a> 
+        <a href="/order?service=Writing&topic=Essay+Structure">essay writing services</a> 
         for early-stage drafting and structure planning can help 
         clarify your direction.</p>
 
-        <h2>The Standard Master's Thesis Structure and Format</h2>
+        <h2 id="structure">The Standard Master's Thesis Structure and Format</h2>
 
         <p>Most academic institutions require a standardized 
         master's thesis structure. Here is what it typically 
@@ -211,9 +304,17 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         absolute clarity is essential for academic credibility. 
         If you need support structuring your empirical design, 
         reaching out for professional 
-        <a href="/contact">research paper writing</a> 
+        <a href="/order?service=Writing&topic=Research+Methodology">research paper writing</a> 
         support can help you present your methodology clearly 
         and accurately.</p>
+
+        <div class="tip-callout">
+          <strong>Tip:</strong> Write your methodology section while 
+          you're still collecting data, not after. Details you take 
+          for granted mid-research — why you excluded certain 
+          participants, why you picked a specific tool — are easy to 
+          forget three months later when you're writing the final draft.
+        </div>
 
         <h3>Discussion, Conclusion, and Referencing</h3>
 
@@ -223,8 +324,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         answers your research question clearly. Finally, include a 
         comprehensive reference list following your university's 
         preferred format whether APA, Harvard, Chicago, or MLA.</p>
+        <a href="/order?service=Writing&topic=Master%27s+Thesis" class="cta-banner">
+  <span class="cta-banner__text">
+    Stuck structuring your chapters? Get matched with a 
+    thesis specialist who's supervised this exact process before.
+  </span>
+  <span class="cta-banner__btn">Talk to a Specialist →</span>
+</a>
 
-        <h2>How to Write a Master's Thesis Step by Step</h2>
+        <h2 id="step-by-step">How to Write a Master's Thesis Step by Step</h2>
 
         <p>To make this extensive project manageable, follow this 
         practical roadmap:</p>
@@ -243,7 +351,33 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           conclusion last for greater accuracy.</li>
         </ul>
 
-        <h2>Polishing Your Thesis: The Final Review and Defense</h2>
+        <h2 id="checklist">Master's Thesis Checklist You Can Copy</h2>
+
+        <p>Feel free to copy this checklist into your own planning 
+        document or cite it directly if you're writing about the 
+        thesis process yourself.</p>
+
+        <div class="linkable-checklist">
+          <ul>
+            <li>☐ Research question is specific, feasible, and analytically complex</li>
+            <li>☐ Proposal approved by supervisor before full drafting begins</li>
+            <li>☐ Methodology section drafted while research is still fresh</li>
+            <li>☐ Literature review identifies a clear gap, not just a summary</li>
+            <li>☐ Every chapter ties back to the original research question</li>
+            <li>☐ Reference list matches your university's required citation style</li>
+            <li>☐ Full draft reviewed for structure before line-editing begins</li>
+            <li>☐ Defense presentation rehearsed in under 15 minutes</li>
+          </ul>
+        </div>
+
+        <a href="/order?service=Proofreading&topic=Master%27s+Thesis" class="cta-banner cta-banner--gold">
+          <span class="cta-banner__text">
+            Want a second pair of eyes on your draft before submission?
+          </span>
+          <span class="cta-banner__btn">Get a Free Consultation →</span>
+        </a>
+
+        <h2 id="polishing">Polishing Your Thesis: The Final Review and Defense</h2>
 
         <h3>Structural Editing and Proofreading</h3>
 
@@ -254,7 +388,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         proofreading. This stage can be incredibly tedious, 
         especially when you have spent months on the same text. 
         Seeking professional 
-        <a href="/contact">editing and proofreading</a> 
+        <a href="/order?service=Proofreading&topic=Thesis+Editing">editing and proofreading</a> 
         services can provide an objective expert review to ensure 
         your work meets high academic standards.</p>
 
@@ -289,7 +423,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           to scholarly feedback.</li>
         </ul>
 
-        <h2>Frequently Asked Questions</h2>
+        <h2 id="faq">Frequently Asked Questions</h2>
 
         <h3>How to write a master's thesis step by step?</h3>
         <p>Writing a master's thesis step by step involves choosing 
@@ -324,6 +458,51 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         have their feedback, draft a formal thesis proposal to 
         establish your research scope, timeline, and methodology.</p>
 
+        <script type="application/ld+json" set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How to write a master's thesis step by step?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Writing a master's thesis step by step involves choosing a focused research topic, formulating a clear research question, drafting and submitting a thesis proposal, conducting a systematic literature review, designing and executing your research methodology, analyzing your data, drafting your core chapters, and finally revising, proofreading, and formatting before submission."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the format of a master's thesis?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A standard master's thesis format typically consists of a title page, abstract, table of contents, introduction, literature review, research methodology, results, discussion, conclusion, and reference list. The specific citation style such as APA or Harvard depends on your university guidelines."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What are the 5 rules of a thesis statement?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A strong thesis statement should be specific, debatable, clear and concise, justifiable with credible evidence, and directional — previewing the structure and main arguments of your research."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How to start with your master's thesis?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Begin by identifying a broad area of interest within your discipline, read widely to locate gaps in current research, formulate a specific research question, and discuss your ideas with a potential supervisor before drafting a formal thesis proposal."
+              }
+            }
+          ]
+        })} />
+                <div class="was-helpful">
+          <span>Was this helpful?</span>
+          <button type="button" class="was-helpful__btn" data-vote="yes" id="voteYes">Yes 👍</button>
+          <button type="button" class="was-helpful__btn" data-vote="no" id="voteNo">No 👎</button>
+          <span id="voteThanks" class="vote-thanks" style="display:none;">Thanks for your feedback!</span>
+        </div>
+
         <h2>Achieve Academic Excellence with ThesisArcPro</h2>
 
         <p>Writing a master's thesis is a challenging, long-term 
@@ -339,16 +518,16 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
         <ul>
           <li>Professional 
-          <a href="/contact">thesis and dissertation help</a> 
+          <a href="/order?service=Writing&topic=Thesis+Help">thesis and dissertation help</a> 
           and consultation.</li>
           <li>Expert 
-          <a href="/contact">research paper writing</a> 
+          <a href="/order?service=Writing&topic=Research+Methodology">research paper writing</a> 
           and sourcing.</li>
           <li>Comprehensive 
-          <a href="/contact">editing and proofreading</a> 
+          <a href="/order?service=Proofreading&topic=Thesis+Editing">editing and proofreading</a> 
           across APA, Harvard, Chicago, and MLA styles.</li>
           <li>Early stage 
-          <a href="/contact">essay writing services</a> 
+          <a href="/order?service=Writing&topic=Essay+Structure">essay writing services</a> 
           and structure planning.</li>
         </ul>
 
@@ -356,32 +535,82 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         precision. Contact ThesisArcPro today to discuss your 
         project requirements.</p>
 
-        <a href="/contact" 
-          class="cta-button">Get Started Today →</a>
+        <a href="/order?service=Writing&topic=Master%27s+Thesis" 
+  class="cta-button">Work with a Thesis Specialist →</a>
 
       </section>
+      </div>
 
       <footer class="author-bio">
-        <h3>About the Author</h3>
-        <p>Written by the ThesisArcPro Editorial Team — a group of 
-        professional academic writers and editors with over 7 years 
-        of combined experience supporting undergraduate, postgraduate, 
-        Master's, and PhD students across the UK, USA, and 
-        Australia.</p>
-      </footer>
+        <img src="https://rehvwvujuamehoanfomj.supabase.co/storage/v1/object/public/writer-photos/1781878508282_Wesley.jpg" alt="Wesley W." class="author-bio__avatar" />
+        <p><a href="/writers" class="author-bio__name-link">Wesley W.</a> is a professionally 
+        trained online tutor with more than six years of experience 
+        in the academic field, holding a Master's degree with a 
+        major in Business Management and Administration. He 
+        specializes in Psychology, Business & Management, Economics, 
+        Geography, and Sociology, and has guided students through 
+        every stage of the postgraduate writing process — from 
+        drafting and research to editing and final proofreading. 
+        Wesley holds a 5.0-star rating across 23 client reviews.</p>
+            </footer>
+
+      <section class="related-articles">
+        <h2>Related Articles</h2>
+        <div class="related-articles__grid">
+          <a href="/blog/how-to-write-an-msc-dissertation" class="related-card">
+            <img src="/images/blog/blog-cover-msc-dissertation.webp" alt="Graduate student writing an MSc dissertation" />
+            <span class="related-card__category">Dissertation Writing</span>
+            <h3>How to Write an MSc Dissertation: A Complete Guide</h3>
+          </a>
+          <a href="/blog/essay-editing-checklist" class="related-card">
+            <img src="/images/blog/blog-cover-essay-editing.webp" alt="Student proofreading and editing essay at desk" />
+            <span class="related-card__category">Editing & Proofreading</span>
+            <h3>Essay Editing Checklist: 10 Things to Fix Before You Submit</h3>
+          </a>
+          <a href="/blog/how-to-write-a-research-paper-without-plagiarism" class="related-card">
+            <img src="/images/blog/blog-cover-research-paper.webp" alt="Student checking sources on laptop for research paper" />
+            <span class="related-card__category">Research Paper</span>
+            <h3>How to Write a Research Paper Without Plagiarism</h3>
+          </a>
+        </div>
+      </section>
+
+      <script>
+  const yesBtn = document.getElementById('voteYes');
+  const noBtn = document.getElementById('voteNo');
+  const thanks = document.getElementById('voteThanks');
+
+  function castVote(choice: string) {
+    yesBtn?.setAttribute('disabled', 'true');
+    noBtn?.setAttribute('disabled', 'true');
+    if (thanks) thanks.style.display = 'inline';
+    localStorage.setItem('vote-masters-thesis', choice);
+  }
+
+  yesBtn?.addEventListener('click', () => castVote('yes'));
+  noBtn?.addEventListener('click', () => castVote('no'));
+</script>
 
     </article>
   </main>
+  <Footer />
 
 </BaseLayout>
 
 <style>
   .blog-post {
-    max-width: 860px;
+    max-width: 1180px;
     margin: 0 auto;
     padding: 2rem;
-    background-color: #F0F4F8;
-    border-radius: 8px;
+    background-color: #ffffff;
+  }
+
+  .post-body {
+    max-width: 860px;
+  }
+
+    .blog-post__tabs-wrap {
+    padding-top: 5.5rem;
   }
 
   .post-header {
@@ -428,8 +657,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   }
 
   .post-body a {
-    color: #1B2A4A;
+    color: #2563EB;
     text-decoration: underline;
+  }
+  .post-body a:hover {
+    color: #1d4ed8;
   }
 
   figure {
@@ -491,14 +723,396 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
   .author-bio {
     margin-top: 3rem;
-    padding: 1.5rem;
-    background-color: #f8fafc;
-    border-left: 4px solid #1B2A4A;
-    border-radius: 4px;
+    padding: 1.5rem 0;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
   }
 
   .author-bio h3 {
+    display: none;
+  }
+
+    .post-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 1.25rem;
+  }
+  .post-breadcrumb a { display: inline-flex; align-items: center; color: #2563EB; text-decoration: none; }
+  .post-breadcrumb a:hover { text-decoration: underline; }
+
+  .post-header { border-bottom: none; margin-bottom: 1.5rem; padding-bottom: 0; }
+  .post-header__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  .post-header h1 { font-size: 2rem; color: #1B2A4A; margin-bottom: 1rem; }
+
+  .post-header__meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .post-category-tag {
+    color: #2563EB;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .post-category-tag:hover { text-decoration: underline; }
+  .post-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+  .post-author__avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .post-author a { color: #2563EB; text-decoration: none; font-weight: 600; }
+  .post-author a:hover { text-decoration: underline; }
+  .post-header__dates { font-size: 0.82rem; color: #94a3b8; }
+
+  .post-header__image img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .cta-steps-bar {
+    display: flex;
+    background: #5B6EE8;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .cta-step {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 1rem;
+    border-right: 1px solid rgba(255,255,255,0.15);
+  }
+  .cta-step:last-child { border-right: none; }
+  .cta-step:hover { background: rgba(255,255,255,0.08); }
+
+  @media (max-width: 700px) {
+    .post-header__grid { grid-template-columns: 1fr; }
+    .cta-steps-bar { flex-direction: column; }
+    .cta-step { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
+    .cta-step:last-child { border-bottom: none; }
+  }
+
+    .key-highlights {
+    background: #F0F4F8;
+    border-left: 4px solid #C9A84C;
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .key-highlights__title {
+    font-weight: 700;
     color: #1B2A4A;
     margin-bottom: 0.5rem;
+  }
+  .key-highlights ul { margin: 0 0 0 1.25rem; }
+  .key-highlights li { margin-bottom: 0.35rem; }
+
+  .tip-callout {
+    background: #FFFBF2;
+    border: 1px solid #E9D9AE;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+    color: #334155;
+  }
+  .tip-callout strong { color: #1B2A4A; }
+
+  .cta-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: #5B6EE8;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+    text-decoration: none;
+    flex-wrap: wrap;
+  }
+  .cta-banner--gold { background: #C9A84C; }
+  .cta-banner__text { font-weight: 600; font-size: 0.95rem; }
+  .cta-banner__btn {
+    background: rgba(255,255,255,0.2);
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .linkable-checklist {
+    background: #F8FAFC;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .linkable-checklist ul { list-style: none; margin: 0; padding: 0; }
+  .linkable-checklist li { padding: 0.4rem 0; color: #334155; }
+
+  .related-articles {
+    margin: 2.5rem 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+  .related-articles h2 { margin-top: 0; }
+  .related-articles__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .related-articles__grid a {
+    display: block;
+    background: #F8FAFC;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    color: #2563EB;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .related-articles__grid a:hover { background: #EEF1FB; }
+
+  @media (max-width: 700px) {
+    .related-articles__grid { grid-template-columns: 1fr; }
+    .cta-banner { flex-direction: column; align-items: flex-start; }
+  }
+
+    .author-bio__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .author-bio__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .author-bio__name {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+    .author-bio__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .author-bio__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .author-bio__name {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+    .was-helpful {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    margin: 2rem 0;
+  }
+  .was-helpful span { font-weight: 600; color: #1B2A4A; font-size: 0.95rem; }
+  .was-helpful__btn {
+    background: #F0F4F8;
+    border: none;
+    border-radius: 6px;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #334155;
+  }
+  .was-helpful__btn:hover { background: #dde5ef; }
+
+  .related-card {
+    display: block;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    transition: box-shadow 0.2s ease;
+  }
+  .related-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+  .related-card img { width: 100%; height: 150px; object-fit: cover; display: block; }
+  .related-card__category {
+    display: block;
+    color: #C9A84C;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 1rem 1rem 0.4rem;
+  }
+  .related-card h3 { font-size: 0.95rem; line-height: 1.4; padding: 0 1rem 1rem; color: #1B2A4A; margin: 0; }
+
+    .author-bio__avatar {
+    float: left;
+    margin-right: 1rem;
+  }
+  .author-bio__name-link {
+    color: #2563EB;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .author-bio__name-link:hover { text-decoration: underline; }
+
+    .was-helpful__btn:disabled { opacity: 0.5; cursor: default; }
+  .vote-thanks { color: #16a34a; font-size: 0.9rem; font-weight: 600; }
+
+    .post-body-wrap {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .post-sidebar { order: 2; }
+  .post-body { order: 1; }
+  .post-sidebar {
+    position: sticky;
+    top: 6.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .toc-box {
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 0.55rem 1.1rem;
+  }
+  .toc-box[open] {
+    border-radius: 10px;
+    padding: 0.7rem 1.1rem;
+  }
+  .toc-box summary {
+    font-weight: 600;
+    color: #2563EB;
+    cursor: pointer;
+    font-size: 0.85rem;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .toc-box summary::-webkit-details-marker { display: none; }
+  .toc-box summary::after {
+    content: '▾';
+    font-size: 0.75rem;
+    color: #94a3b8;
+  }
+  .toc-box[open] summary::after { content: '▴'; }
+  .toc-box nav { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.75rem; }
+  .toc-box nav a { color: #2563EB; font-size: 0.85rem; text-decoration: none; }
+  .toc-box nav a:hover { text-decoration: underline; }
+
+  .sidebar-cta {
+    border: 1px solid #E9A23B;
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+    background: #ffffff;
+  }
+  .sidebar-cta img {
+    width: 100%;
+    max-width: 160px;
+    margin: 0 auto 1rem;
+    display: block;
+  }
+  .sidebar-cta__title {
+    font-weight: 700;
+    color: #1B2A4A;
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+  }
+  .sidebar-cta__text {
+    color: #64748b;
+    font-size: 0.82rem;
+    margin-bottom: 1rem;
+  }
+  .sidebar-cta__btn-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .sidebar-cta__btn {
+    display: inline-block;
+    background: #E9782E;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.65rem 2.2rem;
+    border-radius: 24px;
+    text-decoration: none;
+  }
+  .sidebar-cta__arrows {
+    color: #E9782E;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: inline-block;
+  }
+  .sidebar-cta__arrows--left {
+    animation: arrowPulseLeft 1.4s ease-in-out infinite;
+  }
+  .sidebar-cta__arrows--right {
+    animation: arrowPulseRight 1.4s ease-in-out infinite;
+  }
+  @keyframes arrowPulseLeft {
+    0%, 100% { transform: translateX(0); opacity: 0.5; }
+    50% { transform: translateX(-4px); opacity: 1; }
+  }
+  @keyframes arrowPulseRight {
+    0%, 100% { transform: translateX(0); opacity: 0.5; }
+    50% { transform: translateX(4px); opacity: 1; }
+  }
+
+    .post-body h2,
+  .post-body h3 {
+    scroll-margin-top: 6rem;
+  }
+
+  @media (max-width: 900px) {
+    .post-body-wrap { grid-template-columns: 1fr; }
+    .post-sidebar { position: static; }
   }
 </style>

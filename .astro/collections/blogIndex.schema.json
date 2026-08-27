@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Essay Writing",
+        "Thesis & Dissertation",
+        "Research Paper",
+        "Editing & Proofreading",
+        "Dissertation Writing"
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "cover_alt": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "featured": {
+      "default": false,
+      "type": "boolean"
+    },
+    "read_time_minutes": {
+      "type": "number"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "category",
+    "date",
+    "cover_image",
+    "cover_alt",
+    "url"
+  ]
+}
