@@ -10,18 +10,23 @@ const categories = [
 
 const categorySlug = (cat: string) =>
   cat.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+const activeCategorySlug = Astro.url.searchParams.get('category') || 'all';
 ---
 
 <div class="category-tabs-band">
   <nav class="category-tabs">
-    {categories.map((cat) => (
-      <a
-        href={cat === 'All Posts' ? '/blog' : `/blog?category=${categorySlug(cat)}`}
-        class="tab-btn"
-      >
-        {cat}
-      </a>
-    ))}
+    {categories.map((cat) => {
+      const slug = cat === 'All Posts' ? 'all' : categorySlug(cat);
+      return (
+        <a
+          href={cat === 'All Posts' ? '/blog' : `/blog?category=${slug}`}
+          class:list={['tab-btn', { active: slug === activeCategorySlug }]}
+        >
+          {cat}
+        </a>
+      );
+    })}
   </nav>
   <a href="#" class="search-in-blog">Search in blog</a>
 </div>
@@ -54,6 +59,7 @@ const categorySlug = (cat: string) =>
     transition: all 0.2s ease;
   }
   .tab-btn:hover { color: #1B2A4A; }
+  .tab-btn.active { color: #1B2A4A; font-weight: 700; }
   .search-in-blog {
     flex-shrink: 0;
     color: #475569;

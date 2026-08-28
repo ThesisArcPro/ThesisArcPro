@@ -3,18 +3,23 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import BlogCategoryTabs from '../../components/BlogCategoryTabs.astro';
 
 const allPosts = (await getCollection('blogIndex')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 
-const featuredPost = allPosts.find(p => p.data.featured) ?? allPosts[0];
-const restPosts = allPosts.filter(p => p.id !== featuredPost.id);
-
-const categories = ['All Posts', ...new Set(allPosts.map(p => p.data.category))];
-
 const categorySlug = (cat: string) =>
   cat.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+const activeCategorySlug = Astro.url.searchParams.get('category') || 'all';
+
+const visiblePosts = activeCategorySlug === 'all'
+  ? allPosts
+  : allPosts.filter(p => categorySlug(p.data.category) === activeCategorySlug);
+
+const featuredPost = visiblePosts.find(p => p.data.featured) ?? visiblePosts[0];
+const restPosts = featuredPost ? visiblePosts.filter(p => p.id !== featuredPost.id) : [];
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -46,37 +51,27 @@ const formatDate = (d: Date) =>
       confidence.</p>
     </section>
 
-    <div class="category-tabs-band">
-      <nav class="category-tabs" id="categoryTabs">
-        {categories.map((cat, i) => (
-          <button
-            class:list={['tab-btn', { active: i === 0 }]}
-            data-category={cat === 'All Posts' ? 'all' : categorySlug(cat)}
-          >
-            {cat}
-          </button>
-        ))}
-      </nav>
-      <a href="#" class="search-in-blog">Search in blog</a>
-    </div>
+    <BlogCategoryTabs />
 
-    <section class="featured-post" data-category={categorySlug(featuredPost.data.category)}>
-      <a href={featuredPost.data.url} class="featured-post__image">
-        <img src={featuredPost.data.cover_image} alt={featuredPost.data.cover_alt} loading="eager" />
-      </a>
-      <div class="featured-post__body">
-        <span class="post-category">{featuredPost.data.category}</span>
-        <h2><a href={featuredPost.data.url}>{featuredPost.data.title}</a></h2>
-        <p>{featuredPost.data.description}</p>
-        <div class="featured-post__footer">
-          <a href={featuredPost.data.url} class="read-more-btn">Read more</a>
-          <div class="post-meta-right">
-            <span>{formatDate(featuredPost.data.date)}</span>
-            {featuredPost.data.read_time_minutes && <span>{featuredPost.data.read_time_minutes} min read</span>}
+        {featuredPost && (
+      <section class="featured-post" data-category={categorySlug(featuredPost.data.category)}>
+        <a href={featuredPost.data.url} class="featured-post__image">
+          <img src={featuredPost.data.cover_image} alt={featuredPost.data.cover_alt} loading="eager" />
+        </a>
+        <div class="featured-post__body">
+          <span class="post-category">{featuredPost.data.category}</span>
+          <h2><a href={featuredPost.data.url}>{featuredPost.data.title}</a></h2>
+          <p>{featuredPost.data.description}</p>
+          <div class="featured-post__footer">
+            <a href={featuredPost.data.url} class="read-more-btn">Read more</a>
+            <div class="post-meta-right">
+              <span>{formatDate(featuredPost.data.date)}</span>
+              {featuredPost.data.read_time_minutes && <span>{featuredPost.data.read_time_minutes} min read</span>}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    )}
 
     <section class="blog-grid" id="blogGrid">
       {restPosts.map((post, i) => (
@@ -121,6 +116,10 @@ const formatDate = (d: Date) =>
       <button id="loadMoreBtn" class="load-more-btn">Load more</button>
     </div>
 
+    <div class="browse-all-wrap">
+      <a href="/blog" class="browse-all-btn">Browse all</a>
+    </div>
+
   </main>
   <Footer />
 
@@ -128,43 +127,19 @@ const formatDate = (d: Date) =>
 
 <script>
   const BATCH_SIZE = 6;
-  const tabs = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
   const cards = document.querySelectorAll<HTMLElement>('#blogGrid > *');
   const loadMoreBtn = document.getElementById('loadMoreBtn') as HTMLButtonElement;
-  const featuredPost = document.querySelector<HTMLElement>('.featured-post');
 
-  let activeCategory = 'all';
   let visibleCount = BATCH_SIZE;
 
   function render() {
-    const filtered = Array.from(cards).filter(
-      c => activeCategory === 'all' || c.dataset.category === activeCategory
-    );
-
-    filtered.forEach((c, i) => {
+    cards.forEach((c, i) => {
       c.style.display = i < visibleCount ? '' : 'none';
     });
-    cards.forEach(c => {
-      if (!filtered.includes(c)) c.style.display = 'none';
-    });
-
-    loadMoreBtn.style.display = filtered.length > visibleCount ? 'inline-block' : 'none';
-
-    if (featuredPost) {
-      featuredPost.style.display =
-        activeCategory === 'all' || featuredPost.dataset.category === activeCategory ? '' : 'none';
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = cards.length > visibleCount ? 'inline-block' : 'none';
     }
   }
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      activeCategory = tab.dataset.category || 'all';
-      visibleCount = BATCH_SIZE;
-      render();
-    });
-  });
 
   loadMoreBtn?.addEventListener('click', () => {
     visibleCount += BATCH_SIZE;
@@ -343,6 +318,18 @@ const formatDate = (d: Date) =>
     transition: background 0.2s ease;
   }
   .load-more-btn:hover { background: #dde5ef; }
+    .browse-all-wrap { text-align: center; margin-top: 1rem; }
+  .browse-all-btn {
+    display: inline-block;
+    background: #5B6EE8;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.7rem 2.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+  .browse-all-btn:hover { background: #4a5cd6; }
 
   @media (max-width: 900px) {
     .featured-post { grid-template-columns: 1fr; }

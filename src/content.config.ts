@@ -59,4 +59,47 @@ const blogIndex = defineCollection({
   }),
 });
 
-export const collections = { samples, blogIndex };
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string().max(65),
+    meta_title: z.string(),
+    description: z.string().min(140).max(160),
+    category: z.enum([
+      'Essay Writing',
+      'Thesis & Dissertation',
+      'Research Paper',
+      'Editing & Proofreading',
+      'Dissertation Writing',
+    ]),
+    date: z.date(),
+    last_updated: z.date(),
+    cover_image: z.string(),
+    cover_alt: z.string(),
+    read_time_minutes: z.number(),
+    featured: z.boolean().default(false),
+
+    writer_name: z.string(),
+    writer_photo: z.string(),
+    writer_bio_short: z.string(),
+    writer_bio_long: z.string(),
+
+    key_highlights: z.array(z.string()).min(3).max(3),
+
+    toc: z.array(z.object({
+      id: z.string(),
+      label: z.string(),
+    })),
+
+    faq: z.array(z.object({
+      question: z.string(),
+      answer: z.string(),
+    })).min(4).max(6),
+
+    related: z.array(z.string()).min(2).max(3),
+
+    order_service: z.string().default('Writing'),
+  }),
+});
+
+export const collections = { samples, blogIndex, blog };

@@ -2,18 +2,18 @@ import { defineConfig } from 'astro/config';
 
 import sitemap from '@astrojs/sitemap';
 
+import mdx from '@astrojs/mdx';
+
 export default defineConfig({
   site: 'https://thesisarcpro.com',
 
   trailingSlash: 'always',
-  integrations: [
-    sitemap({
-      filter: (page) =>
-        !page.includes('/admin/') &&
-        !page.includes('/dashboard/') &&
-        !page.includes('/login/') &&
-        !page.includes('/signup/') &&
-        !page.includes('/thankyou/')
-    }),
-  ],
+  integrations: [sitemap({
+    filter: (page) =>
+      !page.includes('/admin/') &&
+      !page.includes('/dashboard/') &&
+      !page.includes('/login/') &&
+      !page.includes('/signup/') &&
+      !page.includes('/thankyou/')
+  }), mdx()],
 });

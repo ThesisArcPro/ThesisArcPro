@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "maxLength": 65
+    },
+    "meta_title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 140,
+      "maxLength": 160
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Essay Writing",
+        "Thesis & Dissertation",
+        "Research Paper",
+        "Editing & Proofreading",
+        "Dissertation Writing"
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "cover_alt": {
+      "type": "string"
+    },
+    "read_time_minutes": {
+      "type": "number"
+    },
+    "featured": {
+      "default": false,
+      "type": "boolean"
+    },
+    "writer_name": {
+      "type": "string"
+    },
+    "writer_photo": {
+      "type": "string"
+    },
+    "writer_bio_short": {
+      "type": "string"
+    },
+    "writer_bio_long": {
+      "type": "string"
+    },
+    "key_highlights": {
+      "minItems": 3,
+      "maxItems": 3,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "toc": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ]
+      }
+    },
+    "faq": {
+      "minItems": 4,
+      "maxItems": 6,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "question",
+          "answer"
+        ]
+      }
+    },
+    "related": {
+      "minItems": 2,
+      "maxItems": 3,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "order_service": {
+      "default": "Writing",
+      "type": "string"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "meta_title",
+    "description",
+    "category",
+    "date",
+    "last_updated",
+    "cover_image",
+    "cover_alt",
+    "read_time_minutes",
+    "writer_name",
+    "writer_photo",
+    "writer_bio_short",
+    "writer_bio_long",
+    "key_highlights",
+    "toc",
+    "faq",
+    "related"
+  ]
+}
