@@ -61,6 +61,8 @@ const articleSchema = {
 };
 
 const orderUrl = `/order?service=${encodeURIComponent(data.order_service)}&topic=${encodeURIComponent(data.title.slice(0, 40))}`;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).toString();
 ---
 
 <BaseLayout
