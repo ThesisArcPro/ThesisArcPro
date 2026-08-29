@@ -148,17 +148,17 @@ const agents = [
       <div class="cw-help-scroll" id="cwHelpArticleBody"></div>
     </div>
 
-    <!-- Guest name capture screen (support only, no account needed) -->
+    <!-- Guest contact capture screen (support only, shown only at escalation time) -->
     <div class="cw-screen" id="cwGuestName">
       <div class="cw-subhead">
         <button class="cw-back-btn" id="cwBackFromGuestName">‹</button>
-        <h3>Start a conversation</h3>
+        <h3>Connect with support</h3>
       </div>
       <div class="cw-help-scroll">
-        <p class="cw-guest-label">What's your name and email? So our support team knows who they're chatting with and can follow up.</p>
+        <p class="cw-guest-label">So our support team can follow up with you, what's your name and email?</p>
         <input type="text" id="cwGuestNameInput" class="cw-input cw-guest-input" placeholder="Your name" style="margin-bottom:0.6rem;" />
         <input type="email" id="cwGuestEmailInput" class="cw-input cw-guest-input" placeholder="Your email" />
-        <button class="cw-login-btn cw-guest-submit" id="cwGuestNameSubmit">Start Chat</button>
+        <button class="cw-login-btn cw-guest-submit" id="cwGuestNameSubmit">Connect me to support</button>
       </div>
     </div>
 
@@ -172,6 +172,12 @@ const agents = [
         </div>
       </div>
       <div class="cw-thread-msgs" id="cwThreadMsgs"></div>
+      <div class="cw-escalate-row">
+        <button class="cw-escalate-btn" id="cwEscalateBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Connect me to support
+        </button>
+      </div>
       <div class="cw-thread-input">
         <input type="text" class="cw-input" id="cwInput" placeholder="Type a message…" />
         <button class="cw-send" id="cwSend" aria-label="Send">
@@ -341,6 +347,11 @@ const agents = [
   .cw-msg-time { font-size: 0.6rem; color: #94a3b8; margin-top: 0.15rem; }
   .cw-msg.mine .cw-msg-time { text-align: right; }
 
+  /* ── PERSISTENT ESCALATE ROW ── */
+  .cw-escalate-row { padding: 0.5rem 0.9rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; }
+  .cw-escalate-btn { display: inline-flex; align-items: center; gap: 0.4rem; background: #fff; border: 1px solid #cbd5e1; border-radius: 999px; padding: 0.4rem 0.85rem; font-size: 0.76rem; font-weight: 600; color: #475569; cursor: pointer; font-family: inherit; transition: 0.15s; }
+  .cw-escalate-btn:hover { border-color: #1d4ed8; color: #1d4ed8; background: #eef2ff; }
+
   .cw-thread-input { display: flex; gap: 0.4rem; padding: 0.7rem 0.9rem; border-top: 1px solid #e2e8f0; background: #fff; }
   .cw-input { flex: 1; background: #f1f5f9; border: 1px solid transparent; border-radius: 20px; padding: 0.55rem 1rem; font-size: 0.85rem; color: #0f172a; outline: none; font-family: inherit; }
   .cw-input:focus { border-color: #1d4ed8; background: #fff; }
@@ -393,6 +404,7 @@ const agents = [
   let cwActiveConvoId: string | null = null;
   let cwSub: any = null;
   let cwActiveCollectionId: string | null = null;
+  let cwPendingEscalation = false; // true while the guest contact form is standing in for an escalation attempt
 
   const bubble = document.getElementById('cwBubble')!;
   const panel = document.getElementById('cwPanel')!;
@@ -420,6 +432,7 @@ const agents = [
   function cwGetGuestEmail(): string { return localStorage.getItem('cw_guest_email') || ''; }
   function cwSetGuestEmail(email: string) { localStorage.setItem('cw_guest_email', email); }
   function cwAuthHeader(): string { return `Bearer ${cwSession ? cwSession.access_token : SUPABASE_KEY}`; }
+  function cwHasGuestIdentity(): boolean { return !!(cwGetGuestName() && cwGetGuestEmail()); }
 
   let cwUnreadCount = 0;
   let cwGlobalSub: any = null;
@@ -437,6 +450,14 @@ const agents = [
       gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
       osc.start(); osc.stop(ctx.currentTime + 0.35);
     } catch (e) {}
+  }
+
+  function cwResetInactivityTimer() {
+    if (cwInactivityTimer) { clearTimeout(cwInactivityTimer); cwInactivityTimer = null; }
+    if (cwTicketEscalated) return; // escalated tickets stay open — no auto-close
+    cwInactivityTimer = setTimeout(() => {
+      if (panel.classList.contains('open')) closePanel();
+    }, 5 * 60 * 1000);
   }
 
   function cwSetBadge(count: number) {
@@ -487,17 +508,19 @@ const agents = [
       cwUserId = session.user.id;
       await detectRole();
     } else {
-      // No account needed for support — chat as a guest
+      // No account needed to browse or chat with the bot — chat as a guest
       cwSession = null;
       cwUserId = cwGetGuestId();
       cwUserRole = 'guest';
       cwUserName = cwGetGuestName() || 'Guest';
+      cwUserEmail = cwGetGuestEmail() || '';
     }
     showScreen('home');
     renderHomeFeatured();
     await loadCwConversations();
     cwStartGlobalSub();
     cwSetBadge(0);
+    cwResetInactivityTimer();
   });
 
   document.getElementById('cwPanelClose')?.addEventListener('click', closePanel);
@@ -524,6 +547,7 @@ const agents = [
     panel.classList.remove('open');
     bubble.classList.remove('open');
     if (cwSub) { cwSub.unsubscribe(); cwSub = null; }
+    if (cwInactivityTimer) { clearTimeout(cwInactivityTimer); cwInactivityTimer = null; }
   }
 
   function showScreen(name: string) {
@@ -537,11 +561,11 @@ const agents = [
     else if (name === 'guestname') guestNameScreen.classList.add('active');
   }
 
-  document.getElementById('cwBackFromGuestName')?.addEventListener('click', () => showScreen('home'));
+  document.getElementById('cwBackFromGuestName')?.addEventListener('click', () => { cwPendingEscalation = false; showScreen('thread'); });
   document.getElementById('cwGuestNameSubmit')?.addEventListener('click', cwSubmitGuestName);
   document.getElementById('cwGuestNameInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); cwSubmitGuestName(); } });
 
-  function cwSubmitGuestName() {
+  async function cwSubmitGuestName() {
     const nameInput = document.getElementById('cwGuestNameInput') as HTMLInputElement;
     const emailInput = document.getElementById('cwGuestEmailInput') as HTMLInputElement;
     const name = nameInput.value.trim();
@@ -552,7 +576,12 @@ const agents = [
     cwSetGuestEmail(email);
     cwUserName = name;
     cwUserEmail = email;
-    startSupport(true);
+    if (cwPendingEscalation) {
+      cwPendingEscalation = false;
+      await cwEscalateToHuman();
+    } else {
+      showScreen('thread');
+    }
   }
 
   // Nav buttons
@@ -575,9 +604,9 @@ const agents = [
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/writers?auth_user_id=eq.${cwUserId}&select=id,full_name`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${cwSession.access_token}` } });
       const data = await res.json();
-      if (data.length) { cwUserRole = 'writer'; cwUserName = data[0].full_name; return; }
+      if (data.length) { cwUserRole = 'writer'; cwUserName = data[0].full_name; cwUserEmail = cwSession.user.email || ''; return; }
     } catch (e) {}
-    if (cwSession.user.email === 'thesisarcpro069@gmail.com') { cwUserRole = 'admin'; cwUserName = 'Admin'; return; }
+    if (cwSession.user.email === 'thesisarcpro069@gmail.com') { cwUserRole = 'admin'; cwUserName = 'Admin'; cwUserEmail = cwSession.user.email || ''; return; }
     cwUserRole = 'client';
     cwUserName = cwSession.user.email?.split('@')[0] || 'Client';
     cwUserEmail = cwSession.user.email || '';
@@ -731,31 +760,26 @@ const agents = [
     });
   });
 
-  async function startSupport(skipNamePrompt = false) {
-    if (!cwSession && cwUserRole === 'guest' && !skipNamePrompt) {
-      const nameInput = document.getElementById('cwGuestNameInput') as HTMLInputElement;
-      const emailInput = document.getElementById('cwGuestEmailInput') as HTMLInputElement;
-      if (nameInput) nameInput.value = cwGetGuestName();
-      if (emailInput) emailInput.value = cwGetGuestEmail();
-      showScreen('guestname');
-      return;
-    }
+  // startSupport now opens the bot immediately — no identity gate. Guests chat
+  // anonymously (silent random ID) until they choose to escalate.
+  async function startSupport() {
     if (!cwUserId) return;
-    let identityLabel = cwUserName;
-    if (cwUserRole === 'client' && cwUserClientId) identityLabel = `${cwUserName} (#${cwUserClientId})`;
-    else if (cwUserRole === 'guest' && cwUserEmail) identityLabel = `${cwUserName} (${cwUserEmail})`;
+    cwTicketEscalated = false;
+    cwActiveTopic = null;
+    let label = cwUserName || 'Guest';
+    if (cwUserRole === 'client' && cwUserClientId) label = `${cwUserName} (#${cwUserClientId})`;
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/conversations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=representation' },
-        body: JSON.stringify({ type: 'support', title: `Support — ${identityLabel}`, status: 'open' })
+        body: JSON.stringify({ type: 'support', title: `Support — ${label}`, status: 'open' })
       });
       const conv = (await res.json())[0];
       if (!conv) throw new Error('Failed');
       await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader() },
-        body: JSON.stringify({ conversation_id: conv.id, user_id: cwUserId, role: cwUserRole, display_name: cwUserName })
+        body: JSON.stringify({ conversation_id: conv.id, user_id: cwUserId, role: cwUserRole, display_name: cwUserName || 'Guest' })
       });
       await loadCwConversations();
       openCwThread(conv.id);
@@ -776,8 +800,12 @@ const agents = [
     'Help with placing the order': "Placing an order is quick: click \"Place Order\" on your dashboard, fill in your assignment details, and submit — you'll start getting writer bids within minutes. Let us know below if you'd like a hand with a specific step.",
     'General questions': "Happy to help! Go ahead and describe what you need below, and our support team will follow up as soon as possible.",
   };
-  const CW_ESCALATION_REPLY = "Thanks for the extra detail — I've flagged this for our support team and someone will follow up with you here shortly. Feel free to add anything else in the meantime!";
-  let cwBotStage = 0; // 0 = no bot reply yet, 1 = topic reply sent, 2 = escalated to human
+  const CW_ESCALATION_REPLY = "Got it — I've connected you with our support team and someone will follow up with you here shortly. Feel free to add anything else in the meantime!";
+  const CW_CLARIFY_QUESTION = "Could you tell me a bit more about what's going on? Any detail helps me point you in the right direction.";
+  let cwActiveTopic: string | null = null;
+  let cwBotStage = 0; // 0 = nothing yet, 1 = clarifying question asked, 2 = topic reply + satisfaction shown, 3 = escalated or resolved (terminal)
+  let cwTicketEscalated = false;
+  let cwInactivityTimer: any = null;
 
   async function openCwThread(conversationId: string) {
     cwActiveConvoId = conversationId;
@@ -789,7 +817,8 @@ const agents = [
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?conversation_id=eq.${conversationId}&order=created_at.asc`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader() } });
       const messages = await res.json();
-      cwBotStage = Math.min(messages.filter((m: any) => m.sender_id === CW_BOT_ID).length, 2);
+      cwBotStage = Math.min(messages.filter((m: any) => m.sender_id === CW_BOT_ID).length, 3);
+      cwTicketEscalated = messages.some((m: any) => m.sender_id === CW_BOT_ID && m.content === CW_ESCALATION_REPLY);
       if (messages.length) renderCwMessages(messages); else renderCwNewThreadIntro();
     } catch (err) { console.error(err); container.innerHTML = '<div style="text-align:center;color:#94a3b8;">Could not load messages</div>'; }
     if (cwSub) { cwSub.unsubscribe(); cwSub = null; }
@@ -856,10 +885,10 @@ const agents = [
     const row = document.getElementById('cwSatisfactionRow');
     if (row) row.remove();
     if (!cwActiveConvoId) return;
-    cwBotStage = 2;
     if (choice === 'connect') {
-      await cwSendBotMessage(cwActiveConvoId, CW_ESCALATION_REPLY);
+      await cwEscalateToHuman();
     } else {
+      cwBotStage = 3;
       await cwSendBotMessage(cwActiveConvoId, "Glad that helped! Feel free to reach out again anytime.");
       try {
         await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, {
@@ -870,6 +899,52 @@ const agents = [
       } catch (e) { console.error('cwHandleSatisfactionChoice resolve error', e); }
     }
   }
+
+  // ── The single escalation entry point. Called from: the persistent button,
+  // the satisfaction-prompt chip, and implicit escalation (typing after a bot reply).
+  // For an unidentified guest, this detours through the contact-info screen first,
+  // then resumes here once submitted (see cwSubmitGuestName).
+  async function cwEscalateToHuman() {
+    if (!cwActiveConvoId) return;
+    if (!cwSession && cwUserRole === 'guest' && !cwHasGuestIdentity()) {
+      const nameInput = document.getElementById('cwGuestNameInput') as HTMLInputElement;
+      const emailInput = document.getElementById('cwGuestEmailInput') as HTMLInputElement;
+      if (nameInput) nameInput.value = cwGetGuestName();
+      if (emailInput) emailInput.value = cwGetGuestEmail();
+      cwPendingEscalation = true;
+      showScreen('guestname');
+      return;
+    }
+    // Identity is known (guest just gave it, or they're logged in) — update the
+    // ticket's title/participant so admin can see who to follow up with.
+    if (cwUserRole === 'guest') {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ title: `Support — ${cwUserName} (${cwUserEmail})` })
+        });
+        await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?conversation_id=eq.${cwActiveConvoId}&user_id=eq.${cwUserId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ display_name: cwUserName })
+        });
+        const conv = cwConversations.find(c => c.id === cwActiveConvoId);
+        if (conv) conv.title = `Support — ${cwUserName} (${cwUserEmail})`;
+        document.getElementById('cwThreadTitle')!.textContent = `Support — ${cwUserName} (${cwUserEmail})`;
+      } catch (e) { console.error('cwEscalateToHuman identity update failed', e); }
+    }
+    cwBotStage = 3;
+    cwTicketEscalated = true;
+    if (cwInactivityTimer) { clearTimeout(cwInactivityTimer); cwInactivityTimer = null; }
+    await cwSendBotMessage(cwActiveConvoId, CW_ESCALATION_REPLY);
+    // NOTE: this exact bot message is the intended trigger point for the Telegram
+    // notification, via a Supabase Database Webhook on messages INSERT (server-side —
+    // never call Telegram's API directly from this client-side file).
+    showScreen('thread');
+  }
+
+  document.getElementById('cwEscalateBtn')?.addEventListener('click', () => cwEscalateToHuman());
 
   document.getElementById('cwSend')?.addEventListener('click', () => cwSendMessage());
   document.getElementById('cwInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); cwSendMessage(); } });
@@ -890,6 +965,7 @@ const agents = [
     const input = document.getElementById('cwInput') as HTMLInputElement;
     const content = (presetText ?? input.value).trim();
     if (!content || !cwActiveConvoId || !cwUserId) return;
+    cwResetInactivityTimer();
     const container = document.getElementById('cwThreadMsgs')!;
     if (container.querySelector('#cwChipRow')) container.innerHTML = '';
     const btn = document.getElementById('cwSend') as HTMLButtonElement;
@@ -897,17 +973,21 @@ const agents = [
     if (!presetText) input.value = '';
     const isTopicChip = !!presetText && CW_TOPICS.includes(presetText);
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/messages`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader() }, body: JSON.stringify({ conversation_id: cwActiveConvoId, sender_id: cwUserId, sender_name: cwUserName, sender_role: cwUserRole, content }) });
+      await fetch(`${SUPABASE_URL}/rest/v1/messages`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader() }, body: JSON.stringify({ conversation_id: cwActiveConvoId, sender_id: cwUserId, sender_name: cwUserName || 'Guest', sender_role: cwUserRole, content }) });
       await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' }, body: JSON.stringify({ updated_at: new Date().toISOString() }) });
 
       if (cwUserRole === 'guest' || cwUserRole === 'client') {
         if (isTopicChip && cwBotStage === 0) {
+          cwActiveTopic = presetText!;
           cwBotStage = 1;
-          await cwSendBotMessage(cwActiveConvoId, CW_TOPIC_REPLIES[presetText!] || CW_ESCALATION_REPLY);
-          cwRenderSatisfactionPrompt();
+          await cwSendBotMessage(cwActiveConvoId, CW_CLARIFY_QUESTION);
         } else if (!isTopicChip && cwBotStage === 1) {
           cwBotStage = 2;
-          await cwSendBotMessage(cwActiveConvoId, CW_ESCALATION_REPLY);
+          await cwSendBotMessage(cwActiveConvoId, (cwActiveTopic && CW_TOPIC_REPLIES[cwActiveTopic]) || CW_TOPIC_REPLIES['General questions']);
+          cwRenderSatisfactionPrompt();
+        } else if (!isTopicChip && cwBotStage === 2) {
+          // Implicit escalation: they kept typing instead of using the satisfaction chips
+          await cwEscalateToHuman();
         }
       }
     } catch (err) { console.error(err); }
