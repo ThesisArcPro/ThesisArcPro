@@ -1,3 +1,4 @@
+Hey there. I can revise this Bachelor’s-level HR analysis to sound more natural and genuinely human while preserving your original ideas and key EEO points. I’ll improve the flow, vary sentence structure, remove overly polished or repetitive wording, and maintain the original meaning and professional tone.
 ---
 const base = '';
 
@@ -282,6 +283,9 @@ const agents = [
   .cw-convo-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.2rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f1f5f9; }
   .cw-convo-item:hover { background: #f8fafc; }
   .cw-convo-icon { width: 36px; height: 36px; border-radius: 8px; background: #eef2ff; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; flex-shrink: 0; }
+  .cw-convo-avatar { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #0f172a; }
+  .cw-convo-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .cw-convo-avatar svg { width: 20px; height: 20px; }
   .cw-convo-info { flex: 1; min-width: 0; }
   .cw-convo-name { font-size: 0.88rem; font-weight: 500; color: #0f172a; }
   .cw-convo-time { font-size: 0.68rem; color: #94a3b8; flex-shrink: 0; }
@@ -337,9 +341,13 @@ const agents = [
   .cw-chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem; }
   .cw-chip { background: #fff; border: 1px solid #cbd5e1; border-radius: 999px; padding: 0.5rem 0.9rem; font-size: 0.8rem; font-weight: 500; color: #1e293b; cursor: pointer; font-family: inherit; transition: border-color 0.15s, background 0.15s, color 0.15s; }
   .cw-chip:hover { border-color: #1d4ed8; background: #eef2ff; color: #1d4ed8; }
-  .cw-msg { display: flex; flex-direction: column; max-width: 80%; }
-  .cw-msg.mine { align-self: flex-end; }
-  .cw-msg.theirs { align-self: flex-start; }
+  .cw-msg { display: flex; flex-direction: column; min-width: 0; }
+  .cw-msg-row { display: flex; align-items: flex-end; gap: 0.4rem; max-width: 80%; }
+  .cw-msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+  .cw-msg-row.theirs { align-self: flex-start; }
+  .cw-msg-avatar { width: 24px; height: 24px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: #0f172a; display: flex; align-items: center; justify-content: center; }
+  .cw-msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .cw-msg-avatar svg { width: 14px; height: 14px; }
   .cw-msg-name { font-size: 0.65rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.15rem; }
   .cw-msg-bubble { padding: 0.55rem 0.85rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.5; word-wrap: break-word; }
   .cw-msg.mine .cw-msg-bubble { background: #1d4ed8; color: #fff; border-bottom-right-radius: 4px; }
@@ -417,6 +425,38 @@ const agents = [
   const guestNameScreen = document.getElementById('cwGuestName')!;
 
   function cwEsc(v: any) { return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // ── Avatars: bot icon vs. real support-agent photo ──
+  const CW_BOT_AVATAR_SVG = '<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="7" width="14" height="12" rx="3" fill="#fff" opacity="0.18"/><circle cx="9.5" cy="13" r="1.4" fill="#fff"/><circle cx="14.5" cy="13" r="1.4" fill="#fff"/><path d="M12 4v3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="3.2" r="1" fill="#fff"/></svg>';
+  function cwHashPick<T>(key: string, options: T[]): T | null {
+    if (!options.length) return null;
+    let hash = 0;
+    const s = String(key || 'x');
+    for (let i = 0; i < s.length; i++) hash = s.charCodeAt(i) + ((hash << 5) - hash);
+    return options[Math.abs(hash) % options.length];
+  }
+  function cwGetAgentPhotos(): string[] {
+    return Array.from(document.querySelectorAll('#cwAvatars img')).map(img => (img as HTMLImageElement).src).filter(Boolean);
+  }
+  // Per-message avatar in the thread: bot icon while the bot is answering, a real
+  // agent photo once an actual human support reply comes in.
+  function cwMsgAvatarHtml(senderId: string, senderName: string): string {
+    if (senderId === CW_BOT_ID) return `<div class="cw-msg-avatar">${CW_BOT_AVATAR_SVG}</div>`;
+    const photo = cwHashPick(senderName, cwGetAgentPhotos());
+    if (photo) return `<div class="cw-msg-avatar"><img src="${photo}" alt="" /></div>`;
+    return `<div class="cw-msg-avatar" style="background:#64748b;color:#fff;font-size:0.6rem;font-weight:700;">${cwEsc((senderName || 'S').charAt(0).toUpperCase())}</div>`;
+  }
+  // Per-conversation avatar in the Messages list: bot icon until a real human has
+  // replied in that ticket (has_human_reply), then a real agent photo — matching
+  // how the icon should flip once live support steps in.
+  function cwConvoAvatarHtml(c: any): string {
+    if (c.type === 'support' && !c.has_human_reply) {
+      return `<div class="cw-convo-avatar">${CW_BOT_AVATAR_SVG}</div>`;
+    }
+    const photo = cwHashPick(c.title || c.id, cwGetAgentPhotos());
+    if (photo) return `<div class="cw-convo-avatar"><img src="${photo}" alt="" /></div>`;
+    return `<div class="cw-convo-icon">${c.type === 'support' ? 'S' : 'O'}</div>`;
+  }
 
   // ── Guest support (no account needed) ──
   function cwGetGuestId(): string {
@@ -620,7 +660,7 @@ const agents = [
 
   async function loadCwConversations() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${cwUserId}&select=conversation_id,conversations!inner(id,type,title,updated_at,status)&conversations.status=eq.open`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader() } });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?user_id=eq.${cwUserId}&select=conversation_id,conversations!inner(id,type,title,updated_at,status,has_human_reply)`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader() } });
       const data = await res.json();
       cwConversations = data.map((d: any) => d.conversations).filter(Boolean).sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
       renderCwConvoList();
@@ -635,7 +675,7 @@ const agents = [
     el.innerHTML = `<p style="font-size:0.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.4px;margin:0 0 0.4rem;">Recent</p>` +
       recent.map((c: any) => {
         return `<div class="cw-convo-item" data-cwcid="${c.id}" style="border-radius:10px;border-bottom:none;background:#fff;margin-bottom:0.4rem;border:1px solid #e2e8f0;">
-          <div class="cw-convo-icon">${c.type === 'support' ? 'S' : 'O'}</div>
+          ${cwConvoAvatarHtml(c)}
           <div class="cw-convo-info"><div class="cw-convo-name">${cwEsc(c.title || 'Chat')}</div></div>
         </div>`;
       }).join('');
@@ -658,7 +698,7 @@ const agents = [
     }
     el.innerHTML = cwConversations.map((c: any) => {
       const time = c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
-      return `<div class="cw-convo-item" data-cwcid="${c.id}"><div class="cw-convo-icon">${c.type === 'support' ? 'S' : 'O'}</div><div class="cw-convo-info"><div class="cw-convo-name">${cwEsc(c.title || 'Chat')}</div></div><div class="cw-convo-time">${time}</div></div>`;
+      return `<div class="cw-convo-item" data-cwcid="${c.id}">${cwConvoAvatarHtml(c)}<div class="cw-convo-info"><div class="cw-convo-name">${cwEsc(c.title || 'Chat')}</div></div><div class="cw-convo-time">${time}</div></div>`;
     }).join('');
     el.querySelectorAll('.cw-convo-item').forEach(item => item.addEventListener('click', () => openCwThread((item as HTMLElement).dataset.cwcid!)));
   }
@@ -803,7 +843,7 @@ const agents = [
   const CW_ESCALATION_REPLY = "Got it — I've connected you with our support team and someone will follow up with you here shortly. Feel free to add anything else in the meantime!";
   const CW_CLARIFY_QUESTION = "Could you tell me a bit more about what's going on? Any detail helps me point you in the right direction.";
   let cwActiveTopic: string | null = null;
-  let cwBotStage = 0; // 0 = nothing yet, 1 = clarifying question asked, 2 = topic reply + satisfaction shown, 3 = escalated or resolved (terminal)
+  let cwBotStage = 0; // 0 = nothing yet, 1 = clarifying question asked, 2 = topic reply sent, 3 = escalated or resolved (terminal)
   let cwTicketEscalated = false;
   let cwInactivityTimer: any = null;
 
@@ -830,7 +870,10 @@ const agents = [
         const isMine = msg.sender_id === cwUserId;
         if (!isMine) cwPlayPing();
         const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
-        c.insertAdjacentHTML('beforeend', `<div class="cw-msg ${isMine ? 'mine' : 'theirs'}">${!isMine ? `<div class="cw-msg-name">${cwEsc(msg.sender_name || 'Support')}</div>` : ''}<div class="cw-msg-bubble">${cwEsc(msg.content)}</div><div class="cw-msg-time">${time}</div></div>`);
+        const rowHtml = isMine
+          ? `<div class="cw-msg-row mine"><div class="cw-msg"><div class="cw-msg-bubble">${cwEsc(msg.content)}</div><div class="cw-msg-time">${time}</div></div></div>`
+          : `<div class="cw-msg-row theirs">${cwMsgAvatarHtml(msg.sender_id, msg.sender_name)}<div class="cw-msg"><div class="cw-msg-name">${cwEsc(msg.sender_name || 'Support')}</div><div class="cw-msg-bubble">${cwEsc(msg.content)}</div><div class="cw-msg-time">${time}</div></div></div>`;
+        c.insertAdjacentHTML('beforeend', rowHtml);
         c.scrollTop = c.scrollHeight;
       }).subscribe();
   }
@@ -839,9 +882,12 @@ const agents = [
     const container = document.getElementById('cwThreadMsgs')!;
     container.innerHTML = `
       <p class="cw-intro-text">We are here to assist you with any questions or concerns you may have. Feel free to ask us anything.</p>
-      <div class="cw-msg theirs">
-        <div class="cw-msg-bubble">Hi there! 👋 What brings you here today?</div>
-        <div class="cw-msg-time">Support team • Just now</div>
+      <div class="cw-msg-row theirs">
+        <div class="cw-msg-avatar">${CW_BOT_AVATAR_SVG}</div>
+        <div class="cw-msg">
+          <div class="cw-msg-bubble">Hi there! 👋 What brings you here today?</div>
+          <div class="cw-msg-time">Support team • Just now</div>
+        </div>
       </div>
       <div class="cw-chip-row" id="cwChipRow">
         ${CW_TOPICS.map(t => `<button class="cw-chip" data-topic="${cwEsc(t)}">${cwEsc(t)}</button>`).join('')}
@@ -858,52 +904,19 @@ const agents = [
     container.innerHTML = messages.map((m: any) => {
       const isMine = m.sender_id === cwUserId;
       const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
-      return `<div class="cw-msg ${isMine ? 'mine' : 'theirs'}">${!isMine ? `<div class="cw-msg-name">${cwEsc(m.sender_name || 'Support')}</div>` : ''}<div class="cw-msg-bubble">${cwEsc(m.content)}</div><div class="cw-msg-time">${time}</div></div>`;
+      if (isMine) {
+        return `<div class="cw-msg-row mine"><div class="cw-msg"><div class="cw-msg-bubble">${cwEsc(m.content)}</div><div class="cw-msg-time">${time}</div></div></div>`;
+      }
+      return `<div class="cw-msg-row theirs">${cwMsgAvatarHtml(m.sender_id, m.sender_name)}<div class="cw-msg"><div class="cw-msg-name">${cwEsc(m.sender_name || 'Support')}</div><div class="cw-msg-bubble">${cwEsc(m.content)}</div><div class="cw-msg-time">${time}</div></div></div>`;
     }).join('');
     container.scrollTop = container.scrollHeight;
   }
 
-  function cwRenderSatisfactionPrompt() {
-    const container = document.getElementById('cwThreadMsgs')!;
-    container.insertAdjacentHTML('beforeend', `
-      <div class="cw-msg theirs">
-        <div class="cw-msg-bubble">Would you like me to connect you with a live agent, or did that answer your question?</div>
-        <div class="cw-msg-time">Support team</div>
-      </div>
-      <div class="cw-chip-row" id="cwSatisfactionRow">
-        <button class="cw-chip" data-cwsat="connect">Connect me with an agent</button>
-        <button class="cw-chip" data-cwsat="resolved">That answered it</button>
-      </div>
-    `);
-    container.scrollTop = container.scrollHeight;
-    document.querySelectorAll('#cwSatisfactionRow .cw-chip').forEach(chip => {
-      chip.addEventListener('click', () => cwHandleSatisfactionChoice((chip as HTMLElement).dataset.cwsat!));
-    });
-  }
-
-  async function cwHandleSatisfactionChoice(choice: string) {
-    const row = document.getElementById('cwSatisfactionRow');
-    if (row) row.remove();
-    if (!cwActiveConvoId) return;
-    if (choice === 'connect') {
-      await cwEscalateToHuman();
-    } else {
-      cwBotStage = 3;
-      await cwSendBotMessage(cwActiveConvoId, "Glad that helped! Feel free to reach out again anytime.");
-      try {
-        await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ status: 'resolved' })
-        });
-      } catch (e) { console.error('cwHandleSatisfactionChoice resolve error', e); }
-    }
-  }
-
   // ── The single escalation entry point. Called from: the persistent button,
-  // the satisfaction-prompt chip, and implicit escalation (typing after a bot reply).
-  // For an unidentified guest, this detours through the contact-info screen first,
-  // then resumes here once submitted (see cwSubmitGuestName).
+  // and implicit escalation (typing further after the bot's topic reply). For
+  // an unidentified guest, this detours through the contact-info screen first,
+  // then resumes here once submitted (see cwSubmitGuestName). The bot never
+  // proactively suggests ending or escalating — that's the client's call.
   async function cwEscalateToHuman() {
     if (!cwActiveConvoId) return;
     if (!cwSession && cwUserRole === 'guest' && !cwHasGuestIdentity()) {
@@ -984,9 +997,11 @@ const agents = [
         } else if (!isTopicChip && cwBotStage === 1) {
           cwBotStage = 2;
           await cwSendBotMessage(cwActiveConvoId, (cwActiveTopic && CW_TOPIC_REPLIES[cwActiveTopic]) || CW_TOPIC_REPLIES['General questions']);
-          cwRenderSatisfactionPrompt();
+          // No "would you like to end this / connect to an agent?" nudge — the client
+          // decides that themselves. They can keep typing (escalates below), or use the
+          // always-visible "Connect me to support" button. If they say nothing further,
+          // the 5-minute inactivity timer quietly closes the panel — no prompt needed.
         } else if (!isTopicChip && cwBotStage === 2) {
-          // Implicit escalation: they kept typing instead of using the satisfaction chips
           await cwEscalateToHuman();
         }
       }

@@ -1018,6 +1018,7 @@ body.dark-mode .idetail-activity-text { color: #cbd5e1; }
   const SUPABASE_URL = 'https://rehvwvujuamehoanfomj.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_CKxnbue4T6cVn9BOIg8BkQ_kBNBiM_h';
   const BUCKET = 'completed-files';
+  const CW_BOT_ID = '00000000-0000-0000-0000-000000000001';
   const AVATAR_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>';
 
   const AVATAR_COLORS = ['#046fcd', '#16a34a', '#d97706', '#dc2626', '#7c3aed', '#0891b2', '#c026d3', '#65a30d'];
@@ -1737,7 +1738,7 @@ body.dark-mode .idetail-activity-text { color: #cbd5e1; }
             const c = document.getElementById(ids.messages)!;
             const ph = c.querySelector('div[style*="text-align:center"]');
             if (ph) c.innerHTML = '';
-            const isMine = msg.sender_role === 'support' || msg.sender_id === currentSession.user.id;
+            const isMine = msg.sender_id !== CW_BOT_ID && (msg.sender_role === 'support' || msg.sender_id === currentSession.user.id);
             const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
             const senderAvColor = colorForName(msg.sender_name || msg.sender_role || 'User');
             c.insertAdjacentHTML('beforeend', `<div class="imsg-row ${isMine ? 'mine' : 'theirs'}">
@@ -1771,7 +1772,8 @@ body.dark-mode .idetail-activity-text { color: #cbd5e1; }
           parts.push(`<div class="imsg-date-divider">${dayLabel(created!)}</div>`);
           lastDay = day;
         }
-        const isSupport = m.sender_role === 'support' || m.sender_id === currentSession.user.id;
+        const isBot = m.sender_id === CW_BOT_ID;
+        const isSupport = !isBot && (m.sender_role === 'support' || m.sender_id === currentSession.user.id);
         const time = created ? created.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
         const senderLabel = isSupport ? 'Support' : (m.sender_name || 'User');
         const senderAvColor = colorForName(senderLabel);
@@ -1801,7 +1803,7 @@ body.dark-mode .idetail-activity-text { color: #cbd5e1; }
         });
         await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${activeId}`, {
           method: 'PATCH', headers: { 'Content-Type': 'application/json', ...hdr(), 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ updated_at: new Date().toISOString(), last_message: `You: ${content}` })
+          body: JSON.stringify({ updated_at: new Date().toISOString(), last_message: `You: ${content}`, has_human_reply: true })
         });
         const conv = conversations.find((c: any) => c.id === activeId);
         if (conv) conv.last_message = `You: ${content}`;
