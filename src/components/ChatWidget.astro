@@ -71,13 +71,19 @@ const agents = [
     </div>
 
     <!-- Messages list screen -->
-    <div class="cw-screen" id="cwMessages">
+    <div class="cw-screen" id="cwMessages" style="position:relative;">
       <div class="cw-subhead">
         <button class="cw-back-btn" id="cwBackFromMessages">‹</button>
         <h3>Messages</h3>
       </div>
       <div class="cw-convo-list" id="cwAllConvos">
         <div class="cw-convo-loading">Loading…</div>
+      </div>
+      <div class="cw-messages-fab-row">
+        <button class="cw-messages-fab" id="cwMessagesSendBtn">
+          Send us a message
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
       </div>
       <nav class="cw-nav">
         <button class="cw-nav-btn" data-cwscreen="home">
@@ -280,6 +286,9 @@ const agents = [
   .cw-empty-sub { font-size: 0.85rem; color: #64748b; margin: 0 0 1.6rem; max-width: 230px; }
   .cw-empty-cta { display: inline-flex; align-items: center; gap: 0.5rem; background: #1d4ed8; color: #fff; border: none; border-radius: 999px; padding: 0.75rem 1.4rem; font-size: 0.88rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }
   .cw-empty-cta:hover { background: #1739ad; }
+  .cw-messages-fab-row { position: absolute; left: 0; right: 0; bottom: 66px; display: flex; justify-content: center; pointer-events: none; }
+  .cw-messages-fab { pointer-events: auto; display: inline-flex; align-items: center; gap: 0.5rem; background: #1d4ed8; color: #fff; border: none; border-radius: 999px; padding: 0.75rem 1.4rem; font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family: inherit; box-shadow: 0 6px 18px rgba(29,78,216,0.35); transition: background 0.15s; }
+  .cw-messages-fab:hover { background: #1739ad; }
   .cw-convo-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.2rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f1f5f9; }
   .cw-convo-item:hover { background: #f8fafc; }
   .cw-convo-icon { width: 36px; height: 36px; border-radius: 8px; background: #eef2ff; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; flex-shrink: 0; }
@@ -635,6 +644,7 @@ const agents = [
   });
 
   document.getElementById('cwBackFromMessages')?.addEventListener('click', () => showScreen('home'));
+  document.getElementById('cwMessagesSendBtn')?.addEventListener('click', () => startSupport());
   document.getElementById('cwBackFromHelpCollection')?.addEventListener('click', () => showScreen('help'));
   document.getElementById('cwBackFromHelpArticle')?.addEventListener('click', () => {
     if (cwActiveCollectionId) showScreen('help-collection'); else showScreen('help');
@@ -682,6 +692,23 @@ const agents = [
     el.querySelectorAll('[data-cwcid]').forEach(item => item.addEventListener('click', () => openCwThread((item as HTMLElement).dataset.cwcid!)));
   }
 
+  async function cwUpdateConvoTitle(newTitle: string) {
+    if (!cwActiveConvoId) return;
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ title: newTitle })
+      });
+      const conv = cwConversations.find(c => c.id === cwActiveConvoId);
+      if (conv) conv.title = newTitle;
+      const titleEl = document.getElementById('cwThreadTitle');
+      if (titleEl) titleEl.textContent = newTitle;
+      renderCwHomeConvos();
+      renderCwConvoList();
+    } catch (e) { console.error('cwUpdateConvoTitle failed', e); }
+  }
+
   function renderCwConvoList() {
     const el = document.getElementById('cwAllConvos')!;
     if (!cwConversations.length) {
@@ -689,11 +716,7 @@ const agents = [
         <span class="cw-empty-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="#0f172a"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
         <p class="cw-empty-title">No messages</p>
         <p class="cw-empty-sub">Messages from the team will be shown here</p>
-        <button class="cw-empty-cta" id="cwEmptySendBtn">Send us a message
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </button>
       </div>`;
-      document.getElementById('cwEmptySendBtn')?.addEventListener('click', () => startSupport());
       return;
     }
     el.innerHTML = cwConversations.map((c: any) => {
@@ -806,7 +829,7 @@ const agents = [
     if (!cwUserId) return;
     cwTicketEscalated = false;
     cwActiveTopic = null;
-    let label = cwUserName || 'Guest';
+    let label = cwUserName || 'New Visitor';
     if (cwUserRole === 'client' && cwUserClientId) label = `${cwUserName} (#${cwUserClientId})`;
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/conversations`, {
@@ -834,13 +857,13 @@ const agents = [
   const CW_BOT_ID = '00000000-0000-0000-0000-000000000001';
   const CW_BOT_NAME = 'ThesisArcPro Bot';
   const CW_TOPIC_REPLIES: Record<string, string> = {
-    'Paper related request': "Thanks for reaching out about your paper! You can check your order's status, revisions, and writer messages anytime from your dashboard. If you need something specific, add your order details below and our team will follow up shortly.",
-    'Payment inquiry': "Your payment is held safely in escrow until the order is completed, then released to your writer. You can view your wallet balance and full transaction history under Wallet in your dashboard. Let us know your specific question below and we'll take a look.",
-    'Account issues': "Sorry you're running into trouble! A few quick fixes: try resetting your password from the login page, or double-check your 2FA code if you have it enabled. If that doesn't sort it out, share a few more details below and our team will help.",
-    'Help with placing the order': "Placing an order is quick: click \"Place Order\" on your dashboard, fill in your assignment details, and submit — you'll start getting writer bids within minutes. Let us know below if you'd like a hand with a specific step.",
-    'General questions': "Happy to help! Go ahead and describe what you need below, and our support team will follow up as soon as possible.",
+    'Paper related request': "Here's how to check on your paper. Open your dashboard and go to your active order. You'll see the current status (in progress, in review, or completed), any files your writer has uploaded, and a chat thread where you can message your writer directly. If you need a revision once the draft is delivered, use the Request Revision button on the order and describe the changes needed, at no extra charge. If something urgent comes up, you can also reach us right here in this chat.",
+    'Payment inquiry': "You can make a payment once you've placed your order and selected a writer. Here's how: go to Balance in your dashboard sidebar, click Add Funds, enter the amount, and click Proceed. Then add your card details and complete the payment. We accept major cards through Stripe, including Visa, Mastercard, American Express, and Discover. We don't currently support PayPal, Apple Pay, or Google Pay. The full amount is held safely in escrow and only released to your writer once you approve the completed order. All payments are processed in USD.",
+    'Account issues': "A few quick fixes for account trouble. Forgot your password? Use the Forgot Password link on the login page to reset it by email. If you have two factor authentication turned on and lost access to your code, use one of your backup codes, or reach out here and our team can help you back in. If you signed up with Google and it's not letting you in, try linking your Google account again from Account Settings under Sign in and Security. Still stuck? Tell us more about what's happening below and we'll sort it out.",
+    'Help with placing the order': "Here's the quick way to place an order. Sign in or create an account first. Then click New Order and fill in the details: subject, task type, deadline, page count, and instructions. If you don't see your exact assignment type listed, choose Essay or Other and describe it in your instructions. Once you submit, click Select Writer to open it up for proposals. Writers will send you offers, you can chat with them if you'd like, then hire the one you prefer. Your payment moves into escrow at that point and stays protected until the work is done.",
+    'General questions': "Here's a quick overview of how ThesisArcPro works. You place an order with your paper's details and deadline, and qualified writers submit proposals to work on it. You review their profiles and ratings, pick the one you like, and your payment is held safely in escrow until the work is delivered and you approve it. That protects both you and the writer. You can message your writer directly throughout the process, request revisions at no extra cost, and reach our support team anytime through this chat. Let us know what else you'd like to know.",
   };
-  const CW_ESCALATION_REPLY = "Got it — I've connected you with our support team and someone will follow up with you here shortly. Feel free to add anything else in the meantime!";
+  const CW_ESCALATION_REPLY = "Got it, I've connected you with our support team and someone will follow up with you here shortly. Feel free to add anything else in the meantime!";
   const CW_CLARIFY_QUESTION = "Could you tell me a bit more about what's going on? Any detail helps me point you in the right direction.";
   let cwActiveTopic: string | null = null;
   let cwBotStage = 0; // 0 = nothing yet, 1 = clarifying question asked, 2 = topic reply sent, 3 = escalated or resolved (terminal)
@@ -932,20 +955,13 @@ const agents = [
     // ticket's title/participant so admin can see who to follow up with.
     if (cwUserRole === 'guest') {
       try {
-        await fetch(`${SUPABASE_URL}/rest/v1/conversations?id=eq.${cwActiveConvoId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ title: `Support — ${cwUserName} (${cwUserEmail})` })
-        });
         await fetch(`${SUPABASE_URL}/rest/v1/conversation_participants?conversation_id=eq.${cwActiveConvoId}&user_id=eq.${cwUserId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': cwAuthHeader(), 'Prefer': 'return=minimal' },
           body: JSON.stringify({ display_name: cwUserName })
         });
-        const conv = cwConversations.find(c => c.id === cwActiveConvoId);
-        if (conv) conv.title = `Support — ${cwUserName} (${cwUserEmail})`;
-        document.getElementById('cwThreadTitle')!.textContent = `Support — ${cwUserName} (${cwUserEmail})`;
-      } catch (e) { console.error('cwEscalateToHuman identity update failed', e); }
+      } catch (e) { console.error('cwEscalateToHuman participant update failed', e); }
+      await cwUpdateConvoTitle(`${cwActiveTopic || 'Support'} — ${cwUserName} (${cwUserEmail})`);
     }
     cwBotStage = 3;
     cwTicketEscalated = true;
@@ -993,6 +1009,8 @@ const agents = [
         if (isTopicChip && cwBotStage === 0) {
           cwActiveTopic = presetText!;
           cwBotStage = 1;
+          const identity = cwUserRole === 'client' && cwUserClientId ? `${cwUserName} (#${cwUserClientId})` : (cwUserName || 'New Visitor');
+          await cwUpdateConvoTitle(`${cwActiveTopic} — ${identity}`);
           await cwSendBotMessage(cwActiveConvoId, CW_CLARIFY_QUESTION);
         } else if (!isTopicChip && cwBotStage === 1) {
           cwBotStage = 2;
