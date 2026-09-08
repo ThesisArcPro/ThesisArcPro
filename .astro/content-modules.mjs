@@ -1,5 +1,7 @@
 
 export default new Map([
+["src/content/blog/college-essay-boring-life.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fcollege-essay-boring-life.mdx&astroContentModuleFlag=true")],
+["src/content/blog/college-essay-five-words.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fcollege-essay-five-words.mdx&astroContentModuleFlag=true")],
 ["src/content/blog/essay-editing-checklist.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fessay-editing-checklist.mdx&astroContentModuleFlag=true")],
 ["src/content/blog/how-to-plan-a-realistic-masters-thesis-timeline.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fhow-to-plan-a-realistic-masters-thesis-timeline.mdx&astroContentModuleFlag=true")],
 ["src/content/blog/how-to-write-a-masters-thesis.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fhow-to-write-a-masters-thesis.mdx&astroContentModuleFlag=true")],
