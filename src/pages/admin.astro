@@ -299,8 +299,14 @@ const base = '';
 
               <div class="users-bottom-grid">
                 <div class="settings-card" style="margin-bottom:0;">
-                  <h3 class="settings-card-title">Add team member</h3>
-                  <p class="settings-card-sub">Invite a new team member and assign their role and access level.</p>
+                  <button type="button" id="addMemberToggle" style="background:none;border:none;cursor:pointer;width:100%;text-align:left;padding:0;display:flex;align-items:center;justify-content:space-between;">
+                    <span>
+                      <h3 class="settings-card-title" style="margin-bottom:0.2rem;">Add team member</h3>
+                      <p class="settings-card-sub" style="margin-bottom:0;">Invite a new team member and assign their role and access level.</p>
+                    </span>
+                    <span id="addMemberChevron" style="font-size:0.75rem;color:#94a3b8;flex-shrink:0;margin-left:0.8rem;">▾</span>
+                  </button>
+                  <div id="addMemberBody" style="margin-top:1rem;">
                   <div class="form-group">
                     <label>Full name</label>
                     <input type="text" id="userNameInput" placeholder="Enter full name" />
@@ -319,6 +325,7 @@ const base = '';
                   </div>
                   <button class="btn-update" id="addUserBtn" style="width:auto;padding:0.7rem 1.4rem;">Add user</button>
                   <p class="input-note" style="margin-top:0.7rem;">This adds them to the team list. They still need an account invite sent separately before they can log in.</p>
+                  </div>
                 </div>
 
                 <div class="role-permissions-card">
@@ -2464,6 +2471,14 @@ body.dark-mode .uam-divider { background: rgba(255,255,255,0.06); }
     chevron.textContent = isHidden ? '▾' : '▸';
   });
 
+    document.getElementById('addMemberToggle')?.addEventListener('click', () => {
+    const body = document.getElementById('addMemberBody')!;
+    const chevron = document.getElementById('addMemberChevron')!;
+    const isHidden = body.style.display === 'none';
+    body.style.display = isHidden ? 'block' : 'none';
+    chevron.textContent = isHidden ? '▾' : '▸';
+  });
+  
   async function loadUsers() {
     const box = document.getElementById('usersList')!;
     box.innerHTML = '<span class="input-note" style="padding:1rem;display:block;">Loading…</span>';
