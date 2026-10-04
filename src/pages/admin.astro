@@ -322,7 +322,11 @@ const base = '';
                 </div>
 
                 <div class="role-permissions-card">
-                  <div class="role-permissions-title">🛡️ Role permissions</div>
+                  <button type="button" class="role-permissions-title" id="rolePermToggle" style="background:none;border:none;cursor:pointer;width:100%;text-align:left;display:flex;align-items:center;justify-content:space-between;padding:0;">
+                    <span>🛡️ Role permissions</span>
+                    <span id="rolePermChevron" style="font-size:0.75rem;color:#94a3b8;transition:transform 0.2s;">▾</span>
+                  </button>
+                  <div id="rolePermBody">
                   <div class="role-perm-row">
                     <span class="role-badge role-support">Support</span>
                     <span class="role-perm-desc">Messages and Tickets only</span>
@@ -334,6 +338,7 @@ const base = '';
                   <div class="role-perm-row">
                     <span class="role-badge role-admin">Admin</span>
                     <span class="role-perm-desc">Full access</span>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -2450,6 +2455,13 @@ body.dark-mode .uam-divider { background: rgba(255,255,255,0.06); }
   }
   document.addEventListener('click', (e) => {
     if (!(e.target as HTMLElement).closest('.user-actions-cell')) closeAllUserMenus();
+  });
+  document.getElementById('rolePermToggle')?.addEventListener('click', () => {
+    const body = document.getElementById('rolePermBody')!;
+    const chevron = document.getElementById('rolePermChevron')!;
+    const isHidden = body.style.display === 'none';
+    body.style.display = isHidden ? 'block' : 'none';
+    chevron.textContent = isHidden ? '▾' : '▸';
   });
 
   async function loadUsers() {
