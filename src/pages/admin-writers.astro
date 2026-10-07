@@ -5,6 +5,13 @@ const base = '';
 
 <BaseLayout title="Manage Writers" description="ThesisArcPro Admin — Writers">
 
+  <script is:inline>
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+  </script>
+
   <main>
     <section class="admin">
       <div class="container">
