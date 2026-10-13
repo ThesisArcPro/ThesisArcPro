@@ -5,8 +5,11 @@ const {
   title = 'ThesisArcPro', 
   description = 'Expert academic writing and research support for high school, college, Masters and PhD students. Essays, dissertations, research papers, editing and more.',
   image = 'https://thesisarcpro.github.io/og-image.jpg',
-  url = Astro.url.href
+  url = Astro.url.href,
+  noPixel = false
 } = Astro.props;
+const isAdminPage = Astro.url.pathname.startsWith('/admin');
+const showPixel = !noPixel && !isAdminPage;
 const fullTitle = title.includes('ThesisArcPro') ? title : `${title} | ThesisArcPro`;
 ---
 <!doctype html>
@@ -81,6 +84,19 @@ const fullTitle = title.includes('ThesisArcPro') ? title : `${title} | ThesisArc
         f.parentNode.insertBefore(a,f)})(window,document,'script','https://invitejs.trustpilot.com/tp.min.js','tp');
         tp('register', 'YBMSgrpD20dfnUuK');
     </script>
+    {showPixel && (
+      <script is:inline>
+        !function (w, d, t) {
+          w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+          var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+          ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+          ttq.holdConsent();
+          ttq.load('DB7289RC77UB6E0E77M0');
+          ttq.page();
+        }(window, document, 'ttq');
+      </script>
+    )}
   </head>
   <body>
     <!-- Referral capture: saves ?ref=CODE from the URL into a cookie so it
@@ -96,9 +112,64 @@ const fullTitle = title.includes('ThesisArcPro') ? title : `${title} | ThesisArc
       })();
     </script>
     <slot />
+    {showPixel && (
+      <div id="cookie-banner" class="cookie-banner" style="display:none" role="dialog" aria-label="Cookie consent">
+        <p>We use cookies for analytics and advertising to understand how students find us. See our <a href="/privacy">privacy policy</a>.</p>
+        <div class="cookie-actions">
+          <button id="cookie-decline" type="button">Decline</button>
+          <button id="cookie-accept" type="button" class="primary">Accept</button>
+        </div>
+      </div>
+      <script is:inline>
+        (function () {
+          var KEY = 'tt_consent';
+          var banner = document.getElementById('cookie-banner');
+          var saved = null;
+          try { saved = localStorage.getItem(KEY); } catch (e) {}
+
+          function save(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+
+          if (saved === 'granted') {
+            window.ttq && ttq.grantConsent();
+          } else if (saved === 'declined') {
+            window.ttq && ttq.revokeConsent();
+          } else if (banner) {
+            banner.style.display = 'flex';
+          }
+
+          document.getElementById('cookie-accept').addEventListener('click', function () {
+            save('granted');
+            window.ttq && ttq.grantConsent();
+            banner.style.display = 'none';
+          });
+          document.getElementById('cookie-decline').addEventListener('click', function () {
+            save('declined');
+            window.ttq && ttq.revokeConsent();
+            banner.style.display = 'none';
+          });
+        })();
+      </script>
+    )}
     <!-- Chat Widget -->
     <ChatWidget />
     <!-- Sitejabber reviews badge loader -->
     <script src="https://widgets.smartcustomer.com/js/v2/widgets.js" data-id="cddc1636b3af829bd776281ec825b28c18524037b9112bb4cbca2dade56bac3c" defer></script>
   </body>
 </html>
+<style>
+  .cookie-banner {
+    position: fixed; left: 16px; bottom: 16px; z-index: 9999;
+    max-width: 380px; padding: 14px 16px; gap: 12px;
+    flex-direction: column;
+    background: #1B2A4A; color: #fff; border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.25); font-size: 14px; line-height: 1.4;
+  }
+  .cookie-banner p { margin: 0; }
+  .cookie-banner a { color: #fff; text-decoration: underline; }
+  .cookie-actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .cookie-actions button {
+    padding: 8px 14px; border-radius: 6px; border: 1px solid #fff;
+    background: transparent; color: #fff; cursor: pointer; font-size: 14px;
+  }
+  .cookie-actions button.primary { background: #fff; color: #1B2A4A; font-weight: 600; }
+</style>
