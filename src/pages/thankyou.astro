@@ -101,6 +101,14 @@ const base = '';
   const params = new URLSearchParams(window.location.search);
   const ticket = params.get('ticket');
   if (ticket) {
+    // TikTok Pixel: report the order once per ticket (only sends if the visitor accepted cookies)
+    try {
+      const key = 'tt_order_' + ticket;
+      if (!localStorage.getItem(key)) {
+        (window as any).ttq?.track('PlaceAnOrder');
+        localStorage.setItem(key, '1');
+      }
+    } catch (e) {}
     const ticketBox = document.getElementById('ticketBox');
     const ticketNumber = document.getElementById('ticketNumber');
     if (ticketBox) ticketBox.style.display = 'block';

@@ -230,6 +230,9 @@ import Header from '../components/Header.astro';
         }
       }
 
+      // TikTok Pixel: report the signup (only sends if the visitor accepted cookies)
+      (window as any).ttq?.track('CompleteRegistration');
+
       successMsg!.textContent = '✅ Account created! Please check your email to verify your account, then login.';
       successMsg!.style.display = 'block';
       submitBtn.textContent = 'Account Created!';
